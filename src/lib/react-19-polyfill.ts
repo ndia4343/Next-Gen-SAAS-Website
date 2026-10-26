@@ -39,26 +39,44 @@ try {
     };
   }
 
-  // Also bridge onto window/globalThis for any UMD/bundle looking for global.React
-  if (typeof window !== 'undefined') {
-    const w = window as any;
-    if (!w.React) {
-      try {
-        w.React = React;
-      } catch {}
+  // Attach __SECRET_INTERNALS directly to React object
+  try {
+    if (!anyReact.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
+      Object.defineProperty(anyReact, '__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED', {
+        value: internals,
+        enumerable: false,
+        configurable: true,
+        writable: true,
+      });
     }
-    if (w.React) {
-      if (!w.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
-        try {
-          w.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = internals;
-        } catch {}
-      }
-      if (!w.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE) {
-        try {
-          w.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = internals;
-        } catch {}
-      }
+  } catch {}
+
+  try {
+    if (anyReact.default && !anyReact.default.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
+      Object.defineProperty(anyReact.default, '__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED', {
+        value: internals,
+        enumerable: false,
+        configurable: true,
+        writable: true,
+      });
     }
+  } catch {}
+
+  // Also bridge onto globalThis and window
+  const g = typeof globalThis !== 'undefined' ? (globalThis as any) : typeof window !== 'undefined' ? (window as any) : {};
+  if (g) {
+    g.__REACT_INTERNALS_POLYFILL = internals;
+    if (!g.React) g.React = anyReact;
+    try {
+      if (g.React && !g.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
+        Object.defineProperty(g.React, '__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED', {
+          value: internals,
+          enumerable: false,
+          configurable: true,
+          writable: true,
+        });
+      }
+    } catch {}
   }
 } catch (e) {
   // Fail silently

@@ -1,18 +1,33 @@
 const fs = require('fs');
 const path = require('path');
 
-function findTargetFiles(dir) {
+function findTargetFiles(dir, visited = new Set()) {
   let files = [];
   try {
+    let realDir;
+    try {
+      realDir = fs.realpathSync(dir);
+      if (visited.has(realDir)) return files;
+      visited.add(realDir);
+    } catch {
+      // ignore
+    }
+
     const list = fs.readdirSync(dir);
     for (const item of list) {
-      if (item === '.git') continue;
+      if (item === '.git' || item === '.next') continue;
       const fullPath = path.join(dir, item);
-      const stat = fs.statSync(fullPath);
+      let stat;
+      try {
+        stat = fs.statSync(fullPath);
+      } catch {
+        continue;
+      }
       if (stat.isDirectory()) {
-        files = files.concat(findTargetFiles(fullPath));
+        files = files.concat(findTargetFiles(fullPath, visited));
       } else if (
-        item.startsWith('react-reconciler') && item.endsWith('.js')
+        (item.startsWith('react-reconciler') || item.includes('react-reconciler')) &&
+        item.endsWith('.js')
       ) {
         files.push(fullPath);
       }
@@ -30,39 +45,77 @@ if (!fs.existsSync(nodeModulesDir)) {
 const targetFiles = findTargetFiles(nodeModulesDir);
 console.log(`Found ${targetFiles.length} reconciler files to inspect.`);
 
+const helper = 'var __patch_safe_internals=function(o){if(!o)o={};if(!o.ReactCurrentDispatcher){o.ReactCurrentDispatcher={get current(){return o.H||null;},set current(v){o.H=v;}};}if(!o.ReactCurrentBatchConfig)o.ReactCurrentBatchConfig={transition:null};if(!o.ReactCurrentOwner)o.ReactCurrentOwner={current:null};if(!o.ReactCurrentActQueue)o.ReactCurrentActQueue={current:null,isBatchingLegacy:false,didScheduleLegacyUpdate:false};return o;};';
+
 for (const targetFile of targetFiles) {
   let content = fs.readFileSync(targetFile, 'utf8');
   let modified = false;
 
-  // 1. Ensure aa.__SECRET_INTERNALS has fallbacks and ReactCurrentBatchConfig
-  const secretPatternProd = /var\s+ea\s*=\s*aa\.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;/g;
-  if (secretPatternProd.test(content)) {
-    content = content.replace(
-      secretPatternProd,
-      'var ea=aa.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED||aa.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE||{};if(!ea.ReactCurrentDispatcher){ea.ReactCurrentDispatcher={get current(){return ea.H},set current(v){ea.H=v}}};if(!ea.ReactCurrentBatchConfig)ea.ReactCurrentBatchConfig={transition:null};if(!ea.ReactCurrentOwner)ea.ReactCurrentOwner={current:null};if(!ea.ReactCurrentActQueue)ea.ReactCurrentActQueue={current:null};'
-    );
+  // 1. Inject safe internals helper if not present
+  if (!content.includes('__patch_safe_internals')) {
+    content = helper + content;
     modified = true;
   }
 
-  const secretPatternDev = /var\s+ReactSharedInternals\s*=\s*React\.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;/g;
-  if (secretPatternDev.test(content)) {
-    content = content.replace(
-      secretPatternDev,
-      'var ReactSharedInternals=React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED||React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE||{};if(!ReactSharedInternals.ReactCurrentDispatcher){ReactSharedInternals.ReactCurrentDispatcher={get current(){return ReactSharedInternals.H},set current(v){ReactSharedInternals.H=v}}};if(!ReactSharedInternals.ReactCurrentBatchConfig)ReactSharedInternals.ReactCurrentBatchConfig={transition:null};if(!ReactSharedInternals.ReactCurrentOwner)ReactSharedInternals.ReactCurrentOwner={current:null};if(!ReactSharedInternals.ReactCurrentActQueue)ReactSharedInternals.ReactCurrentActQueue={current:null};'
+  // 2. Universal regex for ANY variable name or comma/semicolon pattern
+  // Matches: u.__SECRET_INTERNALS..., aa.__SECRET_INTERNALS..., React.__SECRET_INTERNALS...
+  if (content.includes('__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED')) {
+    const newContent = content.replace(
+      /([a-zA-Z0-9_$]+)\.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED/g,
+      '__patch_safe_internals($1.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED||$1.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE||(typeof globalThis!=="undefined"&&globalThis.__REACT_INTERNALS_POLYFILL)||{})'
     );
-    modified = true;
+    if (newContent !== content) {
+      content = newContent;
+      modified = true;
+    }
   }
 
-  const secretPatternProfiling = /var\s+da\s*=\s*aa\.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;/g;
-  if (secretPatternProfiling.test(content)) {
-    content = content.replace(
-      secretPatternProfiling,
-      'var da=aa.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED||aa.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE||{};if(!da.ReactCurrentDispatcher){da.ReactCurrentDispatcher={get current(){return da.H},set current(v){da.H=v}}};if(!da.ReactCurrentBatchConfig)da.ReactCurrentBatchConfig={transition:null};if(!da.ReactCurrentOwner)da.ReactCurrentOwner={current:null};if(!da.ReactCurrentActQueue)da.ReactCurrentActQueue={current:null};'
+  // 3. Bulletproof safe property access: prevent any "Cannot read properties of undefined (reading 'ReactCurrentBatchConfig')"
+  if (content.includes('.ReactCurrentBatchConfig')) {
+    const newContent = content.replace(
+      /([a-zA-Z0-9_$]+)\.ReactCurrentBatchConfig\b(?!\s*=)/g,
+      '($1&&$1.ReactCurrentBatchConfig||{transition:null})'
     );
-    modified = true;
+    if (newContent !== content) {
+      content = newContent;
+      modified = true;
+    }
   }
 
-  // 2. Ensure da_elem is defined
+  if (content.includes('.ReactCurrentDispatcher')) {
+    const newContent = content.replace(
+      /([a-zA-Z0-9_$]+)\.ReactCurrentDispatcher\b(?!\s*=)/g,
+      '($1&&$1.ReactCurrentDispatcher||{get current(){return $1?($1.H||null):null},set current(v){if($1)$1.H=v}})'
+    );
+    if (newContent !== content) {
+      content = newContent;
+      modified = true;
+    }
+  }
+
+  if (content.includes('.ReactCurrentOwner')) {
+    const newContent = content.replace(
+      /([a-zA-Z0-9_$]+)\.ReactCurrentOwner\b(?!\s*=)/g,
+      '($1&&$1.ReactCurrentOwner||{current:null})'
+    );
+    if (newContent !== content) {
+      content = newContent;
+      modified = true;
+    }
+  }
+
+  if (content.includes('.ReactCurrentActQueue')) {
+    const newContent = content.replace(
+      /([a-zA-Z0-9_$]+)\.ReactCurrentActQueue\b(?!\s*=)/g,
+      '($1&&$1.ReactCurrentActQueue||{current:null})'
+    );
+    if (newContent !== content) {
+      content = newContent;
+      modified = true;
+    }
+  }
+
+  // 4. Ensure da_elem is defined
   if (targetFile.includes('production.min.js')) {
     if (!content.includes('da_elem=')) {
       if (content.includes('var fa=')) {
@@ -78,13 +131,13 @@ for (const targetFile of targetFiles) {
       }
     }
 
-    // 3. Make case fa also match da_elem
+    // 5. Make case fa also match da_elem
     if (content.includes('case fa:') && !content.includes('case fa:case da_elem:')) {
       content = content.replaceAll('case fa:', 'case fa:case da_elem:');
       modified = true;
     }
 
-    // 4. React 19 Context support
+    // 6. React 19 Context support
     const oldContextCase = 'case la:g=10;break a;case ma:g=9;break a;';
     const newContextCase = 'case la:case ma:g=10;break a;case Symbol.for("react.consumer"):g=9;break a;';
     if (content.includes(oldContextCase)) {
@@ -92,7 +145,7 @@ for (const targetFile of targetFiles) {
       modified = true;
     }
 
-    // 5. Safe fallback for providerType._context in React 19
+    // 7. Safe fallback for providerType._context in React 19
     if (content.includes('b.type._context')) {
       content = content.replaceAll('b.type._context', '(b.type._context||b.type)');
       modified = true;
