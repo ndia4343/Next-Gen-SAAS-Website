@@ -1,3 +1,4 @@
+import "@/lib/react-19-polyfill";
 import type { Metadata } from 'next';
 import '@/lib/react-19-polyfill';
 import './globals.css';

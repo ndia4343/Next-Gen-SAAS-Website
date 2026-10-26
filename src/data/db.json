@@ -1,7 +1,7 @@
 {
   "siteContent": {
     "themeBranding": {
-      "activeThemeId": "electric-cyan",
+      "activeThemeId": "neon-violet",
       "logoMode": "default",
       "logoImageUrl": "",
       "logoSvgContent": "",
@@ -509,9 +509,9 @@
       "referrer": "Direct",
       "deviceType": "Desktop",
       "browser": "Chrome",
-      "visitCount": 24,
+      "visitCount": 25,
       "firstSeenAt": "2026-10-26T20:26:46.052Z",
-      "lastVisitedAt": "2026-10-26T21:39:35.508Z"
+      "lastVisitedAt": "2026-10-26T21:39:55.802Z"
     },
     {
       "visitorId": "test_vis_999",
