@@ -2,11 +2,11 @@ import { WebsiteContent } from "@/lib/types";
 
 export const initialContent: WebsiteContent = {
   siteMeta: {
-    title: "NEUROFLUX.AI · 3D SaaS & Agentic AI Engineering Agency",
+    title: "ZAVIAN LABS · AI Systems & High-Compute WebGL Engineering",
     description:
-      "Awwwards-caliber 3D SaaS architectures, autonomous AI agent swarms, and enterprise data intelligence systems. Headless ecommerce, full-stack MVP launches, and Power BI analytics.",
-    companyName: "NEUROFLUX SYSTEMS INC.",
-    contactEmail: "architects@neuroflux.ai",
+      "Awwwards-caliber 3D architectures, autonomous AI voice & WhatsApp systems, and enterprise intelligence engineering.",
+    companyName: "ZAVIAN LABS",
+    contactEmail: "architects@zavianlabs.ai",
   },
   hero: {
     badgeText: "NEXT-GEN SAAS · AGENTIC AI · DATA ENGINEERING",
@@ -144,9 +144,9 @@ export const initialContent: WebsiteContent = {
   freyaVoiceAgent: {
     agentName: "Freya",
     systemPrompt:
-      "You are Freya, a world-class AI Solutions Architect and Creative Technologist at NEUROFLUX.AI. You provide expert guidance on Next.js 15, Three.js WebGL architectures, Headless Shopify integrations, and autonomous multi-agent engineering workflows.",
+      "You are Freya, a world-class AI Solutions Architect and Creative Technologist at ZAVIAN LABS. You provide expert guidance on Next.js 15, Three.js WebGL architectures, Headless Shopify integrations, and autonomous multi-agent engineering workflows.",
     welcomeMessage:
-      "Hello! I'm Freya, your autonomous solutions architect. How can I help clarify your project scope today?",
+      "Hello! I'm Freya from ZAVIAN LABS. How can I help clarify your project scope today?",
     isLiveIndicator: true,
   },
 };

@@ -10,14 +10,14 @@ export default async function HomePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: content.siteMeta.companyName || "NEUROFLUX.AI",
-    url: "https://neuroflux.ai",
-    logo: "https://neuroflux.ai/logo.png",
+    name: content.siteMeta.companyName || "ZAVIAN LABS",
+    url: "https://zavianlabs.ai",
+    logo: "https://zavianlabs.ai/logo.png",
     description: content.siteMeta.description,
     sameAs: [
-      "https://twitter.com/neuroflux_ai",
-      "https://github.com/neuroflux",
-      "https://linkedin.com/company/neuroflux-ai",
+      "https://twitter.com/zavianlabs",
+      "https://github.com/zavianlabs",
+      "https://linkedin.com/company/zavianlabs",
     ],
     hasOfferCatalog: {
       "@type": "OfferCatalog",

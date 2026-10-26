@@ -111,13 +111,13 @@ export default function HeroSection({ data }: HeroSectionProps) {
       {/* Eyebrow Badge with glowing crimson dot */}
       <div
         ref={eyebrowRef}
-        className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md mb-8 shadow-inner shadow-white/5"
+        className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/15 backdrop-blur-2xl mb-8 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.15)] shadow-xl shadow-black/30"
       >
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#DC2626] opacity-75" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-[#DC2626]" />
         </span>
-        <span className="font-mono text-xs uppercase tracking-[0.25em] text-zinc-300">
+        <span className="font-mono text-xs uppercase tracking-[0.25em] text-red-400 font-medium">
           {badgeText}
         </span>
       </div>
@@ -185,7 +185,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
           return (
             <div
               key={idx}
-              className="flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl bg-[#0c0c12]/80 border border-white/5 backdrop-blur-md hover:border-white/15 transition-all duration-200 group shadow-lg shadow-black/40"
+              className="flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 hover:border-white/25 backdrop-blur-2xl transition-all duration-300 group shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.1)] shadow-xl shadow-black/30"
             >
               <div className={`flex items-center gap-2 ${colorClass} mb-1.5`}>
                 <Icon className="w-4 h-4" />

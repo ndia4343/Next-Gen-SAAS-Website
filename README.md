@@ -1,4 +1,4 @@
-# NEUROFLUX.AI · 3D SaaS & Agentic AI Engineering Agency Platform
+# ZAVIAN LABS · AI Systems & High-Compute WebGL Engineering Platform
 
 A production-grade, Awwwards-caliber 3D SaaS and AI Engineering Agency web application built with **Next.js 15 (App Router, Turbopack, Server Actions)**, **React 19**, **Three.js / React Three Fiber**, **Tailwind CSS v4**, and **GSAP ScrollTrigger**.
 

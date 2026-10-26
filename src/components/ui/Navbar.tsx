@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Terminal, Sparkles, Menu, X } from "lucide-react";
+import { Sparkles, Menu, X } from "lucide-react";
 import { useModal } from "../providers/ModalProvider";
 import { cn } from "@/lib/utils";
 
@@ -29,16 +29,27 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Brand Logo */}
-        <a href="#" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-red-700 to-red-500 flex items-center justify-center text-white shadow-lg shadow-red-600/40 group-hover:scale-105 transition-transform">
-            <Terminal className="w-5 h-5" />
+        <a href="#" className="flex items-center gap-3 group">
+          <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-800 shadow-lg shadow-red-600/30 border border-red-500/30 group-hover:scale-105 transition-transform">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-5 h-5 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+            >
+              <path d="M4 4h16L7 20h13" />
+              <path d="M9 12h6" strokeOpacity="0.6" strokeWidth="2" />
+            </svg>
           </div>
           <div className="flex flex-col">
             <span className="text-lg font-black tracking-tight text-white leading-none">
-              NEUROFLUX<span className="text-red-500">.AI</span>
+              ZAVIAN <span className="text-red-500">LABS</span>
             </span>
-            <span className="text-[9px] font-mono tracking-widest text-zinc-400 uppercase mt-0.5">
-              3D AI &amp; Software Studio
+            <span className="text-[10px] font-mono tracking-[0.2em] text-zinc-400 uppercase mt-0.5">
+              AI SYSTEMS &amp; ENGINEERING
             </span>
           </div>
         </a>
@@ -49,19 +60,19 @@ export default function Navbar() {
             href="#core-expertise"
             className="hover:text-white transition-colors"
           >
-            01 / Core Expertise
+            01 / CORE EXPERTISE
           </a>
           <a
-            href="#project-support"
+            href="#project-tiers"
             className="hover:text-white transition-colors"
           >
-            02 / Project Tiers
+            02 / PROJECT TIERS
           </a>
           <a
-            href="#methodology"
+            href="#architecture"
             className="hover:text-white transition-colors"
           >
-            03 / Architecture
+            03 / ARCHITECTURE
           </a>
         </nav>
 
@@ -92,23 +103,30 @@ export default function Navbar() {
           <a
             href="#core-expertise"
             onClick={() => setMobileMenuOpen(false)}
-            className="p-2 hover:bg-white/5 rounded-lg text-zinc-300"
+            className="p-2 hover:bg-white/5 rounded-lg text-zinc-300 uppercase tracking-wider"
           >
-            01 / Core Expertise
+            01 / CORE EXPERTISE
           </a>
           <a
-            href="#project-support"
+            href="#project-tiers"
             onClick={() => setMobileMenuOpen(false)}
-            className="p-2 hover:bg-white/5 rounded-lg text-zinc-300"
+            className="p-2 hover:bg-white/5 rounded-lg text-zinc-300 uppercase tracking-wider"
           >
-            02 / Project Tiers
+            02 / PROJECT TIERS
+          </a>
+          <a
+            href="#architecture"
+            onClick={() => setMobileMenuOpen(false)}
+            className="p-2 hover:bg-white/5 rounded-lg text-zinc-300 uppercase tracking-wider"
+          >
+            03 / ARCHITECTURE
           </a>
           <button
             onClick={() => {
               setMobileMenuOpen(false);
               openQuoteModal("General Discovery");
             }}
-            className="w-full mt-2 py-3 rounded-xl bg-red-600 text-white font-semibold text-center"
+            className="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold text-center uppercase tracking-wider shadow-lg shadow-red-700/30"
           >
             Get a Quote
           </button>

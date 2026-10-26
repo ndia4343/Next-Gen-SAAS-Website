@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowUp, Terminal } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { useSmoothScroll } from "../providers/SmoothScrollProvider";
 import { useModal } from "../providers/ModalProvider";
 
@@ -18,41 +18,63 @@ export default function FooterSection() {
   };
 
   return (
-    <footer className="relative z-10 border-t border-white/10 bg-[#060609]/90 backdrop-blur-xl py-16 px-4 sm:px-6 lg:px-8">
+    <footer id="architecture" className="relative z-10 border-t border-white/10 bg-[#060609]/60 backdrop-blur-xl py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         <div>
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white shadow-lg shadow-red-600/40">
-              <Terminal className="w-4 h-4" />
+          <div className="flex items-center gap-3 mb-3">
+            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-800 shadow-lg shadow-red-600/30 border border-red-500/30">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-5 h-5 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+              >
+                <path d="M4 4h16L7 20h13" />
+                <path d="M9 12h6" strokeOpacity="0.6" strokeWidth="2" />
+              </svg>
             </div>
-            <span className="text-xl font-black tracking-tight text-white">
-              NEUROFLUX<span className="text-red-500">.AI</span>
-            </span>
+            <div className="flex flex-col">
+              <span className="text-xl font-black tracking-tight text-white leading-none">
+                ZAVIAN <span className="text-red-500">LABS</span>
+              </span>
+              <span className="text-[10px] font-mono tracking-[0.2em] text-zinc-400 uppercase mt-0.5">
+                AI SYSTEMS &amp; ENGINEERING
+              </span>
+            </div>
           </div>
-          <p className="text-sm text-zinc-400 max-w-sm">
-            High-performance 3D SaaS architectures, autonomous agent swarms, and
+          <p className="text-sm text-zinc-400 max-w-sm leading-relaxed">
+            High-performance 3D architectures, autonomous AI voice &amp; WhatsApp systems, and
             enterprise intelligence engineering.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-6">
+        <div className="flex flex-wrap items-center gap-6 font-mono text-xs uppercase tracking-wider">
           <button
             onClick={() => openQuoteModal("General Discovery")}
-            className="text-sm text-zinc-300 hover:text-white transition-colors"
+            className="text-zinc-300 hover:text-white transition-colors"
           >
             Start a Project
           </button>
           <a
             href="#core-expertise"
-            className="text-sm text-zinc-400 hover:text-white transition-colors"
+            className="text-zinc-400 hover:text-white transition-colors"
           >
-            Capabilities
+            01 / Core Expertise
           </a>
           <a
-            href="#project-support"
-            className="text-sm text-zinc-400 hover:text-white transition-colors"
+            href="#project-tiers"
+            className="text-zinc-400 hover:text-white transition-colors"
           >
-            Project Tiers
+            02 / Project Tiers
+          </a>
+          <a
+            href="#architecture"
+            className="text-zinc-400 hover:text-white transition-colors"
+          >
+            03 / Architecture
           </a>
           <button
             onClick={scrollToTop}
@@ -67,7 +89,7 @@ export default function FooterSection() {
 
       <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-zinc-400 gap-4">
         <div>
-          © {new Date().getFullYear()} NEUROFLUX SYSTEMS INC. ALL RIGHTS RESERVED.
+          © 2026 ZAVIAN LABS. ALL RIGHTS RESERVED.
         </div>
         <div className="flex items-center gap-6">
           <span className="text-emerald-400 flex items-center gap-1.5">

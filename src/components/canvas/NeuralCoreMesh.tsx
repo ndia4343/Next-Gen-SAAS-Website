@@ -225,24 +225,23 @@ export default function NeuralCoreMesh() {
 
       {/* Ambient Sparkles */}
       <Sparkles
-        count={80}
-        scale={8}
-        size={2.5}
-        speed={0.4}
-        opacity={0.5}
-        color="#DC2626"
+        count={220}
+        scale={12}
+        size={2.2}
+        speed={0.35}
+        color="#EF4444"
       />
 
       {/* Synchronized Core Mesh Group */}
       <group ref={groupRef} position={[0, 0, 0]}>
-        {/* Inner wireframe icosahedron (#DC2626 emissive) */}
+        {/* Inner wireframe icosahedron (#DC2626 emissive, #EF4444 color) */}
         <mesh ref={innerCoreRef}>
           <icosahedronGeometry args={[1.15, 1]} />
           <meshStandardMaterial
             wireframe
-            color="#FFFFFF"
+            color="#EF4444"
             emissive="#DC2626"
-            emissiveIntensity={2.0}
+            emissiveIntensity={2.2}
             roughness={0.2}
             metalness={0.9}
           />

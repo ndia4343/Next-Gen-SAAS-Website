@@ -41,10 +41,10 @@ export default function CoreExpertiseSection({ data }: CoreExpertiseSectionProps
     >
       {/* Centered Section Header */}
       <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-        <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#DC2626] font-semibold mb-3">
+        <p className="font-mono text-xs uppercase tracking-[0.25em] text-red-400 font-semibold mb-3">
           {eyebrow}
         </p>
-        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight">
           <span className="text-[#FFFFFF]">{mainTitleWhite}</span>
           <span className="text-[#DC2626]">{mainTitleCrimson}</span>
         </h2>
@@ -61,15 +61,8 @@ export default function CoreExpertiseSection({ data }: CoreExpertiseSectionProps
             <TiltCard
               key={card.id}
               featured={isFeatured}
-              maxTilt={isFeatured ? 14 : 10}
-              className={
-                isFeatured
-                  ? "glass-panel-crimson border-red-500/50 p-8 sm:p-10 flex flex-col justify-between relative transform-3d shadow-2xl shadow-red-950/40"
-                  : "glass-panel p-8 sm:p-10 flex flex-col justify-between group transition-all duration-300 hover:border-white/20 transform-3d"
-              }
-              style={{
-                transform: isFeatured ? "translateZ(20px)" : undefined,
-              }}
+              maxTilt={isFeatured ? 12 : 8}
+              className="p-8 sm:p-10 flex flex-col justify-between"
             >
               {/* Glowing backlight for featured card */}
               {isFeatured && (

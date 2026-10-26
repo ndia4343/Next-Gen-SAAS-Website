@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import TiltCard from "../ui/TiltCard";
 import {
   Code2,
   BarChart3,
@@ -189,12 +190,14 @@ export default function ProjectSupportSection({ data }: ProjectSupportSectionPro
 
   return (
     <section
-      id="project-support"
+      id="project-tiers"
       className="relative z-10 py-24 sm:py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"
     >
+      <span id="project-support" className="sr-only" />
+
       {/* Header with Exact Color Spans */}
       <div className="text-left max-w-3xl mb-16 sm:mb-20">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-zinc-400 mb-4">
+        <p className="font-mono text-xs uppercase tracking-[0.25em] text-red-400 font-semibold mb-4">
           {eyebrow}
         </p>
         <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15] mb-6">
@@ -207,7 +210,7 @@ export default function ProjectSupportSection({ data }: ProjectSupportSectionPro
         </p>
       </div>
 
-      {/* 2x2 Bento Grid: Dark matte glass cards */}
+      {/* 2x2 Bento Grid: Dynamic Frosted Glass Cards with 3D Tilt */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {cards.map((card, idx) => {
           const Icon = getCardIcon(idx, card.numberTag);
@@ -215,12 +218,13 @@ export default function ProjectSupportSection({ data }: ProjectSupportSectionPro
           const serviceTier = mapToServiceTier(card.numberTag, card.title);
 
           return (
-            <div
+            <TiltCard
               key={card.id || idx}
-              className="group relative bg-[#0f0f14]/90 hover:bg-[#14141c]/95 border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col justify-between overflow-hidden transition-all duration-300 hover:border-white/25 hover:shadow-2xl hover:shadow-[#FF6B00]/10 hover:-translate-y-1.5"
+              maxTilt={8}
+              className="p-8 lg:p-10 flex flex-col justify-between"
             >
-              {/* Dynamic background glow */}
-              <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-[#FF6B00]/10 via-[#00B4D8]/5 to-transparent rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
+              {/* Dynamic ambient accent glow */}
+              <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-[#FF6B00]/10 via-[#00B4D8]/5 to-transparent rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-500 -z-10" />
 
               <div>
                 {/* Header row: Eyebrow + Micro Icon */}
@@ -228,7 +232,7 @@ export default function ProjectSupportSection({ data }: ProjectSupportSectionPro
                   <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#FF6B00]">
                     {card.numberTag}
                   </span>
-                  <div className="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-zinc-300 group-hover:text-white group-hover:border-[#FF6B00]/40 group-hover:bg-[#FF6B00]/10 transition-all duration-300 shadow-inner">
+                  <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-zinc-300 group-hover:text-white group-hover:border-[#FF6B00]/40 group-hover:bg-[#FF6B00]/10 transition-all duration-300 shadow-inner">
                     <Icon className="w-6 h-6" />
                   </div>
                 </div>
@@ -263,7 +267,7 @@ export default function ProjectSupportSection({ data }: ProjectSupportSectionPro
                   {tags.map((tag, tIdx) => (
                     <span
                       key={tIdx}
-                      className="px-3 py-1 rounded-full text-xs font-mono bg-white/[0.03] border border-white/5 text-zinc-400 group-hover:border-white/10 transition-colors"
+                      className="px-3 py-1 rounded-full text-xs font-mono bg-white/[0.04] border border-white/10 text-zinc-300 group-hover:border-white/20 transition-colors"
                     >
                       {tag}
                     </span>
@@ -280,11 +284,11 @@ export default function ProjectSupportSection({ data }: ProjectSupportSectionPro
                   <span>{card.ctaText || "Contact for a Quote"}</span>
                   <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
                 </button>
-                <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest hidden sm:inline">
+                <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest hidden sm:inline">
                   Direct Architect Sync
                 </span>
               </div>
-            </div>
+            </TiltCard>
           );
         })}
       </div>

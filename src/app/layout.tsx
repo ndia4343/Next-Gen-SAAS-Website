@@ -22,33 +22,34 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://neuroflux.ai"),
-  title: "NEUROFLUX.AI · 3D SaaS & Agentic AI Engineering Agency",
+  metadataBase: new URL("https://zavianlabs.ai"),
+  title: "ZAVIAN LABS · AI Systems & High-Compute WebGL Engineering",
   description:
-    "Awwwards-caliber 3D SaaS architectures, autonomous AI agent swarms, and enterprise data intelligence systems. Headless ecommerce, full-stack MVP launches, and Power BI analytics.",
+    "Awwwards-caliber 3D architectures, autonomous AI voice & WhatsApp systems, and enterprise intelligence engineering.",
   keywords: [
+    "ZAVIAN LABS",
     "Agentic AI",
-    "Headless Ecommerce",
+    "Autonomous Systems",
     "Next.js 15",
     "Three.js Agency",
     "WebGL Web App",
     "Full-Stack Development",
-    "Autonomous Agents",
-    "Power BI Dashboards",
+    "AI Voice Systems",
+    "Enterprise Intelligence",
   ],
-  authors: [{ name: "Neuroflux Engineering Team" }],
+  authors: [{ name: "Zavian Labs Engineering Team" }],
   openGraph: {
-    title: "NEUROFLUX.AI · 3D SaaS & Agentic AI Agency",
+    title: "ZAVIAN LABS · AI Systems & High-Compute WebGL Engineering",
     description:
-      "Engineering autonomous intelligence and high-velocity software for ambitious founders and enterprises.",
-    url: "https://neuroflux.ai",
-    siteName: "Neuroflux Systems",
+      "Engineering autonomous intelligence and high-performance 3D architectures for ambitious founders and enterprises.",
+    url: "https://zavianlabs.ai",
+    siteName: "ZAVIAN LABS",
     images: [
       {
         url: "/og-preview.png",
         width: 1200,
         height: 630,
-        alt: "Neuroflux.ai 3D WebGL Neural Core",
+        alt: "ZAVIAN LABS 3D WebGL Neural Core",
       },
     ],
     locale: "en_US",
@@ -56,9 +57,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "NEUROFLUX.AI · 3D SaaS & Agentic AI Agency",
+    title: "ZAVIAN LABS · AI Systems & High-Compute WebGL Engineering",
     description:
-      "Awwwards-caliber 3D SaaS & AI Engineering Agency web application.",
+      "High-performance 3D architectures and autonomous AI systems by ZAVIAN LABS.",
   },
 };
 
