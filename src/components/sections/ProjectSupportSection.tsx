@@ -197,15 +197,15 @@ export default function ProjectSupportSection({ data }: ProjectSupportSectionPro
 
       {/* Header with Exact Color Spans */}
       <div className="text-left max-w-3xl mb-16 sm:mb-20">
-        <p className="font-mono text-xs uppercase tracking-[0.25em] text-red-400 font-semibold mb-4">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-zinc-400 mb-4">
           {eyebrow}
         </p>
-        <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15] mb-6">
-          <span className="text-[#FFFFFF]">{headlineWhite}</span>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.15] mb-6">
+          <span>{headlineWhite}</span>
           <span className="text-[#FF6B00]">{headlineOrange}</span>
           <span className="text-[#00B4D8]">{headlineCyan}</span>
         </h2>
-        <p className="text-zinc-400 text-base sm:text-lg max-w-2xl leading-relaxed">
+        <p className="text-base sm:text-lg font-normal leading-relaxed text-zinc-400 max-w-2xl">
           {subtitle}
         </p>
       </div>
@@ -238,12 +238,12 @@ export default function ProjectSupportSection({ data }: ProjectSupportSectionPro
                 </div>
 
                 {/* Title */}
-                <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-4 group-hover:text-zinc-100 transition-colors">
+                <h3 className="text-2xl font-bold text-white tracking-tight mb-4 group-hover:text-zinc-100 transition-colors">
                   {card.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-zinc-400 text-sm sm:text-base leading-relaxed mb-6">
+                <p className="text-base font-normal leading-relaxed text-zinc-400 mb-6">
                   {card.description}
                 </p>
 

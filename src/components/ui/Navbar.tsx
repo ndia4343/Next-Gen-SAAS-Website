@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Sparkles, Menu, X } from "lucide-react";
 import { useModal } from "../providers/ModalProvider";
 import { cn } from "@/lib/utils";
+import ZavianLogo from "./ZavianLogo";
 
 export default function Navbar() {
   const { openQuoteModal } = useModal();
@@ -29,29 +30,8 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Brand Logo */}
-        <a href="#" className="flex items-center gap-3 group">
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-800 shadow-lg shadow-red-600/30 border border-red-500/30 group-hover:scale-105 transition-transform">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="w-5 h-5 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-            >
-              <path d="M4 4h16L7 20h13" />
-              <path d="M9 12h6" strokeOpacity="0.6" strokeWidth="2" />
-            </svg>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-lg font-black tracking-tight text-white leading-none">
-              ZAVIAN <span className="text-red-500">LABS</span>
-            </span>
-            <span className="text-[10px] font-mono tracking-[0.2em] text-zinc-400 uppercase mt-0.5">
-              AI SYSTEMS &amp; ENGINEERING
-            </span>
-          </div>
+        <a href="#" className="flex items-center">
+          <ZavianLogo size="md" withWordmark withTagline />
         </a>
 
         {/* Desktop Nav Links */}

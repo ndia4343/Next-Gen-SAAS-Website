@@ -4,6 +4,7 @@ import React from "react";
 import { ArrowUp } from "lucide-react";
 import { useSmoothScroll } from "../providers/SmoothScrollProvider";
 import { useModal } from "../providers/ModalProvider";
+import ZavianLogo from "../ui/ZavianLogo";
 
 export default function FooterSection() {
   const { lenis } = useSmoothScroll();
@@ -21,29 +22,8 @@ export default function FooterSection() {
     <footer id="architecture" className="relative z-10 border-t border-white/10 bg-[#060609]/60 backdrop-blur-xl py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         <div>
-          <div className="flex items-center gap-3 mb-3">
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-800 shadow-lg shadow-red-600/30 border border-red-500/30">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-              >
-                <path d="M4 4h16L7 20h13" />
-                <path d="M9 12h6" strokeOpacity="0.6" strokeWidth="2" />
-              </svg>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-black tracking-tight text-white leading-none">
-                ZAVIAN <span className="text-red-500">LABS</span>
-              </span>
-              <span className="text-[10px] font-mono tracking-[0.2em] text-zinc-400 uppercase mt-0.5">
-                AI SYSTEMS &amp; ENGINEERING
-              </span>
-            </div>
+          <div className="mb-3">
+            <ZavianLogo size="md" withWordmark withTagline />
           </div>
           <p className="text-sm text-zinc-400 max-w-sm leading-relaxed">
             High-performance 3D architectures, autonomous AI voice &amp; WhatsApp systems, and

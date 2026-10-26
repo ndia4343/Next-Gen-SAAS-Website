@@ -239,7 +239,7 @@ export default function QuoteModal({
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Satya Nadella"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#16161f] border border-white/10 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-[#FF6B00] transition-colors"
+                  className="app-input"
                 />
                 {fieldErrors.name && (
                   <p className="text-[11px] text-red-400 mt-1">{fieldErrors.name[0]}</p>
@@ -257,7 +257,7 @@ export default function QuoteModal({
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="architect@enterprise.com"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#16161f] border border-white/10 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-[#FF6B00] transition-colors"
+                  className="app-input"
                 />
                 {fieldErrors.email && (
                   <p className="text-[11px] text-red-400 mt-1">{fieldErrors.email[0]}</p>
@@ -277,7 +277,7 @@ export default function QuoteModal({
                   value={formData.company}
                   onChange={handleChange}
                   placeholder="Acme Corp / Stealth AI"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#16161f] border border-white/10 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-[#FF6B00] transition-colors"
+                  className="app-input"
                 />
                 {fieldErrors.company && (
                   <p className="text-[11px] text-red-400 mt-1">{fieldErrors.company[0]}</p>
@@ -292,10 +292,10 @@ export default function QuoteModal({
                   name="selectedService"
                   value={formData.selectedService}
                   onChange={handleChange}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#16161f] border border-white/10 text-sm text-white focus:outline-none focus:border-[#FF6B00] transition-colors"
+                  className="app-input"
                 >
                   {serviceOptions.map((opt) => (
-                    <option key={opt} value={opt} className="bg-[#12121a]">
+                    <option key={opt} value={opt} className="bg-[#0c0c14] text-white">
                       {opt}
                     </option>
                   ))}
@@ -314,7 +314,7 @@ export default function QuoteModal({
                 value={formData.projectScope}
                 onChange={handleChange}
                 placeholder="Describe your architecture requirements, scale targets, or tech stack constraints..."
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#16161f] border border-white/10 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-[#FF6B00] transition-colors"
+                className="app-input resize-none"
               />
               {fieldErrors.projectScope && (
                 <p className="text-[11px] text-red-400 mt-1">{fieldErrors.projectScope[0]}</p>
@@ -329,10 +329,10 @@ export default function QuoteModal({
                 name="timeline"
                 value={formData.timeline}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#16161f] border border-white/10 text-sm text-white focus:outline-none focus:border-[#FF6B00] transition-colors"
+                className="app-input"
               >
                 {timelineOptions.map((opt) => (
-                  <option key={opt} value={opt} className="bg-[#12121a]">
+                  <option key={opt} value={opt} className="bg-[#0c0c14] text-white">
                     {opt}
                   </option>
                 ))}

@@ -41,14 +41,14 @@ export default function CoreExpertiseSection({ data }: CoreExpertiseSectionProps
     >
       {/* Centered Section Header */}
       <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-        <p className="font-mono text-xs uppercase tracking-[0.25em] text-red-400 font-semibold mb-3">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-zinc-400 mb-3">
           {eyebrow}
         </p>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight">
-          <span className="text-[#FFFFFF]">{mainTitleWhite}</span>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.15]">
+          <span>{mainTitleWhite}</span>
           <span className="text-[#DC2626]">{mainTitleCrimson}</span>
         </h2>
-        <p className="mt-4 text-zinc-400 text-base sm:text-lg">{subtitle}</p>
+        <p className="mt-4 text-base sm:text-lg font-normal leading-relaxed text-zinc-400">{subtitle}</p>
       </div>
 
       {/* 3-Column 3D Tilt Grid */}
@@ -98,8 +98,8 @@ export default function CoreExpertiseSection({ data }: CoreExpertiseSectionProps
                 <p
                   className={
                     isFeatured
-                      ? "text-zinc-300 text-sm leading-relaxed mb-8"
-                      : "text-zinc-400 text-sm leading-relaxed mb-8"
+                      ? "text-zinc-300 text-base font-normal leading-relaxed mb-8"
+                      : "text-zinc-400 text-base font-normal leading-relaxed mb-8"
                   }
                 >
                   {card.description}

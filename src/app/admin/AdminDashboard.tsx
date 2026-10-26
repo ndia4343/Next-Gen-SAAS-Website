@@ -9,6 +9,7 @@ import {
   FloatingStat,
 } from "@/lib/types";
 import { updateEntireContentAction } from "@/actions/content-actions";
+import ZavianLogo from "@/components/ui/ZavianLogo";
 import {
   Sparkles,
   Cpu,
@@ -315,6 +316,7 @@ export default function AdminDashboard({ initialContent }: AdminDashboardProps) 
       <header className="sticky top-0 z-40 bg-[#0d0d14]/90 border-b border-white/10 backdrop-blur-xl px-6 py-4 flex items-center justify-between gap-4">
         {/* Title + Pulse Beacon */}
         <div className="flex items-center gap-3">
+          <ZavianLogo size="sm" />
           <div className="flex items-center gap-2">
             <span
               className={`w-2.5 h-2.5 rounded-full ${
@@ -326,7 +328,7 @@ export default function AdminDashboard({ initialContent }: AdminDashboardProps) 
               }`}
             />
             <span className="font-mono text-xs font-bold uppercase tracking-wider text-zinc-300">
-              NEXUS <span className="text-[#DC2626]">//</span> LIVE CONTENT CONTROL
+              ZAVIAN LABS <span className="text-[#DC2626]">//</span> LIVE CONTENT CONTROL
             </span>
           </div>
 
@@ -504,7 +506,7 @@ export default function AdminDashboard({ initialContent }: AdminDashboardProps) 
                           hero: { ...prev.hero, badgeText: e.target.value },
                         }))
                       }
-                      className="w-full bg-[#16161f] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#DC2626]"
+                      className="app-input"
                     />
                   </div>
 
@@ -521,7 +523,7 @@ export default function AdminDashboard({ initialContent }: AdminDashboardProps) 
                           hero: { ...prev.hero, titleLine1: e.target.value },
                         }))
                       }
-                      className="w-full bg-[#16161f] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#DC2626]"
+                      className="app-input"
                     />
                   </div>
 
@@ -538,7 +540,7 @@ export default function AdminDashboard({ initialContent }: AdminDashboardProps) 
                           hero: { ...prev.hero, titleHighlight: e.target.value },
                         }))
                       }
-                      className="w-full bg-[#16161f] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#DC2626]"
+                      className="app-input"
                     />
                   </div>
 
@@ -555,7 +557,7 @@ export default function AdminDashboard({ initialContent }: AdminDashboardProps) 
                           hero: { ...prev.hero, titleLine2: e.target.value },
                         }))
                       }
-                      className="w-full bg-[#16161f] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#DC2626]"
+                      className="app-input"
                     />
                   </div>
 
@@ -572,7 +574,7 @@ export default function AdminDashboard({ initialContent }: AdminDashboardProps) 
                           hero: { ...prev.hero, description: e.target.value },
                         }))
                       }
-                      className="w-full bg-[#16161f] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#DC2626]"
+                      className="app-input"
                     />
                   </div>
 
@@ -589,7 +591,7 @@ export default function AdminDashboard({ initialContent }: AdminDashboardProps) 
                           hero: { ...prev.hero, primaryCtaText: e.target.value },
                         }))
                       }
-                      className="w-full bg-[#16161f] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#DC2626]"
+                      className="app-input"
                     />
                   </div>
 
@@ -606,7 +608,7 @@ export default function AdminDashboard({ initialContent }: AdminDashboardProps) 
                           hero: { ...prev.hero, secondaryCtaText: e.target.value },
                         }))
                       }
-                      className="w-full bg-[#16161f] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#DC2626]"
+                      className="app-input"
                     />
                   </div>
                 </div>
@@ -1338,7 +1340,7 @@ export default function AdminDashboard({ initialContent }: AdminDashboardProps) 
                           },
                         }))
                       }
-                      className="w-full bg-[#16161f] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00B4D8]"
+                      className="app-input"
                     />
                   </div>
 
@@ -1390,7 +1392,7 @@ export default function AdminDashboard({ initialContent }: AdminDashboardProps) 
                           },
                         }))
                       }
-                      className="w-full bg-[#16161f] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00B4D8]"
+                      className="app-input"
                     />
                   </div>
 
@@ -1410,7 +1412,7 @@ export default function AdminDashboard({ initialContent }: AdminDashboardProps) 
                           },
                         }))
                       }
-                      className="w-full bg-[#16161f] border border-white/10 rounded-xl px-4 py-3 text-xs font-mono text-zinc-300 focus:outline-none focus:border-[#00B4D8] leading-relaxed"
+                      className="app-input font-mono text-xs leading-relaxed"
                     />
                   </div>
                 </div>

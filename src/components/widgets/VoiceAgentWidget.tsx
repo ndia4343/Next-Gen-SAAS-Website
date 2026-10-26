@@ -389,11 +389,11 @@ export default function VoiceAgentWidget({ config }: VoiceAgentWidgetProps) {
               value={simulatedInput}
               onChange={(e) => setSimulatedInput(e.target.value)}
               placeholder="Ask Freya about architecture, pricing..."
-              className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-red-500/50 transition-colors"
+              className="app-input text-xs py-2"
             />
             <button
               type="submit"
-              className="px-3.5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold active:scale-95 transition-all shadow-md shadow-red-600/30"
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white text-xs font-semibold active:scale-95 transition-all shadow-md shadow-red-600/30 shrink-0"
             >
               Send
             </button>

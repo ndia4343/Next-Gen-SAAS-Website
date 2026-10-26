@@ -117,7 +117,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#DC2626] opacity-75" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-[#DC2626]" />
         </span>
-        <span className="font-mono text-xs uppercase tracking-[0.25em] text-red-400 font-medium">
+        <span className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-zinc-400">
           {badgeText}
         </span>
       </div>
@@ -125,7 +125,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
       {/* Dynamic Headline Reveal with Staggered GSAP Timeline */}
       <h1
         ref={headlineRef}
-        className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight max-w-5xl text-white leading-[1.08] mb-6 perspective-normal"
+        className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-5xl text-white leading-[1.08] mb-6 perspective-normal"
       >
         <span className="inline-block word-reveal mr-3">{titleLine1}</span>
         <span className="inline-block word-reveal mr-3 bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-orange-500">
@@ -140,7 +140,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
       {/* Subtitle */}
       <p
         ref={subtextRef}
-        className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light"
+        className="text-base sm:text-lg font-normal leading-relaxed text-zinc-400 max-w-2xl mx-auto mb-10"
       >
         {description}
       </p>

@@ -46,6 +46,29 @@
   box-shadow: 0 0 35px rgba(220, 38, 38, 0.2), 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
+/* Standardized App Input Token */
+.app-input {
+  width: 100%;
+  border-radius: 0.75rem; /* 12px / rounded-xl */
+  padding: 0.75rem 1rem;   /* px-4 py-3 */
+  font-size: 0.875rem;    /* text-sm */
+  line-height: 1.25rem;
+  background-color: #0c0c14;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.app-input::placeholder {
+  color: #52525b; /* zinc-600 */
+}
+
+.app-input:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 1px #dc2626, 0 0 15px rgba(220, 38, 38, 0.25);
+}
+
 /* 3D Transform Utilities */
 .perspective-container {
   perspective: 1200px;
