@@ -1,364 +1,153 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useCallback } from "react";
-import { useModal, ServiceTier } from "../providers/ModalProvider";
-import { CheckCircle2, AlertCircle, Loader2, Send, X, Copy, Check } from "lucide-react";
-import { soundFX } from "@/lib/audio";
+import React, { useState, useEffect } from 'react';
+import { X, Send, CheckCircle2 } from 'lucide-react';
 
-interface QuoteModalProps {
-  isOpen?: boolean;
-  onClose?: () => void;
-  selectedService?: string;
+interface Props {
+  isOpen: boolean;
+  onClose: () => void;
+  preselectedService: string;
 }
 
-const serviceOptions = [
-  "Headless Ecommerce",
-  "Agentic AI",
-  "Idea to Launch",
-  "01 / Software",
-  "02 / Data",
-  "03 / AI",
-  "04 / Media",
-  "General Discovery",
-];
-
-const timelineOptions = [
-  "Immediate (< 1 month)",
-  "1 - 3 months",
-  "3 - 6 months",
-  "Flexible / Exploring",
-];
-
-export default function QuoteModal({
-  isOpen: propIsOpen,
-  onClose: propOnClose,
-  selectedService: propSelectedService,
-}: QuoteModalProps) {
-  const modalContext = useModal();
-
-  // Support both props and ModalContext
-  const isOpen = propIsOpen !== undefined ? propIsOpen : modalContext.isQuoteModalOpen;
-  const activeService = propSelectedService || modalContext.selectedService || "General Discovery";
-
-  const handleClose = useCallback(() => {
-    if (propOnClose) {
-      propOnClose();
-    } else {
-      modalContext.closeQuoteModal();
-    }
-  }, [propOnClose, modalContext]);
-
+export default function QuoteModal({ isOpen, onClose, preselectedService }: Props) {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    company: "",
-    selectedService: activeService,
-    projectScope: "",
-    timeline: "1 - 3 months",
+    name: '',
+    email: '',
+    company: '',
+    selectedService: preselectedService,
+    projectScope: '',
+    timeline: 'Within 30 Days',
   });
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
-  const [successData, setSuccessData] = useState<{
-    inquiryId: string;
-    message: string;
-  } | null>(null);
-  const [copied, setCopied] = useState(false);
-
-  // Sync selected service when opened or changed
   useEffect(() => {
-    if (isOpen) {
-      setFormData((prev) => ({
-        ...prev,
-        selectedService: activeService,
-      }));
-      setErrorMessage(null);
-      setFieldErrors({});
-      setSuccessData(null);
-      setCopied(false);
+    if (preselectedService) {
+      setFormData((prev) => ({ ...prev, selectedService: preselectedService }));
     }
-  }, [activeService, isOpen]);
-
-  // Keyboard accessibility: ESC key to close
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        handleClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, handleClose]);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
-    // Clear individual field error on change
-    if (fieldErrors[name]) {
-      setFieldErrors((prev) => {
-        const next = { ...prev };
-        delete next[name];
-        return next;
-      });
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    soundFX.playClick();
-    setIsLoading(true);
-    setErrorMessage(null);
-    setFieldErrors({});
-
-    try {
-      const res = await fetch("/api/quote", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setErrorMessage(data.message || "Failed to submit quote inquiry.");
-        if (data.errors) {
-          setFieldErrors(data.errors);
-        }
-      } else {
-        soundFX.playSuccess();
-        setSuccessData({
-          inquiryId: data.inquiryId || data.quoteId || "INQ-CONFIRMED",
-          message: data.message,
-        });
-      }
-    } catch {
-      setErrorMessage("Network connection failed. Please verify your internet and try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCopyInquiryId = () => {
-    if (!successData?.inquiryId) return;
-    navigator.clipboard.writeText(successData.inquiryId);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  }, [preselectedService]);
 
   if (!isOpen) return null;
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMsg('');
+
+    try {
+      const res = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.errors?.[0]?.message || 'Submission failed');
+      setSubmitted(true);
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Error submitting scope');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-200"
-    >
-      {/* Background click to dismiss */}
-      <div className="absolute inset-0" onClick={handleClose} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <div className="relative w-full max-w-lg glass-panel-elevated rounded-3xl p-8 border border-white/15 shadow-2xl">
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 text-zinc-400 hover:text-white cursor-pointer"
+          aria-label="Close quote modal"
+        >
+          <X className="w-5 h-5" />
+        </button>
 
-      {/* Accessible Glass Container */}
-      <div className="relative z-10 w-full max-w-xl rounded-3xl bg-[#0c0c12]/95 border border-white/10 shadow-2xl p-6 sm:p-8 backdrop-blur-2xl text-left overflow-hidden">
-        {/* Top Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
-          <div>
-            <span className="font-mono text-xs uppercase tracking-widest text-[#FF6B00]">
-              Architecture Discovery & Scoping
-            </span>
-            <h2 id="modal-title" className="text-xl sm:text-2xl font-bold text-white mt-1">
-              Request Project Quote
-            </h2>
-          </div>
-          <button
-            onClick={handleClose}
-            className="p-2 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
-            aria-label="Close quote modal"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Success Confirmation View */}
-        {successData ? (
-          <div className="py-6 text-center space-y-5 animate-in fade-in duration-300">
-            <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto">
-              <CheckCircle2 className="w-8 h-8" />
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-white">Inquiry Registered</h3>
-              <p className="text-sm text-zinc-400 max-w-md mx-auto mt-2 leading-relaxed">
-                {successData.message}
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-between max-w-sm mx-auto">
-              <div className="text-left font-mono text-xs">
-                <span className="text-zinc-500 block">INQUIRY REF:</span>
-                <span className="text-[#FF6B00] font-bold">{successData.inquiryId}</span>
-              </div>
-              <button
-                onClick={handleCopyInquiryId}
-                className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-mono text-zinc-300 flex items-center gap-1.5 transition-colors"
-              >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copied ? "Copied" : "Copy"}</span>
-              </button>
-            </div>
-
+        {submitted ? (
+          <div className="text-center py-8">
+            <CheckCircle2 className="w-16 h-16 text-red-500 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-white mb-2">Scope Dispatched</h3>
+            <p className="text-sm text-zinc-400 mb-6">
+              Our engineering solutions team is assessing your requirements.
+            </p>
             <button
-              onClick={handleClose}
-              className="mt-4 px-8 py-3 rounded-full bg-[#FF6B00] hover:bg-[#ff7b1a] text-black font-semibold text-sm transition-all"
+              onClick={() => {
+                setSubmitted(false);
+                onClose();
+              }}
+              className="px-6 py-2.5 rounded-full bg-red-600 hover:bg-red-500 text-white font-mono text-xs uppercase tracking-wider cursor-pointer"
             >
-              Done
+              Close Window
             </button>
           </div>
         ) : (
-          /* Interactive Quote Form */
           <form onSubmit={handleSubmit} className="space-y-4">
-            {errorMessage && (
-              <div className="p-3.5 rounded-xl bg-red-950/40 border border-red-500/30 text-red-300 text-xs flex items-center gap-2.5">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{errorMessage}</span>
+            <div>
+              <div className="text-xs font-mono text-red-500 font-bold uppercase tracking-[0.2em] mb-1">
+                ZAVIAN LABS ONBOARDING
+              </div>
+              <h3 className="text-2xl font-bold text-white">Project Scope &amp; Quote</h3>
+            </div>
+
+            {errorMsg && (
+              <div className="p-3 bg-red-950/60 border border-red-500/50 rounded-xl text-red-300 text-xs font-mono">
+                {errorMsg}
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-mono text-zinc-400 mb-1.5">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Satya Nadella"
-                  className="app-input"
-                />
-                {fieldErrors.name && (
-                  <p className="text-[11px] text-red-400 mt-1">{fieldErrors.name[0]}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono text-zinc-400 mb-1.5">
-                  Work Email <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="architect@enterprise.com"
-                  className="app-input"
-                />
-                {fieldErrors.email && (
-                  <p className="text-[11px] text-red-400 mt-1">{fieldErrors.email[0]}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-mono text-zinc-400 mb-1.5">
-                  Company / Project <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="company"
-                  required
-                  value={formData.company}
-                  onChange={handleChange}
-                  placeholder="Acme Corp / Stealth AI"
-                  className="app-input"
-                />
-                {fieldErrors.company && (
-                  <p className="text-[11px] text-red-400 mt-1">{fieldErrors.company[0]}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono text-zinc-400 mb-1.5">
-                  Service Selection <span className="text-red-500">*</span>
-                </label>
-                <select
-                  name="selectedService"
-                  value={formData.selectedService}
-                  onChange={handleChange}
-                  className="app-input"
-                >
-                  {serviceOptions.map((opt) => (
-                    <option key={opt} value={opt} className="bg-[#0c0c14] text-white">
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div>
+              <label className="block text-xs font-mono text-zinc-400 mb-1">Full Name</label>
+              <input
+                required
+                type="text"
+                placeholder="Syed Bilal"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="app-input"
+              />
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-zinc-400 mb-1.5">
-                Project Scope & Deliverables <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                name="projectScope"
-                rows={3}
+              <label className="block text-xs font-mono text-zinc-400 mb-1">Corporate Email</label>
+              <input
                 required
+                type="email"
+                placeholder="bilal@enterprise.com"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="app-input"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-mono text-zinc-400 mb-1">Selected Focus</label>
+              <input
+                type="text"
+                value={formData.selectedService}
+                onChange={(e) => setFormData({ ...formData, selectedService: e.target.value })}
+                className="app-input"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-mono text-zinc-400 mb-1">Architecture &amp; Deliverables</label>
+              <textarea
+                required
+                rows={3}
+                placeholder="Timeline, tech stack constraints, user volume..."
                 value={formData.projectScope}
-                onChange={handleChange}
-                placeholder="Describe your architecture requirements, scale targets, or tech stack constraints..."
+                onChange={(e) => setFormData({ ...formData, projectScope: e.target.value })}
                 className="app-input resize-none"
               />
-              {fieldErrors.projectScope && (
-                <p className="text-[11px] text-red-400 mt-1">{fieldErrors.projectScope[0]}</p>
-              )}
             </div>
 
-            <div>
-              <label className="block text-xs font-mono text-zinc-400 mb-1.5">
-                Target Timeline
-              </label>
-              <select
-                name="timeline"
-                value={formData.timeline}
-                onChange={handleChange}
-                className="app-input"
-              >
-                {timelineOptions.map((opt) => (
-                  <option key={opt} value={opt} className="bg-[#0c0c14] text-white">
-                    {opt}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Submit Action */}
-            <div className="pt-2">
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-3.5 rounded-xl bg-[#FF6B00] hover:bg-[#ff7b1a] text-black font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-[#FF6B00]/25 disabled:opacity-50 active:scale-[0.99]"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Submitting Inquiry...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4" />
-                    <span>Request Scoped Architecture Quote</span>
-                  </>
-                )}
-              </button>
-            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 rounded-xl bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white font-semibold text-sm tracking-wide transition-all shadow-lg shadow-red-600/30 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Send className="w-4 h-4" />
+              {loading ? 'Submitting Scope...' : 'Request Project Quote'}
+            </button>
           </form>
         )}
       </div>

@@ -1,154 +1,161 @@
-"use client";
+'use client';
 
-import React from "react";
-import TiltCard from "../ui/TiltCard";
-import { useModal, ServiceTier } from "../providers/ModalProvider";
-import { CoreExpertiseSectionData } from "@/lib/types";
+import React from 'react';
+import { Check, Star, Rocket } from 'lucide-react';
 
-interface CoreExpertiseSectionProps {
-  data?: CoreExpertiseSectionData;
+interface Props {
+  onOpenQuoteModal?: (serviceName: string) => void;
 }
 
-export default function CoreExpertiseSection({ data }: CoreExpertiseSectionProps) {
-  const { openQuoteModal } = useModal();
-
-  const eyebrow = data?.eyebrow || "OUR CORE EXPERTISE";
-  const mainTitleWhite = data?.mainTitleWhite || data?.titlePart1 || "Build & ";
-  const mainTitleCrimson = data?.mainTitleCrimson || data?.titlePart2 || "Grow";
-  const subtitle =
-    data?.subtitle ||
-    "High-performance architectures crafted for ambitious leaders, founders, and enterprises.";
-  const cards = data?.cards || [];
-
-  const mapActionToServiceTier = (actionId: string, title: string): ServiceTier => {
-    const combined = (title + " " + actionId).toLowerCase();
-    if (combined.includes("ecommerce")) {
-      return "Headless Ecommerce";
-    }
-    if (combined.includes("ai")) {
-      return "Agentic AI";
-    }
-    if (combined.includes("launch") || combined.includes("mvp")) {
-      return "Idea to Launch";
-    }
-    return "General Discovery";
-  };
+export default function CoreExpertiseSection({ onOpenQuoteModal }: Props) {
+  const cards = [
+    {
+      id: 'ecommerce',
+      eyebrowIcon: '★',
+      title: 'Headless Ecommerce',
+      description: 'Shopify backend, Next.js frontend — built for speed, scale, and total customization. No templates, no limits.',
+      isFeatured: false,
+      ctaText: '🚀 Get Started',
+      checklist: [
+        'Shopify Backend',
+        'Next.js Storefronts',
+        'Custom Checkout Flows',
+        'Lightning-Fast Load Speeds',
+        'Fully Scalable Architecture',
+        'SEO Optimised',
+      ],
+    },
+    {
+      id: 'ai',
+      eyebrowIcon: '★',
+      title: 'Agentic AI',
+      description: "Autonomous AI agents that don't just respond — they think, decide, and act on your business's behalf, 24/7.",
+      isFeatured: true,
+      ctaText: '🚀 Get Started',
+      checklist: [
+        'Autonomous Task Execution',
+        'Multi-Step Decision Making',
+        'Voice & Chat Agents',
+        'CRM & Workflow Integration',
+        'Self-Learning Systems',
+        'Human-Level Reasoning',
+      ],
+    },
+    {
+      id: 'mvp',
+      eyebrowIcon: '★',
+      title: 'Idea to Launch',
+      description: 'From concept to live product — we build, test, and ship your startup MVP fast, so you can start validating with real users.',
+      isFeatured: false,
+      ctaText: '🚀 Get Started',
+      checklist: [
+        'MVP in Weeks, Not Months',
+        'Full-Stack Development',
+        'Investor-Ready Product',
+        'Vibe-Coded & Production-Ready',
+        'Scalable From Day One',
+        'Launch & Iterate Support',
+      ],
+    },
+  ];
 
   return (
-    <section
-      id="core-expertise"
-      className="relative z-10 py-24 sm:py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"
-    >
-      {/* Centered Section Header */}
-      <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-zinc-400 mb-3">
-          {eyebrow}
-        </p>
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.15]">
-          <span>{mainTitleWhite}</span>
-          <span className="text-[#DC2626]">{mainTitleCrimson}</span>
-        </h2>
-        <p className="mt-4 text-base sm:text-lg font-normal leading-relaxed text-zinc-400">{subtitle}</p>
-      </div>
+    <section id="core-expertise" className="relative py-28 px-6 lg:px-12 z-10">
+      <div className="max-w-7xl mx-auto">
+        {/* Section Header */}
+        <div className="text-center mb-20">
+          <div className="text-xs font-mono font-bold uppercase tracking-[0.25em] text-[#DC2626] mb-3">
+            OUR CORE EXPERTISE
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.15]">
+            <span>Build &amp; </span>
+            <span className="text-[#DC2626]">Grow</span>
+          </h2>
+        </div>
 
-      {/* 3-Column 3D Tilt Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 perspective-distant items-stretch">
-        {cards.map((card) => {
-          const isFeatured = card.isFeatured || card.columnKey === "ai";
-          const serviceTier = mapActionToServiceTier(card.ctaActionId, card.title);
+        {/* 3-Column Interactive 3D Tilt Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch perspective-container">
+          {cards.map((card) => {
+            const isFeatured = card.isFeatured;
+            return (
+              <div
+                key={card.id}
+                onMouseMove={(e) => {
+                  const el = e.currentTarget;
+                  const rect = el.getBoundingClientRect();
+                  const x = e.clientX - rect.left - rect.width / 2;
+                  const y = e.clientY - rect.top - rect.height / 2;
+                  el.style.transform = `rotateY(${x * 0.04}deg) rotateX(${-y * 0.04}deg) ${
+                    isFeatured ? 'translateZ(20px)' : 'translateZ(0px)'
+                  }`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = isFeatured
+                    ? 'rotateY(0deg) rotateX(0deg) translateZ(20px)'
+                    : 'rotateY(0deg) rotateX(0deg) translateZ(0px)';
+                }}
+                style={{
+                  transition: 'transform 0.15s ease-out, box-shadow 0.3s ease',
+                  transform: isFeatured ? 'translateZ(20px)' : 'translateZ(0px)',
+                }}
+                className={`relative rounded-3xl p-8 sm:p-10 flex flex-col justify-between transform-3d transition-all ${
+                  isFeatured
+                    ? 'glass-panel-crimson border-red-500/50 shadow-2xl shadow-red-900/30'
+                    : 'glass-panel hover:border-white/20'
+                }`}
+              >
+                {isFeatured && (
+                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-48 h-20 bg-red-600/20 blur-3xl rounded-full pointer-events-none" />
+                )}
 
-          return (
-            <TiltCard
-              key={card.id}
-              featured={isFeatured}
-              maxTilt={isFeatured ? 12 : 8}
-              className="p-8 sm:p-10 flex flex-col justify-between"
-            >
-              {/* Glowing backlight for featured card */}
-              {isFeatured && (
-                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-b from-red-600/25 via-transparent to-red-600/15 -z-10 pointer-events-none blur-2xl" />
-              )}
-
-              <div>
-                {/* Top Row: Title + Star */}
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    {isFeatured && (
-                      <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest bg-red-500/10 text-red-400 border border-red-500/30 mb-2">
-                        ★ Featured AI Swarm
-                      </span>
-                    )}
-                    <h3 className="text-2xl font-bold text-white tracking-tight">
-                      {card.title}
-                    </h3>
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-500 font-semibold">
+                      ENGINEERING TIER
+                    </span>
+                    <Star
+                      className={`w-5 h-5 ${
+                        isFeatured
+                          ? 'text-[#DC2626] fill-[#DC2626]'
+                          : 'text-zinc-600 hover:text-zinc-400'
+                      }`}
+                    />
                   </div>
-                  <span
-                    className={
-                      isFeatured
-                        ? "text-[#DC2626] text-2xl drop-shadow-[0_0_10px_rgba(220,38,38,0.7)] select-none"
-                        : "text-zinc-600 text-2xl select-none"
-                    }
-                    aria-hidden="true"
-                  >
-                    {card.eyebrowIcon || "★"}
-                  </span>
+
+                  <h3 className="text-2xl font-bold text-white mb-4">{card.title}</h3>
+                  <p className="text-base font-normal leading-relaxed text-zinc-400 mb-8">
+                    {card.description}
+                  </p>
+
+                  <div className="space-y-3.5 mb-10">
+                    {card.checklist.map((item, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center bg-[#818CF8]/10 text-[#818CF8] shrink-0">
+                          <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        </div>
+                        <span className="text-sm font-normal text-zinc-300">{item}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                {/* Description */}
-                <p
-                  className={
-                    isFeatured
-                      ? "text-zinc-300 text-base font-normal leading-relaxed mb-8"
-                      : "text-zinc-400 text-base font-normal leading-relaxed mb-8"
-                  }
-                >
-                  {card.description}
-                </p>
-
-                {/* Dynamic CTA Button wired to open quote modal pre-populated with service name */}
                 <button
-                  onClick={() => openQuoteModal(serviceTier)}
-                  className={
+                  onClick={() => {
+                    if (onOpenQuoteModal) onOpenQuoteModal(card.title);
+                  }}
+                  className={`w-full py-4 rounded-xl font-semibold text-sm tracking-wide transition-all flex items-center justify-center gap-2 cursor-pointer ${
                     isFeatured
-                      ? "w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold text-sm shadow-lg shadow-red-700/30 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 mb-10 border border-red-500/40"
-                      : "w-full py-3.5 px-6 rounded-xl border border-red-600 text-white font-medium text-sm hover:bg-red-600/10 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 mb-10 group/btn"
-                  }
+                      ? 'bg-red-700 hover:bg-red-600 text-white shadow-lg shadow-red-700/30 hover:scale-[1.02]'
+                      : 'border border-red-600 text-white hover:bg-red-600/10 hover:border-red-500'
+                  }`}
                 >
-                  <span>{card.ctaText}</span>
+                  <Rocket className="w-4 h-4" />
+                  {card.ctaText}
                 </button>
-
-                {/* Feature Checklist with #818CF8 checkmarks */}
-                <div
-                  className={
-                    isFeatured
-                      ? "space-y-3.5 border-t border-white/10 pt-6"
-                      : "space-y-3.5 border-t border-white/5 pt-6"
-                  }
-                >
-                  {card.checklist.map((item) => (
-                    <div key={item.id} className="flex items-center gap-3">
-                      <span
-                        className="flex-shrink-0 text-[#818CF8] font-bold text-base"
-                        aria-hidden="true"
-                      >
-                        ✓
-                      </span>
-                      <span
-                        className={
-                          isFeatured
-                            ? "text-white text-sm font-medium"
-                            : "text-zinc-300 text-sm font-medium"
-                        }
-                      >
-                        {item.text}
-                      </span>
-                    </div>
-                  ))}
-                </div>
               </div>
-            </TiltCard>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </section>
   );
