@@ -2,14 +2,25 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, X, Volume2, Radio } from 'lucide-react';
+import { FreyaConfig } from '@/lib/types';
 
 type AgentState = 'idle' | 'connecting' | 'listening' | 'speaking';
 
-export default function VoiceAgentWidget() {
+interface VoiceAgentWidgetProps {
+  content?: FreyaConfig;
+}
+
+export default function VoiceAgentWidget({ content }: VoiceAgentWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [agentState, setAgentState] = useState<AgentState>('idle');
   const [transcript, setTranscript] = useState<string[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const agentName = content?.agentName || 'Freya';
+  const welcomeMsg =
+    content?.welcomeMessage ||
+    `Hello! I am ${agentName}. Which software or AI architecture are you looking to engineer today?`;
+  const isLive = content?.isLiveIndicator !== false;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -54,8 +65,8 @@ export default function VoiceAgentWidget() {
       setTimeout(() => {
         setAgentState('listening');
         setTranscript([
-          '[Freya Engine]: Connected to ZAVIAN LABS WebRTC Voice cluster.',
-          '[Freya]: "Hello! I am Freya. Which software or AI architecture are you looking to engineer today?"',
+          `[${agentName} Engine]: Connected to ZAVIAN LABS WebRTC Voice cluster.`,
+          `[${agentName}]: "${welcomeMsg}"`,
         ]);
       }, 1200);
     } else {
@@ -71,22 +82,26 @@ export default function VoiceAgentWidget() {
           onClick={() => setIsOpen(true)}
           className="glass-panel-elevated px-4 py-2 rounded-full cursor-pointer hover:border-red-500/40 transition-all flex items-center gap-2.5 shadow-2xl hover:scale-105 active:scale-95"
         >
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600" />
-          </span>
+          {isLive && (
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600" />
+            </span>
+          )}
           <span className="text-xs font-mono font-bold tracking-wider text-zinc-100">
-            Talk to Freya
+            Talk to {agentName}
           </span>
-          <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-red-600/30 text-red-400 border border-red-500/40">
-            LIVE
-          </span>
+          {isLive && (
+            <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-red-600/30 text-red-400 border border-red-500/40">
+              LIVE
+            </span>
+          )}
         </div>
 
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="w-14 h-14 rounded-full bg-gradient-to-tr from-red-700 to-red-500 text-white flex items-center justify-center shadow-lg shadow-red-700/40 hover:scale-110 active:scale-95 transition-all cursor-pointer"
-          aria-label="Toggle Freya Voice Assistant"
+          aria-label={`Toggle ${agentName} Voice Assistant`}
         >
           <Mic className="w-6 h-6" />
         </button>
@@ -97,12 +112,12 @@ export default function VoiceAgentWidget() {
           <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
             <div className="flex items-center gap-2">
               <Radio className="w-4 h-4 text-red-500 animate-pulse" />
-              <h4 className="font-bold text-white text-sm">Freya Neural Voice</h4>
+              <h4 className="font-bold text-white text-sm">{agentName} Neural Voice</h4>
             </div>
             <button
               onClick={() => setIsOpen(false)}
               className="text-zinc-400 hover:text-white cursor-pointer"
-              aria-label="Close Freya Voice Assistant"
+              aria-label="Close Assistant"
             >
               <X className="w-4 h-4" />
             </button>
@@ -132,7 +147,7 @@ export default function VoiceAgentWidget() {
             }`}
           >
             <Volume2 className="w-4 h-4" />
-            {agentState === 'idle' ? 'Connect Freya Audio' : 'Disconnect Audio'}
+            {agentState === 'idle' ? `Connect ${agentName} Audio` : 'Disconnect Audio'}
           </button>
         </div>
       )}

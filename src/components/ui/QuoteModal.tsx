@@ -13,6 +13,7 @@ export default function QuoteModal({ isOpen, onClose, preselectedService }: Prop
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     company: '',
     selectedService: preselectedService,
     projectScope: '',
@@ -36,10 +37,16 @@ export default function QuoteModal({ isOpen, onClose, preselectedService }: Prop
     setErrorMsg('');
 
     try {
+      const vid = typeof window !== 'undefined' ? localStorage.getItem('zavian_vid') : undefined;
+      const payload = {
+        ...formData,
+        visitorId: vid || undefined,
+      };
+
       const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.errors?.[0]?.message || 'Submission failed');
@@ -67,7 +74,7 @@ export default function QuoteModal({ isOpen, onClose, preselectedService }: Prop
             <CheckCircle2 className="w-16 h-16 text-red-500 mx-auto mb-4" />
             <h3 className="text-2xl font-bold text-white mb-2">Scope Dispatched</h3>
             <p className="text-sm text-zinc-400 mb-6">
-              Our engineering solutions team is assessing your requirements.
+              Our engineering solutions team is assessing your requirements and telemetry.
             </p>
             <button
               onClick={() => {
@@ -94,28 +101,54 @@ export default function QuoteModal({ isOpen, onClose, preselectedService }: Prop
               </div>
             )}
 
-            <div>
-              <label className="block text-xs font-mono text-zinc-400 mb-1">Full Name</label>
-              <input
-                required
-                type="text"
-                placeholder="Syed Bilal"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="app-input"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-mono text-zinc-400 mb-1">Full Name *</label>
+                <input
+                  required
+                  type="text"
+                  placeholder="Syed Bilal"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="app-input"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-zinc-400 mb-1">Contact Phone</label>
+                <input
+                  type="tel"
+                  placeholder="+1 (555) 019-2834"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="app-input"
+                />
+              </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-mono text-zinc-400 mb-1">Corporate Email</label>
-              <input
-                required
-                type="email"
-                placeholder="bilal@enterprise.com"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="app-input"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-mono text-zinc-400 mb-1">Corporate Email *</label>
+                <input
+                  required
+                  type="email"
+                  placeholder="bilal@enterprise.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="app-input"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-zinc-400 mb-1">Company / Firm</label>
+                <input
+                  type="text"
+                  placeholder="Acme Global Inc."
+                  value={formData.company}
+                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  className="app-input"
+                />
+              </div>
             </div>
 
             <div>
@@ -129,7 +162,7 @@ export default function QuoteModal({ isOpen, onClose, preselectedService }: Prop
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-zinc-400 mb-1">Architecture &amp; Deliverables</label>
+              <label className="block text-xs font-mono text-zinc-400 mb-1">Architecture &amp; Deliverables *</label>
               <textarea
                 required
                 rows={3}

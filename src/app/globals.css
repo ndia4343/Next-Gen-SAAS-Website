@@ -5,15 +5,24 @@
   --color-obsidian-900: #060609;
   --color-obsidian-850: #0c0c14;
   --color-obsidian-800: #101018;
-  --color-crimson-600: #dc2626;
-  --color-crimson-500: #ef4444;
-  --color-crimson-glow: rgba(220, 38, 38, 0.45);
-  --color-neon-orange: #ff6b00;
+  --color-crimson-600: var(--theme-primary, #dc2626);
+  --color-crimson-500: var(--theme-title-accent, #ef4444);
+  --color-crimson-glow: var(--theme-glow, rgba(220, 38, 38, 0.45));
+  --color-neon-orange: var(--theme-secondary, #ff6b00);
   --color-electric-cyan: #00b4d8;
   --color-lavender-check: #818cf8;
   --font-display: "Plus Jakarta Sans", "Inter", -apple-system, sans-serif;
   --font-sans: "Plus Jakarta Sans", "Inter", -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
+}
+
+:root {
+  --theme-primary: #dc2626;
+  --theme-secondary: #ff6b00;
+  --theme-title-accent: #ef4444;
+  --theme-desc: #d4d4d8;
+  --theme-glow: rgba(220, 38, 38, 0.45);
+  --theme-3d-light: #dc2626;
 }
 
 @layer base {
@@ -50,10 +59,10 @@
   }
 
   .glass-panel-crimson {
-    background: rgba(220, 38, 38, 0.06);
+    background: rgba(20, 20, 30, 0.75);
     backdrop-filter: blur(24px);
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    box-shadow: 0 0 35px rgba(220, 38, 38, 0.15);
+    border: 1px solid var(--theme-primary, #ef4444);
+    box-shadow: 0 0 35px var(--theme-glow, rgba(220, 38, 38, 0.15));
   }
 
   /* Standardized Form Input Boxes across the whole site */
@@ -75,8 +84,8 @@
   }
 
   .app-input:focus {
-    border-color: #dc2626;
-    box-shadow: 0 0 0 1px #dc2626, 0 0 15px rgba(220, 38, 38, 0.25);
+    border-color: var(--theme-primary, #dc2626);
+    box-shadow: 0 0 0 1px var(--theme-primary, #dc2626), 0 0 15px var(--theme-glow, rgba(220, 38, 38, 0.25));
   }
 }
 

@@ -5,8 +5,16 @@ import { useFrame } from '@react-three/fiber';
 import { Float, MeshTransmissionMaterial, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 import { ScrollTrigger } from '@/lib/gsap';
+import { ColorTheme } from '@/lib/theme';
 
-export default function NeuralCoreMesh() {
+interface NeuralCoreMeshProps {
+  theme?: ColorTheme;
+}
+
+export default function NeuralCoreMesh({ theme }: NeuralCoreMeshProps) {
+  const primaryColor = theme?.primary || '#DC2626';
+  const highlightColor = theme?.titleHighlight || '#EF4444';
+
   const coreRef = useRef<THREE.Group>(null);
   const ring1Ref = useRef<THREE.Mesh>(null);
   const ring2Ref = useRef<THREE.Mesh>(null);
@@ -105,8 +113,8 @@ export default function NeuralCoreMesh() {
         <mesh ref={innerIcosaRef}>
           <icosahedronGeometry args={[1.15, 1]} />
           <meshStandardMaterial
-            color="#DC2626"
-            emissive="#DC2626"
+            color={primaryColor}
+            emissive={primaryColor}
             emissiveIntensity={1.8}
             wireframe
             roughness={0.2}
@@ -141,12 +149,12 @@ export default function NeuralCoreMesh() {
             roughness={0.1}
             chromaticAberration={0.18}
             anisotropy={0.4}
-            color="#DC2626"
+            color={primaryColor}
           />
         </mesh>
 
         {/* Ambient GPU Sparkles */}
-        <Sparkles count={110} scale={5} size={2.2} speed={0.4} opacity={0.6} color="#EF4444" />
+        <Sparkles count={110} scale={5} size={2.2} speed={0.4} opacity={0.6} color={highlightColor} />
       </Float>
 
       {/* Reactive GPU Particle Field */}
@@ -157,7 +165,7 @@ export default function NeuralCoreMesh() {
         </bufferGeometry>
         <pointsMaterial
           size={0.035}
-          color="#DC2626"
+          color={primaryColor}
           transparent
           opacity={0.7}
           blending={THREE.AdditiveBlending}
