@@ -7,6 +7,7 @@ import CoreExpertiseSection from '@/components/sections/CoreExpertiseSection';
 import ProjectSupportSection from '@/components/sections/ProjectSupportSection';
 import VoiceAgentWidget from '@/components/widgets/VoiceAgentWidget';
 import QuoteModal from '@/components/ui/QuoteModal';
+import Footer from '@/components/layout/Footer';
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -24,6 +25,8 @@ export default function HomePage() {
       <CoreExpertiseSection onOpenQuoteModal={handleOpenModal} />
       <ProjectSupportSection onOpenQuoteModal={handleOpenModal} />
       <VoiceAgentWidget />
+
+      <Footer onOpenQuoteModal={handleOpenModal} />
 
       <QuoteModal
         isOpen={modalOpen}
