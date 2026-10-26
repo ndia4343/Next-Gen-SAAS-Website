@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "node scripts/patch-reconciler.js",
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "node scripts/patch-reconciler.js && next build",
     "start": "next start",
     "lint": "next lint"
   },

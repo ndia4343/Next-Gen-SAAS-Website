@@ -1,5 +1,6 @@
 'use client';
 
+import '@/lib/react-19-polyfill';
 import React from 'react';
 import dynamic from 'next/dynamic';
 

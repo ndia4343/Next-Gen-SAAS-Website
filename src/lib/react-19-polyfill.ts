@@ -12,26 +12,35 @@ if (anyReact) {
     anyReact.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = internals;
   }
 
-  if (!internals.ReactCurrentDispatcher) {
-    Object.defineProperty(internals, "ReactCurrentDispatcher", {
-      get() {
-        return internals.H || { current: null };
-      },
-      set(v) {
-        internals.H = v;
-      },
-      configurable: true,
-      enumerable: true,
-    });
-  }
+  // Map React 18 dispatcher to React 19's internals.H
+  internals.ReactCurrentDispatcher = {
+    get current() {
+      return internals.H;
+    },
+    set current(v: any) {
+      internals.H = v;
+    },
+  };
 
-  if (!internals.ReactCurrentBatchConfig) {
-    internals.ReactCurrentBatchConfig = { transition: null };
-  }
+  // Map React 18 batch config to React 19's internals.T
+  internals.ReactCurrentBatchConfig = {
+    get transition() {
+      return internals.T;
+    },
+    set transition(v: any) {
+      internals.T = v;
+    },
+  };
 
-  if (!internals.ReactCurrentOwner) {
-    internals.ReactCurrentOwner = { current: null };
-  }
+  // Map React 18 owner to React 19's internals.A
+  internals.ReactCurrentOwner = {
+    get current() {
+      return internals.A;
+    },
+    set current(v: any) {
+      internals.A = v;
+    },
+  };
 
   if (!internals.ReactCurrentActQueue) {
     internals.ReactCurrentActQueue = { current: null };

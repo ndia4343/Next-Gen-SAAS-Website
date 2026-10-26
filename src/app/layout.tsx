@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import '@/lib/react-19-polyfill';
 import './globals.css';
 import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
 import SceneCanvasWrapper from '@/components/canvas/SceneCanvasWrapper';
