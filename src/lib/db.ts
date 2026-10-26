@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
+import os from 'os';
 import {
   AppDatabase,
   WebsiteContent,
@@ -68,6 +69,22 @@ export async function getDb(): Promise<AppDatabase> {
     return memoryDb;
   }
 
+  const isVercel = process.env.VERCEL === '1';
+  const tmpPath = path.join(os.tmpdir(), 'zavian_db.json');
+
+  // 1. Try reading from /tmp on Vercel if updated
+  if (isVercel) {
+    try {
+      const rawTmp = await fs.readFile(tmpPath, 'utf-8');
+      const parsedTmp: AppDatabase = JSON.parse(rawTmp);
+      if (parsedTmp && parsedTmp.siteContent) {
+        memoryDb = parsedTmp;
+        return parsedTmp;
+      }
+    } catch {}
+  }
+
+  // 2. Try reading from project db.json
   try {
     const rawData = await fs.readFile(DB_FILE_PATH, 'utf-8');
     const parsed: AppDatabase = JSON.parse(rawData);
@@ -86,14 +103,7 @@ export async function getDb(): Promise<AppDatabase> {
     memoryDb = parsed;
     return parsed;
   } catch (error: unknown) {
-    const err = error as NodeJS.ErrnoException;
-    if (err.code === 'ENOENT') {
-      const initial = createInitialDb();
-      memoryDb = initial;
-      await saveDb(initial);
-      return initial;
-    }
-    console.error('Error reading db.json, falling back to initial data:', error);
+    // If not found or read-only, safely use initial in-memory state
     const fallback = createInitialDb();
     memoryDb = fallback;
     return fallback;
@@ -101,31 +111,43 @@ export async function getDb(): Promise<AppDatabase> {
 }
 
 /**
- * Write database atomically to disk.
+ * Write database atomically to disk (safe for Vercel read-only filesystem).
  */
 export async function saveDb(data: AppDatabase): Promise<void> {
   memoryDb = data;
 
-  // Queue writes sequentially to prevent concurrent file locking on Windows
   writeQueue = writeQueue.then(async () => {
-    const dataDir = path.dirname(DB_FILE_PATH);
-    await fs.mkdir(dataDir, { recursive: true });
-
-    const tempFilePath = `${DB_FILE_PATH}.tmp.${Date.now()}`;
-    const serialized = JSON.stringify(data, null, 2);
-
     try {
-      await fs.writeFile(tempFilePath, serialized, 'utf-8');
+      const isVercel = process.env.VERCEL === '1';
+      const targetPath = isVercel ? path.join(os.tmpdir(), 'zavian_db.json') : DB_FILE_PATH;
+      const dataDir = path.dirname(targetPath);
+
+      await fs.mkdir(dataDir, { recursive: true }).catch(() => {});
+
+      const tempFilePath = `${targetPath}.tmp.${Date.now()}`;
+      const serialized = JSON.stringify(data, null, 2);
+
       try {
-        await fs.rename(tempFilePath, DB_FILE_PATH);
-      } catch {
-        await fs.copyFile(tempFilePath, DB_FILE_PATH);
+        await fs.writeFile(tempFilePath, serialized, 'utf-8');
+        try {
+          await fs.rename(tempFilePath, targetPath);
+        } catch {
+          await fs.copyFile(tempFilePath, targetPath);
+          await fs.unlink(tempFilePath).catch(() => {});
+        }
+      } catch (writeErr) {
         await fs.unlink(tempFilePath).catch(() => {});
+        // Fallback to /tmp if primary failed
+        if (!isVercel) {
+          const fallbackPath = path.join(os.tmpdir(), 'zavian_db.json');
+          await fs.writeFile(fallbackPath, serialized, 'utf-8').catch(() => {});
+        }
       }
     } catch (err) {
-      await fs.unlink(tempFilePath).catch(() => {});
-      console.error('saveDb error:', err);
+      console.warn('saveDb non-fatal error:', err);
     }
+  }).catch(() => {
+    writeQueue = Promise.resolve();
   });
 
   return writeQueue;
@@ -143,43 +165,30 @@ export async function updateSiteContent(
   updater: (prev: WebsiteContent) => WebsiteContent
 ): Promise<WebsiteContent> {
   const db = await getDb();
-  const nextContent = updater(db.siteContent || initialContent);
-  db.siteContent = nextContent;
+  const updatedContent = updater(db.siteContent);
+  db.siteContent = updatedContent;
   await saveDb(db);
-  return nextContent;
+  return updatedContent;
 }
 
 // ==========================================
-// Admin Audit Trail
+// Admin Audit Trail Logging
 // ==========================================
-export async function logAdminLogin(
-  entry: Omit<AdminAuditLog, 'id' | 'loginFormatted'>
-): Promise<AdminAuditLog> {
+export async function logAdminLogin(entry: Omit<AdminAuditLog, 'id'>): Promise<AdminAuditLog> {
   const db = await getDb();
-  const dateObj = new Date(entry.loginAt);
-  const formatted = dateObj.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  });
-
-  const fullRecord: AdminAuditLog = {
+  const newLog: AdminAuditLog = {
     id: `audit-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     ...entry,
-    loginFormatted: formatted,
   };
 
-  db.adminAuditLogs.unshift(fullRecord);
-  // Cap at 200 logs to prevent bloat
+  db.adminAuditLogs.unshift(newLog);
+  // Cap at 200 logs
   if (db.adminAuditLogs.length > 200) {
     db.adminAuditLogs = db.adminAuditLogs.slice(0, 200);
   }
 
   await saveDb(db);
-  return fullRecord;
+  return newLog;
 }
 
 export async function getAdminAuditLogs(): Promise<AdminAuditLog[]> {
@@ -188,40 +197,43 @@ export async function getAdminAuditLogs(): Promise<AdminAuditLog[]> {
 }
 
 // ==========================================
-// Visitor Telemetry
+// Visitor Telemetry Intelligence
 // ==========================================
 export async function recordVisitorTelemetry(
-  data: Omit<VisitorTelemetry, 'visitCount' | 'firstSeenAt' | 'lastVisitedAt'>
+  data: Omit<VisitorTelemetry, 'firstSeenAt' | 'lastVisitedAt' | 'visitCount'>
 ): Promise<VisitorTelemetry> {
   const db = await getDb();
-  const now = new Date().toISOString();
   const existingIndex = db.visitorTelemetry.findIndex((v) => v.visitorId === data.visitorId);
+  const now = new Date().toISOString();
+
+  let recorded: VisitorTelemetry;
 
   if (existingIndex >= 0) {
     const existing = db.visitorTelemetry[existingIndex];
-    const updated: VisitorTelemetry = {
+    recorded = {
       ...existing,
       ...data,
-      visitCount: existing.visitCount + 1,
+      visitCount: (existing.visitCount || 1) + 1,
       lastVisitedAt: now,
     };
-    db.visitorTelemetry[existingIndex] = updated;
-    await saveDb(db);
-    return updated;
+    db.visitorTelemetry[existingIndex] = recorded;
   } else {
-    const newVisitor: VisitorTelemetry = {
+    recorded = {
       ...data,
-      visitCount: 1,
       firstSeenAt: now,
       lastVisitedAt: now,
+      visitCount: 1,
     };
-    db.visitorTelemetry.unshift(newVisitor);
-    if (db.visitorTelemetry.length > 500) {
-      db.visitorTelemetry = db.visitorTelemetry.slice(0, 500);
-    }
-    await saveDb(db);
-    return newVisitor;
+    db.visitorTelemetry.unshift(recorded);
   }
+
+  // Keep max 500 active visitors
+  if (db.visitorTelemetry.length > 500) {
+    db.visitorTelemetry = db.visitorTelemetry.slice(0, 500);
+  }
+
+  await saveDb(db);
+  return recorded;
 }
 
 export async function getVisitorTelemetry(): Promise<VisitorTelemetry[]> {
@@ -230,34 +242,29 @@ export async function getVisitorTelemetry(): Promise<VisitorTelemetry[]> {
 }
 
 // ==========================================
-// Identified Leads
+// Lead Submissions with Stitched Telemetry
 // ==========================================
 export async function recordLeadSubmission(
-  leadData: Omit<LeadSubmission, 'id' | 'timestamp' | 'visitCountAtSubmission'>
+  lead: Omit<LeadSubmission, 'id' | 'timestamp' | 'visitCountAtSubmission'>
 ): Promise<LeadSubmission> {
   const db = await getDb();
+  const now = new Date().toISOString();
 
-  // Find visitor telemetry to stitch visit frequency
-  const visitor = leadData.visitorId
-    ? db.visitorTelemetry.find((v) => v.visitorId === leadData.visitorId)
-    : undefined;
+  // Find visitor telemetry to stitch historical visit frequency
+  const visitor = lead.visitorId
+    ? db.visitorTelemetry.find((v) => v.visitorId === lead.visitorId)
+    : null;
 
-  const visitCount = visitor ? visitor.visitCount : 1;
-
-  const record: LeadSubmission = {
+  const newLead: LeadSubmission = {
     id: `lead-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-    ...leadData,
-    timestamp: new Date().toISOString(),
-    visitCountAtSubmission: visitCount,
-    ipAddress: leadData.ipAddress || visitor?.ipAddress || '127.0.0.1',
-    city: leadData.city || visitor?.city || 'Localhost Dev',
-    region: leadData.region || visitor?.region || 'Sindh',
-    country: leadData.country || visitor?.country || 'Pakistan',
+    ...lead,
+    timestamp: now,
+    visitCountAtSubmission: visitor ? visitor.visitCount : 1,
   };
 
-  db.leadSubmissions.unshift(record);
+  db.leadSubmissions.unshift(newLead);
   await saveDb(db);
-  return record;
+  return newLead;
 }
 
 export async function getLeadSubmissions(): Promise<LeadSubmission[]> {

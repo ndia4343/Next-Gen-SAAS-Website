@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "node scripts/patch-reconciler.js",
     "dev": "next dev --turbopack",
-    "build": "node scripts/patch-reconciler.js && next build",
+    "build": "node scripts/patch-reconciler.js && next build --webpack",
     "start": "next start",
     "lint": "next lint"
   },

@@ -505,13 +505,13 @@
       "city": "Localhost Dev",
       "region": "Sindh",
       "country": "Pakistan",
-      "currentPage": "/",
+      "currentPage": "/admin/branding",
       "referrer": "Direct",
       "deviceType": "Desktop",
       "browser": "Chrome",
-      "visitCount": 25,
+      "visitCount": 27,
       "firstSeenAt": "2026-10-26T20:26:46.052Z",
-      "lastVisitedAt": "2026-10-26T21:39:55.802Z"
+      "lastVisitedAt": "2026-10-26T22:05:36.677Z"
     },
     {
       "visitorId": "test_vis_999",

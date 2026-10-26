@@ -10,7 +10,16 @@ export async function POST(request: NextRequest) {
 
     const geo = await resolveGeoLocation(request.headers);
     const userAgent = request.headers.get('user-agent') || 'Unknown';
-    const nowIso = new Date().toISOString();
+    const now = new Date();
+    const nowIso = now.toISOString();
+    const nowFormatted = now.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
 
     const { valid, adminInfo } = verifyCredentials(email, password);
 
@@ -21,6 +30,7 @@ export async function POST(request: NextRequest) {
         adminEmail: email || 'unknown',
         adminPhone: 'N/A',
         loginAt: nowIso,
+        loginFormatted: nowFormatted,
         ipAddress: geo.ip,
         city: geo.city,
         region: geo.region,
@@ -41,6 +51,7 @@ export async function POST(request: NextRequest) {
       adminEmail: adminInfo.email,
       adminPhone: adminInfo.phone,
       loginAt: nowIso,
+      loginFormatted: nowFormatted,
       ipAddress: geo.ip,
       city: geo.city,
       region: geo.region,
