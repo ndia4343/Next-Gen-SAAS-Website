@@ -1,75 +1,88 @@
 @import "tailwindcss";
 
 @theme {
-  /* Obsidian surfaces */
   --color-obsidian-950: #040406;
   --color-obsidian-900: #060609;
-  --color-obsidian-800: #0c0c12;
-  --color-obsidian-700: #12121a;
-
-  /* Crimson accents */
+  --color-obsidian-850: #0c0c14;
+  --color-obsidian-800: #101018;
   --color-crimson-600: #dc2626;
   --color-crimson-500: #ef4444;
-
-  /* Bento accents */
+  --color-crimson-glow: rgba(220, 38, 38, 0.4);
   --color-neon-orange: #ff6b00;
   --color-electric-cyan: #00b4d8;
-  --color-indigo-accent: #818cf8;
-
-  /* Typography */
-  --font-sans: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --color-lavender-check: #818cf8;
+  --font-display: "Plus Jakarta Sans", "Inter", -apple-system, sans-serif;
+  --font-sans: "Plus Jakarta Sans", "Inter", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 }
 
-/* Custom Glassmorphism Utilities */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html,
+  body {
+    background-color: #060609;
+    color: #f4f4f5;
+    font-family: var(--font-display);
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #dc2626;
+    color: #ffffff;
+  }
+
+  /* Universal Glass Surfaces */
+  .glass-panel {
+    background: rgba(16, 16, 24, 0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-panel-elevated {
+    background: rgba(20, 20, 30, 0.82);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .glass-panel-crimson {
+    background: rgba(220, 38, 38, 0.06);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    box-shadow: 0 0 35px rgba(220, 38, 38, 0.15);
+  }
+
+  /* Standardized Form Input Boxes across the whole site */
+  .app-input {
+    width: 100%;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    background-color: #0c0c14;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    outline: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .app-input::placeholder {
+    color: #52525b;
+  }
+
+  .app-input:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 1px #dc2626, 0 0 15px rgba(220, 38, 38, 0.25);
+  }
 }
 
-.glass-panel-elevated {
-  background: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2), 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-}
-
-.glass-panel-crimson {
-  background: linear-gradient(180deg, rgba(69, 10, 10, 0.25) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(220, 38, 38, 0.4);
-  box-shadow: 0 0 35px rgba(220, 38, 38, 0.2), 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-}
-
-/* Standardized App Input Token */
-.app-input {
-  width: 100%;
-  border-radius: 0.75rem; /* 12px / rounded-xl */
-  padding: 0.75rem 1rem;   /* px-4 py-3 */
-  font-size: 0.875rem;    /* text-sm */
-  line-height: 1.25rem;
-  background-color: #0c0c14;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  outline: none;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.app-input::placeholder {
-  color: #52525b; /* zinc-600 */
-}
-
-.app-input:focus {
-  border-color: #dc2626;
-  box-shadow: 0 0 0 1px #dc2626, 0 0 15px rgba(220, 38, 38, 0.25);
-}
-
-/* 3D Transform Utilities */
+/* 3D Perspective & Transform Utilities */
 .perspective-container {
   perspective: 1200px;
   transform-style: preserve-3d;
@@ -93,18 +106,6 @@
 
 .translate-z-10 {
   transform: translateZ(40px);
-}
-
-/* Base Body Styles */
-html,
-body {
-  background-color: #060609;
-  color: #f4f4f5;
-  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  overflow-x: hidden;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Custom Scrollbar for Obsidian Theme */

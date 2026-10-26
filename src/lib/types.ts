@@ -1,6 +1,20 @@
 import { z } from "zod";
 
 // ==========================================
+// 0. Quote Inquiry Lead Schema
+// ==========================================
+export const QuoteSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  email: z.string().email("Valid corporate email required"),
+  company: z.string().optional(),
+  selectedService: z.string().min(1, "Service selection is required"),
+  projectScope: z.string().min(10, "Scope must contain at least 10 characters"),
+  timeline: z.string().default("Immediate"),
+});
+
+export type QuoteInput = z.infer<typeof QuoteSchema>;
+
+// ==========================================
 // 1. Feature Item Schema (Checklist)
 // ==========================================
 export const FeatureItemSchema = z.object({

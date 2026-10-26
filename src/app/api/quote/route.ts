@@ -1,25 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-
-// Zod schema for Quote Lead validation
-const quoteLeadSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").max(100),
-  email: z.string().email("Please provide a valid business email address"),
-  company: z.string().min(1, "Company or Project name is required").max(100),
-  selectedService: z.string().min(1, "Service selection is required"),
-  projectScope: z
-    .string()
-    .min(10, "Please describe your project scope (minimum 10 characters)")
-    .max(2000),
-  timeline: z.string().min(1, "Timeline is required"),
-});
+import { QuoteSchema } from "@/lib/types";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
     // Validate request payload via Zod
-    const validationResult = quoteLeadSchema.safeParse(body);
+    const validationResult = QuoteSchema.safeParse(body);
 
     if (!validationResult.success) {
       return NextResponse.json(
