@@ -6,4 +6,3 @@ if (typeof window !== 'undefined') {
 }
 
 export { gsap, ScrollTrigger };
-export default gsap;

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, createContext, useContext, useState } from 'react';
 import Lenis from 'lenis';
 import { gsap, ScrollTrigger } from '@/lib/gsap';
 
@@ -18,16 +18,17 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.25,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      touchMultiplier: 1.5,
+      touchMultiplier: 1.2,
     });
     lenisRef.current = lenis;
     setLenisState(lenis);
 
+    // Direct binding between Lenis and GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
 
     const tickerUpdate = (time: number) => {
@@ -35,7 +36,8 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
     };
 
     gsap.ticker.add(tickerUpdate);
-    gsap.ticker.lagSmoothing(0); // Strictly prevents WebGL camera lag against DOM scroll
+    // Crucial: disables frame smoothing to lock 3D camera with DOM scroll
+    gsap.ticker.lagSmoothing(0);
 
     requestAnimationFrame(() => {
       ScrollTrigger.refresh();

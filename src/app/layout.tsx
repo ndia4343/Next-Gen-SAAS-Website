@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
-import SceneCanvas from '@/components/canvas/SceneCanvas';
+import SceneCanvasWrapper from '@/components/canvas/SceneCanvasWrapper';
 
 export const metadata: Metadata = {
   title: 'ZAVIAN LABS // 3D SaaS & AI Engineering Studio',
-  description: 'Production-grade WebGL interfaces, autonomous Agentic AI, and full-stack software development.',
+  description: 'GPU-accelerated WebGL motion and autonomous agent architectures.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -13,8 +13,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="antialiased bg-[#060609] text-zinc-100 overflow-x-hidden">
         <SmoothScrollProvider>
-          <SceneCanvas />
-          {children}
+          <SceneCanvasWrapper />
+          <div className="relative z-10">
+            {children}
+          </div>
         </SmoothScrollProvider>
       </body>
     </html>

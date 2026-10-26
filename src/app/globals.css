@@ -7,7 +7,7 @@
   --color-obsidian-800: #101018;
   --color-crimson-600: #dc2626;
   --color-crimson-500: #ef4444;
-  --color-crimson-glow: rgba(220, 38, 38, 0.4);
+  --color-crimson-glow: rgba(220, 38, 38, 0.45);
   --color-neon-orange: #ff6b00;
   --color-electric-cyan: #00b4d8;
   --color-lavender-check: #818cf8;
@@ -17,10 +17,8 @@
 }
 
 @layer base {
-  * {
+  *, ::before, ::after {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
   }
 
   html,
@@ -82,7 +80,7 @@
   }
 }
 
-/* 3D Perspective & Transform Utilities */
+/* 3D Transform & GPU Acceleration Utilities */
 .perspective-container {
   perspective: 1200px;
   transform-style: preserve-3d;
@@ -90,6 +88,8 @@
 
 .transform-3d {
   transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 .perspective-distant {
