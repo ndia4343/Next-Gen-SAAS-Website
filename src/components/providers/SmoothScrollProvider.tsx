@@ -21,7 +21,10 @@ export default function SmoothScrollProvider({
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    // 1. Instantiate Lenis
+    // 1. Ensure ScrollTrigger is registered on the client
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 2. Instantiate Lenis with smooth physics
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -35,19 +38,35 @@ export default function SmoothScrollProvider({
     lenisRef.current = lenis;
     setLenisInstance(lenis);
 
-    // 2. Hook lenis.on('scroll', ScrollTrigger.update)
+    // 3. Wire lenis.on('scroll', ScrollTrigger.update)
     lenis.on("scroll", ScrollTrigger.update);
 
-    // 3. Hook gsap.ticker.add((time) => lenis.raf(time * 1000))
+    // 4. Drive lenis.raf(time * 1000) inside gsap.ticker.add()
     const updateTicker = (time: number) => {
       lenis.raf(time * 1000);
     };
     gsap.ticker.add(updateTicker);
 
-    // 4. Set gsap.ticker.lagSmoothing(0) to prevent 3D WebGL camera drift against DOM scroll coordinates
+    // 5. Configure gsap.ticker.lagSmoothing(0) to prevent WebGL camera drift against DOM
     gsap.ticker.lagSmoothing(0);
 
+    // 6. Call ScrollTrigger.refresh() after component mount and DOM layout
+    requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+    });
+
+    const refreshTimeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 200);
+
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+    };
+    window.addEventListener("resize", handleResize);
+
     return () => {
+      clearTimeout(refreshTimeout);
+      window.removeEventListener("resize", handleResize);
       gsap.ticker.remove(updateTicker);
       lenis.destroy();
       lenisRef.current = null;

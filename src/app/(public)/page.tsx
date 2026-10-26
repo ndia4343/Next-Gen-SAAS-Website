@@ -56,7 +56,7 @@ export default async function HomePage() {
   };
 
   return (
-    <main className="relative min-h-screen bg-[#060609] text-white overflow-hidden">
+    <main className="relative min-h-screen bg-transparent text-white overflow-hidden">
       {/* Structured SEO Schema */}
       <script
         type="application/ld+json"

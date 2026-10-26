@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useMemo, useEffect } from "react";
+import React, { useRef, useMemo, useEffect, Suspense } from "react";
 import { useFrame } from "@react-three/fiber";
 import { MeshTransmissionMaterial, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
@@ -20,12 +20,19 @@ export default function NeuralCoreMesh() {
   const scrollProgressRef = useRef(0);
 
   useEffect(() => {
+    // Dedicated page-level scroll trigger
     const st = ScrollTrigger.create({
+      id: "neural-core-scroll",
       start: 0,
       end: "max",
       onUpdate: (self) => {
         scrollProgressRef.current = self.progress;
       },
+    });
+
+    // Refresh immediately to calculate current viewport offset
+    requestAnimationFrame(() => {
+      st.refresh();
     });
 
     return () => {
@@ -71,7 +78,7 @@ export default function NeuralCoreMesh() {
   // CRITICAL PERFORMANCE RULE: Never update React state inside useFrame.
   // Directly mutate mesh and camera refs.
   useFrame((state, delta) => {
-    const p = ScrollTrigger.getAll()[0]?.progress ?? scrollProgressRef.current;
+    const p = scrollProgressRef.current;
     const t = state.clock.getElapsedTime();
 
     // Keyframe Choreography for mesh position & scale
@@ -124,7 +131,7 @@ export default function NeuralCoreMesh() {
       const nextScale = THREE.MathUtils.lerp(currentScale, targetScale, 0.08);
       groupRef.current.scale.set(nextScale, nextScale, nextScale);
 
-      // Subtle responsive pointer tilt
+      // Responsive pointer tilt
       const pointerX = state.pointer.x * 0.35;
       const pointerY = state.pointer.y * 0.25;
       groupRef.current.rotation.y = THREE.MathUtils.lerp(
@@ -185,35 +192,35 @@ export default function NeuralCoreMesh() {
         cyanLightRef.current.intensity = 3.5 * bentoFactor;
         crimsonLightRef.current.intensity = 1.0;
       } else {
-        orangeLightRef.current.intensity = 0.5;
-        cyanLightRef.current.intensity = 0.8;
+        orangeLightRef.current.intensity = 0.8;
+        cyanLightRef.current.intensity = 1.0;
         crimsonLightRef.current.intensity = 3.0;
       }
     }
   });
 
   return (
-    <>
+    <Suspense fallback={null}>
       {/* Dynamic Lights */}
-      <ambientLight intensity={0.4} />
+      <ambientLight intensity={0.6} />
       <pointLight
         ref={crimsonLightRef}
         position={[0, 0, 2]}
         color="#DC2626"
         intensity={3.0}
-        distance={10}
+        distance={12}
       />
       <directionalLight
         ref={orangeLightRef}
         position={[-5, 4, 3]}
         color="#FF6B00"
-        intensity={0.5}
+        intensity={0.8}
       />
       <directionalLight
         ref={cyanLightRef}
         position={[5, -3, 3]}
         color="#00B4D8"
-        intensity={0.8}
+        intensity={1.0}
       />
 
       {/* Ambient Sparkles */}
@@ -247,6 +254,7 @@ export default function NeuralCoreMesh() {
           <MeshTransmissionMaterial
             backside
             samples={4}
+            resolution={256}
             thickness={0.8}
             roughness={0.08}
             ior={1.48}
@@ -262,6 +270,7 @@ export default function NeuralCoreMesh() {
           <MeshTransmissionMaterial
             backside
             samples={4}
+            resolution={256}
             thickness={0.65}
             roughness={0.12}
             ior={1.52}
@@ -293,6 +302,6 @@ export default function NeuralCoreMesh() {
           />
         </points>
       </group>
-    </>
+    </Suspense>
   );
 }

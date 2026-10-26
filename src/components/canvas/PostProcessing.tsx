@@ -5,13 +5,17 @@ import { EffectComposer, Bloom, Vignette, Noise } from "@react-three/postprocess
 
 export default function PostProcessing() {
   return (
-    <EffectComposer enableNormalPass={false}>
+    <EffectComposer
+      enableNormalPass={false}
+      {...({ disableNormalPass: true } as any)}
+    >
       <Bloom
-        luminanceThreshold={0.95}
+        luminanceThreshold={0.9}
         mipmapBlur
         intensity={0.85}
+        radius={0.7}
       />
-      <Noise opacity={0.035} />
+      <Noise opacity={0.03} />
       <Vignette eskil={false} offset={0.15} darkness={1.05} />
     </EffectComposer>
   );
