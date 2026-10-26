@@ -1,12 +1,8 @@
 'use client';
 
 import '@/lib/react-19-polyfill';
-import React, { Component, ReactNode } from 'react';
-import dynamic from 'next/dynamic';
-
-const SceneCanvas = dynamic(() => import('./SceneCanvas'), {
-  ssr: false,
-});
+import React, { Component, ReactNode, useState, useEffect } from 'react';
+import SceneCanvas from './SceneCanvas';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -32,13 +28,23 @@ class CanvasErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySta
 
   render() {
     if (this.state.hasError) {
-      return <div className="fixed inset-0 z-0 pointer-events-none bg-[#060609]" />;
+      return null;
     }
     return this.props.children;
   }
 }
 
 export default function SceneCanvasWrapper() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <CanvasErrorBoundary>
       <SceneCanvas />
