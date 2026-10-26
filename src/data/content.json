@@ -1,0 +1,221 @@
+{
+  "siteMeta": {
+    "title": "NEUROFLUX.AI · 3D SaaS & Agentic AI Engineering Agency",
+    "description": "Awwwards-caliber 3D SaaS architectures, autonomous AI agent swarms, and enterprise data intelligence systems. Headless ecommerce, full-stack MVP launches, and Power BI analytics.",
+    "companyName": "NEUROFLUX SYSTEMS INC.",
+    "contactEmail": "architects@neuroflux.ai"
+  },
+  "hero": {
+    "badgeText": "NEXT-GEN SAAS · AGENTIC AI · DATA ENGINEERING",
+    "titleLine1": "Architecting the Future of",
+    "titleHighlight": "Autonomous AI",
+    "titleLine2": "& High-Compute WebGL.",
+    "description": "We architect custom headless commerce platforms, autonomous AI agent workflows, and enterprise data intelligence systems designed for extreme scale and speed.",
+    "primaryCtaText": "Explore Capabilities",
+    "secondaryCtaText": "Book Discovery Call",
+    "floatingStats": [
+      {
+        "label": "API Latency",
+        "value": "< 35ms"
+      },
+      {
+        "label": "Agent Uptime",
+        "value": "99.99%"
+      },
+      {
+        "label": "Speed to Market",
+        "value": "4.2x"
+      },
+      {
+        "label": "Template Limits",
+        "value": "Zero"
+      }
+    ]
+  },
+  "coreExpertise": {
+    "eyebrow": "OUR CORE EXPERTISE",
+    "mainTitleWhite": "Build & ",
+    "mainTitleCrimson": "Grow",
+    "titlePart1": "Build & ",
+    "titlePart2": "Grow",
+    "subtitle": "High-performance architectures crafted for ambitious leaders, founders, and enterprises.",
+    "cards": [
+      {
+        "id": "exp-ecommerce",
+        "columnKey": "ecommerce",
+        "eyebrowIcon": "★",
+        "title": "Headless Ecommerce",
+        "description": "Shopify backend, Next.js frontend — built for speed, scale, and total customization. No templates, no limits.",
+        "isFeatured": false,
+        "ctaText": "🚀 Get Started",
+        "ctaActionId": "quote-headless-ecommerce",
+        "checklist": [
+          {
+            "id": "ec-1",
+            "text": "Shopify Backend",
+            "highlighted": false
+          },
+          {
+            "id": "ec-2",
+            "text": "Next.js Storefronts",
+            "highlighted": false
+          },
+          {
+            "id": "ec-3",
+            "text": "Custom Checkout Flows",
+            "highlighted": false
+          },
+          {
+            "id": "ec-4",
+            "text": "Lightning-Fast Load Speeds",
+            "highlighted": false
+          },
+          {
+            "id": "ec-5",
+            "text": "Fully Scalable Architecture",
+            "highlighted": false
+          },
+          {
+            "id": "ec-6",
+            "text": "SEO Optimised",
+            "highlighted": false
+          }
+        ]
+      },
+      {
+        "id": "exp-agentic-ai",
+        "columnKey": "ai",
+        "eyebrowIcon": "★",
+        "title": "Agentic AI",
+        "description": "Autonomous AI agents that don't just respond — they think, decide, and act on your business's behalf, 24/7.",
+        "isFeatured": true,
+        "ctaText": "🚀 Get Started",
+        "ctaActionId": "quote-agentic-ai",
+        "checklist": [
+          {
+            "id": "ai-1",
+            "text": "Autonomous Task Execution",
+            "highlighted": true
+          },
+          {
+            "id": "ai-2",
+            "text": "Multi-Step Decision Making",
+            "highlighted": true
+          },
+          {
+            "id": "ai-3",
+            "text": "Voice & Chat Agents",
+            "highlighted": true
+          },
+          {
+            "id": "ai-4",
+            "text": "CRM & Workflow Integration",
+            "highlighted": true
+          },
+          {
+            "id": "ai-5",
+            "text": "Self-Learning Systems",
+            "highlighted": true
+          },
+          {
+            "id": "ai-6",
+            "text": "Human-Level Reasoning",
+            "highlighted": true
+          }
+        ]
+      },
+      {
+        "id": "exp-idea-to-launch",
+        "columnKey": "mvp",
+        "eyebrowIcon": "★",
+        "title": "Idea to Launch",
+        "description": "From concept to live product — we build, test, and ship your startup MVP fast, so you can start validating with real users.",
+        "isFeatured": false,
+        "ctaText": "🚀 Get Started",
+        "ctaActionId": "quote-idea-to-launch",
+        "checklist": [
+          {
+            "id": "mvp-1",
+            "text": "MVP in Weeks, Not Months",
+            "highlighted": false
+          },
+          {
+            "id": "mvp-2",
+            "text": "Full-Stack Development",
+            "highlighted": false
+          },
+          {
+            "id": "mvp-3",
+            "text": "Investor-Ready Product",
+            "highlighted": false
+          },
+          {
+            "id": "mvp-4",
+            "text": "Vibe-Coded & Production-Ready",
+            "highlighted": false
+          },
+          {
+            "id": "mvp-5",
+            "text": "Scalable From Day One",
+            "highlighted": false
+          },
+          {
+            "id": "mvp-6",
+            "text": "Launch & Iterate Support",
+            "highlighted": false
+          }
+        ]
+      }
+    ]
+  },
+  "projectSupport": {
+    "eyebrow": "SOFTWARE · DATA · AI · MEDIA",
+    "headlineWhite": "Choose the right ",
+    "headlineOrange": "project support ",
+    "headlineCyan": "for your goals.",
+    "titlePart1": "Choose the right ",
+    "titleHighlightOrange": "project support ",
+    "titleHighlightCyan": "for your goals.",
+    "subtitle": "Every engagement starts with a focused conversation and a quote based on your requirements, deliverables and timeline.",
+    "cards": [
+      {
+        "id": "bento-software",
+        "numberTag": "01 / SOFTWARE",
+        "title": "Software Projects",
+        "description": "Reliable websites, CMS platforms and custom applications built around your workflow.",
+        "ctaText": "Contact for a Quote ↗",
+        "accentColor": "orange"
+      },
+      {
+        "id": "bento-data",
+        "numberTag": "02 / DATA",
+        "title": "Data Projects",
+        "description": "Power BI dashboards, reporting and analytics that turn data into clearer decisions.",
+        "ctaText": "Contact for a Quote ↗",
+        "accentColor": "orange"
+      },
+      {
+        "id": "bento-ai",
+        "numberTag": "03 / AI",
+        "title": "AI Solution Driven Projects",
+        "description": "Practical AI tools, integrations and automation that help teams reduce repetitive work.",
+        "ctaText": "Contact for a Quote ↗",
+        "accentColor": "orange"
+      },
+      {
+        "id": "bento-media",
+        "numberTag": "04 / MEDIA",
+        "title": "Video Editing Services",
+        "description": "Story-led videos, social edits and channel support designed to connect with your audience.",
+        "ctaText": "Contact for a Quote ↗",
+        "accentColor": "orange"
+      }
+    ]
+  },
+  "freyaVoiceAgent": {
+    "agentName": "Freya",
+    "systemPrompt": "You are Freya, a world-class AI Solutions Architect and Creative Technologist at NEUROFLUX.AI. You provide expert guidance on Next.js 15, Three.js WebGL architectures, Headless Shopify integrations, and autonomous multi-agent engineering workflows.",
+    "welcomeMessage": "Hello! I'm Freya, your autonomous solutions architect. How can I help clarify your project scope today?",
+    "isLiveIndicator": true
+  }
+}

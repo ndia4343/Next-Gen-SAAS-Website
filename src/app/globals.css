@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+@theme {
+  /* Obsidian surfaces */
+  --color-obsidian-950: #040406;
+  --color-obsidian-900: #060609;
+  --color-obsidian-800: #0c0c12;
+  --color-obsidian-700: #12121a;
+
+  /* Crimson accents */
+  --color-crimson-600: #dc2626;
+  --color-crimson-500: #ef4444;
+
+  /* Bento accents */
+  --color-neon-orange: #ff6b00;
+  --color-electric-cyan: #00b4d8;
+  --color-indigo-accent: #818cf8;
+
+  /* Typography */
+  --font-sans: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Custom Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(16, 16, 22, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-elevated {
+  background: rgba(18, 18, 26, 0.82);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  box-shadow: 0 0 40px -10px rgba(220, 38, 38, 0.25);
+}
+
+.glass-panel-crimson {
+  background: rgba(220, 38, 38, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  box-shadow: 0 0 30px -5px rgba(220, 38, 38, 0.2);
+}
+
+/* 3D Transform Utilities */
+.perspective-container {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.transform-3d {
+  transform-style: preserve-3d;
+}
+
+.perspective-distant {
+  perspective: 1200px;
+}
+
+.perspective-normal {
+  perspective: 800px;
+}
+
+.translate-z-6 {
+  transform: translateZ(24px);
+}
+
+.translate-z-10 {
+  transform: translateZ(40px);
+}
+
+/* Base Body Styles */
+html,
+body {
+  background-color: #060609;
+  color: #f4f4f5;
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar for Obsidian Theme */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #060609;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Radial Spotlight Glow Utilities */
+.spotlight-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotlight-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+    rgba(255, 255, 255, 0.25),
+    transparent 80%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.spotlight-crimson::before {
+  background: radial-gradient(
+    500px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+    rgba(239, 68, 68, 0.5),
+    transparent 80%
+  );
+}
+
+/* Animated Pulse Rings for Voice AI */
+@keyframes ring-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.animate-pulse-ring-1 {
+  animation: ring-pulse 2.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+.animate-pulse-ring-2 {
+  animation: ring-pulse 2.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 0.8s;
+}
+
+.animate-pulse-ring-3 {
+  animation: ring-pulse 2.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 1.6s;
+}
