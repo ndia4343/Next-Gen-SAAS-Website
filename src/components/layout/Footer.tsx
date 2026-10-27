@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUp, Sparkles } from 'lucide-react';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
-import ZavianLogo from '@/components/ui/ZavianLogo';
+import { Logo } from '@/components/ui/Logo';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { FooterData, ThemeBrandingConfig } from '@/lib/types';
 
@@ -94,7 +94,8 @@ export default function Footer({ onOpenQuoteModal, content, themeBranding: initi
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
         <div>
           <div className="mb-4">
-            <ZavianLogo
+            <Logo
+              href="#hero"
               showTagline={true}
               wordmarkWhite={branding?.wordmark1 || content?.brandWordmark1}
               wordmarkCrimson={branding?.wordmark2 || content?.brandWordmark2}

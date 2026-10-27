@@ -571,6 +571,48 @@
   ],
   "visitorTelemetry": [
     {
+      "visitorId": "vid-1793135453061-7hdrqsw",
+      "ipAddress": "::1",
+      "city": "Localhost Dev",
+      "region": "Sindh",
+      "country": "Pakistan",
+      "currentPage": "/",
+      "referrer": "Direct",
+      "deviceType": "Desktop",
+      "browser": "Chrome",
+      "firstSeenAt": "2026-10-27T21:10:53.113Z",
+      "lastVisitedAt": "2026-10-27T21:10:53.113Z",
+      "visitCount": 1
+    },
+    {
+      "visitorId": "vid-1793135324346-vvu5r6l",
+      "ipAddress": "::1",
+      "city": "Localhost Dev",
+      "region": "Sindh",
+      "country": "Pakistan",
+      "currentPage": "/",
+      "referrer": "Direct",
+      "deviceType": "Desktop",
+      "browser": "Chrome",
+      "firstSeenAt": "2026-10-27T21:08:44.376Z",
+      "lastVisitedAt": "2026-10-27T21:08:44.376Z",
+      "visitCount": 1
+    },
+    {
+      "visitorId": "vid-1793135136738-htiyal7",
+      "ipAddress": "::1",
+      "city": "Localhost Dev",
+      "region": "Sindh",
+      "country": "Pakistan",
+      "currentPage": "/",
+      "referrer": "Direct",
+      "deviceType": "Desktop",
+      "browser": "Chrome",
+      "firstSeenAt": "2026-10-27T21:05:36.791Z",
+      "lastVisitedAt": "2026-10-27T21:05:36.791Z",
+      "visitCount": 1
+    },
+    {
       "visitorId": "vid-1793132973393-4wgxrwa",
       "ipAddress": "::1",
       "city": "Localhost Dev",

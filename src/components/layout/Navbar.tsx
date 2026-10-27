@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import ZavianLogo from '@/components/ui/ZavianLogo';
+import { Logo } from '@/components/ui/Logo';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { Sparkles } from 'lucide-react';
 import { HeaderData, ThemeBrandingConfig } from '@/lib/types';
@@ -83,19 +83,18 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
   return (
     <header className="fixed top-5 inset-x-0 z-40 max-w-7xl mx-auto px-6">
       <nav className="glass-panel rounded-full px-6 py-3.5 flex items-center justify-between shadow-2xl transition-colors duration-300">
-        <a href="#hero" className="flex items-center">
-          <ZavianLogo
-            showTagline={true}
-            wordmarkWhite={branding?.wordmark1 || content?.brandWordmark1}
-            wordmarkCrimson={branding?.wordmark2 || content?.brandWordmark2}
-            wordmark1Color={branding?.wordmark1Color}
-            wordmark2Color={branding?.wordmark2Color}
-            tagline={branding?.tagline || content?.tagline}
-            logoMode={branding?.logoMode}
-            logoImageUrl={branding?.logoImageUrl}
-            logoSvgContent={branding?.logoSvgContent}
-          />
-        </a>
+        <Logo
+          href="#hero"
+          showTagline={true}
+          wordmarkWhite={branding?.wordmark1 || content?.brandWordmark1}
+          wordmarkCrimson={branding?.wordmark2 || content?.brandWordmark2}
+          wordmark1Color={branding?.wordmark1Color}
+          wordmark2Color={branding?.wordmark2Color}
+          tagline={branding?.tagline || content?.tagline}
+          logoMode={branding?.logoMode}
+          logoImageUrl={branding?.logoImageUrl}
+          logoSvgContent={branding?.logoSvgContent}
+        />
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400 dark:text-zinc-400 light:text-zinc-600">
           {navLinks.map((item) => (
