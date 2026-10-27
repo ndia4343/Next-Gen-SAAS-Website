@@ -25,8 +25,8 @@ export function Logo({
   className = "",
   showTagline = true,
   withTagline,
-  iconPosition = "right",
-  useFuturisticGlyphs = true,
+  iconPosition = "left",
+  useFuturisticGlyphs = false,
   href = "/",
   wordmarkWhite,
   wordmarkCrimson,
@@ -47,7 +47,7 @@ export function Logo({
 
   // 1. 3D Isometric Interlocking Cube Icon
   const CubeIcon = (
-    <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-105 group-hover:rotate-2">
+    <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-105 group-hover:rotate-[-2deg]">
       {(logoMode === "image" || (logoMode !== "svg" && logoImageUrl)) && logoImageUrl ? (
         <img
           src={logoImageUrl}
@@ -83,22 +83,37 @@ export function Logo({
             </linearGradient>
           </defs>
 
-          {/* Isometric Dual Cube Facets with Thicker 5px Stroke */}
+          {/* Dual Interlocking Isometric Hexagonal Cube Structure */}
           <g
             strokeWidth="5"
             strokeLinecap="round"
             strokeLinejoin="round"
             className="stroke-[url(#cubeGradientLight)] dark:stroke-[url(#cubeGradientDark)] drop-shadow-sm dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.25)]"
           >
-            <path d="M50 8 L86 29 L86 71 L50 92 L14 71 L14 29 Z" />
-            <path d="M50 8 L50 50 L86 71" />
-            <path d="M14 29 L50 50 L14 71" />
-            <path d="M50 50 L86 29" />
-            <path d="M32 39.5 L68 60.5" strokeWidth="3.5" strokeDasharray="2 3" opacity="0.45" />
+            {/* Left Cube Outer Perimeter */}
+            <path d="M35 15 L12 30 L12 66 L35 81" />
+            {/* Right Cube Outer Perimeter */}
+            <path d="M65 85 L88 70 L88 34 L65 19" />
+            {/* Top Facet Diagonal Links */}
+            <path d="M35 15 L50 25 L65 19" />
+            <path d="M12 30 L35 45 L50 35 L35 15" />
+            <path d="M50 25 L65 35" />
+            {/* Vertical & Internal Interlocking Structural Bevels */}
+            <path d="M35 45 L35 81" />
+            <path d="M65 19 L65 55" />
+            <path d="M35 45 L50 55 L65 45 L88 34" />
+            <path d="M50 55 L50 75 L35 81" />
+            <path d="M50 75 L65 85" />
+            <path d="M50 55 L65 65 L88 70" />
           </g>
 
           <polygon
-            points="50,8 86,29 50,50 14,29"
+            points="35,15 50,25 35,45 12,30"
+            fill="url(#facetHighlight)"
+            className="text-zinc-900 dark:text-white"
+          />
+          <polygon
+            points="65,19 88,34 65,45 50,25"
             fill="url(#facetHighlight)"
             className="text-zinc-900 dark:text-white"
           />
@@ -110,9 +125,10 @@ export function Logo({
   // 2. Typography Wordmark
   const BrandText = (
     <div className="flex flex-col text-left justify-center leading-none">
-      <div className="flex items-center gap-1.5 flex-row flex-nowrap">
+      <div className="flex items-center gap-2 flex-row flex-nowrap">
+        {/* Proper Standard 'A' with futuristic tracking */}
         <span
-          className="font-bold text-base sm:text-lg md:text-xl tracking-[0.16em] text-zinc-950 dark:text-white transition-colors font-sans"
+          className="font-bold text-lg sm:text-xl tracking-[0.22em] text-zinc-950 dark:text-white transition-colors"
           style={
             wordmark1Color &&
             wordmark1Color.toLowerCase() !== "#ffffff" &&
@@ -124,7 +140,7 @@ export function Logo({
           {displayWordmark1}
         </span>
         <span
-          className="font-bold text-base sm:text-lg md:text-xl tracking-[0.16em] text-red-600 dark:text-red-500 transition-colors font-sans"
+          className="font-bold text-lg sm:text-xl tracking-[0.22em] text-red-600 dark:text-red-500 transition-colors"
           style={
             wordmark2Color &&
             wordmark2Color.toLowerCase() !== "#dc2626"
@@ -136,7 +152,7 @@ export function Logo({
         </span>
       </div>
       {effectiveShowTagline && (
-        <span className="text-[8.5px] sm:text-[9.5px] font-mono tracking-[0.22em] uppercase text-zinc-500 dark:text-zinc-400 mt-1 font-medium transition-colors truncate">
+        <span className="text-[8px] sm:text-[9.5px] font-mono tracking-[0.22em] uppercase text-zinc-500 dark:text-zinc-400 mt-1 font-medium transition-colors truncate">
           {tagline || "AI AUTOMATION & SOFTWARE STUDIO"}
         </span>
       )}
