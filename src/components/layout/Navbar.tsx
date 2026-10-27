@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ZavianLogo from '@/components/ui/ZavianLogo';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 import { Sparkles } from 'lucide-react';
 import { HeaderData, ThemeBrandingConfig } from '@/lib/types';
 
@@ -26,7 +27,7 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding }: Nav
 
   return (
     <header className="fixed top-5 inset-x-0 z-40 max-w-7xl mx-auto px-6">
-      <nav className="glass-panel rounded-full px-6 py-3.5 flex items-center justify-between border border-white/10 shadow-2xl">
+      <nav className="glass-panel rounded-full px-6 py-3.5 flex items-center justify-between shadow-2xl transition-colors duration-300">
         <a href="#hero" className="flex items-center">
           <ZavianLogo
             showTagline={true}
@@ -41,26 +42,29 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding }: Nav
           />
         </a>
 
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400 dark:text-zinc-400 light:text-zinc-600">
           {navLinks.map((item) => (
             <a
               key={item.id}
               href={item.href}
               target={item.target || '_self'}
-              className="hover:text-white transition-colors"
+              className="hover:text-white dark:hover:text-white light:hover:text-zinc-950 transition-colors"
             >
               {item.label}
             </a>
           ))}
         </div>
 
-        <button
-          onClick={handleOpen}
-          className="px-5 py-2.5 rounded-full bg-[var(--theme-primary,#dc2626)] hover:brightness-110 text-white font-medium text-xs font-mono uppercase tracking-wider transition-all shadow-lg shadow-[var(--theme-glow,rgba(220,38,38,0.3))] hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
-        >
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>{content?.ctaText || 'Book Discovery'}</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <button
+            onClick={handleOpen}
+            className="px-5 py-2.5 rounded-full bg-[var(--theme-primary,#dc2626)] hover:brightness-110 text-white font-medium text-xs font-mono uppercase tracking-wider transition-all shadow-lg shadow-[var(--theme-glow,rgba(220,38,38,0.3))] hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>{content?.ctaText || 'Book Discovery'}</span>
+          </button>
+        </div>
       </nav>
     </header>
   );

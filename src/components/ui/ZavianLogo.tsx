@@ -98,8 +98,8 @@ export default function ZavianLogo({
         <div className="flex flex-col text-left">
           <div className="flex items-center gap-1.5 leading-none">
             <span
-              className="text-lg sm:text-xl font-extrabold tracking-tight font-display"
-              style={{ color: wordmark1Color || '#ffffff' }}
+              className="text-lg sm:text-xl font-extrabold tracking-tight font-display text-zinc-100 dark:text-zinc-100 light:text-zinc-950"
+              style={wordmark1Color ? { color: wordmark1Color } : undefined}
             >
               {wordmarkWhite || 'ZAVIAN'}
             </span>

@@ -9,7 +9,8 @@
       "wordmark1Color": "#ffffff",
       "wordmark2": "LABS",
       "wordmark2Color": "#DC2626",
-      "tagline": "AI AUTOMATION & SOFTWARE STUDIO"
+      "tagline": "AI AUTOMATION & SOFTWARE STUDIO",
+      "defaultMode": "dark"
     },
     "header": {
       "brandWordmark1": "ZAVIAN",
@@ -499,6 +500,34 @@
     }
   ],
   "visitorTelemetry": [
+    {
+      "visitorId": "vid-1793128219799-btdkake",
+      "ipAddress": "::1",
+      "city": "Localhost Dev",
+      "region": "Sindh",
+      "country": "Pakistan",
+      "currentPage": "/",
+      "referrer": "Direct",
+      "deviceType": "Desktop",
+      "browser": "Edge",
+      "firstSeenAt": "2026-10-27T19:10:19.828Z",
+      "lastVisitedAt": "2026-10-27T19:10:19.828Z",
+      "visitCount": 1
+    },
+    {
+      "visitorId": "vid-1793127706119-29v9137",
+      "ipAddress": "::1",
+      "city": "Localhost Dev",
+      "region": "Sindh",
+      "country": "Pakistan",
+      "currentPage": "/",
+      "referrer": "Direct",
+      "deviceType": "Desktop",
+      "browser": "Edge",
+      "firstSeenAt": "2026-10-27T19:01:46.141Z",
+      "lastVisitedAt": "2026-10-27T19:01:46.141Z",
+      "visitCount": 1
+    },
     {
       "visitorId": "vid-1793055215504-wpab9c1",
       "ipAddress": "::1",

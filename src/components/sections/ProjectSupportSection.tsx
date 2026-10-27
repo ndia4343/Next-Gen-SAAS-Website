@@ -79,11 +79,11 @@ export default function ProjectSupportSection({ onOpenQuoteModal, content }: Pro
             {content?.eyebrow || 'SOFTWARE · DATA · AI · MEDIA'}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-6 max-w-4xl leading-[1.15]">
-            <span className="text-white">{content?.headlineWhite || 'Choose the right '}</span>
+            <span className="text-zinc-100 dark:text-zinc-100 light:text-zinc-950">{content?.headlineWhite || 'Choose the right '}</span>
             <span className="text-[#FF6B00]">{content?.headlineOrange || 'project support '}</span>
             <span className="text-[#00B4D8]">{content?.headlineCyan || 'for your goals.'}</span>
           </h2>
-          <p className="text-base font-normal leading-relaxed text-zinc-400 max-w-2xl">
+          <p className="text-base font-normal leading-relaxed text-zinc-400 dark:text-zinc-400 light:text-zinc-600 max-w-2xl">
             {content?.subtitle ||
               'Every engagement starts with a focused conversation and a quote based on your requirements, deliverables and timeline.'}
           </p>
@@ -98,7 +98,7 @@ export default function ProjectSupportSection({ onOpenQuoteModal, content }: Pro
             return (
               <div
                 key={bento.id}
-                className="group relative bg-[#0f0f14]/90 hover:bg-[#14141c]/95 border border-white/10 hover:border-white/20 rounded-3xl p-8 lg:p-10 transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-[#0f0f14]/90 dark:bg-[#0f0f14]/90 light:bg-white/90 hover:bg-[#14141c]/95 dark:hover:bg-[#14141c]/95 light:hover:bg-white border border-white/10 dark:border-white/10 light:border-black/10 hover:border-white/20 dark:hover:border-white/20 light:hover:border-black/20 rounded-3xl p-8 lg:p-10 transition-all duration-300 flex flex-col justify-between shadow-sm light:shadow-md"
               >
                 <div
                   className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${colors.borderGradient} opacity-0 group-hover:opacity-100 transition-opacity`}
@@ -108,15 +108,15 @@ export default function ProjectSupportSection({ onOpenQuoteModal, content }: Pro
                   <div className={`text-xs font-mono font-bold tracking-[0.2em] uppercase ${colors.tagText} mb-4`}>
                     {bento.numberTag}
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-zinc-100 transition-colors">
+                  <h3 className="text-2xl font-bold text-zinc-100 dark:text-zinc-100 light:text-zinc-950 mb-3 transition-colors">
                     {bento.title}
                   </h3>
-                  <p className="text-base font-normal leading-relaxed text-zinc-400 mb-8 max-w-lg">
+                  <p className="text-base font-normal leading-relaxed text-zinc-400 dark:text-zinc-400 light:text-zinc-600 mb-8 max-w-lg">
                     {bento.description}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-6 border-t border-white/5">
+                <div className="flex items-center justify-between pt-6 border-t border-white/5 dark:border-white/5 light:border-black/10">
                   <button
                     onClick={() => {
                       if (onOpenQuoteModal) onOpenQuoteModal(bento.title);
@@ -127,7 +127,7 @@ export default function ProjectSupportSection({ onOpenQuoteModal, content }: Pro
                     <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                   </button>
 
-                  <div className="font-mono text-xs text-zinc-500 uppercase tracking-widest">
+                  <div className="font-mono text-xs text-zinc-500 dark:text-zinc-500 light:text-zinc-600 uppercase tracking-widest">
                     Ready to deploy
                   </div>
                 </div>

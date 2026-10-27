@@ -6,12 +6,15 @@ import { Float, MeshTransmissionMaterial, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 import { ScrollTrigger } from '@/lib/gsap';
 import { ColorTheme } from '@/lib/theme';
+import { ThemeMode } from '@/components/providers/ThemeProvider';
 
 interface NeuralCoreMeshProps {
   theme?: ColorTheme;
+  mode?: ThemeMode;
 }
 
-export default function NeuralCoreMesh({ theme }: NeuralCoreMeshProps) {
+export default function NeuralCoreMesh({ theme, mode = 'dark' }: NeuralCoreMeshProps) {
+  const isLight = mode === 'light';
   const primaryColor = theme?.primary || '#DC2626';
   const highlightColor = theme?.titleHighlight || '#EF4444';
 
@@ -109,16 +112,16 @@ export default function NeuralCoreMesh({ theme }: NeuralCoreMeshProps) {
   return (
     <group ref={coreRef} dispose={null}>
       <Float speed={2} rotationIntensity={0.5} floatIntensity={1.2}>
-        {/* Glowing Geometric Wireframe Core */}
+        {/* Glowing Geometric Wireframe Core - Adaptive Light/Dark */}
         <mesh ref={innerIcosaRef}>
           <icosahedronGeometry args={[1.15, 1]} />
           <meshStandardMaterial
             color={primaryColor}
             emissive={primaryColor}
-            emissiveIntensity={1.8}
+            emissiveIntensity={isLight ? 0.75 : 1.8}
             wireframe
-            roughness={0.2}
-            metalness={0.9}
+            roughness={isLight ? 0.15 : 0.2}
+            metalness={isLight ? 0.95 : 0.9}
           />
         </mesh>
 
@@ -128,14 +131,14 @@ export default function NeuralCoreMesh({ theme }: NeuralCoreMeshProps) {
           <MeshTransmissionMaterial
             backside
             samples={8}
-            thickness={0.8}
+            thickness={isLight ? 0.9 : 0.8}
             roughness={0.08}
             distortion={0.35}
             distortionScale={0.3}
             temporalDistortion={0.2}
             chromaticAberration={0.12}
             anisotropy={0.3}
-            color="#ffffff"
+            color={isLight ? '#475569' : '#ffffff'}
           />
         </mesh>
 
@@ -145,7 +148,7 @@ export default function NeuralCoreMesh({ theme }: NeuralCoreMeshProps) {
           <MeshTransmissionMaterial
             backside
             samples={8}
-            thickness={0.6}
+            thickness={isLight ? 0.75 : 0.6}
             roughness={0.1}
             chromaticAberration={0.18}
             anisotropy={0.4}
@@ -154,21 +157,28 @@ export default function NeuralCoreMesh({ theme }: NeuralCoreMeshProps) {
         </mesh>
 
         {/* Ambient GPU Sparkles */}
-        <Sparkles count={110} scale={5} size={2.2} speed={0.4} opacity={0.6} color={highlightColor} />
+        <Sparkles
+          count={110}
+          scale={5}
+          size={isLight ? 2.6 : 2.2}
+          speed={0.4}
+          opacity={isLight ? 0.75 : 0.6}
+          color={highlightColor}
+        />
       </Float>
 
-      {/* Reactive GPU Particle Field */}
+      {/* Reactive GPU Particle Field - NormalBlending in Light Mode for crisp contrast */}
       <points ref={particlesRef}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[positions, 3]} />
           <bufferAttribute attach="attributes-scale" args={[scales, 1]} />
         </bufferGeometry>
         <pointsMaterial
-          size={0.035}
+          size={isLight ? 0.042 : 0.035}
           color={primaryColor}
           transparent
-          opacity={0.7}
-          blending={THREE.AdditiveBlending}
+          opacity={isLight ? 0.85 : 0.7}
+          blending={isLight ? THREE.NormalBlending : THREE.AdditiveBlending}
         />
       </points>
     </group>

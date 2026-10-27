@@ -260,6 +260,7 @@ export type LogoMode = z.infer<typeof LogoModeSchema>;
 
 export const ThemeBrandingSchema = z.object({
   activeThemeId: ThemeIdSchema.default('crimson-cyber'),
+  defaultMode: z.enum(['dark', 'light']).default('dark'),
   logoMode: LogoModeSchema.default('default'),
   logoImageUrl: z.string().default(''),
   logoSvgContent: z.string().default(''),
@@ -277,6 +278,7 @@ export type ThemeBrandingConfig = z.infer<typeof ThemeBrandingSchema>;
 export const WebsiteContentSchema = z.object({
   themeBranding: ThemeBrandingSchema.default({
     activeThemeId: 'crimson-cyber',
+    defaultMode: 'dark',
     logoMode: 'default',
     logoImageUrl: '',
     logoSvgContent: '',

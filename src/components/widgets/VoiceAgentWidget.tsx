@@ -88,7 +88,7 @@ export default function VoiceAgentWidget({ content }: VoiceAgentWidgetProps) {
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600" />
             </span>
           )}
-          <span className="text-xs font-mono font-bold tracking-wider text-zinc-100">
+          <span className="text-xs font-mono font-bold tracking-wider text-zinc-100 dark:text-zinc-100 light:text-zinc-900">
             Talk to {agentName}
           </span>
           {isLive && (
@@ -112,7 +112,7 @@ export default function VoiceAgentWidget({ content }: VoiceAgentWidgetProps) {
           <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
             <div className="flex items-center gap-2">
               <Radio className="w-4 h-4 text-red-500 animate-pulse" />
-              <h4 className="font-bold text-white text-sm">{agentName} Neural Voice</h4>
+              <h4 className="font-bold text-zinc-100 dark:text-zinc-100 light:text-zinc-900 text-sm">{agentName} Neural Voice</h4>
             </div>
             <button
               onClick={() => setIsOpen(false)}

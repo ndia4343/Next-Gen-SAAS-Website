@@ -77,7 +77,7 @@ export default function CoreExpertiseSection({ onOpenQuoteModal, content }: Prop
           >
             {content?.eyebrow || 'OUR CORE EXPERTISE'}
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.15]">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-100 dark:text-zinc-100 light:text-zinc-950 leading-[1.15]">
             <span>{content?.mainTitleWhite || 'Build & '}</span>
             <span style={{ color: 'var(--theme-primary, #DC2626)' }}>
               {content?.mainTitleCrimson || 'Grow'}
@@ -146,7 +146,7 @@ export default function CoreExpertiseSection({ onOpenQuoteModal, content }: Prop
                     />
                   </div>
 
-                  <h3 className="text-2xl font-bold text-white mb-4">{card.title}</h3>
+                  <h3 className="text-2xl font-bold text-zinc-100 dark:text-zinc-100 light:text-zinc-950 mb-4">{card.title}</h3>
                   <p
                     className="text-base font-normal leading-relaxed mb-8"
                     style={{ color: 'var(--theme-desc, #d4d4d8)' }}
@@ -162,7 +162,7 @@ export default function CoreExpertiseSection({ onOpenQuoteModal, content }: Prop
                           <div className="w-5 h-5 rounded-full flex items-center justify-center bg-[#818CF8]/10 text-[#818CF8] shrink-0">
                             <Check className="w-3.5 h-3.5 stroke-[3]" />
                           </div>
-                          <span className="text-sm font-normal text-zinc-300">{text}</span>
+                          <span className="text-sm font-normal text-zinc-300 dark:text-zinc-300 light:text-zinc-700">{text}</span>
                         </div>
                       );
                     })}
@@ -176,7 +176,7 @@ export default function CoreExpertiseSection({ onOpenQuoteModal, content }: Prop
                   className={`w-full py-4 rounded-xl font-semibold text-sm tracking-wide transition-all flex items-center justify-center gap-2 cursor-pointer ${
                     isFeatured
                       ? 'bg-[var(--theme-primary,#dc2626)] hover:brightness-110 text-white shadow-lg shadow-[var(--theme-glow,rgba(220,38,38,0.3))] hover:scale-[1.02]'
-                      : 'border border-[var(--theme-primary,#dc2626)] text-white hover:bg-[var(--theme-primary,#dc2626)]/10'
+                      : 'border border-[var(--theme-primary,#dc2626)] text-zinc-100 dark:text-zinc-100 light:text-zinc-900 hover:bg-[var(--theme-primary,#dc2626)]/10'
                   }`}
                 >
                   <Rocket className="w-4 h-4" />

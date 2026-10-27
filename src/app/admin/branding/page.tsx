@@ -4,17 +4,28 @@ import React, { useState, useEffect } from 'react';
 import { PREDEFINED_THEMES, PredefinedThemeId } from '@/lib/theme';
 import { ThemeBrandingConfig } from '@/lib/types';
 import ZavianLogo from '@/components/ui/ZavianLogo';
-import { Palette, CheckCircle2, Save, Image, Code, Sparkles, RefreshCw } from 'lucide-react';
+import {
+  Palette,
+  CheckCircle2,
+  Save,
+  Image,
+  Code,
+  Sparkles,
+  RefreshCw,
+  Sun,
+  Moon,
+} from 'lucide-react';
 import { useTheme } from '@/components/providers/ThemeProvider';
 
 export default function ThemeBrandingPage() {
-  const { setThemeId } = useTheme();
+  const { setThemeId, setMode } = useTheme();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
 
   const [branding, setBranding] = useState<ThemeBrandingConfig>({
     activeThemeId: 'crimson-cyber',
+    defaultMode: 'dark',
     logoMode: 'default',
     logoImageUrl: '',
     logoSvgContent: '',
@@ -32,11 +43,14 @@ export default function ThemeBrandingPage() {
         if (data.content && data.content.themeBranding) {
           setBranding(data.content.themeBranding);
           setThemeId(data.content.themeBranding.activeThemeId);
+          if (data.content.themeBranding.defaultMode) {
+            setMode(data.content.themeBranding.defaultMode);
+          }
         }
       })
       .catch((err) => console.error('Failed to load branding:', err))
       .finally(() => setLoading(false));
-  }, [setThemeId]);
+  }, [setThemeId, setMode]);
 
   const handleSelectTheme = (themeId: PredefinedThemeId) => {
     const updated = { ...branding, activeThemeId: themeId };
@@ -87,7 +101,7 @@ export default function ThemeBrandingPage() {
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Theme &amp; Branding</h1>
           <p className="text-xs text-zinc-400 mt-1">
-            Configure the 5 predefined color themes, SVG/image logo, custom wordmark, and sub-tagline.
+            Configure the dual theme engine (Dark / Light), 5 predefined color themes, SVG/image logo, custom wordmark, and sub-tagline.
           </p>
         </div>
 
@@ -108,7 +122,76 @@ export default function ThemeBrandingPage() {
         </div>
       )}
 
-      {/* 1. Predefined Color Theme Selector */}
+      {/* 1. Dual Theme Mode (Dark Mode ⇄ Light Mode) */}
+      <section className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
+        <div>
+          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <Sun className="w-4 h-4 text-amber-400" />
+            <span>Dual Theme Engine (Dark Mode ⇄ Light Mode)</span>
+          </h2>
+          <p className="text-xs text-zinc-400 mt-1">
+            Set the default mode for first-time visitors. Visitors can also toggle on-the-fly using the animated Sun &amp; Moon button in the navbar.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div
+            onClick={() => {
+              setBranding({ ...branding, defaultMode: 'dark' });
+              setMode('dark');
+            }}
+            className={`p-5 rounded-2xl border transition-all cursor-pointer flex items-center gap-4 ${
+              (branding.defaultMode || 'dark') === 'dark'
+                ? 'bg-white/10 border-white/40 shadow-xl ring-2 ring-red-500/50'
+                : 'bg-black/30 border-white/10 hover:border-white/20'
+            }`}
+          >
+            <div className="w-12 h-12 rounded-xl bg-black border border-white/15 flex items-center justify-center text-amber-300 shadow-md">
+              <Moon className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold text-white">Dark Mode (Obsidian)</span>
+                {(branding.defaultMode || 'dark') === 'dark' && (
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold">
+                    DEFAULT
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-zinc-400 mt-0.5">High-contrast cyber obsidian aesthetic with glowing WebGL core</p>
+            </div>
+          </div>
+
+          <div
+            onClick={() => {
+              setBranding({ ...branding, defaultMode: 'light' });
+              setMode('light');
+            }}
+            className={`p-5 rounded-2xl border transition-all cursor-pointer flex items-center gap-4 ${
+              branding.defaultMode === 'light'
+                ? 'bg-white/10 border-white/40 shadow-xl ring-2 ring-red-500/50'
+                : 'bg-black/30 border-white/10 hover:border-white/20'
+            }`}
+          >
+            <div className="w-12 h-12 rounded-xl bg-white border border-black/10 flex items-center justify-center text-amber-500 shadow-md">
+              <Sun className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold text-white">Light Mode (Titanium)</span>
+                {branding.defaultMode === 'light' && (
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold">
+                    DEFAULT
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-zinc-400 mt-0.5">Crisp, clean editorial light mode with chromatic glass refractions</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Predefined Color Theme Selector */}
       <section className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
         <div>
           <h2 className="text-lg font-bold text-white flex items-center gap-2">
@@ -168,7 +251,7 @@ export default function ThemeBrandingPage() {
         </div>
       </section>
 
-      {/* 2. Logo Icon Customization */}
+      {/* 3. Logo Icon Customization */}
       <section className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
         <div>
           <h2 className="text-lg font-bold text-white flex items-center gap-2">
@@ -198,87 +281,84 @@ export default function ThemeBrandingPage() {
               }`}
             >
               <div className="text-xs font-mono font-bold uppercase">{mode.label}</div>
-              <div className="text-[11px] text-zinc-500 mt-1">{mode.desc}</div>
+              <div className="text-[11px] text-zinc-400 mt-1">{mode.desc}</div>
             </button>
           ))}
         </div>
 
-        {/* Image Mode Inputs */}
+        {/* Dynamic Inputs based on logoMode */}
         {branding.logoMode === 'image' && (
           <div className="space-y-2">
-            <label className="block text-xs font-mono text-zinc-400 uppercase tracking-wider">
-              Logo Image URL (PNG, SVG, WebP)
+            <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider">
+              Logo Image URL (HTTPS)
             </label>
             <input
               type="url"
               value={branding.logoImageUrl || ''}
               onChange={(e) => setBranding({ ...branding, logoImageUrl: e.target.value })}
               placeholder="https://example.com/assets/logo.png"
-              className="app-input"
+              className="app-input font-mono text-xs"
             />
           </div>
         )}
 
-        {/* SVG Mode Inputs */}
         {branding.logoMode === 'svg' && (
           <div className="space-y-2">
-            <label className="block text-xs font-mono text-zinc-400 uppercase tracking-wider flex items-center justify-between">
-              <span>Inline SVG Code</span>
-              <Code className="w-3.5 h-3.5 text-zinc-500" />
+            <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider flex items-center gap-2">
+              <Code className="w-3.5 h-3.5 text-red-400" />
+              <span>Raw SVG Code (&lt;svg ...&gt;...&lt;/svg&gt;)</span>
             </label>
             <textarea
-              rows={4}
+              rows={5}
               value={branding.logoSvgContent || ''}
               onChange={(e) => setBranding({ ...branding, logoSvgContent: e.target.value })}
-              placeholder='<svg viewBox="0 0 32 32">...</svg>'
+              placeholder='<svg viewBox="0 0 24 24" fill="currentColor"> ... </svg>'
               className="app-input font-mono text-xs"
             />
           </div>
         )}
       </section>
 
-      {/* 3. Logo Title & Sub-Tagline */}
+      {/* 4. Logo Title & Sub-Tagline */}
       <section className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
         <div>
           <h2 className="text-lg font-bold text-white flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-red-500" />
-            <span>Logo Title &amp; Tagline Editor</span>
+            <span>Wordmark &amp; Tagline Editor</span>
           </h2>
           <p className="text-xs text-zinc-400 mt-1">
-            Customize the dual-word brand wordmark and the micro-tagline shown in the navigation bar and footer.
+            Customize the primary dual-word brand name and corporate sub-tagline shown on navbar and footer.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-xs font-mono text-zinc-400 mb-1.5 uppercase tracking-wider">
-              Wordmark Part 1 (Default: ZAVIAN)
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider">
+              Wordmark Word 1 (Default: ZAVIAN)
             </label>
             <input
               type="text"
               value={branding.wordmark1}
               onChange={(e) => setBranding({ ...branding, wordmark1: e.target.value })}
               className="app-input"
-              placeholder="ZAVIAN"
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-mono text-zinc-400 mb-1.5 uppercase tracking-wider">
-              Wordmark Part 2 (Default: LABS)
+          <div className="space-y-2">
+            <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider">
+              Wordmark Word 2 (Default: LABS)
             </label>
             <input
               type="text"
               value={branding.wordmark2}
               onChange={(e) => setBranding({ ...branding, wordmark2: e.target.value })}
               className="app-input"
-              placeholder="LABS"
             />
           </div>
         </div>
 
-        <div>
-          <label className="block text-xs font-mono text-zinc-400 mb-1.5 uppercase tracking-wider">
+        <div className="space-y-2">
+          <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider">
             Sub-Tagline (Default: AI AUTOMATION &amp; SOFTWARE STUDIO)
           </label>
           <input
@@ -286,23 +366,22 @@ export default function ThemeBrandingPage() {
             value={branding.tagline}
             onChange={(e) => setBranding({ ...branding, tagline: e.target.value })}
             className="app-input"
-            placeholder="AI AUTOMATION & SOFTWARE STUDIO"
           />
         </div>
       </section>
 
-      {/* Live Preview Card */}
-      <section className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/15 space-y-4">
+      {/* 5. Live Interactive Preview */}
+      <section className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400">
-            Real-Time Live Preview
-          </span>
-          <span className="text-[10px] font-mono text-emerald-400 font-bold">
-            THEME: {branding.activeThemeId.toUpperCase()}
+          <h2 className="text-sm font-mono uppercase tracking-wider text-zinc-400">
+            Live Header Brand Preview
+          </h2>
+          <span className="text-[11px] font-mono text-zinc-500">
+            Active Theme: {branding.activeThemeId} ({branding.defaultMode || 'dark'})
           </span>
         </div>
 
-        <div className="p-8 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center">
+        <div className="p-6 rounded-2xl bg-[#060609] border border-white/10 flex items-center justify-between">
           <ZavianLogo
             showTagline={true}
             wordmarkWhite={branding.wordmark1}
@@ -313,7 +392,6 @@ export default function ThemeBrandingPage() {
             logoMode={branding.logoMode}
             logoImageUrl={branding.logoImageUrl}
             logoSvgContent={branding.logoSvgContent}
-            size="lg"
           />
         </div>
       </section>

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(.light, .light *));
+
 @theme {
   --color-obsidian-950: #040406;
   --color-obsidian-900: #060609;
@@ -30,25 +33,45 @@
     box-sizing: border-box;
   }
 
+  html {
+    color-scheme: dark;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html.light {
+    color-scheme: light;
+  }
+
   html,
   body {
     background-color: #060609;
     color: #f4f4f5;
     font-family: var(--font-display);
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html.light,
+  html.light body {
+    background-color: #F8F9FA !important;
+    color: #09090b !important;
   }
 
   ::selection {
-    background-color: #dc2626;
+    background-color: var(--theme-primary, #dc2626);
     color: #ffffff;
   }
 
-  /* Universal Glass Surfaces */
+  /* Universal Glass Surfaces - Dark Mode */
   .glass-panel {
     background: rgba(16, 16, 24, 0.72);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
   .glass-panel-elevated {
@@ -56,6 +79,7 @@
     backdrop-filter: blur(28px);
     -webkit-backdrop-filter: blur(28px);
     border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
   .glass-panel-crimson {
@@ -63,6 +87,26 @@
     backdrop-filter: blur(24px);
     border: 1px solid var(--theme-primary, #ef4444);
     box-shadow: 0 0 35px var(--theme-glow, rgba(220, 38, 38, 0.15));
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* Universal Glass Surfaces - Light Mode Overrides */
+  html.light .glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  }
+
+  html.light .glass-panel-elevated {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+  }
+
+  html.light .glass-panel-crimson {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1.5px solid var(--theme-primary, #ef4444);
+    box-shadow: 0 12px 35px var(--theme-glow, rgba(220, 38, 38, 0.12));
   }
 
   /* Standardized Form Input Boxes across the whole site */
@@ -79,13 +123,62 @@
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  html.light .app-input {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    color: #09090b;
+  }
+
   .app-input::placeholder {
     color: #52525b;
+  }
+
+  html.light .app-input::placeholder {
+    color: #94a3b8;
   }
 
   .app-input:focus {
     border-color: var(--theme-primary, #dc2626);
     box-shadow: 0 0 0 1px var(--theme-primary, #dc2626), 0 0 15px var(--theme-glow, rgba(220, 38, 38, 0.25));
+  }
+
+  /* Light mode text & element hierarchy */
+  html.light h1:not([class*="text-transparent"]),
+  html.light h2:not([class*="text-transparent"]),
+  html.light h3:not([class*="text-transparent"]),
+  html.light .hero-headline-span:not([class*="text-transparent"]) {
+    color: #09090b !important;
+  }
+
+  /* Preserve crisp white text on primary theme buttons */
+  html.light [class*="bg-[var(--theme-primary"],
+  html.light button[class*="bg-[var(--theme-primary"],
+  html.light .bg-red-600,
+  html.light button.bg-red-600 {
+    color: #ffffff !important;
+  }
+
+  html.light .text-zinc-300 {
+    color: #1e293b !important;
+  }
+
+  html.light .text-zinc-400 {
+    color: #475569 !important;
+  }
+
+  html.light .text-zinc-500 {
+    color: #64748b !important;
+  }
+
+  html.light .text-zinc-100 {
+    color: #0f172a !important;
+  }
+
+  html.light .border-white\/5,
+  html.light .border-white\/10,
+  html.light .border-white\/15,
+  html.light .border-white\/20 {
+    border-color: rgba(0, 0, 0, 0.08) !important;
   }
 }
 
@@ -117,7 +210,7 @@
   transform: translateZ(40px);
 }
 
-/* Custom Scrollbar for Obsidian Theme */
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -130,6 +223,16 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+html.light ::-webkit-scrollbar-track {
+  background: #f1f1f4;
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.35);
 }
 
 /* Radial Spotlight Glow Utilities */

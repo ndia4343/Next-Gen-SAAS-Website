@@ -4,6 +4,7 @@ import React from 'react';
 import { ArrowUp, Sparkles } from 'lucide-react';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import ZavianLogo from '@/components/ui/ZavianLogo';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 import { FooterData, ThemeBrandingConfig } from '@/lib/types';
 
 interface FooterProps {
@@ -38,7 +39,7 @@ export default function Footer({ onOpenQuoteModal, content, themeBranding }: Foo
   const links = content?.links && content.links.length > 0 ? content.links : defaultLinks;
 
   return (
-    <footer className="relative z-20 border-t border-white/10 bg-[#060609]/80 backdrop-blur-2xl py-16 px-6 lg:px-12 mt-20">
+    <footer className="relative z-20 border-t border-white/10 dark:border-white/10 light:border-black/10 bg-[#060609]/80 dark:bg-[#060609]/80 light:bg-white/80 backdrop-blur-2xl py-16 px-6 lg:px-12 mt-20 transition-colors duration-300">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
         <div>
           <div className="mb-4">
@@ -54,13 +55,15 @@ export default function Footer({ onOpenQuoteModal, content, themeBranding }: Foo
               logoSvgContent={themeBranding?.logoSvgContent}
             />
           </div>
-          <p className="text-sm text-zinc-400 max-w-md leading-relaxed font-normal">
+          <p className="text-sm text-zinc-400 dark:text-zinc-400 light:text-zinc-600 max-w-md leading-relaxed font-normal">
             {content?.description ||
               'Architecting next-generation autonomous AI systems, GPU-accelerated 3D WebGL interfaces, and production-grade software ecosystems. Zero templates. Pure engineering.'}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-6 text-xs font-mono uppercase tracking-wider">
+          <ThemeToggle />
+
           <button
             onClick={() => handleOpenQuote('Discovery Call')}
             className="px-5 py-2.5 rounded-full bg-[var(--theme-primary,#dc2626)] hover:brightness-110 text-white font-medium transition-all shadow-lg shadow-[var(--theme-glow,rgba(220,38,38,0.3))] hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
@@ -73,7 +76,7 @@ export default function Footer({ onOpenQuoteModal, content, themeBranding }: Foo
             <a
               key={link.id}
               href={link.href}
-              className="text-zinc-400 hover:text-white transition-colors"
+              className="text-zinc-400 hover:text-white dark:text-zinc-400 dark:hover:text-white light:text-zinc-600 light:hover:text-zinc-950 transition-colors"
             >
               {link.label}
             </a>
@@ -81,7 +84,7 @@ export default function Footer({ onOpenQuoteModal, content, themeBranding }: Foo
 
           <button
             onClick={scrollToTop}
-            className="p-3 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 text-xs font-mono cursor-pointer"
+            className="p-3 rounded-full bg-white/5 dark:bg-white/5 light:bg-black/5 border border-white/10 dark:border-white/10 light:border-black/10 text-zinc-400 dark:text-zinc-400 light:text-zinc-600 hover:text-white dark:hover:text-white light:hover:text-zinc-950 hover:bg-white/10 transition-all flex items-center gap-2 text-xs font-mono cursor-pointer"
             aria-label="Back to Top"
           >
             <ArrowUp className="w-4 h-4" />
@@ -90,12 +93,12 @@ export default function Footer({ onOpenQuoteModal, content, themeBranding }: Foo
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-zinc-500 gap-4">
+      <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/5 dark:border-white/5 light:border-black/5 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-zinc-500 gap-4">
         <div>
           {content?.copyright || '© 2026 ZAVIAN LABS. ALL RIGHTS RESERVED.'}
         </div>
         <div className="flex flex-wrap items-center gap-6">
-          <span className="text-emerald-400 flex items-center gap-1.5 font-medium">
+          <span className="text-emerald-400 dark:text-emerald-400 light:text-emerald-600 flex items-center gap-1.5 font-medium">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             {content?.statusLabel || 'SYSTEMS OPERATIONAL'}
           </span>

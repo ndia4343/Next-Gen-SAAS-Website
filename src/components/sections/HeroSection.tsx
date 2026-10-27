@@ -57,7 +57,7 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
       <div className="max-w-5xl mx-auto text-center flex flex-col items-center">
         {/* Eyebrow Badge */}
         {content?.badgeVisible !== false && (
-          <div className="hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border border-white/10 text-xs font-mono tracking-[0.25em] text-zinc-400 uppercase mb-8">
+          <div className="hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border border-white/10 dark:border-white/10 light:border-black/10 text-xs font-mono tracking-[0.25em] text-zinc-400 dark:text-zinc-400 light:text-zinc-600 uppercase mb-8 shadow-sm">
             <span
               className="w-2 h-2 rounded-full animate-pulse"
               style={{ backgroundColor: content?.badgeDotColor || 'var(--theme-primary, #DC2626)' }}
@@ -67,14 +67,14 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         )}
 
         {/* Display Headline */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-white max-w-4xl mb-6 overflow-hidden">
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-white dark:text-white light:text-zinc-950 max-w-4xl mb-6 overflow-hidden">
           <span className="hero-headline-span block">
             {content?.titleLine1 || 'Architecting the Future of'}
           </span>
           <span className="hero-headline-span block text-transparent bg-clip-text bg-gradient-to-r from-[var(--theme-primary,#dc2626)] via-[var(--theme-title-accent,#ef4444)] to-[var(--theme-secondary,#ff6b00)]">
             {content?.titleHighlight || 'Autonomous AI'}
           </span>
-          <span className="hero-headline-span block text-zinc-300">
+          <span className="hero-headline-span block text-zinc-300 dark:text-zinc-300 light:text-zinc-800">
             {content?.titleLine2 || '& High-Compute WebGL.'}
           </span>
         </h1>
@@ -102,7 +102,7 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
             onClick={() => {
               if (onOpenQuoteModal) onOpenQuoteModal('Discovery Call');
             }}
-            className="px-8 py-4 rounded-full glass-panel hover:bg-white/10 text-white font-medium text-sm tracking-wide transition-all border border-white/15 hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
+            className="px-8 py-4 rounded-full glass-panel hover:bg-white/10 dark:hover:bg-white/10 light:hover:bg-black/5 text-zinc-100 dark:text-zinc-100 light:text-zinc-900 font-medium text-sm tracking-wide transition-all border border-white/15 dark:border-white/15 light:border-black/15 hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer shadow-sm"
           >
             <Sparkles className="w-4 h-4 text-[var(--theme-primary,#dc2626)]" />
             {content?.secondaryCtaText || 'Book Discovery Call'}
@@ -112,14 +112,14 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         {/* HUD Metrics */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl">
           {stats.slice(0, 3).map((stat, idx) => (
-            <div key={idx} className="hero-stat-card glass-panel rounded-2xl p-4 border border-white/5 text-left">
-              <div className="flex items-center gap-2 text-zinc-500 font-mono text-xs mb-1">
+            <div key={idx} className="hero-stat-card glass-panel rounded-2xl p-4 border border-white/5 dark:border-white/5 light:border-black/10 text-left shadow-sm">
+              <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-500 light:text-zinc-600 font-mono text-xs mb-1">
                 <Terminal className="w-3.5 h-3.5 text-[var(--theme-primary,#dc2626)]" />
                 {stat.label}
               </div>
-              <div className="text-xl font-bold font-mono text-zinc-100">{stat.value}</div>
+              <div className="text-xl font-bold font-mono text-zinc-100 dark:text-zinc-100 light:text-zinc-900">{stat.value}</div>
               {stat.subtext && (
-                <div className="text-[11px] font-mono text-zinc-500 mt-0.5">{stat.subtext}</div>
+                <div className="text-[11px] font-mono text-zinc-500 dark:text-zinc-500 light:text-zinc-600 mt-0.5">{stat.subtext}</div>
               )}
             </div>
           ))}

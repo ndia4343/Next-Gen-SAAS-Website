@@ -9,7 +9,8 @@ import PostProcessing from './PostProcessing';
 import { useTheme } from '@/components/providers/ThemeProvider';
 
 export default function SceneCanvas() {
-  const { theme } = useTheme();
+  const { theme, mode } = useTheme();
+  const isLight = mode === 'light';
 
   return (
     <div className="fixed inset-0 z-0 pointer-events-none w-screen h-screen overflow-hidden">
@@ -24,13 +25,22 @@ export default function SceneCanvas() {
         dpr={[1, 1.8]}
       >
         <PerspectiveCamera makeDefault position={[0, 0, 4.5]} fov={45} />
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[10, 10, 5]} intensity={1.2} color="#ffffff" />
-        <directionalLight position={[-10, -5, -5]} intensity={1.8} color={theme.lightTint3D} />
-        <pointLight position={[0, 0, 0]} intensity={2.0} color={theme.secondary} distance={6} />
+        <ambientLight intensity={isLight ? 0.85 : 0.4} />
+        <directionalLight position={[10, 10, 5]} intensity={isLight ? 1.6 : 1.2} color="#ffffff" />
+        <directionalLight
+          position={[-10, -5, -5]}
+          intensity={isLight ? 2.4 : 1.8}
+          color={theme?.lightTint3D || '#DC2626'}
+        />
+        <pointLight
+          position={[0, 0, 0]}
+          intensity={isLight ? 2.6 : 2.0}
+          color={theme?.secondary || '#FF6B00'}
+          distance={isLight ? 7.5 : 6}
+        />
 
         <Suspense fallback={null}>
-          <NeuralCoreMesh theme={theme} />
+          <NeuralCoreMesh theme={theme} mode={mode} />
           <PostProcessing />
         </Suspense>
 
