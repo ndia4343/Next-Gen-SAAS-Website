@@ -39,7 +39,10 @@ export async function PATCH(request: NextRequest) {
     const updated = await updateSiteContent(() => validated);
 
     // Instant live storefront cache invalidation
+    revalidatePath('/', 'layout');
     revalidatePath('/', 'page');
+    revalidatePath('/');
+    revalidatePath('/admin', 'layout');
     revalidatePath('/admin', 'page');
     revalidatePath('/admin/branding', 'page');
     revalidatePath('/admin/header', 'page');

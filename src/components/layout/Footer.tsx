@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowUp, Sparkles } from 'lucide-react';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import ZavianLogo from '@/components/ui/ZavianLogo';
@@ -19,8 +19,59 @@ const defaultLinks = [
   { id: '3', label: '02 / Project Support', href: '#project-support' },
 ];
 
-export default function Footer({ onOpenQuoteModal, content, themeBranding }: FooterProps) {
+export default function Footer({ onOpenQuoteModal, content, themeBranding: initialBranding }: FooterProps) {
   const { lenis } = useSmoothScroll();
+  const [branding, setBranding] = useState<ThemeBrandingConfig | undefined>(initialBranding);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('zavian_theme_branding');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && (parsed.logoImageUrl || parsed.logoMode)) {
+          setBranding((prev) => ({ ...prev, ...parsed }));
+        }
+      }
+    } catch {}
+
+    const handleUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<ThemeBrandingConfig>;
+      if (customEvent.detail) {
+        setBranding(customEvent.detail);
+      }
+    };
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'zavian_theme_branding' && e.newValue) {
+        try {
+          setBranding(JSON.parse(e.newValue));
+        } catch {}
+      }
+    };
+
+    window.addEventListener('zavian_branding_updated', handleUpdate);
+    window.addEventListener('storage', handleStorage);
+
+    fetch('/api/content')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.content?.themeBranding) {
+          setBranding((prev) => ({ ...prev, ...data.content.themeBranding }));
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      window.removeEventListener('zavian_branding_updated', handleUpdate);
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (initialBranding) {
+      setBranding((prev) => ({ ...initialBranding, ...(prev?.logoImageUrl ? { logoImageUrl: prev.logoImageUrl, logoMode: prev.logoMode } : {}) }));
+    }
+  }, [initialBranding]);
 
   const scrollToTop = () => {
     if (lenis) {
@@ -45,14 +96,14 @@ export default function Footer({ onOpenQuoteModal, content, themeBranding }: Foo
           <div className="mb-4">
             <ZavianLogo
               showTagline={true}
-              wordmarkWhite={themeBranding?.wordmark1 || content?.brandWordmark1}
-              wordmarkCrimson={themeBranding?.wordmark2 || content?.brandWordmark2}
-              wordmark1Color={themeBranding?.wordmark1Color}
-              wordmark2Color={themeBranding?.wordmark2Color}
-              tagline={themeBranding?.tagline || content?.tagline}
-              logoMode={themeBranding?.logoMode}
-              logoImageUrl={themeBranding?.logoImageUrl}
-              logoSvgContent={themeBranding?.logoSvgContent}
+              wordmarkWhite={branding?.wordmark1 || content?.brandWordmark1}
+              wordmarkCrimson={branding?.wordmark2 || content?.brandWordmark2}
+              wordmark1Color={branding?.wordmark1Color}
+              wordmark2Color={branding?.wordmark2Color}
+              tagline={branding?.tagline || content?.tagline}
+              logoMode={branding?.logoMode}
+              logoImageUrl={branding?.logoImageUrl}
+              logoSvgContent={branding?.logoSvgContent}
             />
           </div>
           <p className="text-sm text-zinc-400 dark:text-zinc-400 light:text-zinc-600 max-w-md leading-relaxed font-normal">

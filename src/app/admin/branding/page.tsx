@@ -64,11 +64,81 @@ export default function ThemeBrandingPage() {
       .finally(() => setLoading(false));
   }, [setThemeId, setMode]);
 
+function optimizeImage(file: File, maxDim = 512): Promise<{ dataUrl: string; sizeKb: string }> {
+  return new Promise((resolve, reject) => {
+    if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target?.result as string;
+        resolve({
+          dataUrl,
+          sizeKb: (file.size / 1024).toFixed(1) + ' KB',
+        });
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new (window as any).Image();
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve({
+            dataUrl: e.target?.result as string,
+            sizeKb: (file.size / 1024).toFixed(1) + ' KB',
+          });
+          return;
+        }
+
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const format = file.type === 'image/jpeg' ? 'image/jpeg' : 'image/png';
+        const dataUrl = canvas.toDataURL(format, 0.92);
+        const approxSizeKb = ((dataUrl.length * 0.75) / 1024).toFixed(1) + ' KB';
+        resolve({ dataUrl, sizeKb: approxSizeKb });
+      };
+      img.onerror = reject;
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
   const processImageFile = async (file: File) => {
     if (!file) return;
     setUploadError('');
 
-    const validTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml', 'image/gif', 'image/x-icon', 'image/vnd.microsoft.icon'];
+    const validTypes = [
+      'image/png',
+      'image/jpeg',
+      'image/webp',
+      'image/svg+xml',
+      'image/gif',
+      'image/x-icon',
+      'image/vnd.microsoft.icon',
+    ];
     const isSvg = file.name.toLowerCase().endsWith('.svg');
 
     if (!validTypes.includes(file.type) && !isSvg) {
@@ -76,52 +146,55 @@ export default function ThemeBrandingPage() {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadError('File size exceeds 5MB limit. Please select an optimized logo asset.');
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError('File size exceeds 10MB limit. Please select an optimized logo asset.');
       return;
     }
 
     setUploadLoading(true);
     setUploadedFileName(file.name);
-    setUploadedFileSize((file.size / 1024).toFixed(1) + ' KB');
 
     try {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const dataUrl = event.target?.result as string;
-        if (dataUrl) {
-          setBranding((prev) => ({
-            ...prev,
-            logoMode: 'image',
-            logoImageUrl: dataUrl,
-          }));
+      const { dataUrl, sizeKb } = await optimizeImage(file, 512);
+      setUploadedFileSize(sizeKb);
 
-          // Background upload for persistent disk asset when supported
-          try {
-            const formData = new FormData();
-            formData.append('file', file);
-            const uploadRes = await fetch('/api/admin/upload', {
-              method: 'POST',
-              body: formData,
-            });
-            if (uploadRes.ok) {
-              const resData = await uploadRes.json();
-              if (resData.url && !resData.url.startsWith('data:')) {
-                setBranding((prev) => ({
-                  ...prev,
-                  logoImageUrl: resData.url,
-                }));
-              }
-            }
-          } catch {
-            // Keep the dataUrl fallback intact
+      const updated = {
+        ...branding,
+        logoMode: 'image' as const,
+        logoImageUrl: dataUrl,
+      };
+
+      setBranding(updated);
+
+      // Instant local persistence & live event dispatch so storefront reflects immediately
+      try {
+        localStorage.setItem('zavian_theme_branding', JSON.stringify(updated));
+        window.dispatchEvent(new CustomEvent('zavian_branding_updated', { detail: updated }));
+      } catch {}
+
+      // Background upload to server /uploads/ folder if writable
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        const uploadRes = await fetch('/api/admin/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        if (uploadRes.ok) {
+          const resData = await uploadRes.json();
+          if (resData.url && !resData.url.startsWith('data:')) {
+            const diskUpdated = { ...updated, logoImageUrl: resData.url };
+            setBranding(diskUpdated);
+            try {
+              localStorage.setItem('zavian_theme_branding', JSON.stringify(diskUpdated));
+              window.dispatchEvent(new CustomEvent('zavian_branding_updated', { detail: diskUpdated }));
+            } catch {}
           }
         }
-        setUploadLoading(false);
-      };
-      reader.readAsDataURL(file);
+      } catch {}
     } catch (err: any) {
       setUploadError(err.message || 'Error processing file');
+    } finally {
       setUploadLoading(false);
     }
   };
@@ -138,11 +211,16 @@ export default function ThemeBrandingPage() {
     reader.onload = (e) => {
       const text = e.target?.result as string;
       if (text) {
-        setBranding((prev) => ({
-          ...prev,
-          logoMode: 'svg',
+        const updated = {
+          ...branding,
+          logoMode: 'svg' as const,
           logoSvgContent: text,
-        }));
+        };
+        setBranding(updated);
+        try {
+          localStorage.setItem('zavian_theme_branding', JSON.stringify(updated));
+          window.dispatchEvent(new CustomEvent('zavian_branding_updated', { detail: updated }));
+        } catch {}
       }
     };
     reader.readAsText(file);
@@ -170,25 +248,46 @@ export default function ThemeBrandingPage() {
     const updated = { ...branding, activeThemeId: themeId };
     setBranding(updated);
     setThemeId(themeId); // Instantly preview on UI & 3D canvas!
+    try {
+      localStorage.setItem('zavian_theme_branding', JSON.stringify(updated));
+      window.dispatchEvent(new CustomEvent('zavian_branding_updated', { detail: updated }));
+    } catch {}
   };
 
   const handleSave = async () => {
     setSaving(true);
     setSuccessMsg('');
     try {
+      const payloadBranding = {
+        ...branding,
+        logoMode: branding.logoImageUrl ? ('image' as const) : branding.logoMode,
+      };
+
+      // 1. Instant client-side persistence and global event broadcast
+      try {
+        localStorage.setItem('zavian_theme_branding', JSON.stringify(payloadBranding));
+        window.dispatchEvent(new CustomEvent('zavian_branding_updated', { detail: payloadBranding }));
+      } catch (storageErr) {
+        console.warn('localStorage sync notice:', storageErr);
+      }
+
+      // 2. Persist to database & trigger live revalidation across storefront
       const res = await fetch('/api/content', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           section: 'themeBranding',
-          data: branding,
+          data: payloadBranding,
         }),
       });
 
-      if (!res.ok) throw new Error('Save failed');
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.error || 'Save failed');
+      }
 
-      setSuccessMsg('Theme & Branding configuration saved! Live storefront updated instantly.');
-      setTimeout(() => setSuccessMsg(''), 4000);
+      setSuccessMsg('Logo & Branding published live! Live storefront updated instantly.');
+      setTimeout(() => setSuccessMsg(''), 5000);
     } catch (err: any) {
       alert(err.message || 'Error saving branding');
     } finally {

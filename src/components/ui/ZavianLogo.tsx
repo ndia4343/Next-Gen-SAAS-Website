@@ -60,7 +60,7 @@ export default function ZavianLogo({
         }}
         className={`relative flex items-center justify-center ${sizeClasses[size]} bg-gradient-to-br from-[var(--theme-primary,#dc2626)] via-[#801010] to-[#200406] border border-[var(--theme-primary,#dc2626)]/40 shadow-[0_0_22px_var(--theme-glow,rgba(220,38,38,0.35))] shrink-0 group overflow-hidden`}
       >
-        {logoMode === 'image' && logoImageUrl ? (
+        {(logoMode === 'image' || (logoMode !== 'svg' && logoImageUrl)) && logoImageUrl ? (
           <img
             src={logoImageUrl}
             alt="Brand Logo"

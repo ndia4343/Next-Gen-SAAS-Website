@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ZavianLogo from '@/components/ui/ZavianLogo';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { Sparkles } from 'lucide-react';
@@ -12,7 +12,62 @@ interface NavbarProps {
   themeBranding?: ThemeBrandingConfig;
 }
 
-export default function Navbar({ onOpenQuoteModal, content, themeBranding }: NavbarProps) {
+export default function Navbar({ onOpenQuoteModal, content, themeBranding: initialBranding }: NavbarProps) {
+  const [branding, setBranding] = useState<ThemeBrandingConfig | undefined>(initialBranding);
+
+  useEffect(() => {
+    // 1. Sync from localStorage for instant client reflection
+    try {
+      const saved = localStorage.getItem('zavian_theme_branding');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && (parsed.logoImageUrl || parsed.logoMode)) {
+          setBranding((prev) => ({ ...prev, ...parsed }));
+        }
+      }
+    } catch {}
+
+    // 2. Listen to live branding updates from admin panel in same tab or across tabs
+    const handleUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<ThemeBrandingConfig>;
+      if (customEvent.detail) {
+        setBranding(customEvent.detail);
+      }
+    };
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'zavian_theme_branding' && e.newValue) {
+        try {
+          setBranding(JSON.parse(e.newValue));
+        } catch {}
+      }
+    };
+
+    window.addEventListener('zavian_branding_updated', handleUpdate);
+    window.addEventListener('storage', handleStorage);
+
+    // 3. Background fetch latest from server API
+    fetch('/api/content')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.content?.themeBranding) {
+          setBranding((prev) => ({ ...prev, ...data.content.themeBranding }));
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      window.removeEventListener('zavian_branding_updated', handleUpdate);
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (initialBranding) {
+      setBranding((prev) => ({ ...initialBranding, ...(prev?.logoImageUrl ? { logoImageUrl: prev.logoImageUrl, logoMode: prev.logoMode } : {}) }));
+    }
+  }, [initialBranding]);
+
   const handleOpen = () => {
     if (onOpenQuoteModal) {
       onOpenQuoteModal(content?.ctaActionId || 'Discovery Call');
@@ -31,14 +86,14 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding }: Nav
         <a href="#hero" className="flex items-center">
           <ZavianLogo
             showTagline={true}
-            wordmarkWhite={themeBranding?.wordmark1 || content?.brandWordmark1}
-            wordmarkCrimson={themeBranding?.wordmark2 || content?.brandWordmark2}
-            wordmark1Color={themeBranding?.wordmark1Color}
-            wordmark2Color={themeBranding?.wordmark2Color}
-            tagline={themeBranding?.tagline || content?.tagline}
-            logoMode={themeBranding?.logoMode}
-            logoImageUrl={themeBranding?.logoImageUrl}
-            logoSvgContent={themeBranding?.logoSvgContent}
+            wordmarkWhite={branding?.wordmark1 || content?.brandWordmark1}
+            wordmarkCrimson={branding?.wordmark2 || content?.brandWordmark2}
+            wordmark1Color={branding?.wordmark1Color}
+            wordmark2Color={branding?.wordmark2Color}
+            tagline={branding?.tagline || content?.tagline}
+            logoMode={branding?.logoMode}
+            logoImageUrl={branding?.logoImageUrl}
+            logoSvgContent={branding?.logoSvgContent}
           />
         </a>
 
