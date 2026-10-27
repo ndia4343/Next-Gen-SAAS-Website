@@ -19,7 +19,7 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
       tl.from('.hero-badge', { y: -25, opacity: 0, duration: 0.8, delay: 0.15 })
-        .from('.hero-headline-span', { y: 55, opacity: 0, duration: 0.95, stagger: 0.14 }, '-=0.4')
+        .from('h1', { y: 40, opacity: 0, duration: 0.95 }, '-=0.4')
         .from('.hero-desc', { y: 25, opacity: 0, duration: 0.8 }, '-=0.5')
         .from('.hero-cta-group', { scale: 0.96, opacity: 0, duration: 0.6 }, '-=0.4')
         .from('.hero-stat-card', { y: 35, opacity: 0, stagger: 0.1, duration: 0.6 }, '-=0.3');
@@ -67,21 +67,19 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         )}
 
         {/* Display Headline */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-white dark:text-white light:text-zinc-950 max-w-4xl mb-6 overflow-hidden">
-          <span className="hero-headline-span block">
-            {content?.titleLine1 || 'Architecting the Future of'}
-          </span>
-          <span className="hero-headline-span block text-transparent bg-clip-text bg-gradient-to-r from-[var(--theme-primary,#dc2626)] via-[var(--theme-title-accent,#ef4444)] to-[var(--theme-secondary,#ff6b00)]">
-            {content?.titleHighlight || 'Autonomous AI'}
-          </span>
-          <span className="hero-headline-span block text-zinc-300 dark:text-zinc-300 light:text-zinc-800">
-            {content?.titleLine2 || '& High-Compute WebGL.'}
-          </span>
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.08] text-zinc-950 dark:text-white drop-shadow-sm dark:drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+          Architecting the Future <br className="hidden sm:block" />
+          of{" "}
+          <span className="bg-gradient-to-r from-red-600 via-red-500 to-orange-500 bg-clip-text text-transparent">
+            Autonomous AI
+          </span>{" "}
+          <br className="hidden sm:block" />
+          & High-Compute WebGL.
         </h1>
 
         {/* Subtitle Body */}
         <p
-          className="hero-desc text-base font-normal leading-relaxed max-w-2xl mb-10"
+          className="hero-desc text-base font-normal leading-relaxed max-w-2xl mt-6 mb-10"
           style={{ color: 'var(--theme-desc, #d4d4d8)' }}
         >
           {content?.description ||
