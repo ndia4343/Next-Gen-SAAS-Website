@@ -49,7 +49,7 @@
       "titleLine1": "Your Next High-Ticket Client",
       "titleHighlight": "Won't Wait 2 Hours for a Reply.",
       "titleLine2": "",
-      "description": "Stop losing qualified leads to voicemail and delayed messages. We engineer 24/7 autonomous AI voice receptionists, instant WhatsApp booking flows, and custom revenue dashboards that convert inbound traffic in under 60 seconds.",
+      "description": "We build AI voice agents, WhatsApp booking workflows, and custom software that turn incoming leads into booked appointments—24/7.",
       "primaryCtaText": "Explore Capabilities",
       "primaryCtaLink": "#core-expertise",
       "secondaryCtaText": "Start a Project",
@@ -570,6 +570,34 @@
     }
   ],
   "visitorTelemetry": [
+    {
+      "visitorId": "vid-1793214328971-cp71rku",
+      "ipAddress": "::1",
+      "city": "Localhost Dev",
+      "region": "Sindh",
+      "country": "Pakistan",
+      "currentPage": "/",
+      "referrer": "Direct",
+      "deviceType": "Desktop",
+      "browser": "Chrome",
+      "firstSeenAt": "2026-10-28T19:05:29.029Z",
+      "lastVisitedAt": "2026-10-28T19:05:29.029Z",
+      "visitCount": 1
+    },
+    {
+      "visitorId": "vid-1793214149644-m3e0r9z",
+      "ipAddress": "::1",
+      "city": "Localhost Dev",
+      "region": "Sindh",
+      "country": "Pakistan",
+      "currentPage": "/",
+      "referrer": "Direct",
+      "deviceType": "Desktop",
+      "browser": "Chrome",
+      "firstSeenAt": "2026-10-28T19:02:29.666Z",
+      "lastVisitedAt": "2026-10-28T19:02:29.666Z",
+      "visitCount": 1
+    },
     {
       "visitorId": "vid-1793208795935-04hvw8s",
       "ipAddress": "::1",

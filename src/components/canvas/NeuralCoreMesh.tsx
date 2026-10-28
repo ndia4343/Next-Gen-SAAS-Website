@@ -72,15 +72,15 @@ export default function NeuralCoreMesh({ theme, mode = 'dark' }: NeuralCoreMeshP
 
       // Choreographed scroll camera/mesh states
       if (scrollProgress < 0.25) {
-        // Hero Section (0% - 25%): Centered focus
+        // Hero Section (0% - 25%): Centered focus (scaled down 20% to eliminate text collision)
         coreRef.current.position.set(0, 0, 0);
-        coreRef.current.scale.setScalar(1);
+        coreRef.current.scale.setScalar(0.8);
       } else if (scrollProgress >= 0.25 && scrollProgress < 0.65) {
         // Core Expertise (25% - 65%): Pulls back behind columns, expands
         const t = (scrollProgress - 0.25) / 0.4;
         coreRef.current.position.z = THREE.MathUtils.lerp(0, -2.4, t);
         coreRef.current.position.y = THREE.MathUtils.lerp(0, -0.7, t);
-        coreRef.current.scale.setScalar(THREE.MathUtils.lerp(1, 1.35, t));
+        coreRef.current.scale.setScalar(THREE.MathUtils.lerp(0.8, 1.25, t));
       } else {
         // Bento Grid (65% - 100%): Shifts to right diagonal accent
         const t = (scrollProgress - 0.65) / 0.35;

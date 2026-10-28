@@ -52,18 +52,21 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
     <section
       id="hero"
       ref={containerRef}
-      className="relative min-h-screen flex flex-col justify-center items-center px-6 lg:px-12 pt-36 pb-20 z-10"
+      className="relative min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-12 z-10"
     >
-      <div className="max-w-5xl mx-auto text-center flex flex-col items-center">
-        {/* Eyebrow Badge */}
+      <div className="relative z-10 max-w-5xl mx-auto px-4 pt-28 sm:pt-36 pb-16 text-center flex flex-col items-center">
+        {/* Subtle backdrop glow/mask to prevent 3D wireframe text collisions */}
+        <div className="absolute inset-0 -z-10 bg-radial from-white/80 via-white/40 to-transparent dark:from-black/80 dark:via-black/40 dark:to-transparent blur-2xl pointer-events-none" />
+
+        {/* EYEBROW */}
         {content?.badgeVisible !== false && (
-          <div className="hero-badge inline-flex items-center gap-1.5 sm:gap-2 text-[9.5px] sm:text-xs font-mono uppercase tracking-normal sm:tracking-widest px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full border border-orange-500/20 bg-orange-500/5 text-orange-400 mb-6 backdrop-blur-md whitespace-nowrap">
+          <div className="hero-badge inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest px-3.5 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-600 dark:text-orange-400 mb-6 backdrop-blur-md">
             {content?.badgeText || '● SPEED-TO-LEAD AUTOMATION · 24/7 INBOUND AGENTS'}
           </div>
         )}
 
-        {/* Display Headline */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08] max-w-5xl mx-auto text-center">
+        {/* H1 HEADLINE */}
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] max-w-4xl mx-auto">
           {content?.titleLine1 ? (
             content.titleLine1.replace('High-Ticket', 'High\u2011Ticket')
           ) : (
@@ -72,7 +75,7 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
             </>
           )}{' '}
           <br className="hidden sm:inline" />
-          <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B00] via-orange-400 to-amber-300 pb-1">
+          <span className="text-[#FF5500] dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-[#FF6B00] dark:via-orange-400 dark:to-amber-300 pb-1 inline-block">
             {content?.titleHighlight || "Won't Wait 2 Hours for a Reply."}
           </span>
           {content?.titleLine2 ? (
@@ -84,11 +87,16 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
           ) : null}
         </h1>
 
-        {/* Subtitle Body */}
-        <p className="hero-desc mt-6 text-base sm:text-lg lg:text-xl text-zinc-400 max-w-2xl mx-auto text-center leading-relaxed font-normal mb-10">
-          {content?.description ||
-            'Stop losing qualified leads to voicemail and delayed messages. We engineer 24/7 autonomous AI voice receptionists, instant WhatsApp booking flows, and custom revenue dashboards that convert inbound traffic in under 60 seconds.'}
-        </p>
+        {/* SUB-HEADLINE */}
+        <div className="hero-desc mt-6 max-w-2xl mx-auto text-center mb-10">
+          <p className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100 tracking-wide">
+            Zero missed calls. Instant booking. Smarter systems.
+          </p>
+          <p className="mt-2 text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
+            {content?.description ||
+              'We build AI voice agents, WhatsApp booking workflows, and custom software that turn incoming leads into booked appointments—24/7.'}
+          </p>
+        </div>
 
         {/* Dual CTAs */}
         <div className="hero-cta-group flex flex-wrap items-center justify-center gap-4 mb-16">

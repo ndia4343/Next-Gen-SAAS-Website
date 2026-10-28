@@ -32,7 +32,7 @@ export const initialContent: WebsiteContent = {
     titleHighlight: "Won't Wait 2 Hours for a Reply.",
     titleLine2: "",
     description:
-      "Stop losing qualified leads to voicemail and delayed messages. We engineer 24/7 autonomous AI voice receptionists, instant WhatsApp booking flows, and custom revenue dashboards that convert inbound traffic in under 60 seconds.",
+      "We build AI voice agents, WhatsApp booking workflows, and custom software that turn incoming leads into booked appointments—24/7.",
     primaryCtaText: "Explore Capabilities",
     primaryCtaLink: "#core-expertise",
     secondaryCtaText: "Start a Project",

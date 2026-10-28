@@ -13,7 +13,7 @@ export default function SceneCanvas() {
   const isLight = mode === 'light';
 
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none w-screen h-screen overflow-hidden">
+    <div className="fixed absolute inset-0 z-0 pointer-events-none opacity-30 dark:opacity-35 w-screen h-screen overflow-hidden">
       <Canvas
         gl={{
           antialias: false,
@@ -24,7 +24,7 @@ export default function SceneCanvas() {
         }}
         dpr={[1, 1.8]}
       >
-        <PerspectiveCamera makeDefault position={[0, 0, 4.5]} fov={45} />
+        <PerspectiveCamera makeDefault position={[0, 0, 6.0]} fov={45} />
         <ambientLight intensity={isLight ? 0.85 : 0.4} />
         <directionalLight position={[10, 10, 5]} intensity={isLight ? 1.6 : 1.2} color="#ffffff" />
         <directionalLight
