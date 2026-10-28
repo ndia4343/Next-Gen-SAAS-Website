@@ -28,14 +28,14 @@
         },
         {
           "id": "nav-2",
-          "label": "Core Expertise",
+          "label": "Services",
           "href": "#core-expertise",
           "target": "_self",
           "active": true
         },
         {
           "id": "nav-3",
-          "label": "Project Support",
+          "label": "Solutions",
           "href": "#project-support",
           "target": "_self",
           "active": true
@@ -570,6 +570,34 @@
     }
   ],
   "visitorTelemetry": [
+    {
+      "visitorId": "vid-1793221127589-lewh7yq",
+      "ipAddress": "::1",
+      "city": "Localhost Dev",
+      "region": "Sindh",
+      "country": "Pakistan",
+      "currentPage": "/",
+      "referrer": "Direct",
+      "deviceType": "Desktop",
+      "browser": "Chrome",
+      "firstSeenAt": "2026-10-28T20:58:47.630Z",
+      "lastVisitedAt": "2026-10-28T20:58:47.630Z",
+      "visitCount": 1
+    },
+    {
+      "visitorId": "vid-1793219820303-id12zf4",
+      "ipAddress": "::1",
+      "city": "Localhost Dev",
+      "region": "Sindh",
+      "country": "Pakistan",
+      "currentPage": "/",
+      "referrer": "Direct",
+      "deviceType": "Desktop",
+      "browser": "Chrome",
+      "firstSeenAt": "2026-10-28T20:37:00.348Z",
+      "lastVisitedAt": "2026-10-28T20:37:00.348Z",
+      "visitCount": 1
+    },
     {
       "visitorId": "vid-1793214328971-cp71rku",
       "ipAddress": "::1",

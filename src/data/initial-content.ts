@@ -20,8 +20,8 @@ export const initialContent: WebsiteContent = {
     ctaActionId: "discovery-call",
     navItems: [
       { id: "nav-1", label: "Overview", href: "#hero", target: "_self", active: true },
-      { id: "nav-2", label: "Core Expertise", href: "#core-expertise", target: "_self", active: true },
-      { id: "nav-3", label: "Project Support", href: "#project-support", target: "_self", active: true },
+      { id: "nav-2", label: "Services", href: "#core-expertise", target: "_self", active: true },
+      { id: "nav-3", label: "Solutions", href: "#project-support", target: "_self", active: true },
     ],
   },
   hero: {

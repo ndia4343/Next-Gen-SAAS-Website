@@ -126,9 +126,8 @@ export function Logo({
   const BrandText = (
     <div className="flex flex-col text-left justify-center leading-none">
       <div className="flex items-center gap-2 flex-row flex-nowrap">
-        {/* Proper Standard 'A' with futuristic tracking */}
         <span
-          className="font-bold text-lg sm:text-xl tracking-[0.22em] text-zinc-950 dark:text-white transition-colors"
+          className="font-black text-base tracking-wider text-zinc-100 transition-colors"
           style={
             wordmark1Color &&
             wordmark1Color.toLowerCase() !== "#ffffff" &&
@@ -140,7 +139,7 @@ export function Logo({
           {displayWordmark1}
         </span>
         <span
-          className="font-bold text-lg sm:text-xl tracking-[0.22em] text-red-600 dark:text-red-500 transition-colors"
+          className="font-light text-base tracking-widest text-[#A855F7] transition-colors"
           style={
             wordmark2Color &&
             wordmark2Color.toLowerCase() !== "#dc2626"
@@ -152,8 +151,8 @@ export function Logo({
         </span>
       </div>
       {effectiveShowTagline && (
-        <span className="text-[8px] sm:text-[9.5px] font-mono tracking-[0.22em] uppercase text-zinc-500 dark:text-zinc-400 mt-1 font-medium transition-colors truncate">
-          {tagline || "AI AUTOMATION & SOFTWARE STUDIO"}
+        <span className="text-[9px] font-mono uppercase tracking-[0.22em] text-zinc-400 mt-1 select-none font-medium transition-colors truncate">
+          {tagline || "AI Automation & Software Studio"}
         </span>
       )}
     </div>
