@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import {
   Check,
-  Star,
-  Rocket,
   X,
   Phone,
   MessageSquare,
@@ -153,14 +151,13 @@ export default function CoreExpertiseSection({ onOpenQuoteModal, content }: Prop
                 </div>
               </div>
 
-              {/* Action Buttons: Demo Handler + Get Started */}
-              <div className="space-y-3 pt-4 border-t border-zinc-200/60 dark:border-white/5">
-                {/* Interactive Demo Trigger */}
+              {/* Interactive Demo Action Button (Flush at bottom) */}
+              <div className="mt-auto pt-4 border-t border-zinc-200/60 dark:border-white/5 w-full">
                 {card.demoType === 'voice' && (
                   <button
                     type="button"
                     onClick={() => setActiveDemo('voice')}
-                    className="w-full py-2.5 px-4 rounded-xl text-xs font-medium tracking-wide border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
+                    className="w-full py-2.5 px-4 rounded-xl text-xs font-medium tracking-wide border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
                   >
                     Listen to Voice Demo →
                   </button>
@@ -170,7 +167,7 @@ export default function CoreExpertiseSection({ onOpenQuoteModal, content }: Prop
                   <button
                     type="button"
                     onClick={() => setActiveDemo('whatsapp')}
-                    className="w-full py-2.5 px-4 rounded-xl text-xs font-medium tracking-wide border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
+                    className="w-full py-2.5 px-4 rounded-xl text-xs font-medium tracking-wide border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
                   >
                     View WhatsApp Flow →
                   </button>
@@ -180,23 +177,11 @@ export default function CoreExpertiseSection({ onOpenQuoteModal, content }: Prop
                   <button
                     type="button"
                     onClick={() => setActiveDemo('software')}
-                    className="w-full py-2.5 px-4 rounded-xl text-xs font-medium tracking-wide border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
+                    className="w-full py-2.5 px-4 rounded-xl text-xs font-medium tracking-wide border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
                   >
                     Explore Custom Systems →
                   </button>
                 )}
-
-                {/* Primary CTA */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onOpenQuoteModal) onOpenQuoteModal(card.title);
-                  }}
-                  className="w-full py-3 rounded-xl font-semibold text-xs font-mono uppercase tracking-wider bg-[var(--theme-primary,#dc2626)] hover:brightness-110 text-white shadow-lg shadow-[var(--theme-glow,rgba(220,38,38,0.3))] transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Rocket className="w-3.5 h-3.5" />
-                  <span>Get Started</span>
-                </button>
               </div>
             </div>
           ))}
