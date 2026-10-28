@@ -93,13 +93,9 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
   return (
     <header className="contents">
       <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl h-16 rounded-full px-5 sm:px-7 flex items-center justify-between bg-zinc-950/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
-        <a
-          href="#hero"
-          aria-label="ZAVIAN LABS Home"
-          className="group flex flex-row flex-nowrap items-center gap-2.5 sm:gap-3.5 pointer-events-auto select-none focus:outline-none"
-        >
-          {/* Existing 3D Isometric Interlocking Cube Icon */}
-          <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-105 group-hover:rotate-[-2deg]">
+        <a href="#hero" className="flex items-center gap-2.5 group focus:outline-none">
+          {/* Cube Icon */}
+          <div className="w-7 h-7 flex items-center justify-center text-zinc-200 transition-transform duration-300 group-hover:scale-105 shrink-0">
             {(branding?.logoMode === 'image' || (branding?.logoMode !== 'svg' && branding?.logoImageUrl)) && branding?.logoImageUrl ? (
               <img
                 src={branding.logoImageUrl}
@@ -155,18 +151,13 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
             )}
           </div>
 
-          {/* Brand Wordmark & Subtitle */}
-          <div className="flex flex-col text-left justify-center leading-none">
-            <div className="flex items-center gap-2">
-              <span className="font-black text-base tracking-wider text-zinc-100">
-                {branding?.wordmark1 || 'ZAVIAN'}
-              </span>
-              <span className="font-light text-base tracking-widest text-[#A855F7]">
-                {branding?.wordmark2 || 'LABS'}
-              </span>
-            </div>
-            <span className="text-[9px] font-mono uppercase tracking-[0.22em] text-zinc-400 mt-1 select-none">
-              {branding?.tagline || 'AI Automation & Software Studio'}
+          {/* Clean Wordmark */}
+          <div className="flex items-center gap-2 leading-none">
+            <span className="font-black text-base tracking-wider text-zinc-100">
+              {branding?.wordmark1 || 'ZAVIAN'}
+            </span>
+            <span className="font-light text-base tracking-widest text-[#A855F7]">
+              {branding?.wordmark2 || 'LABS'}
             </span>
           </div>
         </a>
