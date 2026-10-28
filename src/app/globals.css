@@ -178,6 +178,9 @@
   html.light nav .text-zinc-100 {
     color: #f4f4f5 !important;
   }
+  html.light nav .text-zinc-300 {
+    color: #d4d4d8 !important;
+  }
   html.light nav .text-zinc-400 {
     color: #a1a1aa !important;
   }

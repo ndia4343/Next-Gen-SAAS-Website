@@ -162,13 +162,13 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
           </div>
         </a>
 
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+        <div className="hidden md:flex items-center gap-8">
           {navLinks.map((item) => (
             <a
               key={item.id}
               href={item.href}
               target={item.target || '_self'}
-              className="hover:text-white transition-colors"
+              className="text-zinc-300 hover:text-white transition-colors duration-200 font-medium text-xs tracking-wider uppercase"
             >
               {item.label}
             </a>

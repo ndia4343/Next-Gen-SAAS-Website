@@ -571,6 +571,20 @@
   ],
   "visitorTelemetry": [
     {
+      "visitorId": "vid-1793222418447-qr4x81z",
+      "ipAddress": "::1",
+      "city": "Localhost Dev",
+      "region": "Sindh",
+      "country": "Pakistan",
+      "currentPage": "/",
+      "referrer": "Direct",
+      "deviceType": "Desktop",
+      "browser": "Chrome",
+      "firstSeenAt": "2026-10-28T21:20:18.518Z",
+      "lastVisitedAt": "2026-10-28T21:20:18.518Z",
+      "visitCount": 1
+    },
+    {
       "visitorId": "vid-1793221612442-tezmbuq",
       "ipAddress": "::1",
       "city": "Localhost Dev",
