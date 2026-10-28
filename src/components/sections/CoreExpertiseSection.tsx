@@ -1,7 +1,24 @@
 'use client';
 
-import React from 'react';
-import { Check, Star, Rocket } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  Check,
+  Star,
+  Rocket,
+  X,
+  Phone,
+  MessageSquare,
+  Code2,
+  Play,
+  Pause,
+  Calendar,
+  Volume2,
+  Terminal,
+  Activity,
+  ArrowRight,
+  ShieldCheck,
+  Zap,
+} from 'lucide-react';
 import { CoreExpertiseSectionData } from '@/lib/types';
 
 interface Props {
@@ -9,184 +26,423 @@ interface Props {
   content?: CoreExpertiseSectionData;
 }
 
-const defaultCards = [
+const defaultServices = [
   {
-    id: 'ecommerce',
-    eyebrowIcon: '★',
-    badgeTag: 'ENGINEERING TIER',
-    title: 'Headless Ecommerce',
-    description: 'Shopify backend, Next.js frontend — built for speed, scale, and total customization. No templates, no limits.',
-    isFeatured: false,
-    ctaText: '🚀 Get Started',
+    id: 'voice',
+    demoType: 'voice' as const,
+    badgeTag: 'SPEED-TO-LEAD · VOICE',
+    title: 'AI Voice Receptionists',
+    description:
+      '24/7 human-sounding AI receptionists that answer inbound calls in under 5 seconds, qualify prospects, and book directly onto your calendar.',
+    demoBtnText: 'Listen to Voice Demo →',
     checklist: [
-      { id: '1', text: 'Shopify Backend', highlighted: false },
-      { id: '2', text: 'Next.js Storefronts', highlighted: false },
-      { id: '3', text: 'Custom Checkout Flows', highlighted: false },
-      { id: '4', text: 'Lightning-Fast Load Speeds', highlighted: false },
-      { id: '5', text: 'Fully Scalable Architecture', highlighted: false },
-      { id: '6', text: 'SEO Optimised', highlighted: false },
+      'Under 5s pickup & response latency',
+      'Multi-turn natural human conversation',
+      'Direct calendar booking (Cal & Calendly)',
+      'Native CRM sync (GoHighLevel & HubSpot)',
+      'Call recording & intent transcription',
+      'Zero missed inbound calls 24/7/365',
     ],
   },
   {
-    id: 'ai',
-    eyebrowIcon: '★',
-    badgeTag: 'ENGINEERING TIER',
-    title: 'Agentic AI',
-    description: "Autonomous AI agents that don't just respond — they think, decide, and act on your business's behalf, 24/7.",
-    isFeatured: true,
-    ctaText: '🚀 Get Started',
+    id: 'whatsapp',
+    demoType: 'whatsapp' as const,
+    badgeTag: 'SPEED-TO-LEAD · CHAT',
+    title: 'WhatsApp Inbound Workflows',
+    description:
+      'Convert ad traffic and web leads via high-speed automated WhatsApp funnels that qualify criteria and secure appointments in under 60 seconds.',
+    demoBtnText: 'View WhatsApp Flow →',
     checklist: [
-      { id: '1', text: 'Autonomous Task Execution', highlighted: false },
-      { id: '2', text: 'Multi-Step Decision Making', highlighted: false },
-      { id: '3', text: 'Voice & Chat Agents', highlighted: false },
-      { id: '4', text: 'CRM & Workflow Integration', highlighted: false },
-      { id: '5', text: 'Self-Learning Systems', highlighted: false },
-      { id: '6', text: 'Human-Level Reasoning', highlighted: false },
+      'Sub-60s automated inbound engagement',
+      'Algorithmic lead qualification criteria',
+      'In-chat dynamic calendar scheduling',
+      'Proof-of-funds document parsing',
+      'Multi-touch SMS & WhatsApp re-engagement',
+      'Real-time webhook and pipeline integrations',
     ],
   },
   {
-    id: 'mvp',
-    eyebrowIcon: '★',
-    badgeTag: 'ENGINEERING TIER',
-    title: 'Idea to Launch',
-    description: 'From concept to live product — we build, test, and ship your startup MVP fast, so you can start validating with real users.',
-    isFeatured: false,
-    ctaText: '🚀 Get Started',
+    id: 'software',
+    demoType: 'software' as const,
+    badgeTag: 'HIGH COMPUTE · CUSTOM',
+    title: 'Custom Software & Dashboards',
+    description:
+      'Tailored client portals, real-time revenue dashboards, and custom backend systems built for your exact operational workflows.',
+    demoBtnText: 'Explore Custom Systems →',
     checklist: [
-      { id: '1', text: 'MVP in Weeks, Not Months', highlighted: false },
-      { id: '2', text: 'Full-Stack Development', highlighted: false },
-      { id: '3', text: 'Investor-Ready Product', highlighted: false },
-      { id: '4', text: 'Vibe-Coded & Production-Ready', highlighted: false },
-      { id: '5', text: 'Scalable From Day One', highlighted: false },
-      { id: '6', text: 'Launch & Iterate Support', highlighted: false },
+      'Next.js, Node.js & high-throughput APIs',
+      'Real-time revenue & conversion tracking',
+      'Multi-agent orchestration pipelines',
+      'Custom database architecture & schema',
+      'Zero rigid templates, 100% custom code',
+      'Production deployment on edge infrastructure',
     ],
   },
 ];
 
 export default function CoreExpertiseSection({ onOpenQuoteModal, content }: Props) {
-  const cards = content?.cards && content.cards.length > 0 ? content.cards : defaultCards;
+  const [activeDemo, setActiveDemo] = useState<'voice' | 'whatsapp' | 'software' | null>(null);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+
+  const openBookingModal = () => {
+    if (onOpenQuoteModal) {
+      onOpenQuoteModal('Custom Setup / Pipeline');
+    } else {
+      document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const services = defaultServices;
 
   return (
-    <section id="core-expertise" className="relative py-28 px-6 lg:px-12 z-10">
+    <section id="core-expertise" className="relative py-28 px-4 sm:px-6 lg:px-12 z-10">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="text-center mb-20">
-          <div
-            className="text-xs font-mono font-bold uppercase tracking-[0.25em] mb-3"
-            style={{ color: 'var(--theme-primary, #DC2626)' }}
-          >
-            {content?.eyebrow || 'OUR CORE EXPERTISE'}
+        {/* SECTION HEADER */}
+        <div className="text-center mb-16 sm:mb-20 flex flex-col items-center">
+          <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest px-3.5 py-1.5 rounded-full border border-orange-500/20 bg-orange-500/5 text-orange-600 dark:text-orange-400 mb-4 backdrop-blur-md">
+            ● CORE ARCHITECTURES · ZERO BOTTLENECK
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-100 dark:text-zinc-100 light:text-zinc-950 leading-[1.15]">
-            <span>{content?.mainTitleWhite || 'Build & '}</span>
-            <span style={{ color: 'var(--theme-primary, #DC2626)' }}>
-              {content?.mainTitleCrimson || 'Grow'}
-            </span>
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white text-center">
+            Engineered to <span className="text-[#FF6B00]">Capture, Book,</span> and Scale.
           </h2>
-          {content?.subtitle && (
-            <p
-              className="text-sm font-normal mt-4 max-w-xl mx-auto"
-              style={{ color: 'var(--theme-desc, #d4d4d8)' }}
-            >
-              {content.subtitle}
-            </p>
-          )}
+          <p className="mt-4 text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto text-center font-normal leading-relaxed">
+            Three production-grade automation systems designed to eliminate lead drop-off, qualify inbound intent, and streamline operations 24/7.
+          </p>
         </div>
 
-        {/* 3-Column Interactive 3D Tilt Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch perspective-container">
-          {cards.map((card) => {
-            const isFeatured = !!card.isFeatured;
-            return (
-              <div
-                key={card.id}
-                onMouseMove={(e) => {
-                  const el = e.currentTarget;
-                  const rect = el.getBoundingClientRect();
-                  const x = e.clientX - rect.left - rect.width / 2;
-                  const y = e.clientY - rect.top - rect.height / 2;
-                  el.style.transform = `rotateY(${x * 0.04}deg) rotateX(${-y * 0.04}deg) ${
-                    isFeatured ? 'translateZ(20px)' : 'translateZ(0px)'
-                  }`;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = isFeatured
-                    ? 'rotateY(0deg) rotateX(0deg) translateZ(20px)'
-                    : 'rotateY(0deg) rotateX(0deg) translateZ(0px)';
-                }}
-                style={{
-                  transition: 'transform 0.15s ease-out, box-shadow 0.3s ease',
-                  transform: isFeatured ? 'translateZ(20px)' : 'translateZ(0px)',
-                }}
-                className={`relative rounded-3xl p-8 sm:p-10 flex flex-col justify-between transform-3d transition-all ${
-                  isFeatured
-                    ? 'glass-panel-crimson shadow-2xl'
-                    : 'glass-panel hover:border-white/20'
-                }`}
-              >
-                {isFeatured && (
-                  <div
-                    className="absolute -top-10 left-1/2 -translate-x-1/2 w-48 h-20 blur-3xl rounded-full pointer-events-none opacity-30"
-                    style={{ backgroundColor: 'var(--theme-primary, #DC2626)' }}
-                  />
+        {/* 3 EQUAL SERVICE CARDS */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+          {services.map((card) => (
+            <div
+              key={card.id}
+              className="glass-panel rounded-3xl p-8 sm:p-10 flex flex-col justify-between border border-zinc-200/80 dark:border-white/10 hover:border-zinc-300 dark:hover:border-white/20 transition-all duration-300 shadow-xl shadow-black/5 dark:shadow-black/20 hover:shadow-2xl"
+            >
+              <div>
+                {/* Card Header Badge & Icon */}
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-[#FF6B00] font-semibold px-2.5 py-1 rounded-md bg-orange-500/10 border border-orange-500/20">
+                    {card.badgeTag}
+                  </span>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center bg-zinc-100 dark:bg-white/5 text-zinc-400">
+                    {card.demoType === 'voice' && <Phone className="w-4 h-4 text-[#FF6B00]" />}
+                    {card.demoType === 'whatsapp' && <MessageSquare className="w-4 h-4 text-emerald-500" />}
+                    {card.demoType === 'software' && <Code2 className="w-4 h-4 text-purple-400" />}
+                  </div>
+                </div>
+
+                {/* Title & Description */}
+                <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-3 tracking-tight">
+                  {card.title}
+                </h3>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-6 font-normal">
+                  {card.description}
+                </p>
+
+                {/* Checklist */}
+                <div className="space-y-3 mb-8">
+                  {card.checklist.map((item, i) => (
+                    <div key={i} className="flex items-start gap-2.5 text-left">
+                      <div className="w-4 h-4 rounded-full flex items-center justify-center bg-[#818CF8]/15 text-[#818CF8] shrink-0 mt-0.5">
+                        <Check className="w-2.5 h-2.5 stroke-[3]" />
+                      </div>
+                      <span className="text-xs sm:text-sm font-normal text-zinc-700 dark:text-zinc-300 leading-snug">
+                        {item}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Action Buttons: Demo Handler + Get Started */}
+              <div className="space-y-3 pt-4 border-t border-zinc-200/60 dark:border-white/5">
+                {/* Interactive Demo Trigger */}
+                {card.demoType === 'voice' && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveDemo('voice')}
+                    className="w-full py-2.5 px-4 rounded-xl text-xs font-medium tracking-wide border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
+                  >
+                    Listen to Voice Demo →
+                  </button>
                 )}
 
+                {card.demoType === 'whatsapp' && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveDemo('whatsapp')}
+                    className="w-full py-2.5 px-4 rounded-xl text-xs font-medium tracking-wide border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
+                  >
+                    View WhatsApp Flow →
+                  </button>
+                )}
+
+                {card.demoType === 'software' && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveDemo('software')}
+                    className="w-full py-2.5 px-4 rounded-xl text-xs font-medium tracking-wide border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
+                  >
+                    Explore Custom Systems →
+                  </button>
+                )}
+
+                {/* Primary CTA */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onOpenQuoteModal) onOpenQuoteModal(card.title);
+                  }}
+                  className="w-full py-3 rounded-xl font-semibold text-xs font-mono uppercase tracking-wider bg-[var(--theme-primary,#dc2626)] hover:brightness-110 text-white shadow-lg shadow-[var(--theme-glow,rgba(220,38,38,0.3))] transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Rocket className="w-3.5 h-3.5" />
+                  <span>Get Started</span>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* EXECUTIVE BOTTOM CONVERSION DOCK */}
+        <div className="mt-14 max-w-2xl mx-auto px-4">
+          <div className="relative group rounded-full p-[1px] bg-gradient-to-r from-purple-500/20 via-white/10 to-purple-500/20 hover:from-purple-500/40 hover:via-white/20 hover:to-purple-500/40 transition-all duration-500 shadow-[0_0_30px_rgba(139,92,246,0.1)]">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-3.5 rounded-full bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border border-zinc-200/60 dark:border-white/5">
+              
+              {/* Left indicator & text */}
+              <div className="flex items-center gap-3 text-left">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8B5CF6] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#8B5CF6]" />
+                </span>
+                <span className="text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 font-medium">
+                  Need a custom setup or full-stack pipeline?
+                </span>
+              </div>
+
+              {/* Right Action Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof openBookingModal === 'function') {
+                    openBookingModal();
+                  } else {
+                    document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B5CF6] hover:bg-[#7C3AED] text-white text-xs font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] shadow-sm shadow-purple-500/30 whitespace-nowrap cursor-pointer"
+              >
+                <span>Book Discovery Call</span>
+                <span className="text-white/80">↗</span>
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* INTERACTIVE DEMO MODAL OVERLAY */}
+      {activeDemo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-xl rounded-3xl bg-zinc-900 border border-white/15 p-6 sm:p-8 shadow-2xl text-white">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-orange-500/20 text-[#FF6B00] flex items-center justify-center">
+                  {activeDemo === 'voice' && <Phone className="w-4 h-4" />}
+                  {activeDemo === 'whatsapp' && <MessageSquare className="w-4 h-4 text-emerald-400" />}
+                  {activeDemo === 'software' && <Code2 className="w-4 h-4 text-purple-400" />}
+                </div>
                 <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-500 font-semibold">
-                      {card.badgeTag || 'ENGINEERING TIER'}
+                  <h4 className="font-bold text-base text-zinc-100">
+                    {activeDemo === 'voice' && 'Live AI Voice Receptionist Demo'}
+                    {activeDemo === 'whatsapp' && 'Instant WhatsApp Booking Flow Demo'}
+                    {activeDemo === 'software' && 'Custom High-Compute Systems Demo'}
+                  </h4>
+                  <span className="text-[11px] font-mono text-zinc-400">
+                    {activeDemo === 'voice' && 'LATENCY: 420MS · NATURAL DIALOGUE · CALENDAR SYNC'}
+                    {activeDemo === 'whatsapp' && 'RESPONSE: < 60S · QUALIFICATION FUNNEL · AUTO-CONFIRM'}
+                    {activeDemo === 'software' && 'EDGE DEPLOYMENT · ZERO TEMPLATES · REVENUE METRICS'}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveDemo(null);
+                  setIsPlayingAudio(false);
+                }}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* DEMO 1: VOICE */}
+            {activeDemo === 'voice' && (
+              <div className="space-y-5">
+                {/* Audio Waveform Player Simulation */}
+                <div className="p-4 rounded-2xl bg-zinc-950/80 border border-white/10 flex flex-col gap-3">
+                  <div className="flex items-center justify-between text-xs text-zinc-400 font-mono">
+                    <span className="flex items-center gap-2 text-emerald-400">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      Inbound Call · 00:42
                     </span>
-                    <Star
-                      className="w-5 h-5"
-                      style={
-                        isFeatured
-                          ? { color: 'var(--theme-primary, #DC2626)', fill: 'var(--theme-primary, #DC2626)' }
-                          : { color: '#52525b' }
-                      }
-                    />
+                    <span>Sample: Inbound High-Ticket Qualification</span>
                   </div>
 
-                  <h3 className="text-2xl font-bold text-zinc-100 dark:text-zinc-100 light:text-zinc-950 mb-4">{card.title}</h3>
-                  <p
-                    className="text-base font-normal leading-relaxed mb-8"
-                    style={{ color: 'var(--theme-desc, #d4d4d8)' }}
-                  >
-                    {card.description}
-                  </p>
+                  <div className="flex items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setIsPlayingAudio(!isPlayingAudio)}
+                      className="w-12 h-12 rounded-full bg-[#FF6B00] hover:bg-[#e05e00] flex items-center justify-center text-white transition-all hover:scale-105 cursor-pointer shadow-lg shadow-orange-500/30"
+                    >
+                      {isPlayingAudio ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
+                    </button>
 
-                  <div className="space-y-3.5 mb-10">
-                    {card.checklist.map((item, i) => {
-                      const text = typeof item === 'string' ? item : item.text;
-                      return (
-                        <div key={typeof item === 'string' ? i : item.id || i} className="flex items-center gap-3">
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-[#818CF8]/10 text-[#818CF8] shrink-0">
-                            <Check className="w-3.5 h-3.5 stroke-[3]" />
-                          </div>
-                          <span className="text-sm font-normal text-zinc-300 dark:text-zinc-300 light:text-zinc-700">{text}</span>
-                        </div>
-                      );
-                    })}
+                    <div className="flex-1 flex items-center gap-1 h-8">
+                      {[30, 60, 45, 80, 95, 70, 40, 65, 85, 100, 75, 50, 85, 60, 40, 70, 90, 80, 50, 35, 60, 85, 70, 45, 65, 90, 75, 40].map((h, i) => (
+                        <div
+                          key={i}
+                          className="flex-1 bg-white/20 rounded-full transition-all duration-150"
+                          style={{
+                            height: isPlayingAudio ? `${Math.max(15, (h * Math.sin((i + Date.now() / 200))))}%` : `${h * 0.4}%`,
+                            backgroundColor: isPlayingAudio ? '#FF6B00' : 'rgba(255,255,255,0.2)',
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Call Transcript Preview */}
+                <div className="p-4 rounded-2xl bg-zinc-950/50 border border-white/5 space-y-3 text-xs">
+                  <div className="flex items-start gap-2.5">
+                    <span className="font-mono text-zinc-500 shrink-0 font-bold">CALLER:</span>
+                    <span className="text-zinc-300">"Hey, we're doing about $400k/mo and losing leads because nobody picks up after 6 PM."</span>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <span className="font-mono text-[#FF6B00] shrink-0 font-bold">AI AGENT:</span>
+                    <span className="text-zinc-100">"Understood. Our voice architecture guarantees under 5-second pickup 24/7. Would tomorrow at 11:30 AM EST work to configure your test line?"</span>
+                  </div>
+                  <div className="flex items-start gap-2.5 text-emerald-400 font-mono">
+                    <Check className="w-3.5 h-3.5 shrink-0" />
+                    <span>Meeting Confirmed: Calendar Invite Sent & Logged to CRM</span>
                   </div>
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => {
-                    if (onOpenQuoteModal) onOpenQuoteModal(card.title);
+                    setActiveDemo(null);
+                    onOpenQuoteModal?.('AI Voice Receptionists');
                   }}
-                  className={`w-full py-4 rounded-xl font-semibold text-sm tracking-wide transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                    isFeatured
-                      ? 'bg-[var(--theme-primary,#dc2626)] hover:brightness-110 text-white shadow-lg shadow-[var(--theme-glow,rgba(220,38,38,0.3))] hover:scale-[1.02]'
-                      : 'border border-[var(--theme-primary,#dc2626)] text-zinc-100 dark:text-zinc-100 light:text-zinc-900 hover:bg-[var(--theme-primary,#dc2626)]/10'
-                  }`}
+                  className="w-full py-3 rounded-xl bg-[var(--theme-primary,#dc2626)] hover:brightness-110 text-white font-semibold text-xs font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <Rocket className="w-4 h-4" />
-                  {card.ctaText || 'Get Started'}
+                  <span>Deploy Voice Agent For Your Team</span>
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
-            );
-          })}
+            )}
+
+            {/* DEMO 2: WHATSAPP */}
+            {activeDemo === 'whatsapp' && (
+              <div className="space-y-5">
+                <div className="p-4 rounded-2xl bg-[#0b141a] border border-white/10 space-y-3 text-xs">
+                  <div className="flex items-center justify-between pb-2 border-b border-white/10 text-zinc-400 font-mono text-[11px]">
+                    <span className="flex items-center gap-1.5 text-emerald-400">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                      Zavian WhatsApp Concierge (Verified)
+                    </span>
+                    <span>Response: 12 seconds</span>
+                  </div>
+
+                  {/* Message 1 */}
+                  <div className="bg-[#1f2c34] p-3 rounded-2xl rounded-tl-sm max-w-[85%] text-zinc-200">
+                    Hi! Welcome to Zavian Labs. 👋 I can help you lock in qualified leads 24/7. What industry is your business in?
+                    <div className="text-[10px] text-zinc-400 text-right mt-1 font-mono">10:02 AM · Sent</div>
+                  </div>
+
+                  {/* Message 2 */}
+                  <div className="bg-[#005c4b] p-3 rounded-2xl rounded-tr-sm max-w-[85%] ml-auto text-white">
+                    Private Wealth Management. We have high-ticket investors inquiring nightly.
+                    <div className="text-[10px] text-emerald-200 text-right mt-1 font-mono">10:02 AM · Read</div>
+                  </div>
+
+                  {/* Message 3 */}
+                  <div className="bg-[#1f2c34] p-3 rounded-2xl rounded-tl-sm max-w-[85%] text-zinc-200">
+                    Got it. We can auto-verify criteria and deliver private investment briefs via WhatsApp in under 45 seconds. Would you like a live walkthrough with our Lead Architect?
+                    <div className="mt-2.5 pt-2 border-t border-white/10 flex gap-2">
+                      <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-bold">
+                        ✓ Slot Reserved: Tomorrow 2:00 PM
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveDemo(null);
+                    onOpenQuoteModal?.('WhatsApp Inbound Workflows');
+                  }}
+                  className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-600/30"
+                >
+                  <span>Build Your WhatsApp Speed-to-Lead Funnel</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+
+            {/* DEMO 3: SOFTWARE */}
+            {activeDemo === 'software' && (
+              <div className="space-y-5">
+                <div className="p-4 rounded-2xl bg-zinc-950 border border-white/10 space-y-3 font-mono text-xs">
+                  <div className="flex items-center justify-between text-[11px] text-zinc-400 pb-2 border-b border-white/10">
+                    <span className="text-purple-400 flex items-center gap-1.5 font-bold">
+                      <Terminal className="w-3.5 h-3.5" />
+                      ZAVIAN ENGINE // CORE CLUSTER
+                    </span>
+                    <span className="text-emerald-400">STATUS: HEALTHY</span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/5">
+                      <div className="text-[10px] text-zinc-500">API LATENCY</div>
+                      <div className="text-base font-bold text-zinc-100">18.4ms</div>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/5">
+                      <div className="text-[10px] text-zinc-500">THROUGHPUT</div>
+                      <div className="text-base font-bold text-zinc-100">4.8M ops/s</div>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/5">
+                      <div className="text-[10px] text-zinc-500">LEAD CONV.</div>
+                      <div className="text-base font-bold text-emerald-400">+41.2%</div>
+                    </div>
+                  </div>
+
+                  <div className="text-[11px] text-zinc-400 space-y-1 pt-2">
+                    <div className="text-zinc-500">[15:10:02] Webhook received: inbound lead (GHL CRM)</div>
+                    <div className="text-zinc-400">[15:10:03] Multi-agent parsing: intent score = 0.94 (Qualified)</div>
+                    <div className="text-emerald-400">[15:10:04] Calendar invite dispatched & logged to Stripe</div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveDemo(null);
+                    onOpenQuoteModal?.('Custom Software & Dashboards');
+                  }}
+                  className="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-purple-600/30"
+                >
+                  <span>Request Custom Systems Architecture</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }
