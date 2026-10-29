@@ -1,23 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-  Activity,
-  Check,
-  Calendar,
-  Zap,
-  Radio,
-  ArrowRight,
-  ShieldCheck,
-  Terminal,
-  Cpu,
-  Layers,
-  Clock,
-  ArrowUpRight,
-  Sparkles,
-  BarChart3,
-  TrendingUp,
-} from 'lucide-react';
 import { ProjectSupportSectionData } from '@/lib/types';
 
 interface Props {
@@ -28,35 +11,35 @@ interface Props {
 const stages = [
   {
     id: 'stage-ingestion',
-    kicker: 'INGESTION LAYER',
-    title: 'Ad Webhooks & Multi-Channel Inbound',
+    kicker: 'LEAD CAPTURE',
+    title: 'Instant After-Hours Lead Capture',
     description:
-      'High-throughput packet ingestion capturing ad clicks, form webhooks, and direct SIP calls into unified event queues.',
-    signal: '200 OK · PACKET_CAPTURED',
+      'Capture 100% of missed calls, after-hours web inquiries, and ad form fills with instant automated engagement.',
+    signal: 'ACTIVE · INSTANT FOLLOW-UP',
   },
   {
     id: 'stage-triaging',
-    kicker: 'AUTONOMOUS TRIAGE',
-    title: 'Voice & WhatsApp Intent Qualification',
+    kicker: 'QUALIFICATION & BOOKING',
+    title: 'Conversational Scheduling',
     description:
-      'Multi-turn conversational triage filters low-intent queries, evaluates budget/urgency criteria, and scores prospects.',
-    signal: '420MS · INTENT_CLASSIFIED',
+      'Natural two-way dialogue engages prospects immediately, answers questions, and offers available meeting slots.',
+    signal: 'ACTIVE · APPOINTMENT SELECTED',
   },
   {
     id: 'stage-handshake',
-    kicker: 'PROTOCOL HANDSHAKE',
-    title: 'Two-Way Calendar Lock & CRM Sync',
+    kicker: 'AUTOMATED SYNC',
+    title: 'Calendar & CRM Confirmation',
     description:
-      'Direct calendar booking onto rep schedules with bi-directional webhook dispatch into HubSpot, GoHighLevel, and Slack.',
-    signal: '200 OK · SLOT_CONFIRMED',
+      'Instantly locks appointments directly onto your Google or Outlook Calendar and updates your CRM with zero staff effort.',
+    signal: 'ACTIVE · ZERO STAFF EFFORT',
   },
   {
     id: 'stage-telemetry',
-    kicker: 'SYSTEM TELEMETRY',
-    title: 'Live Margin & Speed-to-Lead Telemetry',
+    kicker: 'MEASURABLE RESULTS',
+    title: '24/7 Response & Revenue Impact',
     description:
-      'Real-time metrics tracking latency, conversion velocity, CAC compression, and autonomous pipeline throughput.',
-    signal: 'TELEMETRY_NOMINAL · 99.98%',
+      'Eliminate lead drop-off completely with sub-60 second follow-up times and continuous 24/7 coverage.',
+    signal: 'NOMINAL · 100% COVERAGE',
   },
 ];
 
@@ -70,167 +53,76 @@ export default function ProjectSupportSection({ onOpenQuoteModal, content }: Pro
   const renderStageVisual = (stageIndex: number) => {
     switch (stageIndex) {
       case 0:
-        // Stage 0: Ingestion Simulation (Ad webhook / Inbound call arrival packet)
+        // Stage 0: Lead Capture Simulation (Clean client-friendly incoming inquiry card)
         return (
-          <div className="w-full max-w-md space-y-4 font-mono text-left">
-            <div className="rounded-xl bg-zinc-900/90 dark:bg-zinc-900 border border-zinc-200/60 dark:border-white/10 p-4 shadow-inner">
-              <div className="flex items-center justify-between pb-3 border-b border-white/10 text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  <span className="text-emerald-400 font-semibold">POST /v1/events/inbound</span>
-                </div>
-                <span className="text-[10px] text-zinc-400">LATENCY: 18ms</span>
+          <div className="w-full max-w-sm rounded-xl bg-zinc-900 border border-white/10 p-5 shadow-2xl text-left">
+            <div className="flex items-center justify-between text-xs text-zinc-400 mb-3">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] animate-pulse" />
+                <span>INCOMING INQUIRY</span>
+              </span>
+              <span>8:42 PM (After Hours)</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#FF6B00]/10 border border-[#FF6B00]/30 flex items-center justify-center text-[#FF6B00] font-bold text-lg">
+                📞
               </div>
-              <div className="pt-3 space-y-1.5 text-xs">
-                <p className="text-zinc-400">
-                  <span className="text-purple-400">"channel"</span>: <span className="text-amber-300">"Meta Ads + Google Inbound"</span>,
-                </p>
-                <p className="text-zinc-400">
-                  <span className="text-purple-400">"event"</span>: <span className="text-emerald-300">"lead_form_submitted"</span>,
-                </p>
-                <p className="text-zinc-400">
-                  <span className="text-purple-400">"routing_target"</span>: <span className="text-[#FF6B00]">"Autonomous Queue 01"</span>,
-                </p>
-                <p className="text-zinc-400">
-                  <span className="text-purple-400">"enrichment"</span>: <span className="text-sky-300">"Clearbit Verified (ARR: $2M+)"</span>
-                </p>
+              <div>
+                <p className="text-sm font-semibold text-white">Missed Inbound Call</p>
+                <p className="text-xs text-zinc-400">Prospect: Inquiring about services</p>
               </div>
             </div>
-
-            <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/5 text-[11px]">
-              <span className="text-zinc-500 dark:text-zinc-400">Buffer Throughput: 1,420 pkts/s</span>
-              <span className="text-emerald-500 font-semibold">● Zero Drop-off Rate</span>
+            <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-emerald-400">
+              <span>AI Trigger: Instant Follow-up</span>
+              <span>Status: Active</span>
             </div>
           </div>
         );
 
       case 1:
-        // Stage 1: Triaging Simulation (Voice / WhatsApp prompt response flow)
+        // Stage 1: Conversational Follow-up / Appointment Selection Flow
         return (
-          <div className="w-full max-w-md space-y-3 text-left">
-            {/* Caller / User Chat Bubble */}
-            <div className="flex items-start gap-2.5">
-              <div className="w-6 h-6 rounded-full bg-zinc-200 dark:bg-white/10 flex items-center justify-center text-[10px] font-mono text-zinc-600 dark:text-zinc-300 shrink-0 mt-0.5">
-                IN
-              </div>
-              <div className="rounded-2xl rounded-tl-sm px-4 py-2.5 bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-white/5 text-xs text-zinc-800 dark:text-zinc-200 leading-relaxed">
-                "We need an AI voice receptionist to capture after-hours calls and route qualified bookings."
-              </div>
+          <div className="w-full max-w-sm space-y-3 text-left">
+            <div className="bg-zinc-800/80 rounded-2xl rounded-tl-sm p-3.5 text-xs text-zinc-200 border border-white/5">
+              "Hi Sarah! Thanks for reaching out. We have an opening tomorrow at 10:00 AM or 2:30 PM. Which works best for you?"
             </div>
-
-            {/* AI Agent Analysis & Response */}
-            <div className="flex items-start gap-2.5 flex-row-reverse">
-              <div className="w-6 h-6 rounded-full bg-orange-500/20 text-[#FF6B00] flex items-center justify-center text-[10px] font-mono font-bold shrink-0 mt-0.5">
-                AI
-              </div>
-              <div className="rounded-2xl rounded-tr-sm px-4 py-2.5 bg-gradient-to-r from-orange-500/10 to-purple-500/10 border border-orange-500/30 text-xs text-zinc-900 dark:text-white leading-relaxed">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-mono text-[#FF6B00] uppercase font-bold tracking-wider">
-                    Tier-1 Match · Score 98%
-                  </span>
-                  <span className="text-[10px] font-mono text-zinc-400">380ms response</span>
-                </div>
-                "Perfect! We can deploy our low-latency receptionist pipeline with your Google Calendar today."
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-[10px]">
-              <div className="p-2 rounded-lg bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/5 text-center">
-                <span className="text-zinc-400 block">INTENT CONFIDENCE</span>
-                <span className="text-emerald-500 font-bold text-xs">98.4% HIGH</span>
-              </div>
-              <div className="p-2 rounded-lg bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/5 text-center">
-                <span className="text-zinc-400 block">HUMAN OVERRIDE</span>
-                <span className="text-[#FF6B00] font-bold text-xs">BYPASSED</span>
-              </div>
+            <div className="bg-[#8B5CF6]/20 border border-[#8B5CF6]/40 rounded-2xl rounded-tr-sm p-3.5 text-xs text-purple-200 ml-auto max-w-[80%] text-right">
+              "Tomorrow at 10:00 AM works perfectly!"
             </div>
           </div>
         );
 
       case 2:
-        // Stage 2: Handshake Simulation (Calendar slot lock & CRM webhook fire)
+        // Stage 2: Handshake / Appointment Confirmed
         return (
-          <div className="w-full max-w-md space-y-3 font-mono text-left">
-            <div className="rounded-xl p-4 bg-zinc-900 border border-purple-500/30 shadow-lg text-white">
-              <div className="flex items-center justify-between pb-3 border-b border-white/10 text-xs">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-3.5 h-3.5 text-purple-400" />
-                  <span className="font-bold text-zinc-200">SLOT_LOCKED: Tomorrow @ 2:30 PM EST</span>
-                </div>
-                <span className="text-[10px] text-emerald-400 font-bold px-1.5 py-0.5 rounded bg-emerald-500/10">
-                  CONFIRMED
-                </span>
+          <div className="w-full max-w-sm rounded-xl bg-zinc-900 border border-white/10 p-5 shadow-2xl text-left">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                ✓
               </div>
-
-              <div className="pt-3 space-y-2 text-xs">
-                <div className="flex items-center gap-2 text-zinc-300">
-                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>Calendar Invite Sent (Google / Cal.com)</span>
-                </div>
-                <div className="flex items-center gap-2 text-zinc-300">
-                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>HubSpot Deal Created in "Qualified Pipeline"</span>
-                </div>
-                <div className="flex items-center gap-2 text-zinc-300">
-                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>Slack Alert Dispatched to #deal-desk</span>
-                </div>
+              <div>
+                <p className="text-sm font-bold text-white">Appointment Confirmed</p>
+                <p className="text-xs text-zinc-400">Tomorrow · 10:00 AM (Google Calendar)</p>
               </div>
             </div>
-
-            <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/5 text-[11px]">
-              <span className="text-zinc-500 dark:text-zinc-400">Sync Velocity: 210ms</span>
-              <span className="text-purple-400 font-semibold">● 100% Protocol Compliance</span>
+            <div className="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-zinc-400">
+              <span>Synced to CRM</span>
+              <span className="text-emerald-400">Zero Staff Effort</span>
             </div>
           </div>
         );
 
       case 3:
-        // Stage 3: Telemetry Simulation (Illustrative margin telemetry comparison graph)
+        // Stage 3: Telemetry / Live Impact Metrics
         return (
-          <div className="w-full max-w-md space-y-3 text-left">
-            <div className="grid grid-cols-3 gap-2 text-center font-mono">
-              <div className="p-3 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10">
-                <span className="text-[10px] text-zinc-500 dark:text-zinc-400 block uppercase">Speed-to-Lead</span>
-                <span className="text-base font-extrabold text-[#FF6B00]">3.2s</span>
-                <span className="text-[9px] text-emerald-500 block">vs 4.2h Legacy</span>
-              </div>
-              <div className="p-3 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10">
-                <span className="text-[10px] text-zinc-500 dark:text-zinc-400 block uppercase">Lead Capture</span>
-                <span className="text-base font-extrabold text-emerald-500">+48%</span>
-                <span className="text-[9px] text-zinc-400 block">24/7 Zero Miss</span>
-              </div>
-              <div className="p-3 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10">
-                <span className="text-[10px] text-zinc-500 dark:text-zinc-400 block uppercase">OpEx Margin</span>
-                <span className="text-base font-extrabold text-purple-400">+73%</span>
-                <span className="text-[9px] text-purple-400/80 block">Zero Headcount</span>
-              </div>
+          <div className="w-full max-w-sm rounded-xl bg-zinc-900 border border-white/10 p-5 grid grid-cols-2 gap-4 text-left">
+            <div className="p-3 rounded-lg bg-white/5">
+              <p className="text-[10px] text-zinc-400 uppercase">Response Time</p>
+              <p className="text-lg font-bold text-emerald-400">Under 60s</p>
             </div>
-
-            {/* Telemetry Visual Graph Simulation */}
-            <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/10 text-white font-mono text-[11px] space-y-2">
-              <div className="flex items-center justify-between text-zinc-400 text-[10px] pb-1 border-b border-white/5">
-                <span>CONVERSION THROUGHPUT</span>
-                <span className="text-emerald-400">99.98% OPERATIONAL</span>
-              </div>
-              <div>
-                <div className="flex justify-between text-[10px] mb-1 text-zinc-400">
-                  <span>Traditional Sales Intake</span>
-                  <span>18% capture</span>
-                </div>
-                <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
-                  <div className="h-full bg-zinc-500 w-[18%]" />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-[10px] mb-1 text-zinc-200">
-                  <span className="text-[#FF6B00] font-semibold">ZAVIAN Deployable Architecture</span>
-                  <span className="text-[#FF6B00] font-bold">86% capture</span>
-                </div>
-                <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-[#FF6B00] to-purple-500 w-[86%]" />
-                </div>
-              </div>
+            <div className="p-3 rounded-lg bg-white/5">
+              <p className="text-[10px] text-zinc-400 uppercase">Leads Saved</p>
+              <p className="text-lg font-bold text-white">100% 24/7</p>
             </div>
           </div>
         );
