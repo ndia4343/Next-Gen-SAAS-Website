@@ -49,13 +49,14 @@ interface IndustryLoop {
 }
 
 const INDUSTRIES: IndustryLoop[] = [
+  // 1. Solar EPC (Pakistan - PKR)
   {
     id: "solar",
     tabLabel: "Solar EPC",
     badge: "SolarPro Engine",
     icon: Sun,
-    headline: "Turn Electric Bills into Signed Solar Contracts",
-    subheadline: "Calculates panel sizes, monthly bill savings, and project profit the second a customer texts.",
+    headline: "Turn Power Bills into Signed Solar Contracts",
+    subheadline: "Calculates panel sizing, net-metering ROI, and profit margins automatically the second a customer texts.",
     chat: {
       sender: "Tariq Mahmood (Factory Owner)",
       incoming: "Salam! Can I get a quote for a 30kW solar setup for our warehouse? Current bill is around Rs 210,000/mo.",
@@ -84,45 +85,47 @@ const INDUSTRIES: IndustryLoop[] = [
         { label: "Quote Speed", value: "2.1 min", delta: "-85%" }
       ],
       pipeline: [
-        { label: "New Inquiries", val: "142" },
+        { label: "Inquiries", val: "142" },
         { label: "Quotes Sent", val: "89" },
         { label: "Signed Deals", val: "41" }
       ]
     }
   },
+
+  // 2. Dental & Aesthetics (Dubai, UAE - AED)
   {
     id: "clinic",
     tabLabel: "Dental & Aesthetics",
-    badge: "CareOps Practice Manager",
+    badge: "CareOps Practice Manager (Dubai)",
     icon: Smile,
     headline: "Keep Treatment Chairs Full All Week",
-    subheadline: "Answers patient questions 24/7, screens treatment photos, and books consultations without front desk delay.",
+    subheadline: "Answers patient inquiries 24/7, triages cosmetic photos, and secures treatment deposits across Dubai clinics without front-desk delays.",
     chat: {
-      sender: "Ayesha Malik",
-      incoming: "Hi! Do you have any open slots with Dr. Sarah for an Invisalign or clear aligner check this Saturday?",
+      sender: "Layla Al-Mansoor (Jumeirah, Dubai)",
+      incoming: "Hi! Do you have any open slots with Dr. Sarah for a clear aligner consultation this Saturday afternoon?",
       time: "08:42 PM",
-      aiReply: "Hi Ayesha! Dr. Sarah has 4:15 PM open this Saturday. I have reserved the chair for you—tap here to confirm: clinic.care/book/88",
-      aiAction: "High-Value Treatment • Chair Reserved"
+      aiReply: "Hi Layla! Dr. Sarah has 4:15 PM available at our Jumeirah clinic this Saturday. I have held Chair 02 for you—tap here to confirm your visit: clinic.ae/book/88",
+      aiAction: "Cosmetic Intent Detected • Chair Held"
     },
     stage2: {
       badge: "STEP 02 // PATIENT INTAKE",
       title: "Case Review & Smile Photos",
-      detail: "Intake form received; smile photos filed for doctor review before visit.",
-      metric: "Case Type: Clear Aligners (Mild Crowding)"
+      detail: "Intake form received; smile photos filed for doctor review prior to appointment.",
+      metric: "Case Type: Clear Aligners (Mild Crowding) • Verified"
     },
     stage3: {
       title: "Appointment Locked In",
-      destination: "Doctor Calendar + WhatsApp Reminder Bot",
-      status: "Chair 02 Confirmed (Sat 4:15 PM)"
+      destination: "Cliniko Calendar + WhatsApp Confirmation Bot",
+      status: "Chair 02 Confirmed (Sat 4:15 PM) • AED 250 Deposit Staged"
     },
     dashboard: {
-      chartTitle: "Available Chair Hours vs. Filled Appointments",
+      chartTitle: "Chair Occupancy vs. Average Hourly Revenue",
       chartType: "clinic",
       kpis: [
-        { label: "Hourly Chair Revenue", value: "Rs 8,500", delta: "+19%" },
+        { label: "Rev / Chair Hour", value: "AED 1,250", delta: "+19%" },
         { label: "Doctor Occupancy", value: "88%", delta: "+14%" },
-        { label: "Treatment Accepted", value: "44.2%", delta: "+8.4%" },
-        { label: "No-Show Rate", value: "2.8%", delta: "-65%" }
+        { label: "Case Acceptance", value: "44.2%", delta: "+8.4%" },
+        { label: "No-Show Rate", value: "2.4%", delta: "-65%" }
       ],
       pipeline: [
         { label: "Inquiries", val: "310" },
@@ -131,6 +134,8 @@ const INDUSTRIES: IndustryLoop[] = [
       ]
     }
   },
+
+  // 3. Restaurant Group (Universal)
   {
     id: "restaurant",
     tabLabel: "Restaurant Group",
@@ -172,78 +177,39 @@ const INDUSTRIES: IndustryLoop[] = [
       ]
     }
   },
-  {
-    id: "realestate",
-    tabLabel: "Real Estate",
-    badge: "US Brokerage Lead Router",
-    icon: Building2,
-    headline: "Turn Online Inquiries into Private Property Showings",
-    subheadline: "Verifies buyer pre-approvals, books in-person property tours, and tracks commission deals 24/7.",
-    chat: {
-      sender: "Marcus Vance (Pre-Approved Buyer)",
-      incoming: "Hi! Is the 3-bed condo on Brickell Ave (Miami) still available? Can we tour it this Saturday afternoon?",
-      time: "01:25 PM",
-      aiReply: "Hi Marcus! Yes, Unit 14B is open. We have private showings this Saturday at 2:00 PM. I've sent the floor plan and held your viewing pass: estate.us/tour/14b",
-      aiAction: "Verified Buyer ($1.2M Pre-Approved) • Tour Held"
-    },
-    stage2: {
-      badge: "STEP 02 // BUYER SCREENING",
-      title: "Pre-Approval & Timeline Verification",
-      detail: "Verified mortgage pre-approval letter and confirmed 30-day buying timeline.",
-      metric: "Financing: Approved Conventional • Budget: $1.2M–$1.5M"
-    },
-    stage3: {
-      title: "Private Tour Confirmed",
-      destination: "Agent Calendar + Lockbox Showing App",
-      status: "Showing Locked (Saturday 2:00 PM)"
-    },
-    dashboard: {
-      chartTitle: "Weekly Home Showings vs. Written Offers",
-      chartType: "realestate",
-      kpis: [
-        { label: "Pipeline Value", value: "$42.5M", delta: "+18%" },
-        { label: "Tour-to-Offer Rate", value: "34.2%", delta: "+6.8%" },
-        { label: "Avg Commission", value: "$28,500", delta: "+12%" },
-        { label: "Speed to Tour", value: "3.5 min", delta: "-80%" }
-      ],
-      pipeline: [
-        { label: "Buyer Leads", val: "420" },
-        { label: "Tours Hosted", val: "164" },
-        { label: "Offers Written", val: "56" }
-      ]
-    }
-  },
+
+  // 4. Travel & Tours (UK / Europe & VIP Umrah - GBP £)
   {
     id: "travel",
     tabLabel: "Travel & Tours",
     badge: "Global Holidays & Umrah Engine",
     icon: Plane,
-    headline: "Turn WhatsApp Inquiries into Booked Holiday & Umrah Packages",
-    subheadline: "Quotes flight tiers, luxury hotel options, and visa requirements for custom Europe tours and VIP Umrah trips in seconds.",
+    headline: "Turn Inquiries into Booked Holiday & Umrah Packages",
+    subheadline: "Quotes luxury Swiss Alps breaks and VIP Umrah suites in seconds, answering passenger queries 24/7.",
     chat: {
-      sender: "Farhan Qureshi (Family of 4)",
-      incoming: "Salam! We need a 10-day luxury family package for 4 adults this December. Can you share options for both a Switzerland winter tour and VIP Umrah?",
+      sender: "Farhan Qureshi (London, UK)",
+      incoming: "Hi! Looking for a 10-day luxury family package for 4 adults this December. Can you share options for both a Swiss Alps winter trip and VIP Umrah?",
       time: "11:45 AM",
-      aiReply: "Walaikum Assalam Farhan! I've staged sample quotes for both: 5-Star Swissôtel Makkah + Oberoi with private GMC transfers, and our 10-day Zurich/Interlaken winter package. Compare both itineraries here: travel.pk/quote/41",
-      aiAction: "Simulated Package Match • Custom Itineraries Staged"
+      aiReply: "Hi Farhan! I've staged bespoke quotes for both: 5-star Swissôtel Makkah with private GMC transfers, and our 10-day Interlaken winter chalet package. View both here: travel.co.uk/q/41",
+      aiAction: "Bespoke Packages Staged • Passenger Triage Active"
     },
     stage2: {
       badge: "STEP 02 // ITINERARY MATCH",
       title: "Hotel Tier & Visa Check",
-      detail: "Screened 5-star hotel options, passenger headcount (4 adults), and holiday visa processing timeline.",
-      metric: "Package Tier: VIP Family (Dec 18–28) • Illustrative Model"
+      detail: "Screened 5-star inventory, 4-passenger suite availability, and UK winter processing timelines.",
+      metric: "Package Tier: VIP Family (Dec 18–28) • Staged"
     },
     stage3: {
-      title: "Itinerary Queued for Agent Call",
-      destination: "Travel CRM Pipeline → Senior Booking Consultant",
-      status: "Staged for Consultant Confirmation (WhatsApp Alert Sent)"
+      title: "Itinerary Staged for Consultant",
+      destination: "Travel CRM Pipeline → Senior Travel Specialist",
+      status: "Staged for Booking Confirmation (WhatsApp Alert Dispatched)"
     },
     dashboard: {
-      chartTitle: "Simulated Package Inquiries vs. Confirmed Tours",
+      chartTitle: "Simulated Inquiries vs. Confirmed Tour Bookings",
       chartType: "travel",
       kpis: [
-        { label: "Pipeline Value", value: "$185k", delta: "+24%" },
-        { label: "Package Win Rate", value: "32.4%", delta: "+5.8%" },
+        { label: "Pipeline Value", value: "£145k", delta: "+24%" },
+        { label: "Win Rate", value: "32.4%", delta: "+5.8%" },
         { label: "Average Margin", value: "22.8%", delta: "+3.1%" },
         { label: "Quote Speed", value: "3.2 sec", delta: "-82%" }
       ],
@@ -267,7 +233,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
   const [isInteracting, setIsInteracting] = useState(false);
   const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Auto-cycle through stages 1 to 4 and transition cleanly across all 5 industries
+  // Auto-cycle through stages 1 to 4 and transition cleanly across all 4 industries
   useEffect(() => {
     if (isInteracting) return;
 
@@ -327,7 +293,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
           </p>
         </div>
 
-        {/* 5 Industry Tabs */}
+        {/* 4 Industry Tabs */}
         <div className="border-b border-slate-200 dark:border-white/10 pb-4">
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth snap-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {INDUSTRIES.map((ind, idx) => {
