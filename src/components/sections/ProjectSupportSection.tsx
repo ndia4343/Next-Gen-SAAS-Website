@@ -484,7 +484,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
                   {/* SVG Chart */}
                   <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 space-y-1.5">
                     <div className="text-xs font-semibold text-slate-700 dark:text-slate-300">{item.dashboard.chartTitle}</div>
-                    <div className="h-28 flex items-center justify-center">
+                    <div className="h-28 sm:h-32 flex items-center justify-center">
                       {item.dashboard.chartType === "solar" && <SolarChart />}
                       {item.dashboard.chartType === "clinic" && <ClinicBarChart />}
                       {item.dashboard.chartType === "restaurant" && <RestaurantChart />}
@@ -601,58 +601,217 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
 };
 
 // -------------------------------------------------------------
-// Human-Friendly Charts for Stage 04
+// AI-Powered Stage 04 Predictive Visualizations
 // -------------------------------------------------------------
 
+// 1. Solar EPC: AI Net-Metering & Generation Forecast with Confidence Corridor
 const SolarChart = () => (
-  <svg viewBox="0 0 400 120" className="w-full h-full">
-    <path d="M 20,95 Q 110,80 190,30 T 380,18" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
-    <path d="M 20,80 Q 110,75 190,55 T 380,50" fill="none" stroke="#64748B" strokeWidth="1.5" strokeDasharray="3 3" />
-    <circle cx="280" cy="22" r="3.5" fill="#FF6B00" />
-    <text x="235" y="15" fill="#FF6B00" fontSize="10" fontFamily="monospace">Signed: +28%</text>
+  <svg viewBox="0 0 400 130" className="w-full h-full overflow-visible">
+    <defs>
+      <linearGradient id="aiCorridor" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.25" />
+        <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0.02" />
+      </linearGradient>
+      <filter id="glowViolet" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+
+    {/* AI Confidence Corridor (Predictive Range Band) */}
+    <polygon
+      points="20,90 100,75 190,25 280,18 380,12 380,45 280,40 190,55 100,85 20,105"
+      fill="url(#aiCorridor)"
+    />
+
+    {/* Historical Actual Yield Curve */}
+    <path
+      d="M 20,95 Q 105,78 190,38"
+      fill="none"
+      stroke="#E2E8F0"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+
+    {/* AI Projected Neural Vector (Glowing Violet) */}
+    <path
+      d="M 190,38 Q 280,18 380,15"
+      fill="none"
+      stroke="#8B5CF6"
+      strokeWidth="2.5"
+      strokeDasharray="4 3"
+      filter="url(#glowViolet)"
+    />
+
+    {/* AI Prediction Inflection Node */}
+    <circle cx="190" cy="38" r="4" fill="#FF6B00" />
+    <circle cx="190" cy="38" r="8" fill="#FF6B00" opacity="0.3" className="animate-ping" />
+    <text x="145" y="24" fill="#FF6B00" fontSize="9" fontFamily="monospace" fontWeight="bold">
+      AI Yield Lock: 99.1%
+    </text>
+
+    {/* Forward Projection Target */}
+    <circle cx="380" cy="15" r="3" fill="#8B5CF6" />
+    <text x="300" y="32" fill="#8B5CF6" fontSize="8" fontFamily="monospace">
+      +28% Projected kW
+    </text>
   </svg>
 );
 
+// 2. Clinic & Dental: AI Chair Occupancy Wave & Capacity Pillars
 const ClinicBarChart = () => (
-  <div className="w-full h-full flex items-end justify-around px-4">
+  <div className="w-full h-full relative flex items-end justify-between px-4 pb-2">
+    {/* Floating Neural Overlay Curve */}
+    <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
+      <path
+        d="M 25,65 Q 100,50 180,35 T 375,18"
+        fill="none"
+        stroke="#8B5CF6"
+        strokeWidth="2"
+        strokeDasharray="3 3"
+      />
+      <circle cx="280" cy="22" r="3.5" fill="#FF6B00" />
+      <text x="210" y="14" fill="#FF6B00" fontSize="8" fontFamily="monospace">
+        AI Optimal Fill: 92%
+      </text>
+    </svg>
+
+    {/* Holographic Capacity Columns */}
     {[
-      { cap: 70, book: 62 },
-      { cap: 85, book: 80 },
-      { cap: 90, book: 88 },
-      { cap: 95, book: 92 },
-      { cap: 100, book: 98 },
-    ].map((b, i) => (
-      <div key={i} className="flex gap-1.5 items-end h-20">
-        <div className="w-3.5 bg-slate-300 dark:bg-slate-700/80 rounded-t-sm" style={{ height: `${b.cap}%` }} />
-        <div className={`w-3.5 rounded-t-sm ${i === 4 ? "bg-[#FF6B00]" : "bg-[#8B5CF6]"}`} style={{ height: `${b.book}%` }} />
+      { cap: 65, pred: 60, label: "Mon" },
+      { cap: 80, pred: 76, label: "Tue" },
+      { cap: 88, pred: 85, label: "Wed" },
+      { cap: 94, pred: 90, label: "Thu" },
+      { cap: 100, pred: 98, label: "Sat", active: true },
+    ].map((col, idx) => (
+      <div key={idx} className="flex flex-col items-center gap-1.5 z-10">
+        <div className="w-6 sm:w-8 h-20 bg-slate-800/40 rounded-lg p-0.5 flex flex-col justify-end border border-white/5">
+          <div
+            className={`w-full rounded-md transition-all duration-500 ${
+              col.active
+                ? "bg-gradient-to-t from-[#8B5CF6] to-[#FF6B00] shadow-[0_0_12px_rgba(255,107,0,0.5)]"
+                : "bg-gradient-to-t from-slate-700 to-[#8B5CF6]/70"
+            }`}
+            style={{ height: `${col.cap}%` }}
+          />
+        </div>
+        <span className="text-[9px] font-mono text-slate-400">{col.label}</span>
       </div>
     ))}
   </div>
 );
 
+// 3. Restaurant: Real-Time AI Dynamic Pricing & Margin Threshold Wave
 const RestaurantChart = () => (
-  <svg viewBox="0 0 400 120" className="w-full h-full">
-    <path d="M 20,25 L 100,40 L 180,30 L 260,20 L 380,12" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
-    <path d="M 20,90 L 100,75 L 180,65 L 260,55 L 380,48" fill="none" stroke="#FF6B00" strokeWidth="2" strokeDasharray="4 4" />
-    <text x="240" y="70" fill="#FF6B00" fontSize="10" fontFamily="monospace">Cost: 54.8%</text>
+  <svg viewBox="0 0 400 130" className="w-full h-full overflow-visible">
+    <defs>
+      <linearGradient id="restGlow" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.2" />
+        <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0" />
+      </linearGradient>
+    </defs>
+
+    {/* Area fill for peak turnover volume */}
+    <path
+      d="M 20,40 Q 110,15 200,45 T 380,20 L 380,110 L 20,110 Z"
+      fill="url(#restGlow)"
+    />
+
+    {/* Seat Turnover Volume Line */}
+    <path
+      d="M 20,40 Q 110,15 200,45 T 380,20"
+      fill="none"
+      stroke="#8B5CF6"
+      strokeWidth="2.5"
+    />
+
+    {/* AI Prime Cost Threshold Target (Orange Controlled Line) */}
+    <line x1="20" y1="75" x2="380" y2="75" stroke="#FF6B00" strokeWidth="1.5" strokeDasharray="4 4" />
+    
+    {/* Real-time Dynamic AI Node */}
+    <circle cx="280" cy="32" r="3.5" fill="#FF6B00" />
+    <circle cx="280" cy="32" r="7" fill="#FF6B00" opacity="0.3" className="animate-ping" />
+    <text x="210" y="68" fill="#FF6B00" fontSize="9" fontFamily="monospace" fontWeight="bold">
+      AI Prime Cost Target: 54.8%
+    </text>
   </svg>
 );
 
+// 4. Real Estate: AI Buyer Match & Private Tour Conversion Trajectory
 const RealEstateChart = () => (
-  <svg viewBox="0 0 400 120" className="w-full h-full">
-    <path d="M 20,85 Q 110,75 200,35 T 380,20" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
-    <path d="M 20,100 Q 110,85 200,55 T 380,45" fill="none" stroke="#64748B" strokeWidth="1.5" strokeDasharray="3 3" />
-    <circle cx="280" cy="22" r="3.5" fill="#FF6B00" />
-    <text x="235" y="15" fill="#FF6B00" fontSize="10" fontFamily="monospace">Offers: +34%</text>
+  <svg viewBox="0 0 400 130" className="w-full h-full overflow-visible">
+    <defs>
+      <linearGradient id="estateGradient" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stopColor="#8B5CF6" />
+        <stop offset="100%" stopColor="#FF6B00" />
+      </linearGradient>
+    </defs>
+    <path
+      d="M 20,100 Q 110,85 200,55 T 380,45"
+      fill="none"
+      stroke="#64748B"
+      strokeWidth="1.5"
+      strokeDasharray="3 3"
+    />
+    <path
+      d="M 20,85 Q 110,70 190,30 T 380,16"
+      fill="none"
+      stroke="url(#estateGradient)"
+      strokeWidth="2.5"
+    />
+    <circle cx="190" cy="30" r="4" fill="#8B5CF6" />
+    <text x="140" y="20" fill="#8B5CF6" fontSize="8" fontFamily="monospace">
+      HNW Tour Surge
+    </text>
+    <circle cx="320" cy="18" r="4" fill="#FF6B00" />
+    <circle cx="320" cy="18" r="8" fill="#FF6B00" opacity="0.3" className="animate-ping" />
+    <text x="250" y="34" fill="#FF6B00" fontSize="9" fontFamily="monospace" fontWeight="bold">
+      AI Offer Rate: +34.2%
+    </text>
   </svg>
 );
 
+// 5. Travel & Tours: Neural Demand Flight Paths & Booking Trajectory
 const TravelChart = () => (
-  <svg viewBox="0 0 400 120" className="w-full h-full">
-    <path d="M 20,85 Q 110,75 190,30 T 380,18" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
-    <path d="M 20,95 Q 110,85 190,60 T 380,50" fill="none" stroke="#64748B" strokeWidth="1.5" strokeDasharray="3 3" />
-    <circle cx="280" cy="22" r="3.5" fill="#FF6B00" />
-    <text x="235" y="15" fill="#FF6B00" fontSize="10" fontFamily="monospace">Booked: +32%</text>
+  <svg viewBox="0 0 400 130" className="w-full h-full overflow-visible">
+    <defs>
+      <linearGradient id="travelGradient" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stopColor="#8B5CF6" />
+        <stop offset="100%" stopColor="#FF6B00" />
+      </linearGradient>
+    </defs>
+
+    {/* Baseline Demand Flow */}
+    <path
+      d="M 20,95 Q 110,85 200,60 T 380,48"
+      fill="none"
+      stroke="#64748B"
+      strokeWidth="1.5"
+      strokeDasharray="3 3"
+    />
+
+    {/* AI Accelerated Package Conversion Vector */}
+    <path
+      d="M 20,95 Q 110,70 190,28 T 380,14"
+      fill="none"
+      stroke="url(#travelGradient)"
+      strokeWidth="3"
+    />
+
+    {/* Dynamic Milestone Nodes (e.g. Zurich / Makkah Packages) */}
+    <circle cx="190" cy="28" r="4" fill="#8B5CF6" />
+    <text x="140" y="20" fill="#8B5CF6" fontSize="8" fontFamily="monospace">
+      VIP Umrah Surge
+    </text>
+
+    <circle cx="330" cy="18" r="4" fill="#FF6B00" />
+    <circle cx="330" cy="18" r="8" fill="#FF6B00" opacity="0.3" className="animate-ping" />
+    <text x="260" y="36" fill="#FF6B00" fontSize="9" fontFamily="monospace" fontWeight="bold">
+      AI Win Rate: +32.4%
+    </text>
   </svg>
 );
 
