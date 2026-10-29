@@ -5,7 +5,6 @@ import {
   Sun, 
   Smile, 
   UtensilsCrossed, 
-  Building2, 
   Plane,
   ArrowRight, 
   CheckCheck, 
@@ -42,7 +41,7 @@ interface IndustryLoop {
   };
   dashboard: {
     chartTitle: string;
-    chartType: "solar" | "clinic" | "restaurant" | "realestate" | "travel";
+    chartType: "solar" | "clinic" | "restaurant" | "travel";
     kpis: { label: string; value: string; delta: string }[];
     pipeline: { label: string; val: string }[];
   };
@@ -454,7 +453,6 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
                       {item.dashboard.chartType === "solar" && <SolarChart />}
                       {item.dashboard.chartType === "clinic" && <ClinicBarChart />}
                       {item.dashboard.chartType === "restaurant" && <RestaurantChart />}
-                      {item.dashboard.chartType === "realestate" && <RealEstateChart />}
                       {item.dashboard.chartType === "travel" && <TravelChart />}
                     </div>
                   </div>
@@ -706,41 +704,7 @@ const RestaurantChart = () => (
   </svg>
 );
 
-// 4. Real Estate: AI Buyer Match & Private Tour Conversion Trajectory
-const RealEstateChart = () => (
-  <svg viewBox="0 0 400 130" className="w-full h-full overflow-visible">
-    <defs>
-      <linearGradient id="estateGradient" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stopColor="#8B5CF6" />
-        <stop offset="100%" stopColor="#FF6B00" />
-      </linearGradient>
-    </defs>
-    <path
-      d="M 20,100 Q 110,85 200,55 T 380,45"
-      fill="none"
-      stroke="#64748B"
-      strokeWidth="1.5"
-      strokeDasharray="3 3"
-    />
-    <path
-      d="M 20,85 Q 110,70 190,30 T 380,16"
-      fill="none"
-      stroke="url(#estateGradient)"
-      strokeWidth="2.5"
-    />
-    <circle cx="190" cy="30" r="4" fill="#8B5CF6" />
-    <text x="140" y="20" fill="#8B5CF6" fontSize="8" fontFamily="monospace">
-      HNW Tour Surge
-    </text>
-    <circle cx="320" cy="18" r="4" fill="#FF6B00" />
-    <circle cx="320" cy="18" r="8" fill="#FF6B00" opacity="0.3" className="animate-ping" />
-    <text x="250" y="34" fill="#FF6B00" fontSize="9" fontFamily="monospace" fontWeight="bold">
-      AI Offer Rate: +34.2%
-    </text>
-  </svg>
-);
-
-// 5. Travel & Tours: Neural Demand Flight Paths & Booking Trajectory
+// 4. Travel & Tours: Neural Demand Flight Paths & Booking Trajectory
 const TravelChart = () => (
   <svg viewBox="0 0 400 130" className="w-full h-full overflow-visible">
     <defs>
