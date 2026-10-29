@@ -649,10 +649,10 @@ const RealEstateChart = () => (
 
 const TravelChart = () => (
   <svg viewBox="0 0 400 120" className="w-full h-full">
-    <path d="M 20,90 Q 110,70 200,30 T 380,16" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
-    <path d="M 20,95 Q 110,85 200,60 T 380,48" fill="none" stroke="#64748B" strokeWidth="1.5" strokeDasharray="3 3" />
-    <circle cx="280" cy="20" r="3.5" fill="#FF6B00" />
-    <text x="235" y="14" fill="#FF6B00" fontSize="10" fontFamily="monospace">Booked: +32%</text>
+    <path d="M 20,85 Q 110,75 190,30 T 380,18" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
+    <path d="M 20,95 Q 110,85 190,60 T 380,50" fill="none" stroke="#64748B" strokeWidth="1.5" strokeDasharray="3 3" />
+    <circle cx="280" cy="22" r="3.5" fill="#FF6B00" />
+    <text x="235" y="15" fill="#FF6B00" fontSize="10" fontFamily="monospace">Booked: +32%</text>
   </svg>
 );
 
