@@ -6,6 +6,7 @@ import {
   Smile, 
   UtensilsCrossed, 
   Building2, 
+  Plane,
   ArrowRight, 
   CheckCheck, 
   Sparkles, 
@@ -41,7 +42,7 @@ interface IndustryLoop {
   };
   dashboard: {
     chartTitle: string;
-    chartType: "solar" | "clinic" | "restaurant" | "realestate";
+    chartType: "solar" | "clinic" | "restaurant" | "realestate" | "travel";
     kpis: { label: string; value: string; delta: string }[];
     pipeline: { label: string; val: string }[];
   };
@@ -211,6 +212,47 @@ const INDUSTRIES: IndustryLoop[] = [
         { label: "Offers Written", val: "56" }
       ]
     }
+  },
+  {
+    id: "travel",
+    tabLabel: "Travel & Tours",
+    badge: "Global Holidays & Umrah Engine",
+    icon: Plane,
+    headline: "Turn WhatsApp Inquiries into Booked Holiday & Umrah Packages",
+    subheadline: "Quotes flight tiers, luxury hotel options, and visa requirements for custom Europe tours and VIP Umrah trips in seconds.",
+    chat: {
+      sender: "Farhan Qureshi (Family of 4)",
+      incoming: "Salam! We need a 10-day luxury family package for 4 adults this December. Can you share options for both a Switzerland winter tour and VIP Umrah?",
+      time: "11:45 AM",
+      aiReply: "Walaikum Assalam Farhan! I've staged sample quotes for both: 5-Star Swissôtel Makkah + Oberoi with private GMC transfers, and our 10-day Zurich/Interlaken winter package. Compare both itineraries here: travel.pk/quote/41",
+      aiAction: "Simulated Package Match • Custom Itineraries Staged"
+    },
+    stage2: {
+      badge: "STEP 02 // ITINERARY MATCH",
+      title: "Hotel Tier & Visa Check",
+      detail: "Screened 5-star hotel options, passenger headcount (4 adults), and holiday visa processing timeline.",
+      metric: "Package Tier: VIP Family (Dec 18–28) • Illustrative Model"
+    },
+    stage3: {
+      title: "Itinerary Queued for Agent Call",
+      destination: "Travel CRM Pipeline → Senior Booking Consultant",
+      status: "Staged for Consultant Confirmation (WhatsApp Alert Sent)"
+    },
+    dashboard: {
+      chartTitle: "Simulated Package Inquiries vs. Confirmed Tours",
+      chartType: "travel",
+      kpis: [
+        { label: "Pipeline Value", value: "$185k", delta: "+24%" },
+        { label: "Package Win Rate", value: "32.4%", delta: "+5.8%" },
+        { label: "Average Margin", value: "22.8%", delta: "+3.1%" },
+        { label: "Quote Speed", value: "3.2 sec", delta: "-82%" }
+      ],
+      pipeline: [
+        { label: "Inquiries", val: "480" },
+        { label: "Quotes Staged", val: "210" },
+        { label: "Tours Booked", val: "68" }
+      ]
+    }
   }
 ];
 
@@ -225,7 +267,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
   const [isInteracting, setIsInteracting] = useState(false);
   const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Auto-cycle through stages 1 to 4 and transition cleanly across all 4 industries
+  // Auto-cycle through stages 1 to 4 and transition cleanly across all 5 industries
   useEffect(() => {
     if (isInteracting) return;
 
@@ -277,7 +319,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
           </div>
           
           <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.15]">
-            One engine. <span className="text-[#FF6B00]">Four built-in industries.</span>
+            One engine. <span className="text-[#FF6B00]">Five built-in industries.</span>
           </h2>
           
           <p className="text-slate-600 dark:text-slate-400 text-base sm:text-lg leading-relaxed">
@@ -285,7 +327,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
           </p>
         </div>
 
-        {/* 4 Industry Tabs */}
+        {/* 5 Industry Tabs */}
         <div className="border-b border-slate-200 dark:border-white/10 pb-4">
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth snap-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {INDUSTRIES.map((ind, idx) => {
@@ -414,7 +456,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
                 <div className="p-6 rounded-2xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 space-y-4 max-w-md mx-auto w-full my-auto animate-in fade-in duration-200">
                   <div className="flex items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400">
                     <Calendar className="w-4 h-4" />
-                    <span>LOCKED IN CALENDAR</span>
+                    <span>LOCKED IN SYSTEM</span>
                   </div>
                   <h4 className="text-xl font-bold text-slate-900 dark:text-white">{item.stage3.title}</h4>
                   <div className="text-sm font-mono text-slate-700 dark:text-slate-300 bg-white dark:bg-white/5 p-4 rounded-xl border border-slate-200 dark:border-white/5 space-y-2">
@@ -447,6 +489,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
                       {item.dashboard.chartType === "clinic" && <ClinicBarChart />}
                       {item.dashboard.chartType === "restaurant" && <RestaurantChart />}
                       {item.dashboard.chartType === "realestate" && <RealEstateChart />}
+                      {item.dashboard.chartType === "travel" && <TravelChart />}
                     </div>
                   </div>
 
@@ -601,6 +644,15 @@ const RealEstateChart = () => (
     <path d="M 20,100 Q 110,85 200,55 T 380,45" fill="none" stroke="#64748B" strokeWidth="1.5" strokeDasharray="3 3" />
     <circle cx="280" cy="22" r="3.5" fill="#FF6B00" />
     <text x="235" y="15" fill="#FF6B00" fontSize="10" fontFamily="monospace">Offers: +34%</text>
+  </svg>
+);
+
+const TravelChart = () => (
+  <svg viewBox="0 0 400 120" className="w-full h-full">
+    <path d="M 20,90 Q 110,70 200,30 T 380,16" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
+    <path d="M 20,95 Q 110,85 200,60 T 380,48" fill="none" stroke="#64748B" strokeWidth="1.5" strokeDasharray="3 3" />
+    <circle cx="280" cy="20" r="3.5" fill="#FF6B00" />
+    <text x="235" y="14" fill="#FF6B00" fontSize="10" fontFamily="monospace">Booked: +32%</text>
   </svg>
 );
 
