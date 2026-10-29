@@ -170,36 +170,39 @@ const VoiceReceptionistInner: React.FC = () => {
     }
   };
 
-  const handleStartCall = async () => {
-    // 1. Explicitly request microphone access for 2-way WebRTC stream
-    if (typeof navigator !== "undefined" && navigator.mediaDevices?.getUserMedia) {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach((track) => track.stop());
-      } catch {
-        console.warn("Microphone permission denied or unavailable");
-      }
-    }
-
-    setCallState("ringing");
-    setCallDuration(0);
-
-    // 2. Pre-unlock audio element within user gesture
-    if (remoteAudioRef.current) {
-      remoteAudioRef.current.play().catch(() => {});
-    }
-
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.resume();
-      const prime = new SpeechSynthesisUtterance("");
-      prime.volume = 0;
-      window.speechSynthesis.speak(prime);
-    }
-
-    startRingingSound();
-
+  const startVoiceCall = async () => {
     try {
-      // 3. Connect 2-way WebRTC stream in background
+      // Explicitly request microphone stream before initializing SDK
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      // Ensure AudioContext is in 'running' state
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (AudioContextClass) {
+        const ctx = new AudioContextClass();
+        if (ctx.state === "suspended") {
+          await ctx.resume();
+        }
+      }
+
+      // Pre-unlock audio element within user gesture
+      if (remoteAudioRef.current) {
+        remoteAudioRef.current.play().catch(() => {});
+      }
+
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.resume();
+        const prime = new SpeechSynthesisUtterance("");
+        prime.volume = 0;
+        window.speechSynthesis.speak(prime);
+      }
+
+      setCallState("ringing");
+      setCallDuration(0);
+      startRingingSound();
+
+      // Start SDK Call with microphone explicitly unmuted
       const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;
       if (agentId && agentId !== "your_agent_id_here") {
         conversation
@@ -212,24 +215,33 @@ const VoiceReceptionistInner: React.FC = () => {
               },
             },
           })
+          .then(() => {
+            conversation.setMuted(false);
+          })
           .catch((err) => {
             console.warn("ElevenLabs session error:", err);
           });
       }
 
-      // 4. Force 3 full rings (4.2 seconds) before flipping UI to connected
+      // Force 3 full rings (4.2 seconds) before flipping UI to connected
       if (connectTimeoutRef.current) clearTimeout(connectTimeoutRef.current);
       connectTimeoutRef.current = setTimeout(() => {
         stopRingingSound();
         setCallState("connected");
         setCallDuration(1);
+        try {
+          conversation.setMuted(false);
+          conversation.setVolume({ volume: 1 });
+        } catch {}
         playGreetingAudio();
       }, 4200);
     } catch (err) {
-      console.error("Connection failed:", err);
+      console.error("Microphone access denied or WebRTC failed:", err);
       handleEndCall();
     }
   };
+
+  const handleStartCall = startVoiceCall;
 
   const handleEndCall = async () => {
     if (connectTimeoutRef.current) {
