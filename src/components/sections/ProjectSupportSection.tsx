@@ -11,7 +11,9 @@ import {
   CheckCheck, 
   Sparkles, 
   Calendar,
-  ShieldCheck
+  ShieldCheck,
+  CheckCircle2,
+  Lock
 } from "lucide-react";
 import { ProjectSupportSectionData } from "@/lib/types";
 
@@ -52,7 +54,7 @@ const INDUSTRIES: IndustryLoop[] = [
   {
     id: "solar",
     tabLabel: "Solar EPC",
-    badge: "SolarPro Engine",
+    badge: "SolarPro Proposal Engine",
     icon: Sun,
     headline: "Turn Power Bills into Signed Solar Contracts",
     subheadline: "Calculates panel sizing, net-metering ROI, and profit margins automatically the second a customer texts.",
@@ -60,33 +62,33 @@ const INDUSTRIES: IndustryLoop[] = [
       sender: "Tariq Mahmood (Factory Owner)",
       incoming: "Salam! We need a 30kW solar quote for our factory in Karachi. Last month's bill was Rs 210,000.",
       time: "10:14 AM",
-      aiReply: "Walaikum Assalam Tariq! Based on your Commercial A-2 bill, 30kW saves ~Rs 165,000/mo with a 3.2-year payback. Here is your estimate: solarpro.pk/q/9821",
-      aiAction: "Commercial Tariff Identified • Proposal Drafted"
+      aiReply: "Walaikum Assalam Tariq! Based on your Commercial A-2 bill, a 30kW system saves ~Rs 165,000/mo with a 3.2-year payback. Here is your preliminary design & proposal: solarpro.pk/q/9821",
+      aiAction: "Commercial Tariff Identified • Custom Proposal Drafted"
     },
     stage2: {
       badge: "STEP 02 // ROOFTOP AUDIT",
-      title: "Satellite Sizing & Panel Fit",
-      detail: "Matched roof area with 550W Tier-1 panels for peak daylight yield.",
-      metric: "Est. Generation: 4,100 kWh/mo • Bill Offset: 81%"
+      title: "Automatic Satellite Roof Scan",
+      detail: "Scanned roof layout and fitted 550W Tier-1 solar panels for maximum sunshine capture.",
+      metric: "Expected Power: 4,100 kWh/mo • Electricity Bill Cut by 81%"
     },
     stage3: {
-      title: "Survey & Proposal Staged",
-      destination: "CRM Pipeline → SolarPro Dispatch",
-      status: "Site Inspection Booked (Tomorrow 11:30 AM)"
+      title: "Site Survey & Proposal Scheduled",
+      destination: "Sales Pipeline → Field Engineering Route",
+      status: "On-Site Engineer Visit: Tomorrow 11:30 AM"
     },
     dashboard: {
-      chartTitle: "Quoted vs. Closed Commercial Capacity (kW)",
+      chartTitle: "Solar System Size vs. Monthly Power Saved",
       chartType: "solar",
       kpis: [
-        { label: "Pipeline Value", value: "Rs 48.5M", delta: "+28%" },
-        { label: "Win Rate", value: "31.4%", delta: "+6.2%" },
-        { label: "Net Margin/kW", value: "18.5%", delta: "+2.1%" },
-        { label: "Quote Speed", value: "2.1 min", delta: "-85%" }
+        { label: "Pipeline Revenue", value: "Rs 48.5M", delta: "+28%" },
+        { label: "Deals Won", value: "31.4%", delta: "+6.2%" },
+        { label: "Profit per kW", value: "18.5%", delta: "+2.1%" },
+        { label: "Time to Quote", value: "2.1 min", delta: "-85%" }
       ],
       pipeline: [
-        { label: "Inquiries", val: "142" },
+        { label: "Customer Inquiries", val: "142" },
         { label: "Proposals Sent", val: "89" },
-        { label: "Signed Deals", val: "41" }
+        { label: "Signed Contracts", val: "41" }
       ]
     }
   },
@@ -95,80 +97,80 @@ const INDUSTRIES: IndustryLoop[] = [
     tabLabel: "Aesthetic & Dental",
     badge: "CareOps Practice Manager",
     icon: Smile,
-    headline: "Fill High-Value Dental & Aesthetic Chairs",
-    subheadline: "Answers patient questions 24/7, triages procedure requests, and secures consultation deposits without front desk delays.",
+    headline: "Fill High-Value Dental & Cosmetic Chairs",
+    subheadline: "Answers patient questions 24/7, reviews smile photos, and secures consultation deposits without front desk delays.",
     chat: {
       sender: "Ayesha Malik",
       incoming: "Hi! Do you have any slots open with Dr. Sarah for a veneer consultation this Saturday afternoon?",
       time: "08:42 PM",
-      aiReply: "Hi Ayesha! Dr. Sarah has 4:15 PM available this Saturday. I have held the chair for you—tap here to confirm your visit: clinic.care/book/88",
-      aiAction: "High-Ticket Intent Detected • Chair Held"
+      aiReply: "Hi Ayesha! Dr. Sarah has a 4:15 PM slot available this Saturday. I have held the chair for you—tap here to confirm your visit: clinic.care/book/88",
+      aiAction: "High-Ticket Intent Detected • Appointment Held"
     },
     stage2: {
       badge: "STEP 02 // PATIENT TRIAGE",
-      title: "Case Screening & Smile Photos",
-      detail: "Intake form dispatched; patient uploaded front smile photos for doctor review.",
-      metric: "Triage Result: Class-I Aesthetic Veneers (4-6 Units)"
+      title: "Treatment Screening & Smile Assessment",
+      detail: "Sent quick intake form; patient uploaded front smile photos for doctor review.",
+      metric: "Screening Result: Aesthetic Ceramic Veneers (4-6 Units)"
     },
     stage3: {
-      title: "Appointment & Deposit Locked",
+      title: "Chair & Deposit Confirmed",
       destination: "Practice Management Calendar + WhatsApp Reminder",
-      status: "Chair 02 Confirmed (Sat 4:15 PM)"
+      status: "Operatory Chair 02 Confirmed (Saturday 4:15 PM)"
     },
     dashboard: {
-      chartTitle: "Doctor Utilization & Chair Revenue (RevPASH)",
+      chartTitle: "Chair Busy Hours vs. Total Weekly Appointments",
       chartType: "clinic",
       kpis: [
-        { label: "Chair Rev/Hour", value: "Rs 8,500", delta: "+19%" },
-        { label: "Doctor Occupancy", value: "88%", delta: "+14%" },
-        { label: "High-Ticket Close", value: "44.2%", delta: "+8.4%" },
-        { label: "No-Show Rate", value: "2.8%", delta: "-65%" }
+        { label: "Hourly Chair Revenue", value: "Rs 8,500/hr", delta: "+19%" },
+        { label: "Doctor Busy Rate", value: "88%", delta: "+14%" },
+        { label: "Treatment Close Rate", value: "44.2%", delta: "+8.4%" },
+        { label: "No-Shows Avoided", value: "2.8%", delta: "-65%" }
       ],
       pipeline: [
-        { label: "Inquiries", val: "310" },
-        { label: "Triaged Cases", val: "186" },
-        { label: "Treatments Booked", val: "112" }
+        { label: "Patient Inquiries", val: "310" },
+        { label: "Cases Qualified", val: "186" },
+        { label: "Treatments Started", val: "112" }
       ]
     }
   },
   {
     id: "restaurant",
     tabLabel: "Restaurant Group",
-    badge: "Floor & Reservation Host",
+    badge: "Table & Reservation Host",
     icon: UtensilsCrossed,
     headline: "More Table Turns. Zero Missed Reservations.",
     subheadline: "Handles weekend party bookings, confirms dietary needs, and protects high-demand tables with minimum spends.",
     chat: {
       sender: "Hamza Sheikh",
-      incoming: "Hey, can I book a table for 8 people tomorrow at 8:30 PM for a birthday dinner? Can we see the set menu?",
+      incoming: "Hey! Can I book a table for 8 people tomorrow at 8:30 PM for a birthday dinner? Can we see the set menu?",
       time: "03:15 PM",
-      aiReply: "Hey Hamza! Table 12 is available for 8 guests tomorrow at 8:30 PM. I've sent the birthday banquet menu. Tap below to confirm!",
-      aiAction: "Large Party Flagged • Minimum Spend Applied"
+      aiReply: "Hey Hamza! We’d love to host your birthday dinner. Table 12 is available for 8 guests tomorrow at 8:30 PM. I’ve attached our banquet menu—tap below to lock it in!",
+      aiAction: "Large Birthday Party • Table Combination Held"
     },
     stage2: {
       badge: "STEP 02 // SEATING OPTIMIZATION",
-      title: "Live POS Table Combination",
-      detail: "Floor system combined tables 12 & 13 for optimal turnaround.",
-      metric: "Allocation: Private Booth • Slot Duration: 2 Hours"
+      title: "Smart Floor & Seating Match",
+      detail: "Floor system combined tables 12 & 13 for optimal turnaround without crowding.",
+      metric: "Seating: Private Corner Booth • Dining Slot: 2 Hours"
     },
     stage3: {
       title: "Table Locked in Host POS",
       destination: "Floor Management Screen & Kitchen Host",
-      status: "Guaranteed Hold (Tomorrow 8:30 PM)"
+      status: "Guaranteed Hold Confirmed (Tomorrow 8:30 PM)"
     },
     dashboard: {
-      chartTitle: "Seat Turns vs. Prime Cost % (Target < 60%)",
+      chartTitle: "Table Occupancy vs. Food & Labor Costs",
       chartType: "restaurant",
       kpis: [
-        { label: "Prime Cost", value: "54.8%", delta: "-4.2%" },
-        { label: "Table Turn Time", value: "41 min", delta: "-12m" },
-        { label: "Avg Dine-In Bill", value: "Rs 3,450", delta: "+18%" },
+        { label: "Food & Labor Cost", value: "54.8%", delta: "-4.2%" },
+        { label: "Avg Table Turn Time", value: "41 min", delta: "-12m" },
+        { label: "Avg Dine-In Spend", value: "Rs 3,450", delta: "+18%" },
         { label: "Direct Bookings", value: "72%", delta: "+15%" }
       ],
       pipeline: [
-        { label: "Requests", val: "1,420" },
+        { label: "Booking Requests", val: "1,420" },
         { label: "Tables Reserved", val: "880" },
-        { label: "Guests Hosted", val: "3,120" }
+        { label: "Guests Welcomed", val: "3,120" }
       ]
     }
   },
@@ -181,34 +183,34 @@ const INDUSTRIES: IndustryLoop[] = [
     subheadline: "Enriches company size, confirms budget suitability, and routes enterprise accounts straight to senior sales reps.",
     chat: {
       sender: "David Chen (VP Engineering)",
-      incoming: "We're an 80-person dev team looking to integrate your automated pipeline with our CRM. Pricing details?",
+      incoming: "We're an 80-person dev team looking to connect your automated pipeline into our CRM. What does enterprise pricing look like?",
       time: "11:20 AM",
-      aiReply: "Hi David! You qualify for our Enterprise tier. I have set up a 20-min architecture call with our Tech Lead for Thursday at 2 PM. Calendar invite sent!",
-      aiAction: "ARR > $50k Qualified • Tech Lead Calendar Dispatched"
+      aiReply: "Hi David! With 80 engineers, you qualify for our Enterprise tier. I have scheduled a 20-min architecture walkthrough with our Lead Solutions Architect for Thursday at 2:00 PM. Calendar invite sent!",
+      aiAction: "Enterprise Lead Qualified • Specialist Calendar Dispatched"
     },
     stage2: {
-      badge: "STEP 02 // ACCOUNT ENRICHMENT",
-      title: "Domain Intelligence & Stack Verification",
-      detail: "Verified company domain: 85 engineers, Series A, high API volume.",
-      metric: "ICP Score: Tier-1 Enterprise • Priority: High"
+      badge: "STEP 02 // ACCOUNT LOOKUP",
+      title: "Instant Company Background Check",
+      detail: "Looked up company profile: 85 engineers, Series A funding, high daily data volume.",
+      metric: "Customer Fit Score: Tier-1 Enterprise (High Value)"
     },
     stage3: {
-      title: "Deal Created & Synced",
-      destination: "Salesforce CRM + Slack Executive Channel",
+      title: "Deal Created & Meeting Booked",
+      destination: "Salesforce CRM + Slack Leadership Channel",
       status: "Architecture Demo Booked (Thursday 2:00 PM)"
     },
     dashboard: {
-      chartTitle: "Sales Velocity vs. Deal Conversion Funnel",
+      chartTitle: "Weekly Lead-to-Sale Conversion Funnel",
       chartType: "saas",
       kpis: [
-        { label: "Sales Velocity", value: "$24.5k/wk", delta: "+32%" },
-        { label: "Lead-to-Demo", value: "52.4%", delta: "+11%" },
+        { label: "New Sales / Week", value: "$24.5k/wk", delta: "+32%" },
+        { label: "Demo Booking Rate", value: "52.4%", delta: "+11%" },
         { label: "Average Deal Size", value: "$36,000", delta: "+18%" },
-        { label: "Payback Period", value: "6.8 Mo", delta: "-2.4m" }
+        { label: "Time to Profit", value: "6.8 Mo", delta: "-2.4m" }
       ],
       pipeline: [
         { label: "Leads Ingested", val: "840" },
-        { label: "Qualified Demos", val: "410" },
+        { label: "Live Demos Booked", val: "410" },
         { label: "Deals Closed", val: "84" }
       ]
     }
@@ -222,30 +224,30 @@ const INDUSTRIES: IndustryLoop[] = [
     subheadline: "Quotes cargo loads based on live fuel prices, assigns trucks, and verifies return cargo automatically.",
     chat: {
       sender: "Bilal Logistics Ops",
-      incoming: "Need rate for 2x 40ft flatbeds from Karachi Port to Sundar Estate Lahore next Tuesday. Cargo ready.",
+      incoming: "Salam! Need freight rates for 2x 40ft flatbed trucks from Karachi Port to Sundar Industrial Estate Lahore next Tuesday. Cargo is packed and ready.",
       time: "02:40 PM",
-      aiReply: "Quoted Rs 335,000 per flatbed based on today's diesel index. Both trucks are pre-assigned. View manifest: fleet.pk/m/41",
-      aiAction: "Lane Matched • Spot Margin Calculated"
+      aiReply: "Walaikum Assalam Bilal! Quoted Rs 335,000 per flatbed based on today's diesel index. Both trucks are reserved and ready. View manifest: fleet.pk/m/41",
+      aiAction: "Lane Matched • Spot Diesel Index Calculated"
     },
     stage2: {
-      badge: "STEP 02 // BACKHAUL CALCULATION",
+      badge: "STEP 02 // RETURN TRIP PLANNING",
       title: "Route Margin & Fuel Indexing",
-      detail: "Calculated route margin and matched return load from Lahore industrial hub.",
-      metric: "Backhaul Probability: 91% • Trip Margin: 22%"
+      detail: "Calculated route margin and matched return load from Lahore industrial hub to avoid empty driving.",
+      metric: "Return Cargo Match: 91% • Trip Profit Margin: 22%"
     },
     stage3: {
       title: "Digital Waybill Dispatched",
-      destination: "Fleet TMS + Driver WhatsApp Dispatch",
+      destination: "Fleet Dispatch Board + Driver WhatsApp Route",
       status: "Truck Manifest Confirmed (Tue 6:00 AM Departure)"
     },
     dashboard: {
-      chartTitle: "Fulfillment Velocity vs. Fleet Uptime",
+      chartTitle: "Trucks on Route vs. On-Time Deliveries",
       chartType: "logistics",
       kpis: [
-        { label: "Fleet Uptime", value: "98.4%", delta: "+4.1%" },
-        { label: "Dock Wait Time", value: "34 min", delta: "-48%" },
-        { label: "Empty Miles", value: "6.2%", delta: "-14%" },
-        { label: "Fuel Savings", value: "15.8%", delta: "+3.2%" }
+        { label: "Fleet in Motion", value: "98.4%", delta: "+4.1%" },
+        { label: "Loading Dock Wait", value: "34 min", delta: "-48%" },
+        { label: "Empty Return Miles", value: "6.2%", delta: "-14%" },
+        { label: "Fuel Expenses Saved", value: "15.8%", delta: "+3.2%" }
       ],
       pipeline: [
         { label: "Cargo Inquiries", val: "540" },
@@ -257,7 +259,7 @@ const INDUSTRIES: IndustryLoop[] = [
 ];
 
 // -------------------------------------------------------------------
-// Domain Authentic SVG Visualizations for Stage 04
+// Domain Authentic Clean Visualizations for Stage 04
 // -------------------------------------------------------------------
 
 const SolarChart = () => (
@@ -265,24 +267,29 @@ const SolarChart = () => (
     <path d="M 20,95 Q 100,85 180,30 T 380,20" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
     <path d="M 20,80 Q 100,75 180,60 T 380,55" fill="none" stroke="#94A3B8" strokeWidth="1.5" strokeDasharray="3 3" />
     <circle cx="280" cy="22" r="3.5" fill="#FF6B00" />
-    <text x="250" y="15" fill="#FF6B00" fontSize="9" fontFamily="monospace">Quoted MW: +38%</text>
+    <text x="245" y="15" fill="#FF6B00" fontSize="10" fontFamily="sans-serif" fontWeight="bold">Power Saved: +38%</text>
   </svg>
 );
 
 const ClinicBarChart = () => (
-  <div className="w-full h-full flex items-end justify-around px-4">
-    {[
-      { cap: 70, book: 62 },
-      { cap: 85, book: 80 },
-      { cap: 90, book: 88 },
-      { cap: 95, book: 92 },
-      { cap: 100, book: 98 },
-    ].map((b, i) => (
-      <div key={i} className="flex gap-1 items-end h-24">
-        <div className="w-3 bg-slate-300 dark:bg-slate-700 rounded-t-sm" style={{ height: `${b.cap}%` }} />
-        <div className={`w-3 rounded-t-sm ${i === 4 ? "bg-[#FF6B00]" : "bg-[#8B5CF6]"}`} style={{ height: `${b.book}%` }} />
-      </div>
-    ))}
+  <div className="w-full h-full flex flex-col justify-end">
+    <div className="flex items-end justify-around px-4 h-24">
+      {[
+        { cap: 70, book: 62, day: "Mon" },
+        { cap: 85, book: 80, day: "Tue" },
+        { cap: 90, book: 88, day: "Wed" },
+        { cap: 95, book: 92, day: "Thu" },
+        { cap: 100, book: 98, day: "Fri" },
+      ].map((b, i) => (
+        <div key={i} className="flex flex-col items-center gap-1.5 h-full justify-end">
+          <div className="flex gap-1 items-end h-20">
+            <div className="w-3 bg-slate-300 dark:bg-slate-700 rounded-t-sm" style={{ height: `${b.cap}%` }} title="Available Chair Hours" />
+            <div className={`w-3 rounded-t-sm ${i === 4 ? "bg-[#FF6B00]" : "bg-[#8B5CF6]"}`} style={{ height: `${b.book}%` }} title="Booked Patients" />
+          </div>
+          <span className="text-[9px] text-slate-500 font-mono">{b.day}</span>
+        </div>
+      ))}
+    </div>
   </div>
 );
 
@@ -290,23 +297,24 @@ const RestaurantChart = () => (
   <svg viewBox="0 0 400 120" className="w-full h-full">
     <path d="M 20,30 L 100,45 L 180,35 L 260,25 L 380,15" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
     <path d="M 20,90 L 100,75 L 180,65 L 260,55 L 380,50" fill="none" stroke="#FF6B00" strokeWidth="2" strokeDasharray="4 4" />
-    <text x="260" y="70" fill="#FF6B00" fontSize="9" fontFamily="monospace">Prime Cost: 54.8%</text>
+    <text x="240" y="70" fill="#FF6B00" fontSize="10" fontFamily="sans-serif" fontWeight="bold">Food & Labor: 54.8%</text>
   </svg>
 );
 
 const SaasFunnelChart = () => (
-  <div className="w-full h-full flex flex-col justify-around px-4">
+  <div className="w-full h-full flex flex-col justify-around px-4 py-1">
     {[
-      { w: "92%", label: "Inbound MQL", color: "bg-slate-400 dark:bg-slate-300" },
-      { w: "65%", label: "Qualified SQL", color: "bg-[#8B5CF6]" },
-      { w: "38%", label: "Demo Completed", color: "bg-[#8B5CF6]" },
-      { w: "18%", label: "Closed Won", color: "bg-[#FF6B00]" },
+      { w: "92%", label: "Website Inquiries", color: "bg-slate-400 dark:bg-slate-300" },
+      { w: "65%", label: "Qualified Leads", color: "bg-[#8B5CF6]" },
+      { w: "38%", label: "Live Demos", color: "bg-[#8B5CF6]" },
+      { w: "18%", label: "Contracts Signed", color: "bg-[#FF6B00]" },
     ].map((f, i) => (
-      <div key={i} className="flex items-center gap-2">
-        <span className="w-24 text-[10px] text-slate-500 dark:text-slate-400 font-mono text-right">{f.label}</span>
-        <div className="flex-1 h-2 bg-slate-200 dark:bg-white/5 rounded-full overflow-hidden">
+      <div key={i} className="flex items-center gap-2.5">
+        <span className="w-28 text-[10px] text-slate-600 dark:text-slate-400 font-sans font-medium text-right shrink-0">{f.label}</span>
+        <div className="flex-1 h-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
           <div className={`h-full ${f.color} rounded-full`} style={{ width: f.w }} />
         </div>
+        <span className="text-[10px] text-slate-500 font-mono w-8">{f.w}</span>
       </div>
     ))}
   </div>
@@ -317,7 +325,7 @@ const LogisticsChart = () => (
     <path d="M 20,80 L 110,70 L 200,40 L 290,30 L 380,20" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
     <path d="M 20,100 L 110,85 L 200,60 L 290,45 L 380,35" fill="none" stroke="#94A3B8" strokeWidth="1.5" strokeDasharray="3 3" />
     <circle cx="290" cy="30" r="3.5" fill="#FF6B00" />
-    <text x="240" y="20" fill="#FF6B00" fontSize="9" fontFamily="monospace">98.4% On-Time</text>
+    <text x="235" y="20" fill="#FF6B00" fontSize="10" fontFamily="sans-serif" fontWeight="bold">98.4% On-Time Deliveries</text>
   </svg>
 );
 
@@ -439,43 +447,103 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
             {/* Dynamic Stage Canvas with Fixed Proportions */}
             <div className="p-6 flex-1 flex flex-col justify-center overflow-hidden">
               
-              {/* STAGE 01: REALISTIC WHATSAPP CHAT */}
+              {/* STAGE 01: AUTHENTIC WHATSAPP CHAT WITH DIRECTIONAL TAILS */}
               {currentStage === 1 && (
                 <div className="space-y-3.5 max-w-md mx-auto w-full animate-in fade-in duration-200">
-                  <div className="text-center text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                    Direct WhatsApp Inbound • Verified Channel
-                  </div>
-
-                  {/* Customer Message */}
-                  <div className="flex flex-col items-start space-y-1">
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium ml-1">{item.chat.sender}</span>
-                    <div className="bg-slate-100 dark:bg-[#1C2230] text-slate-800 dark:text-slate-100 text-xs sm:text-sm p-3.5 rounded-2xl rounded-tl-sm border border-slate-200 dark:border-white/5 shadow-sm max-w-[90%] leading-relaxed">
-                      {item.chat.incoming}
-                      <div className="text-[9px] text-slate-400 text-right mt-1 font-mono">{item.chat.time}</div>
-                    </div>
-                  </div>
-
-                  {/* AI Response */}
-                  <div className="flex flex-col items-end space-y-1">
-                    <span className="text-[11px] text-[#8B5CF6] font-medium mr-1 flex items-center gap-1">
-                      <Sparkles className="w-3 h-3" /> Zavian AI Engine
-                    </span>
-                    <div className="bg-purple-50 dark:bg-[#8B5CF6]/20 border border-purple-200 dark:border-[#8B5CF6]/40 text-purple-950 dark:text-white text-xs sm:text-sm p-3.5 rounded-2xl rounded-tr-sm shadow-sm max-w-[90%] leading-relaxed">
-                      {item.chat.aiReply}
-                      <div className="text-[9px] text-purple-600 dark:text-purple-300 flex items-center justify-end gap-1 mt-1 font-mono">
-                        Just now <CheckCheck className="w-3.5 h-3.5 text-[#FF6B00]" />
+                  
+                  {/* Subtle WhatsApp-style Chat Canvas */}
+                  <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-md bg-[#ECE5DD] dark:bg-[#0B141A]">
+                    
+                    {/* Top WhatsApp Status Bar */}
+                    <div className="px-4 py-2.5 bg-[#075E54] dark:bg-[#1F2C34] text-white flex items-center justify-between shadow-xs">
+                      <div className="flex items-center gap-2.5">
+                        <div className="relative">
+                          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs uppercase text-emerald-100">
+                            {item.tabLabel.slice(0, 2)}
+                          </div>
+                          <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-[#075E54] dark:border-[#1F2C34]" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5 leading-none">
+                            <span className="font-semibold text-xs tracking-tight">{item.badge}</span>
+                            <span className="text-[10px] text-emerald-300">✓</span>
+                          </div>
+                          <span className="text-[9px] text-emerald-100/80 dark:text-slate-400 mt-0.5 block">
+                            Direct WhatsApp Inbound • Automated
+                          </span>
+                        </div>
                       </div>
+                      <span className="text-[9px] font-mono text-emerald-200/90 bg-black/20 px-2 py-0.5 rounded">
+                        Verified Business
+                      </span>
+                    </div>
+
+                    {/* Chat Bubble Thread */}
+                    <div className="p-4 space-y-3.5 bg-[#EFEAE2] dark:bg-[#0B141A]">
+                      
+                      {/* Security Notice */}
+                      <div className="text-center my-0.5">
+                        <span className="px-2.5 py-1 rounded-md bg-white/80 dark:bg-[#182229]/80 text-[10px] text-slate-600 dark:text-slate-400 shadow-xs inline-flex items-center gap-1 border border-black/5 dark:border-white/5 font-sans">
+                          <Lock className="w-2.5 h-2.5 text-amber-500" />
+                          <span>End-to-end encrypted • Instant AI Response</span>
+                        </span>
+                      </div>
+
+                      {/* 1. Customer Inbound Bubble with Left Tail */}
+                      <div className="flex flex-col items-start space-y-1">
+                        <span className="text-[10px] text-slate-600 dark:text-slate-400 font-medium ml-2">{item.chat.sender}</span>
+                        <div className="relative bg-white dark:bg-[#202C33] text-slate-800 dark:text-slate-100 text-xs sm:text-[13px] p-3 rounded-2xl rounded-tl-none shadow-sm border border-black/5 dark:border-white/5 max-w-[88%] leading-relaxed">
+                          {/* Left Directional Tail */}
+                          <svg
+                            className="absolute -left-2 top-0 text-white dark:text-[#202C33] fill-current"
+                            width="8"
+                            height="13"
+                            viewBox="0 0 8 13"
+                          >
+                            <path d="M1.533 3.568 8 12.193V0H2.812C1.042 0 .474 2.156 1.533 3.568z" />
+                          </svg>
+                          <p>{item.chat.incoming}</p>
+                          <div className="text-[9px] text-slate-400 dark:text-slate-500 text-right mt-1 font-mono">
+                            {item.chat.time}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 2. Outgoing AI Response with Right Tail */}
+                      <div className="flex flex-col items-end space-y-1 pt-1">
+                        <span className="text-[10px] text-[#8B5CF6] dark:text-purple-300 font-medium mr-2 flex items-center gap-1">
+                          <Sparkles className="w-3 h-3 text-[#FF6B00]" /> Zavian Auto-Assistant
+                        </span>
+                        <div className="relative bg-[#D9FDD3] dark:bg-[#005C4B] text-slate-900 dark:text-white text-xs sm:text-[13px] p-3 rounded-2xl rounded-tr-none shadow-sm border border-emerald-300/40 dark:border-white/5 max-w-[88%] leading-relaxed">
+                          {/* Right Directional Tail */}
+                          <svg
+                            className="absolute -right-2 top-0 text-[#D9FDD3] dark:text-[#005C4B] fill-current"
+                            width="8"
+                            height="13"
+                            viewBox="0 0 8 13"
+                          >
+                            <path d="M6.467 3.568 0 12.193V0h5.188c1.77 0 2.338 2.156 1.279 3.568z" />
+                          </svg>
+                          <p>{item.chat.aiReply}</p>
+                          <div className="text-[9px] text-emerald-800 dark:text-emerald-200 flex items-center justify-end gap-1 mt-1 font-mono">
+                            <span>Just now</span>
+                            <CheckCheck className="w-3.5 h-3.5 text-[#53bdeb]" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Pill */}
+                      <div className="bg-white/80 dark:bg-[#182229]/90 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 flex items-center justify-between text-xs shadow-xs">
+                        <span className="text-[#FF6B00] flex items-center gap-1.5 font-medium text-[11px]">
+                          <span className="w-2 h-2 rounded-full bg-[#FF6B00] animate-ping" />
+                          {item.chat.aiAction}
+                        </span>
+                        <span className="text-emerald-700 dark:text-emerald-400 font-semibold text-[11px]">⚡ Sub-3s Response</span>
+                      </div>
+
                     </div>
                   </div>
 
-                  {/* Action Pill */}
-                  <div className="bg-slate-100 dark:bg-black/50 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2 flex items-center justify-between text-xs font-mono">
-                    <span className="text-[#FF6B00] flex items-center gap-2 font-medium">
-                      <span className="w-2 h-2 rounded-full bg-[#FF6B00] animate-ping" />
-                      {item.chat.aiAction}
-                    </span>
-                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Sub-3s Response</span>
-                  </div>
                 </div>
               )}
 
@@ -512,7 +580,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
                 </div>
               )}
 
-              {/* STAGE 04: REAL-TIME OWNER DASHBOARD */}
+              {/* STAGE 04: REAL-TIME OWNER DASHBOARD (EVERYDAY LABELS) */}
               {currentStage === 4 && (
                 <div className="space-y-4 animate-in fade-in duration-200">
                   {/* KPI Cards */}
@@ -567,27 +635,27 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
             {[
               {
                 num: "01",
-                tag: "OMNICHANNEL INGESTION",
-                title: "Instant Inbound Qualification",
-                desc: "Captures 100% of WhatsApp inquiries and web leads with contextual natural-language AI response in under 5 seconds."
+                tag: "INSTANT CHAT",
+                title: "24/7 WhatsApp Response",
+                desc: "Answers every WhatsApp text and website inquiry in under 3 seconds with natural, friendly conversation."
               },
               {
                 num: "02",
-                tag: "PARAMETRIC TRIAGE",
-                title: "Automated Logic & Sizing",
-                desc: "Validates technical constraints, applies commercial pricing rules, and enriches records without manual data entry."
+                tag: "SMART FILTER",
+                title: "Automatic Needs Sizing",
+                desc: "Checks project details, applies your pricing rules, and finds the exact right service without manual back-and-forth."
               },
               {
                 num: "03",
-                tag: "AUTOMATED SYNC",
-                title: "Calendar, POS & CRM Lock",
-                desc: "Instantly stakes the appointment, dispatches pre-consult material, and generates booking deposit links."
+                tag: "CALENDAR LOCK",
+                title: "Zero-Delay Direct Booking",
+                desc: "Locks the appointment right into your calendar or team software, sends reminders, and collects booking deposits."
               },
               {
                 num: "04",
-                tag: "MEASURABLE RESULTS",
-                title: "Executive Revenue Telemetry",
-                desc: "Real-time visibility into chair occupancy, solar margins, table turns, and deal conversion rates."
+                tag: "LIVE RESULTS",
+                title: "Real-Time Owner Telemetry",
+                desc: "See your daily profit margins, booked capacity, and active customer pipelines update live as deals close."
               }
             ].map((step, sIdx) => {
               const active = currentStage === sIdx + 1;
