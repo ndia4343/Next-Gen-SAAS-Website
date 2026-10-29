@@ -319,7 +319,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
           </div>
           
           <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.15]">
-            One engine. <span className="text-[#FF6B00]">Five built-in industries.</span>
+            One engine. <span className="text-[#FF6B00]">Four built-in industries.</span>
           </h2>
           
           <p className="text-slate-600 dark:text-slate-400 text-base sm:text-lg leading-relaxed">
