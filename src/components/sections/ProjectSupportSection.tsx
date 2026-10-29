@@ -176,81 +176,67 @@ function StageThreeBookingView() {
 
 function StageFourTelemetryDashboard() {
   return (
-    <div className="w-full max-w-md space-y-3.5 animate-in fade-in zoom-in-95 duration-200 text-left">
-      {/* 3 KPI Tiles */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-center font-mono">
-        <div className="p-3 rounded-xl bg-zinc-50 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/10">
-          <p className="text-[10px] text-zinc-500 dark:text-zinc-400 uppercase">Response Time</p>
-          <p className="text-base sm:text-lg font-bold text-emerald-500 mt-0.5">Under 60s</p>
-          <p className="text-[9px] text-zinc-400 dark:text-zinc-500">24/7 autonomous</p>
+    <div className="w-full space-y-4">
+      {/* Top Telemetry Header & Notice */}
+      <div className="flex items-center justify-between text-[11px] font-mono">
+        <span className="text-zinc-500 dark:text-zinc-400">EXECUTIVE PIPELINE TELEMETRY</span>
+        <span className="text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-white/5 px-2 py-0.5 rounded border border-zinc-200 dark:border-white/10">
+          Illustrative Demo Data
+        </span>
+      </div>
+
+      {/* 3 Metric Cards */}
+      <div className="grid grid-cols-3 gap-3">
+        <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10">
+          <span className="text-[10px] font-mono text-zinc-500 uppercase block">Sample Volume</span>
+          <span className="text-lg font-bold text-zinc-900 dark:text-white mt-0.5 block">240 Leads</span>
+          <span className="text-[10px] text-zinc-400 font-mono">Simulated Cohort</span>
         </div>
-        <div className="p-3 rounded-xl bg-zinc-50 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/10">
-          <p className="text-[10px] text-zinc-500 dark:text-zinc-400 uppercase">Lead Retention</p>
-          <p className="text-base sm:text-lg font-bold text-[#FF6B00] mt-0.5">+38.4%</p>
-          <p className="text-[9px] text-zinc-400 dark:text-zinc-500">after-hours saved</p>
+        <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10">
+          <span className="text-[10px] font-mono text-zinc-500 uppercase block">Triage Speed</span>
+          <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 block">Automated</span>
+          <span className="text-[10px] text-zinc-400 font-mono">Zero Staff Delay</span>
         </div>
-        <div className="p-3 rounded-xl bg-zinc-50 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/10 col-span-2 sm:col-span-1">
-          <p className="text-[10px] text-zinc-500 dark:text-zinc-400 uppercase">Lead-to-Call</p>
-          <p className="text-base sm:text-lg font-bold text-purple-600 dark:text-purple-400 mt-0.5">64.2%</p>
-          <p className="text-[9px] text-zinc-400 dark:text-zinc-500">direct booking</p>
+        <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10">
+          <span className="text-[10px] font-mono text-zinc-500 uppercase block">Calendar Yield</span>
+          <span className="text-lg font-bold text-[#8B5CF6] mt-0.5 block">Direct Sync</span>
+          <span className="text-[10px] text-zinc-400 font-mono">Google Cal / CRM</span>
         </div>
       </div>
 
-      {/* Trend Line Chart */}
-      <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/10">
-        <div className="flex items-center justify-between text-xs font-mono mb-2">
-          <span className="text-zinc-600 dark:text-zinc-400">Monthly Lead Trend</span>
-          <span className="text-emerald-500 font-semibold text-[11px]">▲ +$34,200 Pipeline</span>
+      {/* Inbound Velocity Trend Line & Conversion Distribution */}
+      <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10">
+        <div className="flex justify-between items-center mb-3">
+          <span className="text-xs font-semibold text-zinc-900 dark:text-white">
+            Lead Velocity vs. Direct Bookings
+          </span>
+          <span className="text-[10px] font-mono text-zinc-400">DEMO RUNTIME</span>
         </div>
 
-        <div className="relative h-20 w-full">
-          <svg className="w-full h-full overflow-visible" viewBox="0 0 300 70" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="trendGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#FF6B00" stopOpacity="0.35" />
-                <stop offset="100%" stopColor="#FF6B00" stopOpacity="0.0" />
-              </linearGradient>
-            </defs>
-            <line x1="0" y1="18" x2="300" y2="18" stroke="currentColor" strokeOpacity="0.08" strokeDasharray="3 3" />
-            <line x1="0" y1="45" x2="300" y2="45" stroke="currentColor" strokeOpacity="0.08" strokeDasharray="3 3" />
-            <path d="M 0 58 Q 60 50, 100 40 T 200 25 T 300 10 L 300 70 L 0 70 Z" fill="url(#trendGradient)" />
-            <path d="M 0 58 Q 60 50, 100 40 T 200 25 T 300 10" fill="none" stroke="#FF6B00" strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="100" cy="40" r="3.5" fill="#FF6B00" />
-            <circle cx="200" cy="25" r="3.5" fill="#8B5CF6" />
-            <circle cx="300" cy="10" r="4.5" fill="#10B981" />
-          </svg>
+        {/* SVG Sparkline Graph */}
+        <div className="h-20 w-full flex items-end gap-2 pt-2">
+          {[28, 45, 40, 68, 55, 82, 95].map((val, i) => (
+            <div key={i} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+              <div 
+                className="w-full bg-gradient-to-t from-purple-500/20 via-purple-500/40 to-[#8B5CF6] rounded-t transition-all duration-500" 
+                style={{ height: `${val}%` }} 
+              />
+              <span className="text-[9px] font-mono text-zinc-400">D0{i + 1}</span>
+            </div>
+          ))}
         </div>
 
-        <div className="flex justify-between text-[10px] font-mono text-zinc-400 mt-2 pt-1 border-t border-zinc-200/80 dark:border-white/5">
-          <span>Week 01</span>
-          <span>Week 02</span>
-          <span>Week 03</span>
-          <span className="text-zinc-700 dark:text-zinc-200 font-bold">Week 04 (Current)</span>
+        {/* Conversion Progress Bars */}
+        <div className="mt-4 pt-3 border-t border-zinc-200 dark:border-white/10 space-y-2">
+          <div className="flex justify-between text-[11px] text-zinc-600 dark:text-zinc-400">
+            <span>Inbound Ingestion ➔ Triage</span>
+            <span className="font-mono text-zinc-900 dark:text-white">Active</span>
+          </div>
+          <div className="w-full h-1.5 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden">
+            <div className="h-full bg-[#8B5CF6] rounded-full w-[85%]" />
+          </div>
         </div>
       </div>
-
-      {/* Conversion Bars */}
-      <div className="p-3 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/10 space-y-1.5">
-        <div className="flex justify-between text-[11px] font-mono text-zinc-600 dark:text-zinc-400">
-          <span>Traditional Intake</span>
-          <span className="text-zinc-500 font-semibold">18% conversion</span>
-        </div>
-        <div className="w-full h-1.5 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden">
-          <div className="h-full bg-zinc-400 dark:bg-zinc-600 w-[18%]" />
-        </div>
-
-        <div className="flex justify-between text-[11px] font-mono text-zinc-900 dark:text-zinc-200 pt-1">
-          <span className="text-[#FF6B00] font-semibold">ZAVIAN Autonomous Pipeline</span>
-          <span className="text-emerald-500 font-bold">68% conversion</span>
-        </div>
-        <div className="w-full h-1.5 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-[#FF6B00] to-purple-500 w-[68%]" />
-        </div>
-      </div>
-
-      <p className="text-[10px] font-mono text-zinc-400 dark:text-zinc-500 text-center">
-        * Figures shown are Illustrative Demo Data based on typical production pipeline benchmarks.
-      </p>
     </div>
   );
 }
