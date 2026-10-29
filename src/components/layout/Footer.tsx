@@ -1,9 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { ArrowUp, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
-import { Logo } from '@/components/ui/Logo';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { FooterData, ThemeBrandingConfig } from '@/lib/types';
 
@@ -13,65 +11,18 @@ interface FooterProps {
   themeBranding?: ThemeBrandingConfig;
 }
 
-const defaultLinks = [
-  { id: '1', label: 'Overview', href: '#hero' },
-  { id: '2', label: '01 / Core Expertise', href: '#core-expertise' },
-  { id: '3', label: '02 / Project Support', href: '#project-support' },
-];
-
-export default function Footer({ onOpenQuoteModal, content, themeBranding: initialBranding }: FooterProps) {
+export default function Footer({ onOpenQuoteModal, content }: FooterProps = {}) {
+  const [copied, setCopied] = useState(false);
+  const email = "contact@zavianlabs.com";
   const { lenis } = useSmoothScroll();
-  const [branding, setBranding] = useState<ThemeBrandingConfig | undefined>(initialBranding);
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem('zavian_theme_branding');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && (parsed.logoImageUrl || parsed.logoMode)) {
-          setBranding((prev) => ({ ...prev, ...parsed }));
-        }
-      }
-    } catch {}
-
-    const handleUpdate = (e: Event) => {
-      const customEvent = e as CustomEvent<ThemeBrandingConfig>;
-      if (customEvent.detail) {
-        setBranding(customEvent.detail);
-      }
-    };
-
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key === 'zavian_theme_branding' && e.newValue) {
-        try {
-          setBranding(JSON.parse(e.newValue));
-        } catch {}
-      }
-    };
-
-    window.addEventListener('zavian_branding_updated', handleUpdate);
-    window.addEventListener('storage', handleStorage);
-
-    fetch('/api/content')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.content?.themeBranding) {
-          setBranding((prev) => ({ ...prev, ...data.content.themeBranding }));
-        }
-      })
-      .catch(() => {});
-
-    return () => {
-      window.removeEventListener('zavian_branding_updated', handleUpdate);
-      window.removeEventListener('storage', handleStorage);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (initialBranding) {
-      setBranding((prev) => ({ ...initialBranding, ...(prev?.logoImageUrl ? { logoImageUrl: prev.logoImageUrl, logoMode: prev.logoMode } : {}) }));
+  const handleCopyEmail = () => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
-  }, [initialBranding]);
+  };
 
   const scrollToTop = () => {
     if (lenis) {
@@ -84,79 +35,233 @@ export default function Footer({ onOpenQuoteModal, content, themeBranding: initi
   const handleOpenQuote = (service: string = 'Discovery Call') => {
     if (onOpenQuoteModal) {
       onOpenQuoteModal(service);
+    } else {
+      const el = document.getElementById('project-support');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const links = content?.links && content.links.length > 0 ? content.links : defaultLinks;
-
   return (
-    <footer className="relative z-20 border-t border-white/10 dark:border-white/10 light:border-black/10 bg-[#060609]/80 dark:bg-[#060609]/80 light:bg-white/80 backdrop-blur-2xl py-16 px-6 lg:px-12 mt-20 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
-        <div>
-          <div className="mb-4">
-            <Logo
-              href="#hero"
-              showTagline={true}
-              wordmarkWhite={branding?.wordmark1 || content?.brandWordmark1}
-              wordmarkCrimson={branding?.wordmark2 || content?.brandWordmark2}
-              wordmark1Color={branding?.wordmark1Color}
-              wordmark2Color={branding?.wordmark2Color}
-              tagline={branding?.tagline || content?.tagline}
-              logoMode={branding?.logoMode}
-              logoImageUrl={branding?.logoImageUrl}
-              logoSvgContent={branding?.logoSvgContent}
-            />
+    <footer className="relative bg-[#050508] text-zinc-400 overflow-hidden border-t border-zinc-800/80 pt-16 pb-28 md:pb-16">
+      {/* Top subtle neon ambient glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-[#8B5CF6]/70 to-transparent" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-24 bg-[#8B5CF6]/15 blur-3xl pointer-events-none" />
+
+      {/* Main Grid Container */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 pb-16">
+          
+          {/* Column 1: Brand & Direct Inquiries (Span 4) */}
+          <div className="lg:col-span-4 space-y-5">
+            <div className="flex items-center gap-3">
+              {/* 3D Cube Icon */}
+              <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-700/60 flex items-center justify-center text-white shadow-[0_0_15px_rgba(139,92,246,0.25)]">
+                <svg className="w-4 h-4 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                  <line x1="12" y1="22.08" x2="12" y2="12" />
+                </svg>
+              </div>
+              <div>
+                <span className="font-extrabold text-white tracking-widest text-lg">ZAVIAN</span>
+                <span className="text-[#8B5CF6] font-semibold text-lg ml-1">LABS</span>
+              </div>
+            </div>
+
+            <p className="text-xs uppercase tracking-widest text-zinc-400 font-mono">
+              AI Automation & Software Studio
+            </p>
+
+            <p className="text-sm text-zinc-300 leading-relaxed max-w-sm">
+              Architecting next-generation autonomous AI systems, GPU-accelerated 3D WebGL interfaces, and production-grade software ecosystems. Zero templates. Pure engineering.
+            </p>
+
+            {/* Direct Contact Card with Copy Pill */}
+            <div className="pt-2">
+              <div className="inline-flex items-center gap-2 p-1.5 pr-3 rounded-full bg-zinc-900/90 border border-zinc-800 text-xs">
+                <button
+                  onClick={handleCopyEmail}
+                  className="px-2.5 py-1 rounded-full bg-[#8B5CF6]/20 hover:bg-[#8B5CF6]/30 text-purple-300 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  title="Click to copy email"
+                >
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span>{copied ? 'Copied!' : 'Copy'}</span>
+                </button>
+                <a
+                  href={`mailto:${email}`}
+                  className="text-zinc-300 hover:text-white font-mono transition-colors"
+                >
+                  {email}
+                </a>
+              </div>
+            </div>
+
+            {/* LinkedIn Hub & Network */}
+            <div className="pt-1">
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-900/60 hover:bg-zinc-800/80 border border-zinc-800 text-xs text-zinc-300 hover:text-white transition-all group"
+              >
+                <svg className="w-3.5 h-3.5 text-blue-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+                <span>Connect on LinkedIn</span>
+                <span className="text-zinc-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+              </a>
+            </div>
           </div>
-          <p className="text-sm text-zinc-400 dark:text-zinc-400 light:text-zinc-600 max-w-md leading-relaxed font-normal">
-            {content?.description ||
-              'Architecting next-generation autonomous AI systems, GPU-accelerated 3D WebGL interfaces, and production-grade software ecosystems. Zero templates. Pure engineering.'}
-          </p>
+
+          {/* Column 2: Capabilities & Engineering (Span 3) */}
+          <div className="lg:col-span-3 space-y-4">
+            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#8B5CF6]" />
+              Engineering Solutions
+            </h4>
+            <ul className="space-y-2.5 text-sm">
+              <li 
+                onClick={() => handleOpenQuote('voice_receptionist')}
+                className="text-zinc-300 hover:text-white transition-colors cursor-pointer flex items-center gap-2"
+              >
+                <span className="text-zinc-400">›</span> AI Voice Receptionists (Vapi/Retell)
+              </li>
+              <li 
+                onClick={() => handleOpenQuote('whatsapp_funnel')}
+                className="text-zinc-300 hover:text-white transition-colors cursor-pointer flex items-center gap-2"
+              >
+                <span className="text-zinc-400">›</span> WhatsApp Autonomous Workflows
+              </li>
+              <li 
+                onClick={() => handleOpenQuote('interactive_3d')}
+                className="text-zinc-300 hover:text-white transition-colors cursor-pointer flex items-center gap-2"
+              >
+                <span className="text-zinc-400">›</span> Interactive 3D WebGL Web Apps
+              </li>
+              <li 
+                onClick={() => handleOpenQuote('multi_agent')}
+                className="text-zinc-300 hover:text-white transition-colors cursor-pointer flex items-center gap-2"
+              >
+                <span className="text-zinc-400">›</span> Multi-Agent Pipeline Automations
+              </li>
+              <li 
+                onClick={() => handleOpenQuote('estimation_engine')}
+                className="text-zinc-300 hover:text-white transition-colors cursor-pointer flex items-center gap-2"
+              >
+                <span className="text-zinc-400">›</span> Custom SaaS & Solar Calculation Engines
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Global Delivery & Architecture (Span 3) */}
+          <div className="lg:col-span-3 space-y-4">
+            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00]" />
+              Global Delivery
+            </h4>
+            <div className="space-y-3 text-xs leading-relaxed">
+              <div className="border-l border-zinc-800 pl-3">
+                <p className="text-zinc-300 font-medium">United States & Americas</p>
+                <p className="text-zinc-400 font-mono">EST / PST Direct Sync</p>
+              </div>
+              <div className="border-l border-zinc-800 pl-3">
+                <p className="text-zinc-300 font-medium">United Kingdom & Europe</p>
+                <p className="text-zinc-400 font-mono">GMT Remote Delivery</p>
+              </div>
+              <div className="border-l border-zinc-800 pl-3">
+                <p className="text-zinc-300 font-medium">GCC & Middle East</p>
+                <p className="text-zinc-400 font-mono">GST Real-time Coverage</p>
+              </div>
+              <p className="text-[11px] text-zinc-400 font-mono pt-1">
+                ● High-velocity sprint cycles • Zero downtime
+              </p>
+            </div>
+          </div>
+
+          {/* Column 4: Quick Navigation & CTA (Span 2) */}
+          <div className="lg:col-span-2 space-y-4">
+            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              Navigation
+            </h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a href="#hero" className="text-zinc-300 hover:text-white transition-colors">Overview</a>
+              </li>
+              <li>
+                <a href="#core-expertise" className="text-zinc-300 hover:text-white transition-colors">Core Expertise</a>
+              </li>
+              <li>
+                <a href="#project-support" className="text-zinc-300 hover:text-white transition-colors">Project Support</a>
+              </li>
+              <li>
+                <a href="#privacy" className="text-zinc-300 hover:text-white transition-colors">Privacy Policy</a>
+              </li>
+              <li>
+                <a href="#terms" className="text-zinc-300 hover:text-white transition-colors">Terms of Service</a>
+              </li>
+            </ul>
+
+            {/* Start a Project Trigger */}
+            <div className="pt-3">
+              <button
+                type="button"
+                onClick={() => handleOpenQuote('Discovery Call')}
+                className="inline-flex items-center justify-center w-full px-4 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] text-white hover:opacity-90 shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-all cursor-pointer"
+              >
+                Start a Project →
+              </button>
+            </div>
+          </div>
+
         </div>
 
-        <div className="flex flex-wrap items-center gap-6 text-xs font-mono uppercase tracking-wider">
-          <ThemeToggle />
+        {/* Divider */}
+        <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-zinc-800 to-transparent my-4" />
 
-          <button
-            onClick={() => handleOpenQuote('Discovery Call')}
-            className="px-5 py-2.5 rounded-full bg-[var(--theme-primary,#dc2626)] hover:brightness-110 text-white font-medium transition-all shadow-lg shadow-[var(--theme-glow,rgba(220,38,38,0.3))] hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{content?.ctaText || 'Start a Project'}</span>
-          </button>
+        {/* Bottom Bar: Copyright, Telemetry, and Scroll to Top */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 text-xs font-mono text-zinc-400">
+          <div className="flex items-center gap-2">
+            <span>© {new Date().getFullYear()} ZAVIAN LABS. ALL RIGHTS RESERVED.</span>
+          </div>
 
-          {links.map((link) => (
-            <a
-              key={link.id}
-              href={link.href}
-              className="text-zinc-400 hover:text-white dark:text-zinc-400 dark:hover:text-white light:text-zinc-600 light:hover:text-zinc-950 transition-colors"
-            >
-              {link.label}
-            </a>
-          ))}
+          {/* Center / Right Telemetry */}
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="text-emerald-400 font-semibold tracking-wider">SYSTEMS OPERATIONAL</span>
+              <span className="text-zinc-400">|</span>
+              <span className="text-zinc-300">LATENCY: 24MS</span>
+            </div>
 
-          <button
-            onClick={scrollToTop}
-            className="p-3 rounded-full bg-white/5 dark:bg-white/5 light:bg-black/5 border border-white/10 dark:border-white/10 light:border-black/10 text-zinc-400 dark:text-zinc-400 light:text-zinc-600 hover:text-white dark:hover:text-white light:hover:text-zinc-950 hover:bg-white/10 transition-all flex items-center gap-2 text-xs font-mono cursor-pointer"
-            aria-label="Back to Top"
-          >
-            <ArrowUp className="w-4 h-4" />
-            <span>TOP</span>
-          </button>
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              {/* Back to top button */}
+              <button
+                onClick={scrollToTop}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-white transition-all group cursor-pointer"
+                title="Back to Top"
+              >
+                <span>TOP</span>
+                <span className="group-hover:-translate-y-0.5 transition-transform">↑</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/5 dark:border-white/5 light:border-black/5 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-zinc-500 gap-4">
-        <div>
-          {content?.copyright || '© 2026 ZAVIAN LABS. ALL RIGHTS RESERVED.'}
-        </div>
-        <div className="flex flex-wrap items-center gap-6">
-          <span className="text-emerald-400 dark:text-emerald-400 light:text-emerald-600 flex items-center gap-1.5 font-medium">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            {content?.statusLabel || 'SYSTEMS OPERATIONAL'}
-          </span>
-          <span>{content?.latencyLabel || 'LATENCY: 24MS'}</span>
-          <span>{content?.regionLabel || 'US-EAST / CLOUDFLARE EDGE'}</span>
-        </div>
+      {/* Massive Faint Watermark Background */}
+      <div 
+        className="absolute bottom-2 left-1/2 -translate-x-1/2 select-none pointer-events-none text-[8rem] sm:text-[12rem] lg:text-[15rem] font-black tracking-tighter text-white/[0.015] whitespace-nowrap leading-none z-0"
+        aria-hidden="true"
+      >
+        ZAVIAN LABS
       </div>
     </footer>
   );
