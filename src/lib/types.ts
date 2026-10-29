@@ -232,12 +232,12 @@ export type FooterData = z.infer<typeof FooterDataSchema>;
 // 9. Freya Voice Agent Config Schema
 // ==========================================
 export const FreyaConfigSchema = z.object({
-  agentName: z.string().default("Freya"),
+  agentName: z.string().default("Zara"),
   systemPrompt: z.string().default(
-    "You are Freya, a world-class AI Solutions Architect and Creative Technologist at ZAVIAN LABS. You provide expert guidance on Next.js 15, Three.js WebGL architectures, Headless Shopify integrations, and autonomous multi-agent engineering workflows."
+    "You are Zara, the intelligent voice receptionist and client intake specialist for Zavian Labs—a boutique AI automation and software engineering studio. You speak with natural executive warmth, crisp clarity, and subtle British/Global English cadence."
   ),
   welcomeMessage: z.string().default(
-    "Hello! I'm Freya from ZAVIAN LABS. How can I help clarify your project scope today?"
+    "Hey! Welcome to Zavian Labs. I’m Zara—I handle our front desk so no one gets left on hold. Are you looking to automate your phone calls, set up WhatsApp booking funnels, or build custom software?"
   ),
   isLiveIndicator: z.boolean().default(true),
 });

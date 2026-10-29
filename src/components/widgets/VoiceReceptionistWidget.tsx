@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Mic, MicOff, Sparkles, X, Volume2 } from "lucide-react";
+import { ZARA_WELCOME_MESSAGE } from "@/lib/zaraVoicePrompt";
 
 interface VoiceReceptionistWidgetProps {
   content?: any;
@@ -9,8 +10,47 @@ export const VoiceReceptionistWidget: React.FC<VoiceReceptionistWidgetProps> = (
   const [isOpen, setIsOpen] = useState(false);
   const [isCalling, setIsCalling] = useState(false);
 
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        try {
+          window.speechSynthesis.cancel();
+        } catch {}
+      }
+    };
+  }, []);
+
   const toggleCall = () => {
-    setIsCalling((prev) => !prev);
+    setIsCalling((prev) => {
+      const next = !prev;
+      if (next) {
+        if (typeof window !== "undefined" && "speechSynthesis" in window) {
+          try {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(ZARA_WELCOME_MESSAGE);
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(
+              (v) =>
+                v.lang === "en-GB" ||
+                v.name.includes("UK") ||
+                v.name.includes("British") ||
+                v.name.includes("English United Kingdom")
+            ) || voices.find((v) => v.lang.startsWith("en"));
+            if (preferredVoice) utterance.voice = preferredVoice;
+            utterance.rate = 1.0;
+            utterance.pitch = 1.05;
+            window.speechSynthesis.speak(utterance);
+          } catch {}
+        }
+      } else {
+        if (typeof window !== "undefined" && "speechSynthesis" in window) {
+          try {
+            window.speechSynthesis.cancel();
+          } catch {}
+        }
+      }
+      return next;
+    });
   };
 
   return (
