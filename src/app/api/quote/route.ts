@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { QuoteSchema } from '@/lib/types';
 import { recordLeadSubmission } from '@/lib/db';
 import { resolveGeoLocation } from '@/lib/geo';
+import { forwardLeadToGoogleSheets } from '@/lib/googleSheets';
 
 export async function POST(req: NextRequest) {
   try {
@@ -42,6 +43,17 @@ export async function POST(req: NextRequest) {
     });
 
     console.log('[ZAVIAN LABS Lead Stitched & Persisted]:', savedLead);
+
+    // Forward to Google Sheets Webhook asynchronously
+    forwardLeadToGoogleSheets({
+      source: body.source || 'Website Modal',
+      name: validatedData.name,
+      phone: validatedData.phone,
+      email: validatedData.email,
+      requested_systems: Array.isArray(body.services) ? body.services : [validatedData.selectedService],
+      volume: body.leadVolume || 'Standard',
+      notes: body.notes || validatedData.projectScope,
+    }).catch((err) => console.warn('[Google Sheets Sync Non-blocking Error]:', err));
 
     return NextResponse.json({
       success: true,
