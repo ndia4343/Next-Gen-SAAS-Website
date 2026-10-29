@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Mic, PhoneOff, Volume2, VolumeX, X } from "lucide-react";
 import { ConversationProvider, useConversation } from "@elevenlabs/react";
+import { soundFX } from "@/lib/audio";
 
 interface VoiceReceptionistWidgetProps {
   content?: any;
@@ -12,15 +13,20 @@ const FIRST_GREETING_MESSAGE =
   "Hello! I'm Zara from Zavian Labs. I'd love to know who I'm speaking with today?";
 
 const VoiceReceptionistInner: React.FC = () => {
+  // Call States:
+  // isRinging = true strictly during the 4.5s (3-ring) connecting phase
+  // isCallActive = true strictly after pickup, when call is connected
   const [isRinging, setIsRinging] = useState(false);
+  const [isCallActive, setIsCallActive] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
-  const [isSimulatedConnected, setIsSimulatedConnected] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const audioContextRef = useRef<AudioContext | null>(null);
-  const ringIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const pickupTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const remoteAudioRef = useRef<HTMLAudioElement | null>(null);
+  const isCancelledRef = useRef<boolean>(false);
 
   const showToast = (msg: string) => {
     setErrorMessage(msg);
@@ -31,82 +37,123 @@ const VoiceReceptionistInner: React.FC = () => {
   };
 
   const stopRingingSound = () => {
-    if (ringIntervalRef.current) {
-      clearInterval(ringIntervalRef.current);
-      ringIntervalRef.current = null;
-    }
     if (audioContextRef.current) {
-      audioContextRef.current.close().catch(() => {});
+      try {
+        audioContextRef.current.close().catch(() => {});
+      } catch {}
       audioContextRef.current = null;
     }
   };
 
-  // Synthesize realistic telephone ring tone using Web Audio API (Dual tones 400Hz + 450Hz)
-  const playRingCadence = () => {
-    try {
-      const AudioCtx =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      audioContextRef.current = ctx;
+  // Pre-load voices for SpeechSynthesis on mount
+  useEffect(() => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.getVoices();
+      const onVoicesChanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+      window.speechSynthesis.onvoiceschanged = onVoicesChanged;
+      return () => {
+        window.speechSynthesis.onvoiceschanged = null;
+      };
+    }
+  }, []);
 
-      const runTone = () => {
-        if (!ctx || ctx.state === "closed") return;
+  // Ensure any remote audio element attached to DOM by WebRTC/LiveKit is unlocked and unmuted
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof HTMLAudioElement) {
+            node.autoplay = true;
+            node.playsInline = true;
+            node.play().catch(() => {});
+          }
+        });
+      });
+    });
+
+    observer.observe(document.body, { childList: true });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Synthesize exact 3-ring telephone cadence (3 bursts: 0.0s, 1.5s, 3.0s over 4.5s)
+  const play3RingBursts = (ctx: AudioContext) => {
+    try {
+      const bursts = [0, 1.5, 3.0];
+      bursts.forEach((startTime) => {
         const osc1 = ctx.createOscillator();
         const osc2 = ctx.createOscillator();
         const gainNode = ctx.createGain();
 
-        // Standard UK/International PBX ring tones (400Hz + 450Hz)
+        // Standard PBX dual tones (400Hz + 450Hz)
         osc1.frequency.value = 400;
         osc2.frequency.value = 450;
         osc1.type = "sine";
         osc2.type = "sine";
 
-        gainNode.gain.setValueAtTime(0, ctx.currentTime);
-        // Ring pulse 1
-        gainNode.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.1);
-        gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5);
-        // Ring pulse 2
-        gainNode.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.7);
-        gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.2);
+        const t = ctx.currentTime + startTime;
+        gainNode.gain.setValueAtTime(0, t);
+        gainNode.gain.linearRampToValueAtTime(0.12, t + 0.05);
+        gainNode.gain.setValueAtTime(0.12, t + 0.85);
+        gainNode.gain.linearRampToValueAtTime(0, t + 0.9);
 
         osc1.connect(gainNode);
         osc2.connect(gainNode);
         gainNode.connect(ctx.destination);
 
-        osc1.start(ctx.currentTime);
-        osc2.start(ctx.currentTime);
-        osc1.stop(ctx.currentTime + 1.25);
-        osc2.stop(ctx.currentTime + 1.25);
-      };
-
-      runTone();
-      ringIntervalRef.current = setInterval(runTone, 3000);
+        osc1.start(t);
+        osc2.start(t);
+        osc1.stop(t + 0.95);
+        osc2.stop(t + 0.95);
+      });
     } catch (e) {
       console.warn("AudioContext tone blocked or unavailable:", e);
     }
   };
 
+  // Play Zara's greeting out loud through device speakers
+  const playZaraGreetingSpeech = (text: string) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.resume();
+      setTimeout(() => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        const voices = window.speechSynthesis.getVoices();
+        const preferredVoice = voices.find(
+          (v) =>
+            v.lang === "en-GB" ||
+            v.name.includes("UK") ||
+            v.name.includes("British") ||
+            v.name.includes("English United Kingdom")
+        ) || voices.find((v) => v.lang.startsWith("en"));
+        if (preferredVoice) utterance.voice = preferredVoice;
+        utterance.rate = 1.0;
+        utterance.pitch = 1.05;
+        utterance.volume = 1.0;
+        window.speechSynthesis.speak(utterance);
+      }, 60);
+    } catch (e) {
+      console.warn("Speech synthesis playback error:", e);
+    }
+  };
+
   const conversation = useConversation({
     onConnect: () => {
-      stopRingingSound();
-      setIsRinging(false);
-      setCallDuration(0);
+      // Live WebRTC connected silently in background.
+      // We do NOT change UI yet; the 4.5-second 3-ring timeout governs the pickup transition.
+      console.log("ElevenLabs WebRTC connected in background");
     },
     onDisconnect: () => {
-      stopRingingSound();
-      setIsRinging(false);
-      setIsSimulatedConnected(false);
-      setCallDuration(0);
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        try { window.speechSynthesis.cancel(); } catch {}
-      }
+      handleEndCall();
     },
     onError: (err) => {
       console.error("Zara voice engine error:", err);
-      stopRingingSound();
-      setIsRinging(false);
       const str = typeof err === "string" ? err : err?.message || "";
       if (
         str.toLowerCase().includes("permission") ||
@@ -114,29 +161,29 @@ const VoiceReceptionistInner: React.FC = () => {
         str.toLowerCase().includes("microphone")
       ) {
         showToast("Please allow microphone access to talk to Zara");
+        handleEndCall();
       }
     },
   });
 
-  const isConnected = conversation.status === "connected" || isSimulatedConnected;
-
-  // Active call duration timer (mm:ss)
+  // Active call duration timer (starts strictly at 00:01 post-pickup)
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (isConnected) {
+    if (isCallActive) {
       timer = setInterval(() => {
         setCallDuration((prev) => prev + 1);
       }, 1000);
     }
     return () => {
-      clearInterval(timer);
+      if (timer) clearInterval(timer);
     };
-  }, [isConnected]);
+  }, [isCallActive]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       stopRingingSound();
+      if (pickupTimeoutRef.current) clearTimeout(pickupTimeoutRef.current);
       if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
         try { window.speechSynthesis.cancel(); } catch {}
@@ -145,75 +192,113 @@ const VoiceReceptionistInner: React.FC = () => {
   }, []);
 
   const handleStartCall = async () => {
-    try {
-      // 1. Explicitly request microphone access first
-      if (typeof navigator !== "undefined" && navigator.mediaDevices?.getUserMedia) {
+    isCancelledRef.current = false;
+
+    // 1. Explicitly request microphone access first
+    if (typeof navigator !== "undefined" && navigator.mediaDevices?.getUserMedia) {
+      try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         stream.getTracks().forEach((track) => track.stop());
-      } else {
+      } catch {
         showToast("Please allow microphone access to talk to Zara");
         return;
       }
+    } else {
+      showToast("Please allow microphone access to talk to Zara");
+      return;
+    }
 
-      setIsRinging(true);
-      playRingCadence();
+    // 2. Unlock HTMLAudioElement and Web Audio / Speech engines within user click gesture
+    if (remoteAudioRef.current) {
+      remoteAudioRef.current.play().catch(() => {});
+    }
 
-      const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.resume();
+      const dummyUtterance = new SpeechSynthesisUtterance("");
+      dummyUtterance.volume = 0;
+      window.speechSynthesis.speak(dummyUtterance);
+    }
 
-      if (agentId && agentId !== "your_agent_id_here") {
-        // Start live ElevenLabs WebRTC session with the initial greeting override
+    // 3. Initialize AudioContext and trigger exact 3-ring bursts
+    const AudioCtx =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (AudioCtx) {
+      const ctx = new AudioCtx();
+      audioContextRef.current = ctx;
+      if (ctx.state === "suspended") {
+        await ctx.resume().catch(() => {});
+      }
+      play3RingBursts(ctx);
+    }
+
+    // 4. Enter Ringing Phase (do NOT show connected or start timer yet)
+    setIsRinging(true);
+    setIsCallActive(false);
+    setCallDuration(0);
+
+    // 5. Connect ElevenLabs WebRTC session silently in background during ringing
+    const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;
+    if (agentId && agentId !== "your_agent_id_here") {
+      try {
+        // Start session with muted volume so agent speech doesn't overlap the 3 rings
         await conversation.startSession({
           agentId,
+          volume: 0,
           overrides: {
             agent: {
               firstMessage: FIRST_GREETING_MESSAGE,
             },
           },
         });
-      } else {
-        // Realistic simulated cadence for demonstration if agentId placeholder is present
-        setTimeout(() => {
-          stopRingingSound();
-          setIsRinging(false);
-          setIsSimulatedConnected(true);
-
-          // Deliver initial greeting immediately upon connection
-          if (typeof window !== "undefined" && "speechSynthesis" in window) {
-            try {
-              window.speechSynthesis.cancel();
-              const utterance = new SpeechSynthesisUtterance(FIRST_GREETING_MESSAGE);
-              const voices = window.speechSynthesis.getVoices();
-              const preferredVoice = voices.find(
-                (v) =>
-                  v.lang === "en-GB" ||
-                  v.name.includes("UK") ||
-                  v.name.includes("British") ||
-                  v.name.includes("English United Kingdom")
-              ) || voices.find((v) => v.lang.startsWith("en"));
-              if (preferredVoice) utterance.voice = preferredVoice;
-              utterance.rate = 1.0;
-              utterance.pitch = 1.05;
-              window.speechSynthesis.speak(utterance);
-            } catch {}
-          }
-        }, 2200);
+      } catch (err) {
+        console.warn("ElevenLabs session error during background connect:", err);
       }
-    } catch (error: any) {
-      console.error("Failed to connect to Zara:", error);
+    }
+
+    // 6. Enforce exact 4.5-second sequence before pickup (3 full rings complete)
+    if (pickupTimeoutRef.current) clearTimeout(pickupTimeoutRef.current);
+    pickupTimeoutRef.current = setTimeout(() => {
+      if (isCancelledRef.current) return;
+
+      // Ringing completes: fade out ring sound
       stopRingingSound();
       setIsRinging(false);
-      showToast("Please allow microphone access to talk to Zara");
-    }
+      setIsCallActive(true);
+
+      // Start live call timer strictly at 00:01
+      setCallDuration(1);
+
+      // Play audio pickup chime
+      soundFX.playActivate();
+
+      // Trigger Zara's greeting out of device speakers
+      if (conversation.status === "connected") {
+        // Unmute ElevenLabs audio stream for speaker playback
+        conversation.setVolume({ volume: 1 });
+      } else {
+        // Fallback demo speech synthesis
+        playZaraGreetingSpeech(FIRST_GREETING_MESSAGE);
+      }
+    }, 4500);
   };
 
   const handleEndCall = async () => {
+    isCancelledRef.current = true;
+    if (pickupTimeoutRef.current) {
+      clearTimeout(pickupTimeoutRef.current);
+      pickupTimeoutRef.current = null;
+    }
     stopRingingSound();
     setIsRinging(false);
-    setIsSimulatedConnected(false);
+    setIsCallActive(false);
     setCallDuration(0);
+
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       try { window.speechSynthesis.cancel(); } catch {}
     }
+
     try {
       await conversation.endSession();
     } catch {}
@@ -229,6 +314,15 @@ const VoiceReceptionistInner: React.FC = () => {
 
   return (
     <aside aria-label="Voice Receptionist" className="fixed bottom-6 right-6 z-50 select-none">
+      {/* Explicit Audio Element to guarantee speaker playback */}
+      <audio
+        ref={remoteAudioRef}
+        autoPlay
+        playsInline
+        aria-hidden="true"
+        className="hidden"
+      />
+
       {/* Permission / Error Toast */}
       {errorMessage && (
         <div
@@ -250,8 +344,8 @@ const VoiceReceptionistInner: React.FC = () => {
         </div>
       )}
 
-      {/* 1. CONNECTED STATE */}
-      {isConnected && (
+      {/* 1. CONNECTED STATE (Active strictly post-pickup, timer starts at 00:01) */}
+      {isCallActive && (
         <div className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#12151E]/95 border border-white/10 shadow-[0_0_25px_rgba(139,92,246,0.3)] backdrop-blur-xl transition-all">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -278,6 +372,13 @@ const VoiceReceptionistInner: React.FC = () => {
               try {
                 conversation.setVolume({ volume: nextMuted ? 0 : 1 });
               } catch {}
+              if (typeof window !== "undefined" && "speechSynthesis" in window) {
+                if (nextMuted) {
+                  window.speechSynthesis.pause();
+                } else {
+                  window.speechSynthesis.resume();
+                }
+              }
             }}
             className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             title={isMuted ? "Unmute" : "Mute"}
@@ -299,8 +400,8 @@ const VoiceReceptionistInner: React.FC = () => {
         </div>
       )}
 
-      {/* 2. RINGING STATE */}
-      {isRinging && !isConnected && (
+      {/* 2. RINGING STATE (Active strictly during the 4.5s 3-ring sequence) */}
+      {isRinging && !isCallActive && (
         <div className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#12151E]/95 border border-white/10 shadow-[0_0_25px_rgba(255,107,0,0.3)] backdrop-blur-xl transition-all">
           <div className="flex items-center gap-2">
             <span className="relative flex h-2.5 w-2.5">
@@ -325,7 +426,7 @@ const VoiceReceptionistInner: React.FC = () => {
       )}
 
       {/* 3. IDLE LAUNCHER (Standard State) */}
-      {!isConnected && !isRinging && (
+      {!isCallActive && !isRinging && (
         <button
           type="button"
           onClick={handleStartCall}
