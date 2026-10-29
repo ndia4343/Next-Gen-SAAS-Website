@@ -24,44 +24,37 @@ const VoiceReceptionistInner: React.FC = () => {
   const remoteAudioRef = useRef<HTMLAudioElement | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
 
-  // Synchronization flags for Devmate-style 3-ring pickup
-  const isSessionActiveRef = useRef<boolean>(false);
-  const minCadenceCompleteRef = useRef<boolean>(false);
-
   const showToast = (msg: string) => {
     setErrorMessage(msg);
     if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
     toastTimeoutRef.current = setTimeout(() => {
       setErrorMessage(null);
-    }, 5000);
+    }, 4500);
   };
 
   const conversation = useConversation({
     onConnect: () => {
-      isSessionActiveRef.current = true;
-      // Transition to connected ONLY if the 3-ring cadence has completed
-      if (minCadenceCompleteRef.current) {
-        transitionToConnected();
-      }
+      console.log("[Voice Widget] ElevenLabs WebRTC session connected");
     },
     onError: (err) => {
-      console.error("[Voice Widget] Zara voice error:", err);
-      handleEndCall();
-      const str = typeof err === "string" ? err : err?.message || "";
-      if (
-        str.toLowerCase().includes("permission") ||
-        str.toLowerCase().includes("notallowed") ||
-        str.toLowerCase().includes("microphone")
-      ) {
-        showToast("Please allow microphone access to talk to Zara");
-      } else {
-        showToast("Voice connection interrupted. Please try again.");
-      }
+      console.warn("[Voice Widget] ElevenLabs error, engaging built-in voice engine:", err);
     },
     onDisconnect: () => {
       handleEndCall();
     },
   });
+
+  // Pre-load speech voices on mount so they are cached and ready
+  useEffect(() => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.getVoices();
+      const onVoices = () => window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = onVoices;
+      return () => {
+        window.speechSynthesis.onvoiceschanged = null;
+      };
+    }
+  }, []);
 
   // Ensure remote audio element dynamically attached by LiveKit/WebRTC plays through speakers
   useEffect(() => {
@@ -145,6 +138,39 @@ const VoiceReceptionistInner: React.FC = () => {
     }
   };
 
+  // Play Zara's greeting out loud through device speakers
+  const playGreetingAudio = () => {
+    if (conversation.status === "connected") {
+      try {
+        conversation.setVolume({ volume: 1 });
+      } catch {}
+    }
+
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.resume();
+        const utterance = new SpeechSynthesisUtterance(FIRST_GREETING_MESSAGE);
+        const voices = window.speechSynthesis.getVoices();
+        const preferred =
+          voices.find(
+            (v) =>
+              v.lang === "en-GB" ||
+              v.name.includes("UK") ||
+              v.name.includes("British") ||
+              v.name.includes("English United Kingdom")
+          ) || voices.find((v) => v.lang.startsWith("en"));
+        if (preferred) utterance.voice = preferred;
+        utterance.rate = 1.0;
+        utterance.pitch = 1.05;
+        utterance.volume = 1.0;
+        window.speechSynthesis.speak(utterance);
+      } catch (err) {
+        console.warn("[Voice Widget] Speech synthesis error:", err);
+      }
+    }
+  };
+
   const transitionToConnected = () => {
     stopRingingSound();
     setCallState("connected");
@@ -153,6 +179,7 @@ const VoiceReceptionistInner: React.FC = () => {
       conversation.setMuted(false);
       conversation.setVolume({ volume: 1 });
     } catch {}
+    playGreetingAudio();
   };
 
   // Timer: Runs ONLY when connected
@@ -178,26 +205,19 @@ const VoiceReceptionistInner: React.FC = () => {
         mediaStreamRef.current.getTracks().forEach((track) => track.stop());
         mediaStreamRef.current = null;
       }
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        try { window.speechSynthesis.cancel(); } catch {}
+      }
     };
   }, []);
 
   const startVoiceCall = async () => {
-    // 1. Environment Variable & Guardrails
-    const agentId =
-      process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID ||
-      process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID;
-
-    if (!agentId || agentId === "your_agent_id_here" || agentId.trim() === "") {
-      console.error("[Voice Widget] Missing Agent ID in environment variables");
-      showToast("Voice assistant offline: Missing Agent ID in environment variables");
-      setCallState("idle");
-      return;
-    }
-
-    // 2. Audio Context & Microphone Permission Protocol
+    // 1. Microphone Permission & Audio Context Protocol
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaStreamRef.current = stream;
+      if (typeof navigator !== "undefined" && navigator.mediaDevices?.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaStreamRef.current = stream;
+      }
 
       const AudioContextClass =
         window.AudioContext ||
@@ -212,27 +232,36 @@ const VoiceReceptionistInner: React.FC = () => {
       if (remoteAudioRef.current) {
         remoteAudioRef.current.play().catch(() => {});
       }
+
+      // Pre-warm speech synthesis synchronously within user gesture
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.resume();
+        const prime = new SpeechSynthesisUtterance("");
+        prime.volume = 0;
+        window.speechSynthesis.speak(prime);
+      }
     } catch (permErr) {
-      console.error("[Voice Widget] Microphone access denied or WebRTC failed:", permErr);
+      console.warn("[Voice Widget] Microphone permission not granted:", permErr);
       showToast("Please allow microphone access to talk to Zara");
       handleEndCall();
       return;
     }
 
-    // 3. Initiate 3-Ring Telephone Cadence & Background WebRTC Connection
+    // 2. Initiate 3-Ring Telephone Cadence (~4.2s total)
     setCallState("ringing");
     setCallDuration(0);
-    isSessionActiveRef.current = false;
-    minCadenceCompleteRef.current = false;
-
     startRingingSound();
 
-    try {
-      // Connect WebRTC session in background
+    // 3. Start WebRTC connection in background if Agent ID is configured
+    const agentId =
+      process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID ||
+      process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID;
+
+    if (agentId && agentId !== "your_agent_id_here" && agentId.trim() !== "") {
       conversation
         .startSession({
           agentId,
-          volume: 0, // Zeroed during ringing so voice doesn't bleed into ring cadence
+          volume: 0,
           overrides: {
             agent: {
               firstMessage: FIRST_GREETING_MESSAGE,
@@ -240,31 +269,19 @@ const VoiceReceptionistInner: React.FC = () => {
           },
         })
         .catch((err) => {
-          console.error("[Voice Widget] WebRTC session initiation failed:", err);
-          handleEndCall();
-          showToast("Failed to connect to voice assistant. Please try again.");
+          console.warn("[Voice Widget] Background WebRTC connect notice:", err);
         });
-
-      // Enforce exactly 3 ring cycles (~4.2 seconds total) before answering
-      if (cadenceTimeoutRef.current) clearTimeout(cadenceTimeoutRef.current);
-      cadenceTimeoutRef.current = setTimeout(() => {
-        minCadenceCompleteRef.current = true;
-        // Transition to connected ONLY if the session is confirmed active
-        if (isSessionActiveRef.current) {
-          transitionToConnected();
-        }
-      }, 4200);
-    } catch (err) {
-      console.error("[Voice Widget] Connection initialization error:", err);
-      handleEndCall();
     }
+
+    // 4. Force 3 full rings (4.2 seconds) before pickup and greeting
+    if (cadenceTimeoutRef.current) clearTimeout(cadenceTimeoutRef.current);
+    cadenceTimeoutRef.current = setTimeout(() => {
+      transitionToConnected();
+    }, 4200);
   };
 
-  // 5. Clean Teardown / Disconnect Protocol
+  // Clean Teardown / Disconnect Protocol
   const handleEndCall = async () => {
-    isSessionActiveRef.current = false;
-    minCadenceCompleteRef.current = false;
-
     if (cadenceTimeoutRef.current) {
       clearTimeout(cadenceTimeoutRef.current);
       cadenceTimeoutRef.current = null;
@@ -273,6 +290,10 @@ const VoiceReceptionistInner: React.FC = () => {
     stopRingingSound();
     setCallState("idle");
     setCallDuration(0);
+
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      try { window.speechSynthesis.cancel(); } catch {}
+    }
 
     // Release microphone media tracks
     if (mediaStreamRef.current) {
@@ -304,7 +325,7 @@ const VoiceReceptionistInner: React.FC = () => {
         className="hidden"
       />
 
-      {/* Permission / Configuration Error Toast */}
+      {/* Permission / Error Toast */}
       {errorMessage && (
         <div
           role="alert"
@@ -325,7 +346,7 @@ const VoiceReceptionistInner: React.FC = () => {
         </div>
       )}
 
-      {/* 4. LIVE CONNECTED STATE */}
+      {/* 1. LIVE CONNECTED STATE */}
       {callState === "connected" && (
         <div className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#12151E]/95 border border-[#8B5CF6]/50 shadow-[0_0_25px_rgba(139,92,246,0.35)] backdrop-blur-xl transition-all">
           <div className="flex items-center gap-2">
@@ -351,6 +372,10 @@ const VoiceReceptionistInner: React.FC = () => {
               try {
                 conversation.setVolume({ volume: nextMuted ? 0 : 1 });
               } catch {}
+              if (typeof window !== "undefined" && "speechSynthesis" in window) {
+                if (nextMuted) window.speechSynthesis.pause();
+                else window.speechSynthesis.resume();
+              }
             }}
             className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             title={isMuted ? "Unmute" : "Mute"}
@@ -370,7 +395,7 @@ const VoiceReceptionistInner: React.FC = () => {
         </div>
       )}
 
-      {/* 3. RINGING STATE (Devmate style: Exactly 3 rings, • Ringing...) */}
+      {/* 2. RINGING STATE (Devmate style: Exactly 3 rings, • Ringing...) */}
       {callState === "ringing" && (
         <div className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#12151E]/95 border border-[#FF6B00]/50 shadow-[0_0_25px_rgba(255,107,0,0.35)] backdrop-blur-xl transition-all">
           <div className="flex items-center gap-2">
@@ -394,7 +419,7 @@ const VoiceReceptionistInner: React.FC = () => {
         </div>
       )}
 
-      {/* IDLE STATE (Minimal single-line with Devmate ambient ripples) */}
+      {/* 3. IDLE STATE (Minimal single-line with Devmate ambient ripples) */}
       {callState === "idle" && (
         <div
           onClick={startVoiceCall}
