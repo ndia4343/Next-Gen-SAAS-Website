@@ -341,7 +341,7 @@ const VoiceReceptionistInner: React.FC = () => {
 
       {/* 3. IDLE STATE (Minimal single-line with Devmate mic ripples) */}
       {callState === "idle" && (
-        <button
+        <div
           onClick={handleStartCall}
           className="group flex items-center gap-3 pl-4 pr-2.5 py-2 rounded-full bg-[#12151E]/95 hover:bg-[#12151E] border border-white/10 hover:border-[#8B5CF6]/50 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] backdrop-blur-xl transition-all duration-300 cursor-pointer"
         >
@@ -356,16 +356,28 @@ const VoiceReceptionistInner: React.FC = () => {
             </span>
           </div>
 
-          {/* Devmate-style mic button with pulsing radar ripples */}
+          {/* Concentric Ambient Ripples (Devmate Style) */}
           <div className="relative flex items-center justify-center">
-            {/* Concentric radar ripples */}
-            <span className="absolute -inset-1 rounded-full bg-[#8B5CF6]/40 animate-ping opacity-60 pointer-events-none" />
-            <span className="absolute -inset-2 rounded-full border border-[#8B5CF6]/30 animate-pulse pointer-events-none" />
-            <div className="relative w-8 h-8 rounded-full bg-[#8B5CF6] group-hover:bg-[#7C3AED] flex items-center justify-center text-white shadow-[0_0_15px_rgba(139,92,246,0.6)] transition-all duration-300 group-hover:scale-105">
-              <Mic className="w-4 h-4" />
-            </div>
+            <span className="absolute w-10 h-10 rounded-full bg-[#8B5CF6]/30 animate-ping opacity-75 pointer-events-none" />
+            <span className="absolute w-12 h-12 rounded-full bg-[#8B5CF6]/15 animate-pulse pointer-events-none" />
+
+            {/* Core Mic Button */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleStartCall();
+              }}
+              className="relative z-10 w-9 h-9 rounded-full bg-[#8B5CF6] hover:bg-[#7C3AED] text-white flex items-center justify-center shadow-lg shadow-purple-500/30 transition-transform active:scale-95 cursor-pointer"
+              aria-label="Talk to Zara"
+            >
+              {/* Microphone Icon */}
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-14 0m14 0a7 7 0 01-14 0m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3z" />
+              </svg>
+            </button>
           </div>
-        </button>
+        </div>
       )}
     </div>
   );
