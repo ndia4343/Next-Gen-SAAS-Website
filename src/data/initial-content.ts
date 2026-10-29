@@ -220,12 +220,12 @@ export const initialContent: WebsiteContent = {
     ],
   },
   projectSupport: {
-    eyebrow: "SOFTWARE · DATA · AI · MEDIA",
-    headlineWhite: "Choose the right ",
-    headlineOrange: "project support ",
-    headlineCyan: "for your goals.",
+    eyebrow: "● ARCHITECTURAL BLUEPRINT · SYSTEM TELEMETRY",
+    headlineWhite: "Deployable Systems ",
+    headlineOrange: "Engineered for Scale.",
+    headlineCyan: "",
     subtitle:
-      "Every engagement starts with a focused conversation and a quote based on your requirements, deliverables and timeline.",
+      "From instant lead capture to live profit dashboards, deploy automated systems built to scale your revenue without adding headcount.",
     cards: [
       {
         id: "bento-software",
