@@ -5,7 +5,7 @@ import Navbar from '@/components/layout/Navbar';
 import HeroSection from '@/components/sections/HeroSection';
 import CoreExpertiseSection from '@/components/sections/CoreExpertiseSection';
 import ProjectSupportSection from '@/components/sections/ProjectSupportSection';
-import VoiceAgentWidget from '@/components/widgets/VoiceAgentWidget';
+import VoiceReceptionistWidget from '@/components/widgets/VoiceReceptionistWidget';
 import QuoteModal from '@/components/ui/QuoteModal';
 import Footer from '@/components/layout/Footer';
 import { WebsiteContent, ThemeBrandingConfig } from '@/lib/types';
@@ -81,7 +81,7 @@ export default function HomeClient({ content }: HomeClientProps) {
       <HeroSection onOpenQuoteModal={handleOpenModal} content={content.hero} />
       <CoreExpertiseSection onOpenQuoteModal={handleOpenModal} content={content.coreExpertise} />
       <ProjectSupportSection onOpenQuoteModal={handleOpenModal} content={content.projectSupport} />
-      <VoiceAgentWidget content={content.freyaVoiceAgent} />
+      <VoiceReceptionistWidget />
 
       <Footer
         onOpenQuoteModal={handleOpenModal}
