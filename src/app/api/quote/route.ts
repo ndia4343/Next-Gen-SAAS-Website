@@ -6,7 +6,22 @@ import { resolveGeoLocation } from '@/lib/geo';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const validatedData = QuoteSchema.parse(body);
+
+    // Support both multi-select services array and single service string
+    const normalizedPayload = {
+      ...body,
+      selectedService:
+        body.selectedService ||
+        (Array.isArray(body.services) && body.services.length > 0
+          ? body.services.join(', ')
+          : 'Full-Stack Architecture'),
+      projectScope:
+        body.projectScope ||
+        `[Monthly Volume: ${body.leadVolume || 'Unspecified'}] ${body.notes || 'Inbound scope inquiry via 3-step modal.'}`,
+      timeline: body.timeline || 'Immediate',
+    };
+
+    const validatedData = QuoteSchema.parse(normalizedPayload);
 
     const geo = await resolveGeoLocation(req.headers);
 

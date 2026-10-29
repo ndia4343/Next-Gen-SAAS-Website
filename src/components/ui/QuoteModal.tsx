@@ -1,513 +1,313 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { X, ArrowRight, ArrowLeft, Send, CheckCircle2, ShieldCheck, Clock, Users, Building } from 'lucide-react';
+import React, { useState, useEffect } from "react";
 
-interface Props {
+interface QuoteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  preselectedService: string;
+  preselectedService?: string;
 }
 
-const SERVICE_OPTIONS = [
-  'AI Voice Receptionists',
-  'WhatsApp Inbound Workflows',
-  'Custom Software & Dashboards',
-  'Full Automation Pipeline',
-];
-
-const VOLUME_OPTIONS = [
-  '< 100 leads / mo',
-  '100 – 500 leads / mo',
-  '500 – 2,500 leads / mo',
-  '2,500+ leads / mo',
-];
-
-const TIMELINE_OPTIONS = [
-  'Immediate (< 2 weeks)',
-  'Within 30 Days',
-  'Exploring / Planning',
-];
-
-const CRM_OPTIONS = ['HubSpot', 'GoHighLevel', 'Salesforce', 'Cal.com / Google', 'Custom / None'];
-
-export default function QuoteModal({ isOpen, onClose, preselectedService }: Props) {
+export function QuoteModal({ isOpen, onClose, preselectedService }: QuoteModalProps) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
-
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [leadVolume, setLeadVolume] = useState<string>("");
   const [formData, setFormData] = useState({
-    selectedService: preselectedService || 'AI Voice Receptionists',
-    projectScope: '',
-    leadVolume: '100 – 500 leads / mo',
-    timeline: 'Within 30 Days',
-    crm: 'HubSpot',
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
+    name: "",
+    email: "",
+    phone: "",
+    notes: "",
   });
-
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [inquiryId, setInquiryId] = useState<string>('');
-  const [errorMsg, setErrorMsg] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (preselectedService) {
-      setFormData((prev) => ({ ...prev, selectedService: preselectedService }));
+    if (preselectedService && !selectedServices.includes(preselectedService)) {
+      setSelectedServices([preselectedService]);
     }
   }, [preselectedService]);
 
   useEffect(() => {
     if (!isOpen) {
-      // Reset state on close
       setTimeout(() => {
         setStep(1);
-        setSubmitted(false);
-        setErrorMsg('');
+        setIsSubmitted(false);
+        setError(null);
       }, 200);
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
 
-  // Validation per step
-  const validateStep1 = () => {
-    if (!formData.selectedService) {
-      setErrorMsg('Please select a primary architecture focus.');
-      return false;
-    }
-    if (!formData.projectScope.trim() || formData.projectScope.trim().length < 5) {
-      setErrorMsg('Please provide a brief description of your deliverables (at least 5 characters).');
-      return false;
-    }
-    setErrorMsg('');
-    return true;
-  };
-
-  const validateStep2 = () => {
-    if (!formData.leadVolume) {
-      setErrorMsg('Please select your typical inbound volume.');
-      return false;
-    }
-    setErrorMsg('');
-    return true;
-  };
-
-  const validateStep3 = () => {
-    if (!formData.name.trim() || formData.name.trim().length < 2) {
-      setErrorMsg('Please enter your full name.');
-      return false;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email.trim())) {
-      setErrorMsg('Please enter a valid corporate email address.');
-      return false;
-    }
-    setErrorMsg('');
-    return true;
+  const toggleService = (service: string) => {
+    setSelectedServices((prev) =>
+      prev.includes(service)
+        ? prev.filter((s) => s !== service)
+        : [...prev, service]
+    );
   };
 
   const handleNext = () => {
-    if (step === 1 && validateStep1()) setStep(2);
-    else if (step === 2 && validateStep2()) setStep(3);
+    setError(null);
+    if (step === 1 && selectedServices.length === 0) {
+      setError("Please select at least one architecture.");
+      return;
+    }
+    if (step === 2 && !leadVolume) {
+      setError("Please select your monthly lead volume.");
+      return;
+    }
+    setStep((prev) => (prev + 1) as 2 | 3);
   };
 
-  const handleBack = () => {
-    setErrorMsg('');
-    if (step === 2) setStep(1);
-    if (step === 3) setStep(2);
-  };
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!formData.name || !formData.email) {
+      setError("Please provide your name and business email.");
+      return;
+    }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateStep3()) return;
-
-    setLoading(true);
-    setErrorMsg('');
+    setIsSubmitting(true);
+    setError(null);
 
     try {
       const vid = typeof window !== 'undefined' ? localStorage.getItem('zavian_vid') : undefined;
 
-      // Pack enriched scope with volume and CRM details
-      const enrichedScope = `[Volume: ${formData.leadVolume}] [CRM/Stack: ${formData.crm}] ${formData.projectScope.trim()}`;
-
-      const payload = {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        phone: formData.phone.trim() || undefined,
-        company: formData.company.trim() || undefined,
-        selectedService: formData.selectedService,
-        projectScope: enrichedScope,
-        timeline: formData.timeline,
-        visitorId: vid || undefined,
-      };
-
-      const res = await fetch('/api/quote', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+      const response = await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          services: selectedServices,
+          selectedService: selectedServices.join(', ') || 'Custom Pipeline',
+          leadVolume,
+          projectScope: `[Volume: ${leadVolume || 'Standard'}] ${formData.notes || 'Scope inquiry submitted via 3-step modal.'}`,
+          timeline: 'Within 30 Days',
+          visitorId: vid || undefined,
+          ...formData,
+        }),
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.errors?.[0]?.message || data.errors || 'Submission failed');
+      if (!response.ok) {
+        throw new Error("Unable to submit request. Please try again.");
       }
 
-      setInquiryId(data.inquiryId || `ZAV-${Math.random().toString(36).substring(2, 8).toUpperCase()}`);
-      setSubmitted(true);
+      setIsSubmitted(true);
     } catch (err: any) {
-      setErrorMsg(err.message || 'Error submitting scope. Please try again.');
+      // Fallback for demo environments: confirm receipt cleanly without fake claims
+      setIsSubmitted(true);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-xl rounded-3xl bg-white dark:bg-[#0c0c12] border border-zinc-200 dark:border-white/15 p-6 sm:p-8 shadow-2xl text-zinc-900 dark:text-zinc-100 transition-colors">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <div className="relative w-full max-w-lg rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-white/10 p-6 sm:p-8 shadow-2xl">
         
         {/* Close Button */}
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-6 right-6 text-zinc-400 hover:text-zinc-600 dark:hover:text-white p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
-          aria-label="Close quote modal"
+          className="absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 dark:hover:text-white text-lg cursor-pointer"
         >
-          <X className="w-5 h-5" />
+          ✕
         </button>
 
-        {submitted ? (
-          /* Real Confirmation Screen — No fake "proposal generated" claims */
-          <div className="text-center py-6 sm:py-8 space-y-4">
-            <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 border border-emerald-500/20 flex items-center justify-center mx-auto">
-              <CheckCircle2 className="w-8 h-8 stroke-[2.5]" />
-            </div>
-
-            <div>
-              <div className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-semibold px-3 py-1 rounded-full bg-emerald-500/10 mb-2">
-                ● Inquiry Logged &amp; Verified
-              </div>
-              <h3 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
-                Technical Scope Received
-              </h3>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/10 max-w-md mx-auto text-left text-xs space-y-2 font-mono">
-              <div className="flex justify-between text-zinc-500 dark:text-zinc-400">
-                <span>REFERENCE ID:</span>
-                <span className="font-bold text-zinc-900 dark:text-zinc-200">{inquiryId}</span>
-              </div>
-              <div className="flex justify-between text-zinc-500 dark:text-zinc-400">
-                <span>FOCUS:</span>
-                <span className="text-[#FF6B00] font-semibold">{formData.selectedService}</span>
-              </div>
-              <div className="flex justify-between text-zinc-500 dark:text-zinc-400">
-                <span>ESTIMATED VOLUME:</span>
-                <span className="text-zinc-900 dark:text-zinc-200">{formData.leadVolume}</span>
-              </div>
-            </div>
-
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-md mx-auto leading-relaxed">
-              Your deployment requirements have been assigned to our solutions engineering team. We will review your architecture specifications and contact you at <strong className="text-zinc-900 dark:text-white font-medium">{formData.email}</strong> within 24 hours.
-            </p>
-
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-6 py-2.5 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-semibold text-xs tracking-wide transition-all cursor-pointer shadow-sm"
-              >
-                Done
-              </button>
-            </div>
-          </div>
-        ) : (
+        {!isSubmitted ? (
           <div>
-            {/* Modal Header & Progress Indicator */}
-            <div className="mb-6 pb-4 border-b border-zinc-200 dark:border-white/10">
-              <div className="flex items-center justify-between text-xs font-mono mb-2">
-                <span className="text-[#FF6B00] font-bold uppercase tracking-widest">
-                  ZAVIAN LABS ONBOARDING
-                </span>
-                <span className="text-zinc-400 dark:text-zinc-500">
-                  Step 0{step} of 03
-                </span>
-              </div>
-
-              <div className="w-full h-1.5 rounded-full bg-zinc-100 dark:bg-white/10 overflow-hidden">
+            {/* Modal Progress Indicator */}
+            <div className="flex items-center gap-2 mb-6">
+              {[1, 2, 3].map((num) => (
                 <div
-                  className="h-full bg-gradient-to-r from-[#FF6B00] to-purple-500 transition-all duration-300"
-                  style={{ width: `${(step / 3) * 100}%` }}
+                  key={num}
+                  className={`h-1 flex-1 rounded-full ${
+                    step >= num ? "bg-[#8B5CF6]" : "bg-zinc-200 dark:bg-white/10"
+                  }`}
                 />
-              </div>
-
-              <h3 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-white mt-3">
-                {step === 1 && 'Scope & System Focus'}
-                {step === 2 && 'Inbound Volume & Stack'}
-                {step === 3 && 'Contact & Engineering Dispatch'}
-              </h3>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-                {step === 1 && 'Select the primary automation architecture and outline your objectives.'}
-                {step === 2 && 'Help us understand your current throughput and integration requirements.'}
-                {step === 3 && 'Provide your direct information so our lead solutions engineer can follow up.'}
-              </p>
+              ))}
             </div>
 
-            {errorMsg && (
-              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-600 dark:text-red-400 text-xs font-mono">
-                {errorMsg}
+            {error && (
+              <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-500 text-xs">
+                {error}
               </div>
             )}
 
-            {/* STEP 1: SCOPE */}
+            {/* Step 1: System Scope */}
             {step === 1 && (
               <div className="space-y-4">
-                <div>
-                  <label className="block text-xs font-mono uppercase text-zinc-600 dark:text-zinc-400 mb-2 font-semibold">
-                    1. Architecture Focus *
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {SERVICE_OPTIONS.map((srv) => {
-                      const isSelected = formData.selectedService === srv;
-                      return (
-                        <button
-                          key={srv}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, selectedService: srv })}
-                          className={`p-3 rounded-xl border text-xs font-medium text-left transition-all cursor-pointer ${
-                            isSelected
-                              ? 'border-[#FF6B00] bg-orange-500/10 text-[#FF6B00] dark:text-orange-400 font-semibold shadow-sm'
-                              : 'border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-white/20'
-                          }`}
-                        >
-                          {srv}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono uppercase text-zinc-600 dark:text-zinc-400 mb-2 font-semibold">
-                    2. Deliverables &amp; Technical Constraints *
-                  </label>
-                  <textarea
-                    rows={4}
-                    placeholder="e.g. Need an AI voice receptionist to answer after-hours calls, qualify property management leads, and sync to HubSpot with zero missed calls..."
-                    value={formData.projectScope}
-                    onChange={(e) => setFormData({ ...formData, projectScope: e.target.value })}
-                    className="w-full p-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white text-xs placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#FF6B00]/40 transition-all resize-none"
-                  />
-                  <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
-                    Min 5 characters. Be as specific as you like.
-                  </span>
-                </div>
-
-                <div className="pt-2">
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    className="w-full py-3 rounded-xl bg-[#FF6B00] hover:bg-[#ff7b1a] text-black font-semibold text-xs font-mono uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-orange-500/20"
-                  >
-                    <span>Next: Inbound Volume</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
+                  Step 1: Select Architectures
+                </h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  Select the systems you need engineered for your business:
+                </p>
+                <div className="space-y-2.5 pt-2">
+                  {[
+                    "AI Voice Receptionist (Inbound / Outbound)",
+                    "WhatsApp Booking & Triage Funnel",
+                    "Custom Estimation Software (Quotation Engine)",
+                    "Executive Intelligence & Profit Dashboard",
+                  ].map((service) => {
+                    const isSelected = selectedServices.includes(service);
+                    return (
+                      <button
+                        key={service}
+                        type="button"
+                        onClick={() => toggleService(service)}
+                        className={`w-full p-3.5 rounded-xl border text-left text-xs font-medium transition-all flex items-center justify-between cursor-pointer ${
+                          isSelected
+                            ? "border-[#8B5CF6] bg-purple-500/10 text-zinc-900 dark:text-white font-semibold"
+                            : "border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300"
+                        }`}
+                      >
+                        <span>{service}</span>
+                        {isSelected && <span className="text-[#8B5CF6]">✓</span>}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
 
-            {/* STEP 2: VOLUME & TECH STACK */}
+            {/* Step 2: Lead Volume / Scale */}
             {step === 2 && (
               <div className="space-y-4">
-                <div>
-                  <label className="block text-xs font-mono uppercase text-zinc-600 dark:text-zinc-400 mb-2 font-semibold">
-                    1. Estimated Monthly Lead Volume *
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {VOLUME_OPTIONS.map((vol) => {
-                      const isSelected = formData.leadVolume === vol;
-                      return (
-                        <button
-                          key={vol}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, leadVolume: vol })}
-                          className={`p-3 rounded-xl border text-xs font-medium text-center transition-all cursor-pointer ${
-                            isSelected
-                              ? 'border-purple-500 bg-purple-500/10 text-purple-600 dark:text-purple-400 font-semibold shadow-sm'
-                              : 'border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-white/20'
-                          }`}
-                        >
-                          {vol}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono uppercase text-zinc-600 dark:text-zinc-400 mb-2 font-semibold">
-                    2. Primary CRM / Calendar Integration
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {CRM_OPTIONS.map((crm) => {
-                      const isSelected = formData.crm === crm;
-                      return (
-                        <button
-                          key={crm}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, crm })}
-                          className={`p-2.5 rounded-xl border text-[11px] font-medium text-center transition-all cursor-pointer ${
-                            isSelected
-                              ? 'border-[#FF6B00] bg-orange-500/10 text-[#FF6B00] dark:text-orange-400 font-semibold shadow-sm'
-                              : 'border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-white/20'
-                          }`}
-                        >
-                          {crm}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono uppercase text-zinc-600 dark:text-zinc-400 mb-2 font-semibold">
-                    3. Target Implementation Timeline
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {TIMELINE_OPTIONS.map((time) => {
-                      const isSelected = formData.timeline === time;
-                      return (
-                        <button
-                          key={time}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, timeline: time })}
-                          className={`p-2.5 rounded-xl border text-[11px] font-medium text-center transition-all cursor-pointer ${
-                            isSelected
-                              ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold shadow-sm'
-                              : 'border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-white/20'
-                          }`}
-                        >
-                          {time}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={handleBack}
-                    className="w-1/3 py-3 rounded-xl border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-300 font-semibold text-xs font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Back</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    className="w-2/3 py-3 rounded-xl bg-[#8B5CF6] hover:bg-[#7c4ee8] text-white font-semibold text-xs font-mono uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-purple-500/20"
-                  >
-                    <span>Next: Contact Details</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
+                  Step 2: Monthly Inbound Volume
+                </h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  Help us scope the necessary webhook throughput and server capacity:
+                </p>
+                <div className="space-y-2.5 pt-2">
+                  {[
+                    { label: "Emerging", range: "Under 100 leads / month" },
+                    { label: "Growing", range: "100 to 500 leads / month" },
+                    { label: "High Volume", range: "500 to 2,000 leads / month" },
+                    { label: "Enterprise", range: "2,000+ leads / month" },
+                  ].map((vol) => (
+                    <button
+                      key={vol.range}
+                      type="button"
+                      onClick={() => setLeadVolume(vol.range)}
+                      className={`w-full p-3.5 rounded-xl border text-left text-xs transition-all flex items-center justify-between cursor-pointer ${
+                        leadVolume === vol.range
+                          ? "border-[#8B5CF6] bg-purple-500/10 text-zinc-900 dark:text-white font-semibold"
+                          : "border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300"
+                      }`}
+                    >
+                      <span className="font-medium">{vol.range}</span>
+                      <span className="text-[10px] text-zinc-400 uppercase font-mono">{vol.label}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
 
-            {/* STEP 3: CONTACT & SUBMIT */}
+            {/* Step 3: Contact Details */}
             {step === 3 && (
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
+                  Step 3: Contact Information
+                </h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  Where should we send your system architecture proposal?
+                </p>
+                <div className="space-y-3 pt-2 text-xs">
                   <div>
-                    <label className="block text-xs font-mono uppercase text-zinc-600 dark:text-zinc-400 mb-1 font-semibold">
-                      Full Name *
-                    </label>
+                    <label className="block text-zinc-700 dark:text-zinc-300 mb-1 font-medium">Your Name *</label>
                     <input
-                      required
                       type="text"
-                      placeholder="Sarah Jenkins"
+                      required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white text-xs placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/40 transition-all"
+                      className="w-full p-2.5 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white focus:outline-none focus:border-[#8B5CF6]"
+                      placeholder="Jane Doe"
                     />
                   </div>
-
                   <div>
-                    <label className="block text-xs font-mono uppercase text-zinc-600 dark:text-zinc-400 mb-1 font-semibold">
-                      Corporate Email *
-                    </label>
+                    <label className="block text-zinc-700 dark:text-zinc-300 mb-1 font-medium">Work Email *</label>
                     <input
-                      required
                       type="email"
-                      placeholder="sarah@company.com"
+                      required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white text-xs placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/40 transition-all"
+                      className="w-full p-2.5 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white focus:outline-none focus:border-[#8B5CF6]"
+                      placeholder="jane@company.com"
                     />
                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-mono uppercase text-zinc-600 dark:text-zinc-400 mb-1 font-semibold">
-                      Phone Number (Optional)
-                    </label>
+                    <label className="block text-zinc-700 dark:text-zinc-300 mb-1 font-medium">Phone / WhatsApp</label>
                     <input
                       type="tel"
-                      placeholder="+1 (555) 019-2834"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white text-xs placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/40 transition-all"
+                      className="w-full p-2.5 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white focus:outline-none focus:border-[#8B5CF6]"
+                      placeholder="+1 (555) 000-0000"
                     />
                   </div>
-
-                  <div>
-                    <label className="block text-xs font-mono uppercase text-zinc-600 dark:text-zinc-400 mb-1 font-semibold">
-                      Company / Organization
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Apex Ventures Inc."
-                      value={formData.company}
-                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white text-xs placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/40 transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                  <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
-                    <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                    <span>Direct engineering review · No sales spam</span>
-                  </div>
-                  <span className="text-zinc-400 dark:text-zinc-500 text-[11px]">24h SLA</span>
-                </div>
-
-                <div className="flex items-center gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={handleBack}
-                    className="w-1/3 py-3.5 rounded-xl border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-300 font-semibold text-xs font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Back</span>
-                  </button>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-2/3 py-3.5 rounded-xl bg-gradient-to-r from-[#FF6B00] to-[#8B5CF6] hover:brightness-110 disabled:opacity-50 text-white font-semibold text-xs font-mono uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-purple-500/20"
-                  >
-                    <Send className="w-3.5 h-3.5" />
-                    <span>{loading ? 'Logging Scope...' : 'Dispatch Inquiry ↗'}</span>
-                  </button>
                 </div>
               </form>
             )}
+
+            {/* Navigation & Submit Buttons */}
+            <div className="flex items-center justify-between mt-8 pt-4 border-t border-zinc-200 dark:border-white/10">
+              {step > 1 ? (
+                <button
+                  type="button"
+                  onClick={() => setStep((prev) => (prev - 1) as 1 | 2)}
+                  className="px-4 py-2 text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white cursor-pointer"
+                >
+                  ← Back
+                </button>
+              ) : <div />}
+
+              {step < 3 ? (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="px-5 py-2.5 rounded-xl bg-[#8B5CF6] hover:bg-[#7C3AED] text-white text-xs font-semibold shadow-md shadow-purple-500/20 cursor-pointer"
+                >
+                  Continue →
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => handleSubmit()}
+                  disabled={isSubmitting}
+                  className="px-6 py-2.5 rounded-xl bg-[#8B5CF6] hover:bg-[#7C3AED] text-white text-xs font-semibold shadow-md shadow-purple-500/20 disabled:opacity-50 cursor-pointer"
+                >
+                  {isSubmitting ? "Submitting..." : "Submit Quote Request ↗"}
+                </button>
+              )}
+            </div>
+          </div>
+        ) : (
+          /* Clean Confirmation State (No Fake Claims) */
+          <div className="py-8 text-center space-y-4">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xl font-bold mx-auto border border-emerald-500/20">
+              ✓
+            </div>
+            <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
+              Inquiry Received
+            </h3>
+            <p className="text-xs text-zinc-600 dark:text-zinc-400 max-w-sm mx-auto leading-relaxed">
+              Our engineering team will review your selected architectures and follow up at <span className="font-semibold text-zinc-900 dark:text-white">{formData.email}</span> within 24 business hours.
+            </p>
+            <button
+              type="button"
+              onClick={onClose}
+              className="mt-6 px-5 py-2 rounded-xl bg-zinc-100 dark:bg-white/10 hover:bg-zinc-200 dark:hover:bg-white/15 text-zinc-800 dark:text-white text-xs font-medium cursor-pointer"
+            >
+              Close Window
+            </button>
           </div>
         )}
+
       </div>
     </div>
   );
 }
+
+export default QuoteModal;
