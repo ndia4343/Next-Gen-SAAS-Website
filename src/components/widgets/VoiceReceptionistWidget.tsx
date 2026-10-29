@@ -8,6 +8,9 @@ interface VoiceReceptionistWidgetProps {
   content?: any;
 }
 
+const FIRST_GREETING_MESSAGE = 
+  "Hello! I'm Zara from Zavian Labs. I'd love to know who I'm speaking with today?";
+
 const VoiceReceptionistInner: React.FC = () => {
   const [isRinging, setIsRinging] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
@@ -27,36 +30,18 @@ const VoiceReceptionistInner: React.FC = () => {
     }, 4500);
   };
 
-  const conversation = useConversation({
-    onConnect: () => {
-      stopRingingSound();
-      setIsRinging(false);
-      setCallDuration(0);
-    },
-    onDisconnect: () => {
-      stopRingingSound();
-      setIsRinging(false);
-      setIsSimulatedConnected(false);
-      setCallDuration(0);
-    },
-    onError: (err) => {
-      console.error("Zara voice engine error:", err);
-      stopRingingSound();
-      setIsRinging(false);
-      const str = typeof err === "string" ? err : err?.message || "";
-      if (
-        str.toLowerCase().includes("permission") ||
-        str.toLowerCase().includes("notallowed") ||
-        str.toLowerCase().includes("microphone")
-      ) {
-        showToast("Please allow microphone access to talk to Zara");
-      }
-    },
-  });
+  const stopRingingSound = () => {
+    if (ringIntervalRef.current) {
+      clearInterval(ringIntervalRef.current);
+      ringIntervalRef.current = null;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current = null;
+    }
+  };
 
-  const isConnected = conversation.status === "connected" || isSimulatedConnected;
-
-  // Synthesize realistic telephone ring tone using Web Audio API (Zero external MP3 dependencies)
+  // Synthesize realistic telephone ring tone using Web Audio API (Dual tones 400Hz + 450Hz)
   const playRingCadence = () => {
     try {
       const AudioCtx =
@@ -103,18 +88,39 @@ const VoiceReceptionistInner: React.FC = () => {
     }
   };
 
-  const stopRingingSound = () => {
-    if (ringIntervalRef.current) {
-      clearInterval(ringIntervalRef.current);
-      ringIntervalRef.current = null;
-    }
-    if (audioContextRef.current) {
-      audioContextRef.current.close().catch(() => {});
-      audioContextRef.current = null;
-    }
-  };
+  const conversation = useConversation({
+    onConnect: () => {
+      stopRingingSound();
+      setIsRinging(false);
+      setCallDuration(0);
+    },
+    onDisconnect: () => {
+      stopRingingSound();
+      setIsRinging(false);
+      setIsSimulatedConnected(false);
+      setCallDuration(0);
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        try { window.speechSynthesis.cancel(); } catch {}
+      }
+    },
+    onError: (err) => {
+      console.error("Zara voice engine error:", err);
+      stopRingingSound();
+      setIsRinging(false);
+      const str = typeof err === "string" ? err : err?.message || "";
+      if (
+        str.toLowerCase().includes("permission") ||
+        str.toLowerCase().includes("notallowed") ||
+        str.toLowerCase().includes("microphone")
+      ) {
+        showToast("Please allow microphone access to talk to Zara");
+      }
+    },
+  });
 
-  // Active call duration timer
+  const isConnected = conversation.status === "connected" || isSimulatedConnected;
+
+  // Active call duration timer (mm:ss)
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (isConnected) {
@@ -127,15 +133,17 @@ const VoiceReceptionistInner: React.FC = () => {
     };
   }, [isConnected]);
 
-  // Cleanup audio context and timers on unmount
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       stopRingingSound();
       if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        try { window.speechSynthesis.cancel(); } catch {}
+      }
     };
   }, []);
 
-  // Handle Starting and Ending the Call
   const handleStartCall = async () => {
     try {
       // 1. Explicitly request microphone access first
@@ -153,8 +161,14 @@ const VoiceReceptionistInner: React.FC = () => {
       const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;
 
       if (agentId && agentId !== "your_agent_id_here") {
+        // Start live ElevenLabs WebRTC session with the initial greeting override
         await conversation.startSession({
           agentId,
+          overrides: {
+            agent: {
+              firstMessage: FIRST_GREETING_MESSAGE,
+            },
+          },
         });
       } else {
         // Realistic simulated cadence for demonstration if agentId placeholder is present
@@ -162,6 +176,26 @@ const VoiceReceptionistInner: React.FC = () => {
           stopRingingSound();
           setIsRinging(false);
           setIsSimulatedConnected(true);
+
+          // Deliver initial greeting immediately upon connection
+          if (typeof window !== "undefined" && "speechSynthesis" in window) {
+            try {
+              window.speechSynthesis.cancel();
+              const utterance = new SpeechSynthesisUtterance(FIRST_GREETING_MESSAGE);
+              const voices = window.speechSynthesis.getVoices();
+              const preferredVoice = voices.find(
+                (v) =>
+                  v.lang === "en-GB" ||
+                  v.name.includes("UK") ||
+                  v.name.includes("British") ||
+                  v.name.includes("English United Kingdom")
+              ) || voices.find((v) => v.lang.startsWith("en"));
+              if (preferredVoice) utterance.voice = preferredVoice;
+              utterance.rate = 1.0;
+              utterance.pitch = 1.05;
+              window.speechSynthesis.speak(utterance);
+            } catch {}
+          }
         }, 2200);
       }
     } catch (error: any) {
@@ -177,6 +211,9 @@ const VoiceReceptionistInner: React.FC = () => {
     setIsRinging(false);
     setIsSimulatedConnected(false);
     setCallDuration(0);
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      try { window.speechSynthesis.cancel(); } catch {}
+    }
     try {
       await conversation.endSession();
     } catch {}
@@ -215,7 +252,7 @@ const VoiceReceptionistInner: React.FC = () => {
 
       {/* 1. CONNECTED STATE */}
       {isConnected && (
-        <div className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#12151E]/95 border border-[#8B5CF6]/40 shadow-[0_0_25px_rgba(139,92,246,0.3)] backdrop-blur-xl transition-all">
+        <div className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#12151E]/95 border border-white/10 shadow-[0_0_25px_rgba(139,92,246,0.3)] backdrop-blur-xl transition-all">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-xs font-semibold text-white tracking-wide">Zara</span>
@@ -224,7 +261,7 @@ const VoiceReceptionistInner: React.FC = () => {
             </span>
           </div>
 
-          {/* Sound Wave Animation */}
+          {/* Animated 4-bar sound wave in Electric Orange (#FF6B00) */}
           <div className="flex items-center gap-0.5 px-1.5 h-4">
             <span className="w-0.5 h-3 bg-[#FF6B00] animate-pulse rounded-full" />
             <span className="w-0.5 h-4 bg-[#FF6B00] animate-bounce rounded-full" />
@@ -244,16 +281,18 @@ const VoiceReceptionistInner: React.FC = () => {
             }}
             className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             title={isMuted ? "Unmute" : "Mute"}
+            aria-label={isMuted ? "Unmute audio" : "Mute audio"}
           >
             {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4" />}
           </button>
 
-          {/* Hang Up Button */}
+          {/* Red Hangup Button */}
           <button
             type="button"
             onClick={handleEndCall}
             className="p-2 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-400 hover:bg-rose-500 hover:text-white transition-all shadow-[0_0_15px_rgba(244,63,94,0.3)] cursor-pointer"
             title="End Call"
+            aria-label="Hang up call"
           >
             <PhoneOff className="w-4 h-4" />
           </button>
@@ -262,14 +301,14 @@ const VoiceReceptionistInner: React.FC = () => {
 
       {/* 2. RINGING STATE */}
       {isRinging && !isConnected && (
-        <div className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#12151E]/95 border border-[#FF6B00]/40 shadow-[0_0_25px_rgba(255,107,0,0.3)] backdrop-blur-xl transition-all">
+        <div className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#12151E]/95 border border-white/10 shadow-[0_0_25px_rgba(255,107,0,0.3)] backdrop-blur-xl transition-all">
           <div className="flex items-center gap-2">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FF6B00]" />
             </span>
             <span className="text-xs font-mono font-medium text-slate-200 tracking-wide">
-              Connecting to Zara...
+              • Connecting to Zara...
             </span>
           </div>
 
@@ -278,6 +317,7 @@ const VoiceReceptionistInner: React.FC = () => {
             onClick={handleEndCall}
             className="p-2 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-400 hover:bg-rose-500 hover:text-white transition-all cursor-pointer"
             title="Cancel Call"
+            aria-label="Cancel connecting call"
           >
             <PhoneOff className="w-3.5 h-3.5" />
           </button>
@@ -289,7 +329,7 @@ const VoiceReceptionistInner: React.FC = () => {
         <button
           type="button"
           onClick={handleStartCall}
-          className="group flex items-center gap-3.5 pl-4 pr-2.5 py-2.5 rounded-full bg-[#12151E]/90 hover:bg-[#12151E] border border-white/10 hover:border-[#8B5CF6]/50 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] backdrop-blur-xl transition-all duration-300 cursor-pointer"
+          className="group flex items-center gap-3.5 pl-4 pr-2.5 py-2.5 rounded-full bg-[#12151E]/95 hover:bg-[#12151E] border border-white/10 hover:border-[#8B5CF6]/50 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] backdrop-blur-xl transition-all duration-300 cursor-pointer"
         >
           <div className="flex flex-col text-left">
             <div className="flex items-center gap-1.5">
