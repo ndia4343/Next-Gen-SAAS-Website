@@ -1,934 +1,644 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  CheckCircle2,
-  Check,
-  Phone,
-  Video,
-  MoreVertical,
-  ArrowRight,
-  ShieldCheck,
+import React, { useState, useEffect, useRef } from "react";
+import { 
+  Sun, 
+  Smile, 
+  UtensilsCrossed, 
+  Layers, 
+  Truck, 
+  ArrowRight, 
+  CheckCheck, 
+  Sparkles, 
+  Info,
   Calendar,
-  Layers,
-  Sparkles,
-  Zap,
-  TrendingUp,
-} from 'lucide-react';
-import { ProjectSupportSectionData } from '@/lib/types';
+  Database,
+  TrendingUp
+} from "lucide-react";
+import { ProjectSupportSectionData } from "@/lib/types";
 
-interface Props {
+interface IndustryLoop {
+  id: string;
+  tabLabel: string;
+  badge: string;
+  icon: React.ElementType;
+  headline: string;
+  subheadline: string;
+  // Stage 01: Chat
+  chat: {
+    sender: string;
+    incoming: string;
+    time: string;
+    aiReply: string;
+    aiAction: string;
+  };
+  // Stage 02: Triage
+  stage2: {
+    title: string;
+    step: string;
+    output: string;
+  };
+  // Stage 03: CRM/Sync
+  stage3: {
+    action: string;
+    target: string;
+    status: string;
+  };
+  // Stage 04: CEO Dashboard
+  dashboard: {
+    kpis: { label: string; value: string; delta: string }[];
+    chartTitle: string;
+    chartType: "solar" | "clinic" | "restaurant" | "saas" | "logistics";
+    pipeline: { label: string; val: string }[];
+  };
+}
+
+const INDUSTRIES: IndustryLoop[] = [
+  {
+    id: "solar",
+    tabLabel: "Solar EPC",
+    badge: "SolarPro Proposal Engine",
+    icon: Sun,
+    headline: "Instant PV Quotes to Pipeline Margins",
+    subheadline: "Turns raw power bills into bankable solar designs, site visits, and gross margin tracking in seconds.",
+    chat: {
+      sender: "Tariq Mahmood (Textile Mills)",
+      incoming: "Need a 25kW hybrid quote for our SITE warehouse. Current bill is around Rs 185k/mo.",
+      time: "10:14 AM",
+      aiReply: "Analyzed your Commercial A-2 tariff. Estimated payback: 3.4 years. Sent preliminary proposal link to your email.",
+      aiAction: "Commercial Tariff Identified • Proposal Drafted"
+    },
+    stage2: {
+      title: "Parametric PV Sizing",
+      step: "Satellite roof geometry matched with 550W Tier-1 panels.",
+      output: "Est. Generation: 3,450 kWh/mo • Offset: 78%"
+    },
+    stage3: {
+      action: "Site Survey & Proposal Locked",
+      target: "CRM Pipeline • SolarPro Dispatch",
+      status: "Survey Booked (Tomorrow 11:30 AM)"
+    },
+    dashboard: {
+      chartTitle: "Quoted vs. Closed Commercial Capacity (kW)",
+      chartType: "solar",
+      kpis: [
+        { label: "Pipeline Value", value: "Rs 48.5M", delta: "+28%" },
+        { label: "Close Rate", value: "31.4%", delta: "+6.2%" },
+        { label: "Gross Margin", value: "18.5%", delta: "+2.1%" },
+        { label: "Proposal Time", value: "2.1 min", delta: "-85%" }
+      ],
+      pipeline: [
+        { label: "Inbound Leads", val: "142" },
+        { label: "Proposals Sent", val: "89" },
+        { label: "Deals Closed", val: "41" }
+      ]
+    }
+  },
+  {
+    id: "clinic",
+    tabLabel: "Aesthetic & Dental",
+    badge: "CareOps Chair Manager",
+    icon: Smile,
+    headline: "Fill High-Value Clinical Chairs Fast",
+    subheadline: "Capture elective inquiries, triage case photos, and secure treatment deposits 24/7 without desk staff.",
+    chat: {
+      sender: "Ayesha Malik",
+      incoming: "Hi! Any open slot with Dr. Sarah for composite veneers consultation this Friday evening?",
+      time: "08:42 PM",
+      aiReply: "Dr. Sarah has 5:30 PM open this Friday. I've reserved it and sent the consultation intake link.",
+      aiAction: "High-Ticket Intent Detected • Slot Reserved"
+    },
+    stage2: {
+      title: "Patient Triage & Screening",
+      step: "Smile photos requested & pre-consult questionnaire sent.",
+      output: "Assessment: Class I Aesthetic Veneers (4-6 Units)"
+    },
+    stage3: {
+      action: "Appointment & Deposit Confirmed",
+      target: "Cliniko Calendar & WhatsApp Notifier",
+      status: "Chair 02 Confirmed (Fri 5:30 PM)"
+    },
+    dashboard: {
+      chartTitle: "Doctor Utilization & Chair Revenue (RevPASH)",
+      chartType: "clinic",
+      kpis: [
+        { label: "RevPASH", value: "Rs 8,500/hr", delta: "+19%" },
+        { label: "Doctor Utilization", value: "88%", delta: "+14%" },
+        { label: "High-Ticket Close", value: "44.2%", delta: "+8.4%" },
+        { label: "No-Show Rate", value: "2.8%", delta: "-65%" }
+      ],
+      pipeline: [
+        { label: "Consult Requests", val: "310" },
+        { label: "Qualified Cases", val: "186" },
+        { label: "Treatment Accepted", val: "112" }
+      ]
+    }
+  },
+  {
+    id: "restaurant",
+    tabLabel: "Restaurant Group",
+    badge: "Table & Prime Cost Router",
+    icon: UtensilsCrossed,
+    headline: "Maximum Seat Turns, Zero Booking Drop-Off",
+    subheadline: "Handle large group bookings, private dining minimum spends, and POS seating allocations instantly.",
+    chat: {
+      sender: "Hamza Sheikh",
+      incoming: "Table for 10 this Saturday at 8:30 PM for a birthday dinner? Can we see the set menu?",
+      time: "03:15 PM",
+      aiReply: "Table 14 is open! I've attached our 8-course banquet menu. Tap below to confirm reservation.",
+      aiAction: "Large Group Flagged • Minimum Spend Applied"
+    },
+    stage2: {
+      title: "Floor Table Allocation",
+      step: "POS floor map checked for turnover velocity.",
+      output: "Matched Table 14+15 combination (2h dining slot)"
+    },
+    stage3: {
+      action: "Reservation Locked in POS",
+      target: "Kitchen & Host Display Engine",
+      status: "Guaranteed Hold (Sat 8:30 PM)"
+    },
+    dashboard: {
+      chartTitle: "Daily Seat Turns vs. Prime Cost %",
+      chartType: "restaurant",
+      kpis: [
+        { label: "Prime Cost", value: "54.8%", delta: "-4.2%" },
+        { label: "Table Turn Time", value: "41 min", delta: "-12m" },
+        { label: "Avg Dine-in Spend", value: "Rs 3,450", delta: "+18%" },
+        { label: "Direct Direct %", value: "72%", delta: "+15%" }
+      ],
+      pipeline: [
+        { label: "Inquiries", val: "1,420" },
+        { label: "Tables Reserved", val: "880" },
+        { label: "Guests Served", val: "3,120" }
+      ]
+    }
+  },
+  {
+    id: "saas",
+    tabLabel: "B2B SaaS",
+    badge: "RevOps Conversion Engine",
+    icon: Layers,
+    headline: "Speed-to-Lead Pipeline Velocity",
+    subheadline: "Qualify inbound enterprise prospects, enrich headcount data, and route demos directly to Account Executives.",
+    chat: {
+      sender: "David Chen (VP Eng)",
+      incoming: "We're 80 seats on Datadog looking to integrate your automated API pipeline. Pricing?",
+      time: "11:20 AM",
+      aiReply: "You qualify for our Enterprise tier. I have scheduled an executive architecture walkthrough with our lead AE.",
+      aiAction: "ARR > $50k Qualified • Calendar Dispatched"
+    },
+    stage2: {
+      title: "Domain Enrichment",
+      step: "Clearbit API ping: 85 employees • Series A funding.",
+      output: "Ideal Customer Profile: Tier-1 Enterprise"
+    },
+    stage3: {
+      action: "CRM Deal Staged & Synced",
+      target: "Salesforce / Slack Account Exec Channel",
+      status: "Demo Booked (Thursday 2:00 PM)"
+    },
+    dashboard: {
+      chartTitle: "Sales Velocity vs. Deal Conversion Funnel",
+      chartType: "saas",
+      kpis: [
+        { label: "Pipeline Velocity", value: "$24.5k/wk", delta: "+32%" },
+        { label: "Lead-to-Demo", value: "52.4%", delta: "+11%" },
+        { label: "Average ACV", value: "$36,000", delta: "+18%" },
+        { label: "CAC Payback", value: "6.8 Mo", delta: "-2.4m" }
+      ],
+      pipeline: [
+        { label: "Inbound MQL", val: "840" },
+        { label: "Qualified SQL", val: "410" },
+        { label: "Contracts Closed", val: "84" }
+      ]
+    }
+  },
+  {
+    id: "logistics",
+    tabLabel: "Logistics Fleet",
+    badge: "Freight Dispatch Router",
+    icon: Truck,
+    headline: "Automated Rate Spotting & Fleet Turnaround",
+    subheadline: "Generate instant lane pricing, confirm driver manifests, and eliminate deadhead miles on auto-pilot.",
+    chat: {
+      sender: "Bilal Logistics Ops",
+      incoming: "Rate for 2x 40ft flatbeds from Karachi Port to Sundar Estate Lahore next Tuesday?",
+      time: "02:40 PM",
+      aiReply: "Quoted Rs 340,000 per flatbed based on current diesel index. Drivers pre-allocated.",
+      aiAction: "Lane Matched • Spot Margin Calculated"
+    },
+    stage2: {
+      title: "Route & Backhaul Calculation",
+      step: "Diesel matrix indexed + return load probability checked.",
+      output: "Backhaul Probability: 91% • Est. Margin: 22%"
+    },
+    stage3: {
+      action: "Digital Waybill Pre-Staged",
+      target: "Fleet TMS & Driver WhatsApp Dispatch",
+      status: "Manifest Dispatched (Tue 6:00 AM)"
+    },
+    dashboard: {
+      chartTitle: "Fulfillment Velocity vs. Fleet Uptime",
+      chartType: "logistics",
+      kpis: [
+        { label: "Fleet Uptime", value: "98.4%", delta: "+4.1%" },
+        { label: "Dock Dwell Time", value: "34 min", delta: "-48%" },
+        { label: "Empty Miles", value: "6.2%", delta: "-14%" },
+        { label: "Fuel Savings", value: "15.8%", delta: "+3.2%" }
+      ],
+      pipeline: [
+        { label: "Loads Ingested", val: "540" },
+        { label: "Dispatched", val: "518" },
+        { label: "Reconciled", val: "498" }
+      ]
+    }
+  }
+];
+
+// -------------------------------------------------------------------
+// Domain Authentic SVG Visualizations for Stage 04
+// -------------------------------------------------------------------
+
+const SolarChart = () => (
+  <svg viewBox="0 0 400 120" className="w-full h-full">
+    <path d="M 20,95 Q 100,85 180,30 T 380,20" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
+    <path d="M 20,80 Q 100,75 180,60 T 380,55" fill="none" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="3 3" />
+    <circle cx="280" cy="22" r="3.5" fill="#FF6B00" />
+    <text x="250" y="15" fill="#FF6B00" fontSize="9" fontFamily="monospace">Quoted MW: +38%</text>
+  </svg>
+);
+
+const ClinicBarChart = () => (
+  <div className="w-full h-full flex items-end justify-around px-4">
+    {[
+      { cap: 70, book: 62 },
+      { cap: 85, book: 80 },
+      { cap: 90, book: 88 },
+      { cap: 95, book: 92 },
+      { cap: 100, book: 98 },
+    ].map((b, i) => (
+      <div key={i} className="flex gap-1 items-end h-24">
+        <div className="w-3 bg-slate-700 rounded-t-sm" style={{ height: `${b.cap}%` }} />
+        <div className={`w-3 rounded-t-sm ${i === 4 ? "bg-[#FF6B00]" : "bg-[#8B5CF6]"}`} style={{ height: `${b.book}%` }} />
+      </div>
+    ))}
+  </div>
+);
+
+const RestaurantChart = () => (
+  <svg viewBox="0 0 400 120" className="w-full h-full">
+    <path d="M 20,30 L 100,45 L 180,35 L 260,25 L 380,15" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
+    <path d="M 20,90 L 100,75 L 180,65 L 260,55 L 380,50" fill="none" stroke="#FF6B00" strokeWidth="2" strokeDasharray="4 4" />
+    <text x="260" y="70" fill="#FF6B00" fontSize="9" fontFamily="monospace">Prime Cost: 54.8%</text>
+  </svg>
+);
+
+const SaasFunnelChart = () => (
+  <div className="w-full h-full flex flex-col justify-around px-4">
+    {[
+      { w: "92%", label: "Inbound MQL", color: "bg-slate-300" },
+      { w: "65%", label: "Qualified SQL", color: "bg-[#8B5CF6]" },
+      { w: "38%", label: "Demo Completed", color: "bg-[#8B5CF6]" },
+      { w: "18%", label: "Closed Won", color: "bg-[#FF6B00]" },
+    ].map((f, i) => (
+      <div key={i} className="flex items-center gap-2">
+        <span className="w-24 text-[10px] text-slate-400 font-mono text-right">{f.label}</span>
+        <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
+          <div className={`h-full ${f.color} rounded-full`} style={{ width: f.w }} />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const LogisticsChart = () => (
+  <svg viewBox="0 0 400 120" className="w-full h-full">
+    <path d="M 20,80 L 110,70 L 200,40 L 290,30 L 380,20" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
+    <path d="M 20,100 L 110,85 L 200,60 L 290,45 L 380,35" fill="none" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="3 3" />
+    <circle cx="290" cy="30" r="3.5" fill="#FF6B00" />
+    <text x="240" y="20" fill="#FF6B00" fontSize="9" fontFamily="monospace">98.4% On-Time</text>
+  </svg>
+);
+
+interface SolutionsShowcaseProps {
   onOpenQuoteModal?: (serviceName: string) => void;
   content?: ProjectSupportSectionData;
 }
 
-interface IndustryData {
-  id: string;
-  tabLabel: string;
-  icon: string;
-  tagline: string;
-  badge: string;
-  whatsapp: {
-    contactName: string;
-    avatarLetter: string;
-    avatarBg: string;
-    customerInquiry: string;
-    inquiryTime: string;
-    aiQualification: string;
-    qualificationTime: string;
-    customerReply: string;
-    replyTime: string;
-    aiConfirmation: string;
-    confirmationTime: string;
-    actionChipText: string;
-  };
-  triage: {
-    kicker: string;
-    title: string;
-    intentScore: string;
-    priorityLabel: string;
-    qualificationChecklist: string[];
-    routingTarget: string;
-    decisionLogic: string;
-  };
-  handshake: {
-    meetingTitle: string;
-    scheduledTime: string;
-    leadName: string;
-    assignedRep: string;
-    platform: string;
-    syncChecklist: string[];
-  };
-  telemetry: {
-    sampleVolume: string;
-    sampleSubtitle: string;
-    speedMetric: string;
-    speedSubtitle: string;
-    yieldMetric: string;
-    yieldSubtitle: string;
-    sparklineValues: number[];
-    pipelineGenerated: string;
-    traditionalRate: number;
-    zavianRate: number;
-  };
-}
+export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuoteModal, content }) => {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [currentStage, setCurrentStage] = useState(1);
+  const [isInteracting, setIsInteracting] = useState(false);
+  const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-const INDUSTRIES: IndustryData[] = [
-  {
-    id: 'solar',
-    tabLabel: 'Solar & Roofing',
-    icon: '☀️',
-    tagline: 'Home Services & High-Ticket Contracting',
-    badge: 'SATELLITE ROOF ESTIMATES · HIGH-TICKET DISPATCH',
-    whatsapp: {
-      contactName: 'Apex Solar · Instant FastLead AI',
-      avatarLetter: '☀️',
-      avatarBg: 'bg-amber-500/20 text-amber-500',
-      customerInquiry: 'Hey! Need an estimate on a 2,800 sq ft roof replacement & 12kW solar panel install.',
-      inquiryTime: '8:42 PM',
-      aiQualification: 'Hello Mike! I’ve initiated our satellite roof scanner. Is your average monthly electric bill over $250?',
-      qualificationTime: '8:42 PM',
-      customerReply: 'Yes, around $340/mo. Asphalt shingle roof, two-story home in Dallas.',
-      replyTime: '8:43 PM',
-      aiConfirmation: 'Calculated. You qualify for $0 down. Locking your on-site engineering survey for tomorrow:',
-      confirmationTime: '8:43 PM',
-      actionChipText: 'Tomorrow 10:00 AM · Survey Locked ✓',
-    },
-    triage: {
-      kicker: 'HIGH-TICKET DISPATCH ENGINE',
-      title: 'Satellite Estimation & Financing Qualification',
-      intentScore: '99.1% High Priority',
-      priorityLabel: 'Tier-1 Contractor Lead',
-      qualificationChecklist: [
-        'Roof area > 2,500 sq ft (Verified via Satellite GIS)',
-        'Monthly energy bill > $250 ($340/mo confirmed)',
-        'Homeowner status & credit tier pre-qualified',
-      ],
-      routingTarget: 'Senior Field Estimator Calendar',
-      decisionLogic: 'Automated bypass of Tier-1 phone rep; direct dispatch to field crew.',
-    },
-    handshake: {
-      meetingTitle: 'On-Site Roof Inspection & Solar Production Survey',
-      scheduledTime: 'Tomorrow, 10:00 AM – 10:45 AM EST',
-      leadName: 'Mike Callahan (Homeowner)',
-      assignedRep: 'Dave Henderson (Senior Solar Estimator)',
-      platform: 'On-Site Dispatch (Google Calendar & Cal.com)',
-      syncChecklist: [
-        'Calendar slot locked on estimator mobile dispatch route',
-        'HubSpot Deal created: $38,500 Residential Solar Project',
-        'Slack alert fired to #sales-dispatch with satellite imagery link',
-        'SMS & WhatsApp confirmation sent with arrival window',
-      ],
-    },
-    telemetry: {
-      sampleVolume: '320 Leads',
-      sampleSubtitle: 'Simulated Monthly Cohort',
-      speedMetric: '< 35s',
-      speedSubtitle: 'Avg Response Latency',
-      yieldMetric: '72.4%',
-      yieldSubtitle: 'Site Survey Lock Rate',
-      sparklineValues: [32, 48, 52, 70, 65, 88, 96],
-      pipelineGenerated: '+$48,500 Monthly Pipeline',
-      traditionalRate: 18,
-      zavianRate: 72,
-    },
-  },
-  {
-    id: 'realestate',
-    tabLabel: 'Luxury Real Estate',
-    icon: '🏢',
-    tagline: 'High-Net-Worth Brokerages & Developers',
-    badge: 'PROOF OF FUNDS VERIFICATION · BROKER VIP TOURS',
-    whatsapp: {
-      contactName: 'Vanguard Estates · Private Concierge',
-      avatarLetter: '🏢',
-      avatarBg: 'bg-sky-500/20 text-sky-400',
-      customerInquiry: 'Interested in private viewing for the Brickell penthouse ($4.2M).',
-      inquiryTime: '9:15 PM',
-      aiQualification: 'Welcome Robert. That penthouse has private elevator access. Are you purchasing all-cash or seeking jumbo financing?',
-      qualificationTime: '9:15 PM',
-      customerReply: 'All-cash purchase. Proof of funds letter ready from JPMorgan.',
-      replyTime: '9:16 PM',
-      aiConfirmation: 'Verified. Attaching digital NDA and reserving your broker VIP tour for tomorrow:',
-      confirmationTime: '9:16 PM',
-      actionChipText: 'Private Tour: Tomorrow 2:30 PM ✓',
-    },
-    triage: {
-      kicker: 'VIP LIQUIDITY SCREENING',
-      title: 'Proof-of-Funds Parsing & Buyer Criteria Fit',
-      intentScore: '98.7% Ultra-HNW',
-      priorityLabel: 'Prime Acquisition Intent',
-      qualificationChecklist: [
-        'Target property: $4.2M Penthouse (Brickell Ave)',
-        'Liquidity verified: All-cash transaction capability',
-        'Automated NDA delivery & digital acknowledgement',
-      ],
-      routingTarget: 'Managing Broker Direct Line',
-      decisionLogic: 'Immediate route to principal broker; skip general agency pool.',
-    },
-    handshake: {
-      meetingTitle: 'Private Broker Walkthrough · Penthouse 48B',
-      scheduledTime: 'Tomorrow, 2:30 PM – 3:30 PM EST',
-      leadName: 'Robert Sterling (Principal Buyer)',
-      assignedRep: 'Elena Rostova (Managing Broker)',
-      platform: 'On-Property VIP Access (Cal.com Confirmed)',
-      syncChecklist: [
-        'Private tour booked on broker calendar with gate security code',
-        'FollowUpBoss CRM contact created with VIP Lead tag',
-        'Slack alert broadcast to #luxury-closings with PDF portfolio',
-        'WhatsApp itinerary and concierge directions dispatched',
-      ],
-    },
-    telemetry: {
-      sampleVolume: '145 HNW Leads',
-      sampleSubtitle: 'Simulated Luxury Inquiries',
-      speedMetric: '< 20s',
-      speedSubtitle: 'Instant HNW Response',
-      yieldMetric: '78.5%',
-      yieldSubtitle: 'Tour Conversion Yield',
-      sparklineValues: [24, 40, 58, 62, 75, 84, 94],
-      pipelineGenerated: '+$185,000 Brokerage Pipeline',
-      traditionalRate: 22,
-      zavianRate: 78,
-    },
-  },
-  {
-    id: 'dental',
-    tabLabel: 'Dental & Aesthetics',
-    icon: '🩺',
-    tagline: 'Private Clinics & Medical Spas',
-    badge: 'AFTER-HOURS PATIENT INTAKE · CHAIR-TIME OPTIMIZATION',
-    whatsapp: {
-      contactName: 'Lumière Dental · Smile AI Concierge',
-      avatarLetter: '🩺',
-      avatarBg: 'bg-emerald-500/20 text-emerald-400',
-      customerInquiry: 'Hi! Looking to book consultation for full ceramic veneers and Invisalign.',
-      inquiryTime: '7:08 PM',
-      aiQualification: 'Hello Sophia! Dr. Vance has 2 private cosmetic consultation slots available this week. Have you had dental X-rays in the last 6 months?',
-      qualificationTime: '7:08 PM',
-      customerReply: 'Yes, last month during my routine cleaning.',
-      replyTime: '7:09 PM',
-      aiConfirmation: 'Wonderful! Reserving your 45-min 3D digital smile design consultation:',
-      confirmationTime: '7:09 PM',
-      actionChipText: 'Thursday 11:00 AM · Smile Consult ✓',
-    },
-    triage: {
-      kicker: 'CLINICAL TRIAGE ENGINE',
-      title: 'Treatment Fit & High-Value Procedure Matching',
-      intentScore: '96.5% High Value',
-      priorityLabel: 'Cosmetic Veneers ($18k+)',
-      qualificationChecklist: [
-        'High-value treatment focus (Veneers + Invisalign)',
-        'Recent dental diagnostics confirmed available',
-        'Deposit pre-authorization & medical history intake prepared',
-      ],
-      routingTarget: 'Operatory Suite 01 / Dr. Vance',
-      decisionLogic: 'Direct operatory calendar block with zero receptionist overhead.',
-    },
-    handshake: {
-      meetingTitle: '3D Cosmetic Smile Design & Diagnostic Scan',
-      scheduledTime: 'Thursday, 11:00 AM – 11:45 AM EST',
-      leadName: 'Sophia Martinez (Patient)',
-      assignedRep: 'Dr. Julian Vance (Cosmetic Director)',
-      platform: 'In-Clinic Operatory (Practice EHR Sync)',
-      syncChecklist: [
-        'Appointment synced directly to Dentrix / Curve Dental EHR',
-        'Patient intake health form sent via SMS with digital signature',
-        'Treatment coordinator alerted in clinical Slack channel',
-        'WhatsApp appointment reminder with calendar pass armed',
-      ],
-    },
-    telemetry: {
-      sampleVolume: '420 Patients',
-      sampleSubtitle: 'Simulated Monthly Inflow',
-      speedMetric: '< 40s',
-      speedSubtitle: 'Evening Response Time',
-      yieldMetric: '84.2%',
-      yieldSubtitle: 'Chair Fill Efficiency',
-      sparklineValues: [35, 52, 60, 78, 80, 89, 98],
-      pipelineGenerated: '+$62,000 Treatment Value',
-      traditionalRate: 26,
-      zavianRate: 84,
-    },
-  },
-  {
-    id: 'ecommerce',
-    tabLabel: 'E-Commerce & Retail',
-    icon: '🛍️',
-    tagline: 'DTC Brands & High-AOV Retailers',
-    badge: 'VIP CART RESCUE · AUTONOMOUS DISCOUNTS',
-    whatsapp: {
-      contactName: 'Nordic Luxe · VIP Order Assistant',
-      avatarLetter: '🛍️',
-      avatarBg: 'bg-purple-500/20 text-purple-400',
-      customerInquiry: 'My checkout code VIP20 isn’t applying to the titanium chronograph ($1,850).',
-      inquiryTime: '11:24 PM',
-      aiQualification: 'Checking stock now Liam... Authorized! I’ve locked in the $370 private VIP deduction and complimentary express courier dispatch.',
-      qualificationTime: '11:24 PM',
-      customerReply: 'Awesome! Can you send the direct checkout link?',
-      replyTime: '11:25 PM',
-      aiConfirmation: 'Secured link generated. Your reserved cart expires in 15 minutes:',
-      confirmationTime: '11:25 PM',
-      actionChipText: 'Complete VIP Order ($1,480) ➔',
-    },
-    triage: {
-      kicker: 'DYNAMIC MARGIN OPTIMIZER',
-      title: 'Abandoned Cart Value & Margin Floor Engine',
-      intentScore: '99.4% Ready to Buy',
-      priorityLabel: 'High AOV ($1,850 Cart)',
-      qualificationChecklist: [
-        'Cart value > $1,500 threshold with high margin headroom',
-        'Real-time inventory reserve locked in Shopify Plus',
-        'Automated single-use checkout token generated',
-      ],
-      routingTarget: 'Shopify Plus / Stripe Checkout Direct',
-      decisionLogic: 'Algorithmic promo authorization within strict gross margin constraints.',
-    },
-    handshake: {
-      meetingTitle: 'Order Verified & Express Courier Dispatched',
-      scheduledTime: 'Immediate Dispatch (Shopify Plus Token)',
-      leadName: 'Liam Chen (VIP Customer)',
-      assignedRep: 'Autonomous VIP Desk',
-      platform: 'Shopify Plus & Stripe Direct Link',
-      syncChecklist: [
-        'Checkout token synced with Shopify Plus backend',
-        'Stripe payment intent pre-authorized with fraud check',
-        'Klaviyo VIP customer segment tagged: Platinum Tier',
-        'WhatsApp automated tracking updates enabled',
-      ],
-    },
-    telemetry: {
-      sampleVolume: '1,280 Carts',
-      sampleSubtitle: 'Simulated Checkout Sessions',
-      speedMetric: '< 8s',
-      speedSubtitle: 'Cart Rescue Latency',
-      yieldMetric: '46.8%',
-      yieldSubtitle: 'High-AOV Rescue Rate',
-      sparklineValues: [42, 58, 64, 82, 79, 91, 99],
-      pipelineGenerated: '+$114,000 Recovered GMV',
-      traditionalRate: 12,
-      zavianRate: 47,
-    },
-  },
-  {
-    id: 'legal',
-    tabLabel: 'Legal & Professional',
-    icon: '⚖️',
-    tagline: 'Corporate Law & Advisory Firms',
-    badge: 'M&A INTAKE · CONFLICT CHECK SCREENING',
-    whatsapp: {
-      contactName: 'Vanguard Legal · Corporate Practice Desk',
-      avatarLetter: '⚖️',
-      avatarBg: 'bg-rose-500/20 text-rose-400',
-      customerInquiry: 'We need retained counsel for an M&A transaction ($8.5M asset purchase agreement).',
-      inquiryTime: '6:30 PM',
-      aiQualification: 'Understood. Our corporate M&A practice lead evaluates cross-border agreements. What is your target close date?',
-      qualificationTime: '6:30 PM',
-      customerReply: 'Targeting Q4 close. Both buyer and seller have signed the preliminary term sheet.',
-      replyTime: '6:31 PM',
-      aiConfirmation: 'High priority. Conflict-check clearance initiated. Connecting directly with managing partner:',
-      confirmationTime: '6:31 PM',
-      actionChipText: 'Partner Strategy Intake: Tomorrow 9:00 AM ✓',
-    },
-    triage: {
-      kicker: 'CONFLICT & RETAINER QUALIFIER',
-      title: 'Transaction Scale & Practice Group Routing',
-      intentScore: '97.8% High Value',
-      priorityLabel: 'M&A Retainer Opportunity',
-      qualificationChecklist: [
-        'Transaction size > $5M ($8.5M asset deal confirmed)',
-        'Term sheet executed; active closing window',
-        'Automated preliminary party conflict check triggered',
-      ],
-      routingTarget: 'Senior M&A Partner Desk',
-      decisionLogic: 'High-value corporate lead routed directly to practice group leader.',
-    },
-    handshake: {
-      meetingTitle: 'Partner Strategy Consultation · $8.5M Asset Purchase',
-      scheduledTime: 'Tomorrow, 9:00 AM – 9:45 AM EST',
-      leadName: 'Marcus Sterling (CEO / Acquirer)',
-      assignedRep: 'Alexander Wright (Managing Partner, M&A)',
-      platform: 'Secure Video Conference (Google Meet / Cal.com)',
-      syncChecklist: [
-        'Partner calendar locked with encrypted meeting link',
-        'Clio / Salesforce Legal CRM matter file opened',
-        'Automated NDA & engagement letter template queued',
-        'Secure WhatsApp confirmation with partner bio dispatched',
-      ],
-    },
-    telemetry: {
-      sampleVolume: '84 Retainers',
-      sampleSubtitle: 'Simulated M&A Inquiries',
-      speedMetric: '< 30s',
-      speedSubtitle: 'Executive Lead Intake',
-      yieldMetric: '68.0%',
-      yieldSubtitle: 'Retainer Conversion',
-      sparklineValues: [28, 44, 50, 68, 72, 85, 95],
-      pipelineGenerated: '+$240,000 Retainers',
-      traditionalRate: 15,
-      zavianRate: 68,
-    },
-  },
-];
-
-const STAGE_CONFIG = [
-  {
-    id: 'stage-whatsapp',
-    kicker: 'INBOUND CAPTURE',
-    title: 'Authentic WhatsApp Lead Funnel',
-    description: 'Instant sub-60s multi-turn conversational intake capturing prospect intent and initial qualification.',
-  },
-  {
-    id: 'stage-triage',
-    kicker: 'AUTONOMOUS TRIAGE',
-    title: 'AI Intent & Scoring Matrix',
-    description: 'Algorithmic criteria qualification evaluates budget, scope, and urgency without human intervention.',
-  },
-  {
-    id: 'stage-handshake',
-    kicker: 'PROTOCOL HANDSHAKE',
-    title: 'Two-Way Calendar & CRM Sync',
-    description: 'Direct calendar locking onto specialist schedules with automated CRM deal and pipeline updates.',
-  },
-  {
-    id: 'stage-telemetry',
-    kicker: 'REVENUE TELEMETRY',
-    title: 'Executive Analytics Dashboard',
-    description: 'Real-time pipeline monitoring tracking velocity, lead retention, and autonomous conversion margins.',
-  },
-];
-
-export default function ProjectSupportSection({ onOpenQuoteModal, content }: Props) {
-  const [activeIndustryIdx, setActiveIndustryIdx] = useState(0);
-  const [activeStage, setActiveStage] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [progress, setProgress] = useState(0); // 0 to 100%
-
-  const isPausedRef = useRef(isPaused);
-  isPausedRef.current = isPaused;
-
-  const pauseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Controlled Stage Cycling:
-  // - 3.5s per stage
-  // - Transitioning from Stage 04 back to 01 increments to the next industry exactly once
-  // - Manual clicks pause auto-rotation for 12 seconds
+  // Auto-cycle stages: 1 -> 2 -> 3 -> 4 -> 1 (with industry change on 4->1)
   useEffect(() => {
-    const STAGE_DURATION_MS = 3500;
-    const TICK_MS = 50;
-    const increment = (TICK_MS / STAGE_DURATION_MS) * 100;
+    if (isInteracting) return;
 
     const interval = setInterval(() => {
-      if (!isPausedRef.current) {
-        setProgress((prev) => {
-          if (prev + increment >= 100) {
-            setActiveStage((currentStage) => {
-              if (currentStage === 3) {
-                // Transitioning from Stage 04 back to 01 increments to the next industry exactly once
-                setActiveIndustryIdx((currentInd) => (currentInd + 1) % INDUSTRIES.length);
-                return 0;
-              }
-              return currentStage + 1;
-            });
-            return 0;
-          }
-          return prev + increment;
-        });
-      }
-    }, TICK_MS);
+      setCurrentStage((prev) => {
+        if (prev === 4) {
+          setActiveIdx((curr) => (curr + 1) % INDUSTRIES.length);
+          return 1;
+        }
+        return prev + 1;
+      });
+    }, 3800);
 
-    return () => {
-      clearInterval(interval);
-      if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current);
-    };
-  }, []);
+    return () => clearInterval(interval);
+  }, [isInteracting]);
 
-  const handleManualIndustrySelect = (indIdx: number) => {
-    setActiveIndustryIdx(indIdx);
-    setActiveStage(0); // Manual tab clicks reset to Stage 01
-    setProgress(0);
-    setIsPaused(true);
+  const handleTabClick = (idx: number) => {
+    setActiveIdx(idx);
+    setCurrentStage(1);
+    setIsInteracting(true);
 
-    if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current);
-    pauseTimeoutRef.current = setTimeout(() => {
-      setIsPaused(false);
-    }, 12000); // pause auto-rotation for 12 seconds
+    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    pauseTimerRef.current = setTimeout(() => setIsInteracting(false), 12000);
   };
 
-  const handleManualStageSelect = (stageIdx: number) => {
-    setActiveStage(stageIdx);
-    setProgress(0);
-    setIsPaused(true);
+  const handleStageClick = (stageNum: number) => {
+    setCurrentStage(stageNum);
+    setIsInteracting(true);
 
-    if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current);
-    pauseTimeoutRef.current = setTimeout(() => {
-      setIsPaused(false);
-    }, 12000); // pause auto-rotation for 12 seconds
+    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    pauseTimerRef.current = setTimeout(() => setIsInteracting(false), 12000);
   };
 
-  const currentIndustry = INDUSTRIES[activeIndustryIdx] || INDUSTRIES[0];
+  const item = INDUSTRIES[activeIdx];
 
   return (
-    <section id="project-support" className="py-24 px-4 max-w-7xl mx-auto z-10 relative">
-      {/* Section Header */}
-      <div className="text-center max-w-3xl mx-auto mb-14">
-        <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest px-3.5 py-1.5 rounded-full border border-orange-500/20 bg-orange-500/5 text-orange-600 dark:text-orange-400 mb-4 backdrop-blur-md">
-          ● ARCHITECTURAL BLUEPRINT · SYSTEM TELEMETRY
-        </div>
-        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-          Deployable Systems <span className="text-[#FF6B00]">Engineered for Scale.</span>
-        </h2>
-        <p className="mt-4 text-base sm:text-lg text-zinc-600 dark:text-zinc-400 font-normal leading-relaxed">
-          {content?.subtitle ||
-            'From instant lead capture to live profit dashboards, deploy automated systems built to scale your revenue without adding headcount.'}
-        </p>
-      </div>
+    <section id="project-support" className="relative w-full bg-[#090A0F] text-slate-100 py-20 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden">
+      {/* Background glow accents */}
+      <div className="absolute top-1/4 -left-32 w-80 h-80 bg-[#8B5CF6]/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-10 right-0 w-80 h-80 bg-[#FF6B00]/10 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* 5-INDUSTRY SYNCED TABS SELECTOR */}
-      <div className="max-w-5xl mx-auto mb-8">
-        <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-          {INDUSTRIES.map((ind, idx) => {
-            const isSelected = activeIndustryIdx === idx;
-            return (
-              <button
-                key={ind.id}
-                type="button"
-                onClick={() => handleManualIndustrySelect(idx)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-medium transition-all whitespace-nowrap cursor-pointer shrink-0 border ${
-                  isSelected
-                    ? 'bg-[#FF6B00] border-[#FF6B00] text-black font-semibold shadow-lg shadow-orange-500/25 scale-[1.03]'
-                    : 'bg-white dark:bg-[#12151E] border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/20 hover:text-zinc-900 dark:hover:text-white'
-                }`}
-              >
-                <span>{ind.icon}</span>
-                <span>{ind.tabLabel}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Industry Active Tagline / Sub-badge */}
-        <div className="text-center mt-3 flex items-center justify-center gap-2 text-xs font-mono">
-          <span className="text-[#FF6B00] font-bold">●</span>
-          <span className="text-zinc-500 dark:text-zinc-400 tracking-wider uppercase text-[11px]">
-            {currentIndustry.tagline} — <span className="text-zinc-800 dark:text-zinc-200">{currentIndustry.badge}</span>
-          </span>
-        </div>
-      </div>
-
-      {/* 60/40 Asymmetrical Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+      <div className="max-w-7xl mx-auto space-y-10">
         
-        {/* LEFT CONSOLE (60%): Interactive Engine Canvas */}
-        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#090A0F] border border-zinc-200 dark:border-white/10 p-5 sm:p-7 flex flex-col justify-between shadow-xl shadow-zinc-200/40 dark:shadow-[0_8px_32px_rgba(0,0,0,0.6)] transition-colors min-h-[560px]">
+        {/* Editorial Top Headline */}
+        <div className="max-w-2xl space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono tracking-wider uppercase text-slate-400">
+            <span className="w-2 h-2 rounded-full bg-[#FF6B00]" />
+            Turnkey Operations
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
+            One engine. Five built-in industries.
+          </h2>
+          <p className="text-slate-400 text-sm sm:text-base">
+            {content?.subtitle || "From first WhatsApp inquiry to automated CRM lock-in and CEO-level margins."}
+          </p>
+        </div>
+
+        {/* Scrollable Industry Selectors */}
+        <div className="border-b border-white/10 pb-4">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth snap-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {INDUSTRIES.map((ind, idx) => {
+              const Icon = ind.icon;
+              const active = idx === activeIdx;
+              return (
+                <button
+                  key={ind.id}
+                  onClick={() => handleTabClick(idx)}
+                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-200 snap-start border cursor-pointer ${
+                    active
+                      ? "bg-[#8B5CF6]/15 border-[#8B5CF6] text-white shadow-[0_0_15px_rgba(139,92,246,0.3)]"
+                      : "bg-[#12151E] border-white/5 text-slate-400 hover:text-white hover:border-white/20"
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${active ? "text-[#8B5CF6]" : "text-slate-500"}`} />
+                  <span>{ind.tabLabel}</span>
+                  {active && <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] animate-pulse" />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 2-Column Split Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Console Topbar */}
-          <div className="flex items-center justify-between pb-4 border-b border-zinc-200 dark:border-white/10">
-            <div className="flex items-center gap-3">
-              <div className="flex gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-                <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-                <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-              </div>
-              <span className="text-xs font-mono uppercase tracking-wider text-zinc-600 dark:text-zinc-400 font-semibold">
-                {currentIndustry.tabLabel} Engine
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2 font-mono text-[11px] text-zinc-500 dark:text-zinc-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="px-2 py-0.5 rounded bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 uppercase text-[10px] text-[#FF6B00] font-semibold">
-                ILLUSTRATIVE DEMO DATA
-              </span>
-            </div>
-          </div>
-
-          {/* MAIN SIMULATION VIEWPORT (Fills available space) */}
-          <div className="py-6 min-h-[380px] flex items-center justify-center w-full">
+          {/* Left: Interactive Preview Screen */}
+          <div className="lg:col-span-7 rounded-2xl bg-[#12151E] border border-white/10 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[460px]">
             
-            {/* STAGE 01: AUTHENTIC WHATSAPP BUBBLE UI */}
-            {activeStage === 0 && (
-              <div className="w-full max-w-md rounded-2xl overflow-hidden border border-zinc-200 dark:border-white/10 shadow-2xl bg-[#EFEAE2] dark:bg-[#0B141A] text-left animate-in fade-in zoom-in-95 duration-200">
-                {/* WhatsApp Chat Top Header */}
-                <div className="px-4 py-3 bg-[#005C4B] dark:bg-[#1F2C34] text-white flex items-center justify-between shadow-md">
-                  <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold">
-                        {currentIndustry.whatsapp.avatarLetter}
-                      </div>
-                      <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#005C4B] dark:border-[#1F2C34]" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5 leading-none">
-                        <span className="font-semibold text-xs tracking-tight text-white">
-                          {currentIndustry.whatsapp.contactName}
-                        </span>
-                        <span className="text-emerald-300 text-[10px]">✓</span>
-                      </div>
-                      <span className="text-[10px] text-emerald-100 dark:text-zinc-400 font-normal mt-0.5 block">
-                        online · verified AI bot
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 text-white/80">
-                    <Video className="w-4 h-4 cursor-pointer hover:text-white" />
-                    <Phone className="w-3.5 h-3.5 cursor-pointer hover:text-white" />
-                    <MoreVertical className="w-3.5 h-3.5 cursor-pointer hover:text-white" />
-                  </div>
-                </div>
-
-                {/* WhatsApp Message Body */}
-                <div className="p-4 space-y-3 font-sans text-xs">
-                  {/* Security / Encryption Pill */}
-                  <div className="text-center my-1">
-                    <span className="px-3 py-1 rounded-lg bg-black/10 dark:bg-black/30 text-[10px] text-zinc-600 dark:text-zinc-400 font-mono inline-flex items-center gap-1">
-                      <span>🔒</span> End-to-end encrypted · Automated by Zavian Labs
-                    </span>
-                  </div>
-
-                  {/* 1. Incoming Customer Message */}
-                  <div className="flex justify-start">
-                    <div className="relative max-w-[85%] rounded-2xl rounded-tl-sm px-3.5 py-2.5 bg-white dark:bg-[#202C33] text-zinc-900 dark:text-zinc-100 shadow-sm border border-zinc-200/50 dark:border-white/5">
-                      <p className="leading-relaxed">
-                        {currentIndustry.whatsapp.customerInquiry}
-                      </p>
-                      <span className="text-[9px] text-zinc-400 block text-right mt-1 font-mono">
-                        {currentIndustry.whatsapp.inquiryTime}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* 2. Outgoing AI Qualification Message */}
-                  <div className="flex justify-end">
-                    <div className="relative max-w-[85%] rounded-2xl rounded-tr-sm px-3.5 py-2.5 bg-[#DCF8C6] dark:bg-[#005C4B] text-zinc-900 dark:text-white shadow-sm border border-emerald-300/40 dark:border-white/5">
-                      <p className="leading-relaxed">
-                        {currentIndustry.whatsapp.aiQualification}
-                      </p>
-                      <div className="flex items-center justify-end gap-1 mt-1 text-[9px] text-emerald-800 dark:text-emerald-200 font-mono">
-                        <span>{currentIndustry.whatsapp.qualificationTime}</span>
-                        <span className="text-sky-500 dark:text-sky-300 font-bold">✓✓</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 3. Incoming Customer Reply */}
-                  <div className="flex justify-start">
-                    <div className="relative max-w-[85%] rounded-2xl rounded-tl-sm px-3.5 py-2.5 bg-white dark:bg-[#202C33] text-zinc-900 dark:text-zinc-100 shadow-sm border border-zinc-200/50 dark:border-white/5">
-                      <p className="leading-relaxed">
-                        {currentIndustry.whatsapp.customerReply}
-                      </p>
-                      <span className="text-[9px] text-zinc-400 block text-right mt-1 font-mono">
-                        {currentIndustry.whatsapp.replyTime}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* 4. Outgoing AI Confirmation + Action Link */}
-                  <div className="flex justify-end">
-                    <div className="relative max-w-[88%] rounded-2xl rounded-tr-sm px-3.5 py-2.5 bg-[#DCF8C6] dark:bg-[#005C4B] text-zinc-900 dark:text-white shadow-sm border border-emerald-300/40 dark:border-white/5">
-                      <p className="leading-relaxed">
-                        {currentIndustry.whatsapp.aiConfirmation}
-                      </p>
-                      
-                      {/* Action Chip Button */}
-                      <div className="mt-2.5 pt-2 border-t border-emerald-600/30 dark:border-white/10">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#12151E] text-emerald-800 dark:text-emerald-300 font-semibold text-[11px] shadow-sm">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                          <span>{currentIndustry.whatsapp.actionChipText}</span>
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-end gap-1 mt-1 text-[9px] text-emerald-800 dark:text-emerald-200 font-mono">
-                        <span>{currentIndustry.whatsapp.confirmationTime}</span>
-                        <span className="text-sky-500 dark:text-sky-300 font-bold">✓✓</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            {/* Top Bar */}
+            <div className="flex items-center justify-between px-5 py-3.5 bg-black/40 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#FF6B00]/70" />
+                <span className="text-xs font-mono text-slate-400">
+                  zavian://{item.id}.workflow
+                </span>
               </div>
-            )}
-
-            {/* STAGE 02: AUTONOMOUS TRIAGE ENGINE */}
-            {activeStage === 1 && (
-              <div className="w-full max-w-md space-y-3.5 text-left animate-in fade-in zoom-in-95 duration-200">
-                <div className="rounded-2xl bg-zinc-50 dark:bg-[#12151E] border border-zinc-200 dark:border-white/10 p-5 sm:p-6 shadow-sm dark:shadow-2xl space-y-4">
-                  <div className="flex items-center justify-between pb-3 border-b border-zinc-200/80 dark:border-white/10 text-xs font-mono">
-                    <span className="text-zinc-500 dark:text-zinc-400 uppercase font-semibold">
-                      {currentIndustry.triage.kicker}
-                    </span>
-                    <span className="text-[#FF6B00] font-bold px-2 py-0.5 rounded bg-orange-500/10">
-                      {currentIndustry.triage.intentScore}
-                    </span>
-                  </div>
-
-                  <div>
-                    <h4 className="text-base font-bold text-zinc-900 dark:text-white">
-                      {currentIndustry.triage.title}
-                    </h4>
-                    <span className="text-xs font-mono text-purple-600 dark:text-purple-400 font-medium block mt-1">
-                      Target Route: {currentIndustry.triage.routingTarget}
-                    </span>
-                  </div>
-
-                  <div className="space-y-2 pt-1 text-xs">
-                    <div className="text-[10px] font-mono uppercase text-zinc-400 tracking-wider">
-                      Automated Verification Criteria:
-                    </div>
-                    {currentIndustry.triage.qualificationChecklist.map((item, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center gap-2 p-2 rounded-xl bg-white dark:bg-white/[0.03] border border-zinc-200 dark:border-white/5"
-                      >
-                        <span className="w-4 h-4 rounded-full bg-emerald-500/15 text-emerald-500 flex items-center justify-center text-[10px] font-bold shrink-0">
-                          ✓
-                        </span>
-                        <span className="text-zinc-700 dark:text-zinc-300 text-[11px] font-mono leading-tight">
-                          {item}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="pt-3 border-t border-zinc-200/80 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                    <span className="text-zinc-400 text-[11px]">DECISION LOGIC</span>
-                    <span className="text-emerald-500 font-bold text-[11px]">
-                      HUMAN AGENT BYPASSED
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* STAGE 03: PROTOCOL HANDSHAKE (CALENDAR & CRM) */}
-            {activeStage === 2 && (
-              <div className="w-full max-w-md space-y-3.5 text-left animate-in fade-in zoom-in-95 duration-200">
-                <div className="rounded-2xl bg-zinc-50 dark:bg-[#12151E] border border-zinc-200 dark:border-white/10 p-5 sm:p-6 shadow-sm dark:shadow-2xl">
-                  <div className="flex items-center gap-3.5 mb-4">
-                    <div className="w-11 h-11 rounded-2xl bg-[#8B5CF6]/20 text-[#8B5CF6] flex items-center justify-center font-bold text-xl shrink-0">
-                      <Calendar className="w-5 h-5 stroke-[2.2]" />
-                    </div>
-                    <div>
-                      <p className="text-base font-bold text-zinc-900 dark:text-white leading-tight">
-                        {currentIndustry.handshake.meetingTitle}
-                      </p>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 font-mono">
-                        {currentIndustry.handshake.scheduledTime}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 pt-3 border-t border-zinc-200/80 dark:border-white/5 text-xs font-mono">
-                    {currentIndustry.handshake.syncChecklist.map((checkText, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between p-2.5 rounded-xl bg-white dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/5 text-[11px]"
-                      >
-                        <span className="text-zinc-700 dark:text-zinc-300">✓ {checkText}</span>
-                        <span className="text-emerald-500 font-bold text-[10px]">SYNCED</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-4 pt-3 border-t border-zinc-200/80 dark:border-white/5 flex justify-between text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
-                    <span>Protocol: Two-Way Lock</span>
-                    <span className="text-[#8B5CF6] font-semibold">Zero Staff Overhead</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* STAGE 04: EXECUTIVE CEO TELEMETRY DASHBOARD */}
-            {activeStage === 3 && (
-              <div className="w-full max-w-md space-y-3.5 text-left animate-in fade-in zoom-in-95 duration-200">
-                {/* Header & Notice */}
-                <div className="flex items-center justify-between text-[11px] font-mono pb-1">
-                  <span className="text-zinc-600 dark:text-zinc-400 font-semibold uppercase">
-                    {currentIndustry.tabLabel} · Executive Telemetry
-                  </span>
-                  <span className="text-[#FF6B00] bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded text-[10px] font-semibold">
-                    ILLUSTRATIVE DEMO DATA
-                  </span>
-                </div>
-
-                {/* 3 Metric Cards */}
-                <div className="grid grid-cols-3 gap-2.5 text-center font-mono">
-                  <div className="p-3 rounded-xl bg-zinc-50 dark:bg-[#12151E] border border-zinc-200 dark:border-white/10">
-                    <span className="text-[10px] text-zinc-500 dark:text-zinc-400 uppercase block">Sample Volume</span>
-                    <span className="text-base font-bold text-zinc-900 dark:text-white mt-0.5 block">
-                      {currentIndustry.telemetry.sampleVolume}
-                    </span>
-                    <span className="text-[9px] text-zinc-400 block">{currentIndustry.telemetry.sampleSubtitle}</span>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-zinc-50 dark:bg-[#12151E] border border-zinc-200 dark:border-white/10">
-                    <span className="text-[10px] text-zinc-500 dark:text-zinc-400 uppercase block">Triage Speed</span>
-                    <span className="text-base font-bold text-emerald-500 mt-0.5 block">
-                      {currentIndustry.telemetry.speedMetric}
-                    </span>
-                    <span className="text-[9px] text-zinc-400 block">{currentIndustry.telemetry.speedSubtitle}</span>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-zinc-50 dark:bg-[#12151E] border border-zinc-200 dark:border-white/10">
-                    <span className="text-[10px] text-zinc-500 dark:text-zinc-400 uppercase block">Calendar Yield</span>
-                    <span className="text-base font-bold text-[#8B5CF6] mt-0.5 block">
-                      {currentIndustry.telemetry.yieldMetric}
-                    </span>
-                    <span className="text-[9px] text-zinc-400 block">{currentIndustry.telemetry.yieldSubtitle}</span>
-                  </div>
-                </div>
-
-                {/* Inbound Velocity Sparkline Graph */}
-                <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-[#12151E] border border-zinc-200 dark:border-white/10">
-                  <div className="flex justify-between items-center mb-2.5 text-xs font-mono">
-                    <span className="font-semibold text-zinc-900 dark:text-white">
-                      Lead Velocity vs. Direct Bookings
-                    </span>
-                    <span className="text-emerald-500 font-bold text-[11px]">
-                      ▲ {currentIndustry.telemetry.pipelineGenerated}
-                    </span>
-                  </div>
-
-                  <div className="h-16 w-full flex items-end gap-2 pt-1">
-                    {currentIndustry.telemetry.sparklineValues.map((val, i) => (
-                      <div key={i} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                        <div
-                          className="w-full bg-gradient-to-t from-purple-500/20 via-purple-500/40 to-[#8B5CF6] rounded-t transition-all duration-500"
-                          style={{ height: `${val}%` }}
-                        />
-                        <span className="text-[9px] font-mono text-zinc-400">D0{i + 1}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Conversion Progress Bar */}
-                  <div className="mt-3 pt-2.5 border-t border-zinc-200 dark:border-white/10 space-y-1.5">
-                    <div className="flex justify-between text-[11px] text-zinc-600 dark:text-zinc-400 font-mono">
-                      <span>Traditional Intake</span>
-                      <span className="text-zinc-500 font-semibold">{currentIndustry.telemetry.traditionalRate}%</span>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden">
-                      <div
-                        className="h-full bg-zinc-400 dark:bg-zinc-600 rounded-full"
-                        style={{ width: `${currentIndustry.telemetry.traditionalRate}%` }}
-                      />
-                    </div>
-
-                    <div className="flex justify-between text-[11px] text-zinc-900 dark:text-zinc-200 font-mono pt-1">
-                      <span className="text-[#FF6B00] font-semibold">ZAVIAN Autonomous Pipeline</span>
-                      <span className="text-emerald-500 font-bold">{currentIndustry.telemetry.zavianRate}%</span>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-[#FF6B00] to-[#8B5CF6] rounded-full"
-                        style={{ width: `${currentIndustry.telemetry.zavianRate}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-[10px] font-mono text-zinc-400 dark:text-zinc-500 text-center">
-                  * ILLUSTRATIVE DEMO DATA — Simulated pipeline performance for {currentIndustry.tabLabel}.
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Console Status Footer */}
-          <div className="pt-4 border-t border-zinc-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-zinc-500 dark:text-zinc-400">
-            <div className="flex items-center gap-2">
-              <span>ACTIVE SIGNAL:</span>
-              <span className="text-[#FF6B00] font-semibold">
-                {activeStage === 0 && 'WHATSAPP_LEAD_DISPATCHED'}
-                {activeStage === 1 && 'CRITERIA_TRIAGE_QUALIFIED'}
-                {activeStage === 2 && 'CALENDAR_PROTOCOL_COMMITTED'}
-                {activeStage === 3 && 'TELEMETRY_PIPELINE_SYNCHRONIZED'}
-              </span>
-            </div>
-            <span>MODE: <span className="text-zinc-800 dark:text-zinc-200 font-medium">AUTONOMOUS</span></span>
-          </div>
-        </div>
-
-        {/* RIGHT TRACK (40%): Editorial Stage Controls */}
-        <div className="lg:col-span-5 flex flex-col justify-between gap-3.5">
-          {STAGE_CONFIG.map((stg, idx) => {
-            const isActive = activeStage === idx;
-            return (
-              <button
-                key={stg.id}
-                type="button"
-                onClick={() => handleManualStageSelect(idx)}
-                className={`relative overflow-hidden w-full text-left p-5 sm:p-6 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
-                  isActive
-                    ? 'bg-zinc-50 dark:bg-[#12151E] border-[#8B5CF6]/60 shadow-md dark:shadow-purple-500/10 scale-[1.01]'
-                    : 'bg-white dark:bg-[#090A0F]/60 border-zinc-200 dark:border-white/5 hover:border-zinc-300 dark:hover:border-white/15'
-                }`}
-              >
-                {/* Smooth purple progress indicator (3.5s cycle) */}
-                {isActive && (
-                  <div
-                    className="absolute bottom-0 left-0 h-[2px] bg-[#8B5CF6] transition-all duration-75"
-                    style={{ width: `${progress}%` }}
-                  />
-                )}
-
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400 dark:text-zinc-500 font-semibold">
-                    0{idx + 1} · {stg.kicker}
-                  </span>
-                  {isActive && (
-                    <span className="flex h-2 w-2 relative">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF6B00]" />
-                    </span>
-                  )}
-                </div>
-
-                <h3 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100 mt-2">
-                  {stg.title}
-                </h3>
-
-                <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-2 leading-relaxed">
-                  {stg.description}
-                </p>
-              </button>
-            );
-          })}
-        </div>
-
-      </div>
-
-      {/* BOTTOM CONVERSION DOCK */}
-      <div className="mt-14 max-w-2xl mx-auto px-4">
-        <div className="relative group rounded-full p-[1px] bg-gradient-to-r from-purple-500/20 via-white/10 to-purple-500/20 hover:from-purple-500/40 hover:via-white/20 hover:to-purple-500/40 transition-all duration-500 shadow-[0_0_30px_rgba(139,92,246,0.1)]">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-3.5 rounded-full bg-white/90 dark:bg-zinc-950/80 backdrop-blur-xl border border-zinc-200/80 dark:border-white/5">
-            <div className="flex items-center gap-3 text-left">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8B5CF6] opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#8B5CF6]" />
-              </span>
-              <span className="text-xs sm:text-sm text-zinc-800 dark:text-zinc-300 font-medium">
-                Need an industry-customized pipeline setup?
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#FF6B00] bg-[#FF6B00]/10 border border-[#FF6B00]/30 px-2.5 py-0.5 rounded font-semibold">
+                Illustrative Demo Data
               </span>
             </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                if (onOpenQuoteModal) {
-                  onOpenQuoteModal(currentIndustry.tabLabel);
-                } else {
-                  document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#8B5CF6] hover:bg-[#7C3AED] text-white text-xs font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] shadow-sm shadow-purple-500/30 whitespace-nowrap cursor-pointer"
-            >
-              <span>Book Discovery Call</span>
-              <span className="text-white/80">↗</span>
-            </button>
+            {/* Dynamic Stage Canvas */}
+            <div className="p-6 flex-1 flex flex-col justify-center">
+              
+              {/* STAGE 01: WHATSAPP CHAT BUBBLES */}
+              {currentStage === 1 && (
+                <div className="space-y-4 max-w-md mx-auto w-full animate-in fade-in duration-200">
+                  <div className="text-center text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+                    WhatsApp Inbound • Verified Channel
+                  </div>
+
+                  {/* Customer Message Bubble */}
+                  <div className="flex flex-col items-start space-y-1">
+                    <span className="text-[10px] text-slate-400 ml-1">{item.chat.sender}</span>
+                    <div className="bg-[#1F2433] text-slate-200 text-sm p-3.5 rounded-2xl rounded-tl-sm border border-white/5 shadow-md max-w-[88%] leading-relaxed">
+                      {item.chat.incoming}
+                      <div className="text-[9px] text-slate-400 text-right mt-1 font-mono">{item.chat.time}</div>
+                    </div>
+                  </div>
+
+                  {/* AI Auto-Response Bubble */}
+                  <div className="flex flex-col items-end space-y-1 pt-1">
+                    <span className="text-[10px] text-[#8B5CF6] mr-1 flex items-center gap-1 font-medium">
+                      <Sparkles className="w-3 h-3" /> Zavian AI Engine
+                    </span>
+                    <div className="bg-[#8B5CF6]/20 border border-[#8B5CF6]/40 text-white text-sm p-3.5 rounded-2xl rounded-tr-sm shadow-md max-w-[88%] leading-relaxed">
+                      {item.chat.aiReply}
+                      <div className="text-[9px] text-purple-300 flex items-center justify-end gap-1 mt-1 font-mono">
+                        Just now <CheckCheck className="w-3.5 h-3.5 text-[#FF6B00]" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Micro-Card */}
+                  <div className="bg-black/40 border border-white/10 rounded-xl p-2.5 flex items-center justify-between text-xs font-mono text-slate-300">
+                    <span className="text-[#FF6B00] flex items-center gap-1.5 font-medium">
+                      <span className="w-2 h-2 rounded-full bg-[#FF6B00] animate-ping" />
+                      {item.chat.aiAction}
+                    </span>
+                    <span className="text-emerald-400 font-medium">Sub-3s Response</span>
+                  </div>
+                </div>
+              )}
+
+              {/* STAGE 02: TRIAGE STEP */}
+              {currentStage === 2 && (
+                <div className="p-6 rounded-2xl bg-black/40 border border-white/10 space-y-4 max-w-md mx-auto w-full animate-in fade-in duration-200">
+                  <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+                    <span className="uppercase text-[#8B5CF6] font-bold">Stage 02 • Auto-Triage</span>
+                    <span>Confidence: 99.4%</span>
+                  </div>
+                  <h4 className="text-lg font-bold text-white">{item.stage2.title}</h4>
+                  <p className="text-sm text-slate-300 leading-relaxed">{item.stage2.step}</p>
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/5 text-xs font-mono text-[#FF6B00] font-medium">
+                    {item.stage2.output}
+                  </div>
+                </div>
+              )}
+
+              {/* STAGE 03: CRM & CALENDAR LOCK */}
+              {currentStage === 3 && (
+                <div className="p-6 rounded-2xl bg-black/40 border border-white/10 space-y-4 max-w-md mx-auto w-full animate-in fade-in duration-200">
+                  <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 font-medium">
+                    <Calendar className="w-4 h-4" />
+                    <span>SYNCHRONIZED WITH ZERO DELAY</span>
+                  </div>
+                  <h4 className="text-lg font-bold text-white">{item.stage3.action}</h4>
+                  <div className="text-sm font-mono text-slate-300 bg-white/5 p-3 rounded-xl border border-white/5 space-y-1">
+                    <div className="text-slate-400 text-xs">Route Destination:</div>
+                    <div className="text-white font-semibold">{item.stage3.target}</div>
+                    <div className="text-xs text-[#FF6B00] pt-1 font-medium">{item.stage3.status}</div>
+                  </div>
+                </div>
+              )}
+
+              {/* STAGE 04: AUTHENTIC CEO DASHBOARD */}
+              {currentStage === 4 && (
+                <div className="space-y-5 animate-in fade-in duration-200">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {item.dashboard.kpis.map((k, kidx) => (
+                      <div key={kidx} className="p-3 rounded-xl bg-black/30 border border-white/5">
+                        <div className="text-xs text-slate-400 leading-none">{k.label}</div>
+                        <div className="text-lg sm:text-xl font-bold text-white mt-1.5">{k.value}</div>
+                        <div className="text-[10px] font-mono text-emerald-400 mt-0.5">{k.delta}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* SVG Chart */}
+                  <div className="p-4 rounded-xl bg-black/30 border border-white/5 space-y-2">
+                    <div className="text-xs font-semibold text-slate-300">{item.dashboard.chartTitle}</div>
+                    <div className="h-32 flex items-center justify-center">
+                      {item.dashboard.chartType === "solar" && <SolarChart />}
+                      {item.dashboard.chartType === "clinic" && <ClinicBarChart />}
+                      {item.dashboard.chartType === "restaurant" && <RestaurantChart />}
+                      {item.dashboard.chartType === "saas" && <SaasFunnelChart />}
+                      {item.dashboard.chartType === "logistics" && <LogisticsChart />}
+                    </div>
+                  </div>
+
+                  {/* Pipeline Stage Pills */}
+                  <div className="grid grid-cols-3 gap-2">
+                    {item.dashboard.pipeline.map((p, pidx) => (
+                      <div key={pidx} className="p-2.5 rounded-lg bg-white/5 text-center">
+                        <div className="text-[10px] text-slate-400 uppercase font-mono">{p.label}</div>
+                        <div className="text-sm font-bold text-white mt-0.5">{p.val}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+            </div>
+
+            {/* Bottom Status Ticker */}
+            <div className="px-5 py-3 bg-black/40 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#8B5CF6]" />
+                STAGE 0{currentStage} ACTIVE
+              </span>
+              <span className="text-[#FF6B00] font-semibold">AUTONOMOUS PIPELINE</span>
+            </div>
           </div>
+
+          {/* Right: The 4 Chronological Workflow Cards */}
+          <div className="lg:col-span-5 space-y-3">
+            {[
+              {
+                num: "01",
+                tag: "OMNICHANNEL INGESTION",
+                title: "Instant Inbound Qualification",
+                desc: "Captures 100% of WhatsApp inquiries and web leads with contextual natural-language AI response in under 5 seconds."
+              },
+              {
+                num: "02",
+                tag: "PARAMETRIC TRIAGE",
+                title: "Automated Logic & Sizing",
+                desc: "Validates technical constraints, applies commercial pricing rules, and enriches records without manual data entry."
+              },
+              {
+                num: "03",
+                tag: "AUTOMATED SYNC",
+                title: "Calendar, POS & CRM Lock",
+                desc: "Instantly stakes the appointment, dispatches pre-consult material, and generates booking deposit links."
+              },
+              {
+                num: "04",
+                tag: "MEASURABLE RESULTS",
+                title: "Executive Revenue Telemetry",
+                desc: "Real-time visibility into chair occupancy, solar margins, table turns, and deal conversion rates."
+              }
+            ].map((step, sIdx) => {
+              const active = currentStage === sIdx + 1;
+              return (
+                <div
+                  key={sIdx}
+                  onClick={() => handleStageClick(sIdx + 1)}
+                  className={`cursor-pointer p-4 rounded-xl border transition-all duration-200 ${
+                    active
+                      ? "bg-[#12151E] border-[#8B5CF6] shadow-[0_0_20px_rgba(139,92,246,0.2)]"
+                      : "bg-[#12151E]/60 border-white/5 hover:border-white/20 opacity-70 hover:opacity-100"
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-xs font-mono">
+                    <span className={active ? "text-[#FF6B00] font-semibold" : "text-slate-500"}>
+                      {step.num} • {step.tag}
+                    </span>
+                    {active && <span className="w-2 h-2 rounded-full bg-[#FF6B00]" />}
+                  </div>
+                  <h3 className="text-base font-bold text-white mt-1">{step.title}</h3>
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">{step.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+
         </div>
+
+        {/* Bottom Call to Action Strip */}
+        <div className="p-4 sm:p-6 rounded-2xl bg-[#12151E] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#FF6B00]" />
+            <p className="text-sm text-slate-300 font-medium">
+              Ready to deploy these customized architectures into your business?
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              if (onOpenQuoteModal) {
+                onOpenQuoteModal(item.tabLabel);
+              } else {
+                document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-[#8B5CF6] hover:bg-[#7C3AED] transition-all duration-200 shadow-[0_0_20px_rgba(139,92,246,0.35)] shrink-0 cursor-pointer"
+          >
+            <span>Request Custom Quote</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+
       </div>
     </section>
   );
-}
+};
+
+export { SolutionsShowcase as ProjectSupportSection };
+export default SolutionsShowcase;
