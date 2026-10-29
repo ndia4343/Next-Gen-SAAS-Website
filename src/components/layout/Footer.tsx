@@ -39,23 +39,30 @@ export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-14">
           
-          {/* Column 1: Exact Brand Logo & High-Impact Tagline (Span 5) */}
+          {/* Column 1: Exact Brand Logo & High-Impact Copy (Span 5) */}
           <div className="lg:col-span-5 space-y-4">
             
-            {/* Logo: Identical to Navbar (No rounded box container) */}
+            {/* Logo: Exact Navbar Isometric Nested Cube (No background box) */}
             <a href="#overview" className="inline-flex items-center gap-2.5 group">
               <svg 
                 className="w-6 h-6 text-white group-hover:text-purple-400 transition-colors" 
                 viewBox="0 0 24 24" 
                 fill="none" 
                 stroke="currentColor" 
-                strokeWidth="1.8" 
+                strokeWidth="1.6" 
                 strokeLinecap="round" 
                 strokeLinejoin="round"
               >
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                <line x1="12" y1="22.08" x2="12" y2="12" />
+                {/* Outer isometric cube */}
+                <path d="M12 2.5 L20.5 7.4 V16.6 L12 21.5 L3.5 16.6 V7.4 Z" />
+                <path d="M12 12 L12 21.5" />
+                <path d="M12 12 L20.5 7.4" />
+                <path d="M12 12 L3.5 7.4" />
+                {/* Inner intertwined isometric cube */}
+                <path d="M12 6.5 L16.5 9.1 V14.2 L12 16.8 L7.5 14.2 V9.1 Z" strokeOpacity="0.85" />
+                <path d="M12 12 L12 16.8" strokeOpacity="0.85" />
+                <path d="M12 12 L16.5 9.1" strokeOpacity="0.85" />
+                <path d="M12 12 L7.5 9.1" strokeOpacity="0.85" />
               </svg>
               <div className="flex items-center text-lg tracking-wider">
                 <span className="font-extrabold text-white">ZAVIAN</span>
@@ -63,20 +70,21 @@ export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
               </div>
             </a>
 
-            {/* Catchy, High-Impact Tagline */}
+            {/* Tagline */}
             <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight leading-snug pt-1">
-              Autonomous intelligence. <br />
+              Every missed lead is lost revenue. <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-[#FF6B00]">
-                Engineered for scale.
+                We make sure none slip away.
               </span>
             </h3>
 
-            <p className="text-sm text-zinc-400 leading-relaxed max-w-sm">
-              Custom AI voice receptionists, WhatsApp booking funnels, and autonomous systems built to handle your operations on autopilot.
+            {/* Subtext */}
+            <p className="text-sm text-zinc-400 leading-relaxed max-w-md">
+              Built to capture, convert, and track every opportunity—from first contact to final booking. Powered by intelligent automation and custom systems that keep your business moving around the clock.
             </p>
 
-            {/* Sleek Direct Email Badge (No "Copy" label) */}
-            <div className="pt-2">
+            {/* Direct Email Badge */}
+            <div className="pt-1">
               <a
                 href="mailto:contact@zavianlabs.com"
                 className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-zinc-900/80 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-white transition-all group"
