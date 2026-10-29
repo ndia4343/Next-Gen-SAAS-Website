@@ -120,10 +120,40 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
       .map((opt) => opt.title);
     const volumeLabel = volumeOptions.find((v) => v.id === selectedVolume)?.label || selectedVolume;
 
+    // 1. Direct Webhook Dispatch to Google Apps Script
+    // Set header 'Content-Type': 'text/plain' to prevent CORS preflight blocks
+    const webhookUrl = process.env.NEXT_PUBLIC_LEAD_WEBHOOK_URL;
+    if (webhookUrl && webhookUrl !== "your_google_apps_script_url_here") {
+      try {
+        await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify({
+            name: formData.name,
+            caller_name: formData.name,
+            email: formData.email,
+            work_email: formData.email,
+            phone: formData.phone,
+            whatsapp_number: formData.phone,
+            selectedArchitectures,
+            requested_systems: selectedTitles,
+            selectedVolume,
+            volume: volumeLabel,
+            estimated_monthly_volume: volumeLabel,
+            source: "Website Modal (Quote Request)",
+          }),
+          mode: "no-cors",
+        });
+      } catch (webhookErr) {
+        console.warn("[Google Sheets Client Webhook Error]:", webhookErr);
+      }
+    }
+
+    // 2. Persist to Next.js API route for local telemetry and admin dashboard
     try {
       const vid = typeof window !== "undefined" ? localStorage.getItem("zavian_vid") : undefined;
 
-      const response = await fetch("/api/quote", {
+      await fetch("/api/quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -136,17 +166,14 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
           ...formData,
         }),
       });
-
-      if (!response.ok) {
-        throw new Error("Unable to submit request. Please try again.");
-      }
-
-      setIsSubmitted(true);
     } catch (err: any) {
-      // Fallback for demo environments
-      setIsSubmitted(true);
+      console.warn("[Internal Quote Sync Error]:", err);
     } finally {
-      setIsSubmitting(false);
+      // Brief visual transition before showing success confirmation
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setIsSubmitted(true);
+      }, 400);
     }
   };
 

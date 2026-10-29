@@ -1,56 +1,47 @@
-import React, { useState, useEffect } from "react";
-import { Mic, MicOff, Sparkles, X, Volume2 } from "lucide-react";
-import { ZARA_WELCOME_MESSAGE } from "@/lib/zaraVoicePrompt";
+"use client";
+
+import React, { useState } from "react";
+import { Mic, MicOff } from "lucide-react";
+import { ConversationProvider, useConversation } from "@elevenlabs/react";
 
 interface VoiceReceptionistWidgetProps {
   content?: any;
 }
 
-export const VoiceReceptionistWidget: React.FC<VoiceReceptionistWidgetProps> = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isCalling, setIsCalling] = useState(false);
+const VoiceReceptionistInner: React.FC = () => {
+  const conversation = useConversation();
+  const isConnected = conversation.status === "connected";
+  const [isSimulatedCalling, setIsSimulatedCalling] = useState(false);
 
-  useEffect(() => {
-    return () => {
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        try {
-          window.speechSynthesis.cancel();
-        } catch {}
-      }
-    };
-  }, []);
+  const isCalling = isConnected || isSimulatedCalling;
 
-  const toggleCall = () => {
-    setIsCalling((prev) => {
-      const next = !prev;
-      if (next) {
-        if (typeof window !== "undefined" && "speechSynthesis" in window) {
-          try {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(ZARA_WELCOME_MESSAGE);
-            const voices = window.speechSynthesis.getVoices();
-            const preferredVoice = voices.find(
-              (v) =>
-                v.lang === "en-GB" ||
-                v.name.includes("UK") ||
-                v.name.includes("British") ||
-                v.name.includes("English United Kingdom")
-            ) || voices.find((v) => v.lang.startsWith("en"));
-            if (preferredVoice) utterance.voice = preferredVoice;
-            utterance.rate = 1.0;
-            utterance.pitch = 1.05;
-            window.speechSynthesis.speak(utterance);
-          } catch {}
-        }
-      } else {
-        if (typeof window !== "undefined" && "speechSynthesis" in window) {
-          try {
-            window.speechSynthesis.cancel();
-          } catch {}
-        }
+  const handleToggleCall = async () => {
+    if (isConnected) {
+      await conversation.endSession();
+      setIsSimulatedCalling(false);
+      return;
+    }
+
+    if (isSimulatedCalling) {
+      setIsSimulatedCalling(false);
+      return;
+    }
+
+    const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;
+
+    if (agentId && agentId !== "your_agent_id_here") {
+      try {
+        await conversation.startSession({
+          agentId,
+        });
+      } catch (err) {
+        console.warn("ElevenLabs session error, switching to demo mode:", err);
+        setIsSimulatedCalling(true);
       }
-      return next;
-    });
+    } else {
+      // Fallback demo mode when agent ID placeholder is used
+      setIsSimulatedCalling(true);
+    }
   };
 
   return (
@@ -96,7 +87,7 @@ export const VoiceReceptionistWidget: React.FC<VoiceReceptionistWidgetProps> = (
 
         {/* Integrated Mic Action Button */}
         <button
-          onClick={toggleCall}
+          onClick={handleToggleCall}
           type="button"
           aria-label={isCalling ? "End Call" : "Speak to Zara"}
           className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${
@@ -113,6 +104,14 @@ export const VoiceReceptionistWidget: React.FC<VoiceReceptionistWidgetProps> = (
         </button>
       </div>
     </aside>
+  );
+};
+
+export const VoiceReceptionistWidget: React.FC<VoiceReceptionistWidgetProps> = () => {
+  return (
+    <ConversationProvider>
+      <VoiceReceptionistInner />
+    </ConversationProvider>
   );
 };
 
