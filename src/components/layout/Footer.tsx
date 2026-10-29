@@ -42,27 +42,27 @@ export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
           {/* Column 1: Exact Brand Logo & High-Impact Copy (Span 5) */}
           <div className="lg:col-span-5 space-y-4">
             
-            {/* Logo: Exact Navbar Isometric Nested Cube (No background box) */}
+            {/* Logo: Isometric Cube */}
             <a href="#overview" className="inline-flex items-center gap-2.5 group">
               <svg 
                 className="w-6 h-6 text-white group-hover:text-purple-400 transition-colors" 
                 viewBox="0 0 24 24" 
                 fill="none" 
                 stroke="currentColor" 
-                strokeWidth="1.6" 
+                strokeWidth="1.8" 
                 strokeLinecap="round" 
                 strokeLinejoin="round"
               >
-                {/* Outer isometric cube */}
-                <path d="M12 2.5 L20.5 7.4 V16.6 L12 21.5 L3.5 16.6 V7.4 Z" />
-                <path d="M12 12 L12 21.5" />
-                <path d="M12 12 L20.5 7.4" />
-                <path d="M12 12 L3.5 7.4" />
-                {/* Inner intertwined isometric cube */}
-                <path d="M12 6.5 L16.5 9.1 V14.2 L12 16.8 L7.5 14.2 V9.1 Z" strokeOpacity="0.85" />
-                <path d="M12 12 L12 16.8" strokeOpacity="0.85" />
-                <path d="M12 12 L16.5 9.1" strokeOpacity="0.85" />
-                <path d="M12 12 L7.5 9.1" strokeOpacity="0.85" />
+                {/* Outer isometric boundary */}
+                <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2" />
+                {/* Top center vertical drop */}
+                <line x1="12" y1="2" x2="12" y2="8.5" />
+                {/* Upper crossing diagonals */}
+                <polyline points="2 15.5 12 8.5 22 15.5" />
+                {/* Bottom center vertical rise */}
+                <line x1="12" y1="22" x2="12" y2="15.5" />
+                {/* Lower crossing diagonals */}
+                <polyline points="22 8.5 12 15.5 2 8.5" />
               </svg>
               <div className="flex items-center text-lg tracking-wider">
                 <span className="font-extrabold text-white">ZAVIAN</span>
