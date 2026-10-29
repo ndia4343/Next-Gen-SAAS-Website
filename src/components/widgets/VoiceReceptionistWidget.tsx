@@ -171,10 +171,20 @@ const VoiceReceptionistInner: React.FC = () => {
   };
 
   const handleStartCall = async () => {
+    // 1. Explicitly request microphone access for 2-way WebRTC stream
+    if (typeof navigator !== "undefined" && navigator.mediaDevices?.getUserMedia) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach((track) => track.stop());
+      } catch {
+        console.warn("Microphone permission denied or unavailable");
+      }
+    }
+
     setCallState("ringing");
     setCallDuration(0);
 
-    // Pre-unlock audio element within user gesture
+    // 2. Pre-unlock audio element within user gesture
     if (remoteAudioRef.current) {
       remoteAudioRef.current.play().catch(() => {});
     }
@@ -189,7 +199,7 @@ const VoiceReceptionistInner: React.FC = () => {
     startRingingSound();
 
     try {
-      // Connect in background if valid ElevenLabs agent ID is configured
+      // 3. Connect 2-way WebRTC stream in background
       const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;
       if (agentId && agentId !== "your_agent_id_here") {
         conversation
@@ -207,7 +217,7 @@ const VoiceReceptionistInner: React.FC = () => {
           });
       }
 
-      // Force 3 full rings (4.2 seconds) before flipping UI to connected
+      // 4. Force 3 full rings (4.2 seconds) before flipping UI to connected
       if (connectTimeoutRef.current) clearTimeout(connectTimeoutRef.current);
       connectTimeoutRef.current = setTimeout(() => {
         stopRingingSound();
@@ -329,26 +339,31 @@ const VoiceReceptionistInner: React.FC = () => {
         </div>
       )}
 
-      {/* 3. IDLE STATE */}
+      {/* 3. IDLE STATE (Minimal single-line with Devmate mic ripples) */}
       {callState === "idle" && (
         <button
           onClick={handleStartCall}
-          className="group flex items-center gap-3.5 pl-4 pr-2.5 py-2.5 rounded-full bg-[#12151E]/90 hover:bg-[#12151E] border border-white/10 hover:border-[#8B5CF6]/50 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] backdrop-blur-xl transition-all duration-300 cursor-pointer"
+          className="group flex items-center gap-3 pl-4 pr-2.5 py-2 rounded-full bg-[#12151E]/95 hover:bg-[#12151E] border border-white/10 hover:border-[#8B5CF6]/50 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] backdrop-blur-xl transition-all duration-300 cursor-pointer"
         >
-          <div className="flex flex-col text-left">
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs font-bold text-white tracking-tight">Talk to Zara</span>
-              <span className="text-[9px] font-mono font-bold tracking-wider px-1.5 py-0.5 rounded bg-[#FF6B00]/20 border border-[#FF6B00]/40 text-[#FF6B00]">
-                LIVE
-              </span>
-            </div>
-            <span className="text-[10px] text-slate-400 font-mono tracking-tight">
-              AI Voice Receptionist
+          {/* Clean minimal text without subtitle */}
+          <div className="flex items-center gap-2 pr-1">
+            <span className="text-xs font-semibold text-white tracking-wide">
+              Talk to Zara
+            </span>
+            <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-red-500/20 text-red-400 border border-red-500/30 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+              LIVE
             </span>
           </div>
 
-          <div className="w-9 h-9 rounded-full bg-[#8B5CF6] group-hover:bg-[#7C3AED] flex items-center justify-center text-white shadow-[0_0_15px_rgba(139,92,246,0.5)] transition-transform duration-200 group-hover:scale-105">
-            <Mic className="w-4 h-4" />
+          {/* Devmate-style mic button with pulsing radar ripples */}
+          <div className="relative flex items-center justify-center">
+            {/* Concentric radar ripples */}
+            <span className="absolute -inset-1 rounded-full bg-[#8B5CF6]/40 animate-ping opacity-60 pointer-events-none" />
+            <span className="absolute -inset-2 rounded-full border border-[#8B5CF6]/30 animate-pulse pointer-events-none" />
+            <div className="relative w-8 h-8 rounded-full bg-[#8B5CF6] group-hover:bg-[#7C3AED] flex items-center justify-center text-white shadow-[0_0_15px_rgba(139,92,246,0.6)] transition-all duration-300 group-hover:scale-105">
+              <Mic className="w-4 h-4" />
+            </div>
           </div>
         </button>
       )}
