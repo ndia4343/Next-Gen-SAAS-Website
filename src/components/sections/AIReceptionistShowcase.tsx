@@ -225,7 +225,7 @@ export default function AIReceptionistShowcase({
                   SAMPLE INBOUND CALL
                 </span>
               </div>
-              <span className="text-xs font-mono font-medium text-cyan-300/80">
+              <span className="text-xs font-mono text-neutral-400">
                 00:24
               </span>
             </div>
@@ -233,17 +233,17 @@ export default function AIReceptionistShowcase({
             {/* Heading & Subtext */}
             <div className="mt-5 mb-6">
               <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
-                Attune™ Voice Preview
+                attune<span className="text-sky-400">.ai</span>
               </h3>
-              <p className="mt-1 text-xs sm:text-sm text-neutral-400 font-medium">
+              <p className="mt-1 text-xs sm:text-sm text-neutral-300 font-medium">
                 Dental &amp; Aesthetics Intake Consultation
               </p>
             </div>
 
             {/* Centered Elegant Horizontal Waveform with Cyan Accents */}
             <div className="my-6 p-4 rounded-2xl bg-neutral-950/60 border border-neutral-800/60 shadow-inner">
-              <div className="flex items-center justify-between text-[11px] font-mono text-neutral-500 mb-2 px-1">
-                <span className="text-cyan-400 font-medium">{formatTime(currentTime)}</span>
+              <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400 mb-2 px-1">
+                <span>{formatTime(currentTime)}</span>
                 <span>00:24</span>
               </div>
               <div className="flex items-center justify-center gap-1 sm:gap-1.5 h-14 sm:h-16 px-1">
@@ -305,10 +305,10 @@ export default function AIReceptionistShowcase({
 
             {/* Proof Badge */}
             <div className="mt-4 pt-3 border-t border-neutral-800/80 flex flex-col items-center gap-2">
-              <div className="text-[10px] font-mono tracking-wider text-neutral-500 dark:text-neutral-400 uppercase bg-neutral-900/40 border border-neutral-800 rounded px-2.5 py-1 text-center inline-block">
+              <div className="bg-neutral-800/80 border border-neutral-700 text-neutral-300 font-mono text-[10px] tracking-wider px-3 py-1 rounded-md uppercase text-center inline-block">
                 DEMO WORKFLOW · GOOGLE CALENDAR BOOKING TESTED
               </div>
-              <p className="text-[11px] text-neutral-500 dark:text-neutral-400 text-center">
+              <p className="text-neutral-400 text-[11px] text-center">
                 Live integration configured directly with your clinic's booking schedule during setup.
               </p>
             </div>
