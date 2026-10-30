@@ -3,8 +3,8 @@ import { WebsiteContent } from "@/lib/types";
 export const initialContent: WebsiteContent = {
   themeBranding: {
     activeThemeId: "crimson-cyber",
-    logoMode: "default",
-    logoImageUrl: "",
+    logoMode: "image",
+    logoImageUrl: "/images/zavian-cube-mark.png",
     logoSvgContent: "",
     wordmark1: "ZAVIAN",
     wordmark1Color: "#ffffff",

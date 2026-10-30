@@ -3,8 +3,8 @@
     "themeBranding": {
       "activeThemeId": "neon-violet",
       "defaultMode": "dark",
-      "logoMode": "default",
-      "logoImageUrl": "",
+      "logoMode": "image",
+      "logoImageUrl": "/images/zavian-cube-mark.png",
       "logoSvgContent": "",
       "wordmark1": "ZAVIAN",
       "wordmark1Color": "#ffffff",

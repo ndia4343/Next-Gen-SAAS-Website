@@ -60,64 +60,11 @@ export function Logo({
           dangerouslySetInnerHTML={{ __html: logoSvgContent }}
         />
       ) : (
-        <svg
-          viewBox="0 0 100 100"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full"
-        >
-          <defs>
-            <linearGradient id="cubeGradientDark" x1="10%" y1="0%" x2="90%" y2="100%">
-              <stop offset="0%" stopColor="#FFFFFF" />
-              <stop offset="50%" stopColor="#CBD5E1" />
-              <stop offset="100%" stopColor="#64748B" />
-            </linearGradient>
-            <linearGradient id="cubeGradientLight" x1="10%" y1="0%" x2="90%" y2="100%">
-              <stop offset="0%" stopColor="#0F172A" />
-              <stop offset="50%" stopColor="#334155" />
-              <stop offset="100%" stopColor="#1E293B" />
-            </linearGradient>
-            <linearGradient id="facetHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="currentColor" stopOpacity="0.18" />
-              <stop offset="100%" stopColor="currentColor" stopOpacity="0.02" />
-            </linearGradient>
-          </defs>
-
-          {/* Dual Interlocking Isometric Hexagonal Cube Structure */}
-          <g
-            strokeWidth="5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="stroke-[url(#cubeGradientLight)] dark:stroke-[url(#cubeGradientDark)] drop-shadow-sm dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.25)]"
-          >
-            {/* Left Cube Outer Perimeter */}
-            <path d="M35 15 L12 30 L12 66 L35 81" />
-            {/* Right Cube Outer Perimeter */}
-            <path d="M65 85 L88 70 L88 34 L65 19" />
-            {/* Top Facet Diagonal Links */}
-            <path d="M35 15 L50 25 L65 19" />
-            <path d="M12 30 L35 45 L50 35 L35 15" />
-            <path d="M50 25 L65 35" />
-            {/* Vertical & Internal Interlocking Structural Bevels */}
-            <path d="M35 45 L35 81" />
-            <path d="M65 19 L65 55" />
-            <path d="M35 45 L50 55 L65 45 L88 34" />
-            <path d="M50 55 L50 75 L35 81" />
-            <path d="M50 75 L65 85" />
-            <path d="M50 55 L65 65 L88 70" />
-          </g>
-
-          <polygon
-            points="35,15 50,25 35,45 12,30"
-            fill="url(#facetHighlight)"
-            className="text-zinc-900 dark:text-white"
-          />
-          <polygon
-            points="65,19 88,34 65,45 50,25"
-            fill="url(#facetHighlight)"
-            className="text-zinc-900 dark:text-white"
-          />
-        </svg>
+        <img
+          src="/images/zavian-cube-mark.png"
+          alt="Brand Logo"
+          className="w-full h-full object-contain"
+        />
       )}
     </div>
   );
