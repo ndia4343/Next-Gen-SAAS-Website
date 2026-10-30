@@ -269,7 +269,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
   const item = INDUSTRIES[activeIdx];
 
   return (
-    <section id="project-support" className="relative z-20 bg-white dark:bg-[#0a0a0a] shadow-2xl w-full text-slate-900 dark:text-slate-100 pt-36 pb-24 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-300">
+    <section id="project-support" className="relative z-10 bg-transparent w-full text-slate-900 dark:text-slate-100 pt-36 pb-24 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-300">
       {/* Background glow accents */}
       <div className="absolute top-1/3 -left-40 w-96 h-96 bg-[#8B5CF6]/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-16 -right-20 w-80 h-80 bg-[#FF6B00]/10 rounded-full blur-[140px] pointer-events-none" />
@@ -536,9 +536,9 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
         </div>
 
         {/* Solutions-to-Footer Bridge (#custom-quote) */}
-        <div id="custom-quote" className="relative overflow-hidden rounded-2xl">
+        <div id="custom-quote" className="relative bg-transparent overflow-hidden rounded-2xl">
           {/* Bottom CTA Bar */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-slate-50 dark:bg-[#12151E] border border-slate-200 dark:border-white/10 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white/80 dark:bg-[#12151E]/80 border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <span className="w-2.5 h-2.5 rounded-full bg-[#FF6B00]" />
               <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">

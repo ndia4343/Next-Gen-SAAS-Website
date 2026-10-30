@@ -81,7 +81,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
   };
 
   return (
-    <footer className="relative z-10 bg-transparent text-zinc-400 border-t border-zinc-800/80 pt-8 pb-10">
+    <footer className="relative z-20 bg-neutral-950 border-t border-neutral-800 text-zinc-400 pt-8 pb-10">
       <div className="max-w-6xl mx-auto px-6">
         
         {/* Main Grid - Reduced padding & tighter gaps */}

@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Float, MeshTransmissionMaterial } from '@react-three/drei';
+import { Float } from '@react-three/drei';
 import * as THREE from 'three';
 import { ColorTheme } from '@/lib/theme';
 import { ThemeMode } from '@/components/providers/ThemeProvider';
@@ -48,47 +48,45 @@ export default function NeuralCoreMesh({ theme, mode = 'dark' }: NeuralCoreMeshP
   return (
     <group ref={coreRef} dispose={null}>
       <Float speed={2} rotationIntensity={0.5} floatIntensity={1.2}>
-        {/* Glowing Geometric Wireframe Core - Adaptive Light/Dark */}
+        {/* Glowing Geometric Wireframe Core - Delicate Ice-Blue */}
         <mesh ref={innerIcosaRef}>
           <icosahedronGeometry args={[1.15, 1]} />
           <meshStandardMaterial
-            color={primaryColor}
-            emissive={primaryColor}
-            emissiveIntensity={isLight ? 0.75 : 1.8}
+            color="#38bdf8"
+            emissive="#38bdf8"
+            emissiveIntensity={0.6}
             wireframe
-            roughness={isLight ? 0.15 : 0.2}
-            metalness={isLight ? 0.95 : 0.9}
+            transparent
+            opacity={0.25}
+            depthWrite={false}
           />
         </mesh>
 
-        {/* Orbiting Refractive Glass Ring 1 */}
+        {/* Orbiting Wireframe Orbit Ring 1 - Delicate Ice-Blue */}
         <mesh ref={ring1Ref}>
-          <torusGeometry args={[1.9, 0.05, 32, 100]} />
-          <MeshTransmissionMaterial
-            backside
-            samples={8}
-            thickness={isLight ? 0.9 : 0.8}
-            roughness={0.08}
-            distortion={0.35}
-            distortionScale={0.3}
-            temporalDistortion={0.2}
-            chromaticAberration={0.12}
-            anisotropy={0.3}
-            color={isLight ? '#475569' : '#ffffff'}
+          <torusGeometry args={[1.9, 0.02, 16, 100]} />
+          <meshStandardMaterial
+            color="#38bdf8"
+            emissive="#38bdf8"
+            emissiveIntensity={0.5}
+            wireframe
+            transparent
+            opacity={0.22}
+            depthWrite={false}
           />
         </mesh>
 
-        {/* Orbiting Refractive Glass Ring 2 */}
+        {/* Orbiting Wireframe Orbit Ring 2 - Delicate Ice-Blue */}
         <mesh ref={ring2Ref}>
-          <torusGeometry args={[2.3, 0.035, 32, 100]} />
-          <MeshTransmissionMaterial
-            backside
-            samples={8}
-            thickness={isLight ? 0.75 : 0.6}
-            roughness={0.1}
-            chromaticAberration={0.18}
-            anisotropy={0.4}
-            color={primaryColor}
+          <torusGeometry args={[2.3, 0.018, 16, 100]} />
+          <meshStandardMaterial
+            color="#38bdf8"
+            emissive="#38bdf8"
+            emissiveIntensity={0.5}
+            wireframe
+            transparent
+            opacity={0.20}
+            depthWrite={false}
           />
         </mesh>
       </Float>
