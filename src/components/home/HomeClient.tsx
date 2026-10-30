@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import HeroSection from '@/components/sections/HeroSection';
 import AIReceptionistShowcase from '@/components/sections/AIReceptionistShowcase';
+import WorkflowPipelineSection from '@/components/sections/WorkflowPipelineSection';
 import CoreExpertiseSection from '@/components/sections/CoreExpertiseSection';
 import ProjectSupportSection from '@/components/sections/ProjectSupportSection';
 import QuoteModal from '@/components/ui/QuoteModal';
@@ -81,6 +82,9 @@ export default function HomeClient({ content }: HomeClientProps) {
       <HeroSection onOpenQuoteModal={handleOpenModal} content={content.hero} />
       <AIReceptionistShowcase
         onBookCall={() => handleOpenModal('Discovery Call')}
+      />
+      <WorkflowPipelineSection
+        onOpenQuoteModal={handleOpenModal}
       />
       <CoreExpertiseSection onOpenQuoteModal={handleOpenModal} content={content.coreExpertise} />
       <ProjectSupportSection onOpenQuoteModal={handleOpenModal} content={content.projectSupport} />
