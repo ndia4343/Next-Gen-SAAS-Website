@@ -213,7 +213,7 @@ export default function CoreExpertiseSection({ onOpenQuoteModal, content }: Prop
                     document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B5CF6] hover:bg-[#7C3AED] text-white text-xs font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] shadow-sm shadow-purple-500/30 whitespace-nowrap cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs tracking-wide transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:shadow-[0_0_30px_rgba(139,92,246,0.65)] hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap cursor-pointer"
               >
                 <span>Book Discovery Call</span>
                 <span className="text-white/80">↗</span>

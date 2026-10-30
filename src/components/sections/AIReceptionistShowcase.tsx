@@ -271,11 +271,11 @@ export default function AIReceptionistShowcase({
               </div>
             </div>
 
-            {/* CTA Button (Keep Purple) */}
+            {/* CTA Button (Neon Violet Action System) */}
             <button
               type="button"
               onClick={togglePlayback}
-              className="w-full py-3.5 px-5 rounded-2xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2.5 shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+              className="w-full py-3.5 px-5 rounded-2xl bg-violet-600 hover:bg-violet-500 text-white font-semibold transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:shadow-[0_0_30px_rgba(139,92,246,0.65)] hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2.5 cursor-pointer"
             >
               {isPlaying ? (
                 <>

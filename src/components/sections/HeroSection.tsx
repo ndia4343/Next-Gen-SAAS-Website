@@ -89,19 +89,19 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         <div className="hero-cta-group flex flex-wrap items-center justify-center gap-4 mb-16">
           <button
             onClick={handlePrimaryClick}
-            className="px-8 py-4 rounded-full bg-[var(--theme-primary,#dc2626)] hover:brightness-110 text-white font-medium text-sm tracking-wide transition-all shadow-lg shadow-[var(--theme-glow,rgba(220,38,38,0.3))] hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
+            className="px-8 py-4 rounded-full glass-panel hover:bg-white/10 dark:hover:bg-white/10 light:hover:bg-black/5 text-zinc-900 dark:text-zinc-100 font-semibold text-sm tracking-wide transition-all duration-300 border border-neutral-300 dark:border-white/15 hover:border-violet-500/50 flex items-center gap-2 cursor-pointer shadow-sm"
           >
             {content?.primaryCtaText || 'Explore Capabilities'}
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4 text-violet-400" />
           </button>
 
           <button
             onClick={() => {
               if (onOpenQuoteModal) onOpenQuoteModal('Discovery Call');
             }}
-            className="px-8 py-4 rounded-full glass-panel hover:bg-white/10 dark:hover:bg-white/10 light:hover:bg-black/5 text-zinc-100 dark:text-zinc-100 light:text-zinc-900 font-medium text-sm tracking-wide transition-all border border-white/15 dark:border-white/15 light:border-black/15 hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer shadow-sm"
+            className="px-8 py-4 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-sm tracking-wide transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:shadow-[0_0_30px_rgba(139,92,246,0.65)] hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 cursor-pointer"
           >
-            <Sparkles className="w-4 h-4 text-[var(--theme-primary,#dc2626)]" />
+            <Sparkles className="w-4 h-4 text-violet-200" />
             {content?.secondaryCtaText || 'Book Discovery Call'}
           </button>
         </div>
@@ -111,7 +111,7 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
           {stats.slice(0, 3).map((stat, idx) => (
             <div key={idx} className="hero-stat-card glass-panel rounded-2xl p-4 border border-white/5 dark:border-white/5 light:border-black/10 text-left shadow-sm">
               <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-500 light:text-zinc-600 font-mono text-xs mb-1">
-                <Terminal className="w-3.5 h-3.5 text-[var(--theme-primary,#dc2626)]" />
+                <Terminal className="w-3.5 h-3.5 text-violet-400" />
                 {stat.label}
               </div>
               <div className="text-xl font-bold font-mono text-zinc-100 dark:text-zinc-100 light:text-zinc-900">{stat.value}</div>

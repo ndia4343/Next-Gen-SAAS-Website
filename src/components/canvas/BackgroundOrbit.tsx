@@ -7,13 +7,18 @@ import * as THREE from 'three';
 
 function OrbitScene() {
   const sphereRef = useRef<THREE.Mesh>(null!);
-  const ringRef = useRef<THREE.Mesh>(null!);
+  const ring1Ref = useRef<THREE.Mesh>(null!);
+  const ring2Ref = useRef<THREE.Mesh>(null!);
 
   useFrame((_, delta) => {
     if (sphereRef.current) sphereRef.current.rotation.y += delta * 0.15;
-    if (ringRef.current) {
-      ringRef.current.rotation.z += delta * 0.1;
-      ringRef.current.rotation.x += delta * 0.05;
+    if (ring1Ref.current) {
+      ring1Ref.current.rotation.z += delta * 0.1;
+      ring1Ref.current.rotation.x += delta * 0.05;
+    }
+    if (ring2Ref.current) {
+      ring2Ref.current.rotation.y -= delta * 0.08;
+      ring2Ref.current.rotation.z += delta * 0.06;
     }
   });
 
@@ -23,26 +28,40 @@ function OrbitScene() {
       {/* Electric Orange warm inner core glow */}
       <pointLight color="#ff5722" intensity={1.8} distance={8} />
 
-      {/* Wireframe Sphere */}
+      {/* Central Wireframe Sphere: Synthwave Violet */}
       <mesh ref={sphereRef}>
         <icosahedronGeometry args={[2.2, 2]} />
         <meshBasicMaterial
-          color="#8b5cf6"
+          color="#a855f7"
           wireframe
           transparent
-          opacity={0.2}
+          opacity={0.38}
           depthWrite={false}
+          blending={THREE.AdditiveBlending}
         />
       </mesh>
 
-      {/* Neon Purple Orbit Ring */}
-      <mesh ref={ringRef} rotation={[1.2, 0.4, 0]}>
-        <torusGeometry args={[3.6, 0.04, 16, 100]} />
+      {/* Primary Orbit Ring 1 (Outer Diagonal Tilt): Royal Indigo-Violet */}
+      <mesh ref={ring1Ref} rotation={[1.1, 0.4, 0]}>
+        <torusGeometry args={[3.6, 0.035, 16, 120]} />
+        <meshBasicMaterial
+          color="#7c3aed"
+          transparent
+          opacity={0.42}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      {/* Secondary Orbit Ring 2 (Intersecting Counter-Angle): Neon Violet */}
+      <mesh ref={ring2Ref} rotation={[-0.8, 1.2, 0.5]}>
+        <torusGeometry args={[3.8, 0.03, 16, 120]} />
         <meshBasicMaterial
           color="#8b5cf6"
           transparent
-          opacity={0.32}
+          opacity={0.35}
           depthWrite={false}
+          blending={THREE.AdditiveBlending}
         />
       </mesh>
     </>
@@ -64,8 +83,12 @@ export default function BackgroundOrbit() {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {/* Subtle radial glow in dark mode to restore ambient tech depth */}
-      <div className="absolute inset-0 hidden dark:block pointer-events-none [background:radial-gradient(ellipse_at_top,rgba(124,58,237,0.08),transparent_70%)]" />
+      {/* Ambient Synthwave Radial Flare (Behind Canvas) */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(99,102,241,0.18),rgba(139,92,246,0.08)_50%,transparent_85%)]" />
+
+      {/* Sphere Center Aura */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(124,58,237,0.24)_0%,rgba(99,102,241,0.08)_45%,transparent_70%)]" />
+
       <Canvas
         camera={{ position: [0, 0, 7], fov: 45 }}
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}

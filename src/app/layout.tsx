@@ -44,7 +44,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
         />
       </head>
-      <body className="relative antialiased bg-white dark:bg-[#050508] text-neutral-900 dark:text-zinc-100 transition-colors duration-300 overflow-x-hidden">
+      <body className="relative antialiased bg-[#fafafa] dark:bg-[#050508] text-neutral-900 dark:text-zinc-100 transition-colors duration-300 overflow-x-hidden">
         <ThemeProvider initialThemeId={activeThemeId} initialMode={defaultMode}>
           <SmoothScrollProvider>
             <VisitorTracker />
