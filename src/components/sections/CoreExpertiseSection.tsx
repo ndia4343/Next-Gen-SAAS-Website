@@ -101,7 +101,7 @@ export default function CoreExpertiseSection({ onOpenQuoteModal, content }: Prop
             ● CORE ARCHITECTURES · ZERO BOTTLENECK
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white text-center">
-            Engineered to <span className="text-[#FF6B00]">Capture, Book,</span> and Scale.
+            Engineered to <span className="bg-gradient-to-r from-orange-500 via-amber-400 to-orange-400 bg-clip-text text-transparent">Capture, Book, and Scale.</span>
           </h2>
           <p className="mt-4 text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto text-center font-normal leading-relaxed">
             Three production-grade automation systems designed to eliminate lead drop-off, qualify inbound intent, and streamline operations 24/7.

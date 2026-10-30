@@ -81,15 +81,15 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         </h1>
 
         {/* SUB-HEADLINE & PRIMARY SUPPORTING PARAGRAPH */}
-        <div className="hero-desc mt-6 max-w-2xl mx-auto text-center mb-10 space-y-3">
-          <p className="text-base sm:text-lg text-zinc-700 dark:text-zinc-300 font-medium leading-relaxed">
+        <div className="hero-desc mt-6 max-w-2xl mx-auto text-center mb-10 space-y-2.5">
+          <p className="text-base text-zinc-800 dark:text-zinc-100 font-medium tracking-tight leading-relaxed">
             We answer instantly, capture every opportunity, and turn incoming conversations into actionable leads — around the clock.
           </p>
 
-          <p className="text-zinc-600 dark:text-zinc-400 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto text-center">
-            We build custom <span className="text-zinc-900 dark:text-white font-medium">AI receptionists</span>,{' '}
-            <span className="text-zinc-900 dark:text-white font-medium">WhatsApp booking systems</span>, and autonomous workflows that convert opportunities into booked revenue —{' '}
-            <span className="text-zinc-900 dark:text-white font-medium">24/7</span>.
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl mx-auto text-center">
+            We build custom <span className="text-zinc-900 dark:text-zinc-100 font-semibold">AI receptionists</span>,{' '}
+            <span className="text-zinc-900 dark:text-zinc-100 font-semibold">WhatsApp booking systems</span>, and autonomous workflows that convert opportunities into booked revenue —{' '}
+            <span className="text-zinc-900 dark:text-zinc-100 font-semibold">24/7</span>.
           </p>
         </div>
 
