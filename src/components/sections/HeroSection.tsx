@@ -3,7 +3,7 @@
 import React, { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from '@/lib/gsap';
-import { ArrowRight, Sparkles, Terminal } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { HeroSectionData } from '@/lib/types';
 
 interface HeroProps {
@@ -21,20 +21,10 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
       tl.from('.hero-badge', { y: -25, opacity: 0, duration: 0.8, delay: 0.15 })
         .from('h1', { y: 40, opacity: 0, duration: 0.95 }, '-=0.4')
         .from('.hero-desc', { y: 25, opacity: 0, duration: 0.8 }, '-=0.5')
-        .from('.hero-cta-group', { scale: 0.96, opacity: 0, duration: 0.6 }, '-=0.4')
-        .from('.hero-stat-card', { y: 35, opacity: 0, stagger: 0.1, duration: 0.6 }, '-=0.3');
+        .from('.hero-cta-group', { scale: 0.96, opacity: 0, duration: 0.6 }, '-=0.4');
     },
     { scope: containerRef }
   );
-
-  const stats =
-    content?.floatingStats && content.floatingStats.length > 0
-      ? content.floatingStats
-      : [
-          { label: 'WebGL Frame Budget', value: '16.6ms / 60fps' },
-          { label: 'Autonomous Agent Uptime', value: '99.98%' },
-          { label: 'Pipeline Throughput', value: '4.8M ops/sec' },
-        ];
 
   const handlePrimaryClick = () => {
     const rawTarget = content?.primaryCtaLink || '#core-expertise';
@@ -52,9 +42,9 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
     <section
       id="hero"
       ref={containerRef}
-      className="relative z-10 bg-transparent min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-12"
+      className="relative z-10 bg-transparent min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-12 pt-32 sm:pt-36 pb-16"
     >
-      <div className="relative z-10 max-w-5xl mx-auto px-4 pt-28 sm:pt-36 pb-16 text-center flex flex-col items-center">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 text-center flex flex-col items-center">
         {/* Subtle backdrop glow/mask to prevent 3D wireframe text collisions */}
         <div className="absolute inset-0 -z-10 bg-radial from-white/80 via-white/40 to-transparent dark:from-black/80 dark:via-black/40 dark:to-transparent blur-2xl pointer-events-none" />
 
@@ -86,7 +76,7 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         </p>
 
         {/* Dual CTAs */}
-        <div className="hero-cta-group flex flex-wrap items-center justify-center gap-4 mb-16">
+        <div className="hero-cta-group flex flex-wrap items-center justify-center gap-4">
           <button
             onClick={handlePrimaryClick}
             className="px-8 py-4 rounded-full glass-panel hover:bg-white/10 dark:hover:bg-white/10 light:hover:bg-black/5 text-zinc-900 dark:text-zinc-100 font-semibold text-sm tracking-wide transition-all duration-300 border border-neutral-300 dark:border-white/15 hover:border-violet-500/50 flex items-center gap-2 cursor-pointer shadow-sm"
@@ -104,22 +94,6 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
             <Sparkles className="w-4 h-4 text-violet-200" />
             {content?.secondaryCtaText || 'Book Discovery Call'}
           </button>
-        </div>
-
-        {/* HUD Metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl">
-          {stats.slice(0, 3).map((stat, idx) => (
-            <div key={idx} className="hero-stat-card glass-panel rounded-2xl p-4 border border-white/5 dark:border-white/5 light:border-black/10 text-left shadow-sm">
-              <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-500 light:text-zinc-600 font-mono text-xs mb-1">
-                <Terminal className="w-3.5 h-3.5 text-violet-400" />
-                {stat.label}
-              </div>
-              <div className="text-xl font-bold font-mono text-zinc-100 dark:text-zinc-100 light:text-zinc-900">{stat.value}</div>
-              {stat.subtext && (
-                <div className="text-[11px] font-mono text-zinc-500 dark:text-zinc-500 light:text-zinc-600 mt-0.5">{stat.subtext}</div>
-              )}
-            </div>
-          ))}
         </div>
       </div>
     </section>
