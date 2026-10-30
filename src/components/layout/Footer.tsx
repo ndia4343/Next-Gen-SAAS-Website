@@ -235,7 +235,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               <span className="text-emerald-400 font-medium">SYSTEMS OPERATIONAL</span>
             </div>
             <ThemeToggle />
-            <button onClick={scrollToTop} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white text-xs cursor-pointer">
+            <button onClick={scrollToTop} className="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-zinc-200 hover:text-white text-xs cursor-pointer">
               TOP ↑
             </button>
           </div>
