@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float, MeshTransmissionMaterial } from '@react-three/drei';
 import * as THREE from 'three';
-import { ScrollTrigger } from '@/lib/gsap';
 import { ColorTheme } from '@/lib/theme';
 import { ThemeMode } from '@/components/providers/ThemeProvider';
 
@@ -16,59 +15,19 @@ interface NeuralCoreMeshProps {
 export default function NeuralCoreMesh({ theme, mode = 'dark' }: NeuralCoreMeshProps) {
   const isLight = mode === 'light';
   const primaryColor = theme?.primary || '#DC2626';
-  const highlightColor = theme?.titleHighlight || '#EF4444';
 
   const coreRef = useRef<THREE.Group>(null);
   const ring1Ref = useRef<THREE.Mesh>(null);
   const ring2Ref = useRef<THREE.Mesh>(null);
   const innerIcosaRef = useRef<THREE.Mesh>(null);
 
-  const scrollProgressRef = useRef(0);
-
-  useEffect(() => {
-    const st = ScrollTrigger.create({
-      start: 0,
-      end: 'max',
-      onUpdate: (self) => {
-        scrollProgressRef.current = self.progress;
-      },
-    });
-
-    requestAnimationFrame(() => {
-      st.refresh();
-    });
-
-    return () => {
-      st.kill();
-    };
-  }, []);
-
   useFrame((state, delta) => {
-    const scrollProgress = scrollProgressRef.current || ScrollTrigger.getAll()[0]?.progress || 0;
-
     if (coreRef.current) {
       // Idle rotation + subtle sine hover
       coreRef.current.rotation.y += delta * 0.22;
       coreRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.12;
-
-      // Choreographed scroll camera/mesh states
-      if (scrollProgress < 0.25) {
-        // Hero Section (0% - 25%): Centered focus (scaled down 20% to eliminate text collision)
-        coreRef.current.position.set(0, 0, 0);
-        coreRef.current.scale.setScalar(0.8);
-      } else if (scrollProgress >= 0.25 && scrollProgress < 0.65) {
-        // Core Expertise (25% - 65%): Pulls back behind columns, expands
-        const t = (scrollProgress - 0.25) / 0.4;
-        coreRef.current.position.z = THREE.MathUtils.lerp(0, -2.4, t);
-        coreRef.current.position.y = THREE.MathUtils.lerp(0, -0.7, t);
-        coreRef.current.scale.setScalar(THREE.MathUtils.lerp(0.8, 1.25, t));
-      } else {
-        // Bento Grid (65% - 100%): Shifts to right diagonal accent
-        const t = (scrollProgress - 0.65) / 0.35;
-        coreRef.current.position.x = THREE.MathUtils.lerp(0, 1.8, t);
-        coreRef.current.position.y = THREE.MathUtils.lerp(-0.7, -2.1, t);
-        coreRef.current.position.z = THREE.MathUtils.lerp(-2.4, -3.9, t);
-      }
+      coreRef.current.position.set(0, 0, 0);
+      coreRef.current.scale.setScalar(1);
     }
 
     if (ring1Ref.current) {

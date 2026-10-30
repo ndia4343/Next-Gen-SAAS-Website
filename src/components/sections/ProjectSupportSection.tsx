@@ -12,6 +12,7 @@ import {
   Calendar,
   CheckCircle2
 } from "lucide-react";
+import SceneCanvasWrapper from "@/components/canvas/SceneCanvasWrapper";
 import { ProjectSupportSectionData } from "@/lib/types";
 
 interface IndustryLoop {
@@ -535,28 +536,34 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
 
         </div>
 
-        {/* Bottom CTA Bar */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#12151E] border border-slate-200 dark:border-white/10 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#FF6B00]" />
-            <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
-              Ready to deploy these automated systems into your business?
-            </p>
+        {/* Solutions-to-Footer Bridge (#custom-quote) */}
+        <div id="custom-quote" className="relative bg-transparent overflow-hidden rounded-2xl">
+          {/* Secondary 3D Orbit Canvas */}
+          <SceneCanvasWrapper className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center opacity-30" />
+
+          {/* Bottom CTA Bar */}
+          <div className="relative z-10 p-5 sm:p-6 rounded-2xl bg-white/90 dark:bg-[#12151E]/90 border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#FF6B00]" />
+              <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
+                Ready to deploy these automated systems into your business?
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (onOpenQuoteModal) {
+                  onOpenQuoteModal(item.tabLabel);
+                } else {
+                  document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-white bg-[#8B5CF6] hover:bg-[#7C3AED] transition-all duration-200 shadow-[0_0_20px_rgba(139,92,246,0.35)] shrink-0 cursor-pointer"
+            >
+              <span>Request Custom Quote</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              if (onOpenQuoteModal) {
-                onOpenQuoteModal(item.tabLabel);
-              } else {
-                document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-white bg-[#8B5CF6] hover:bg-[#7C3AED] transition-all duration-200 shadow-[0_0_20px_rgba(139,92,246,0.35)] shrink-0 cursor-pointer"
-          >
-            <span>Request Custom Quote</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
         </div>
 
       </div>

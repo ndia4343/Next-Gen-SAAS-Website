@@ -34,7 +34,11 @@ class CanvasErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 }
 
-export default function SceneCanvasWrapper() {
+interface SceneCanvasWrapperProps {
+  className?: string;
+}
+
+export default function SceneCanvasWrapper({ className }: SceneCanvasWrapperProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -47,7 +51,7 @@ export default function SceneCanvasWrapper() {
 
   return (
     <CanvasErrorBoundary>
-      <SceneCanvas />
+      <SceneCanvas className={className} />
     </CanvasErrorBoundary>
   );
 }

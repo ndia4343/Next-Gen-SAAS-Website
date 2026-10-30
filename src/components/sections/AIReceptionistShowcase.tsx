@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Pause, Check } from "lucide-react";
+import SceneCanvasWrapper from "@/components/canvas/SceneCanvasWrapper";
 
 const WAVEFORM_BARS = [
   24, 38, 55, 72, 45, 60, 85, 96, 70, 50, 82, 100, 88, 64, 78, 92, 74, 52, 85, 95, 68, 48, 62, 80, 58, 42, 30, 22
@@ -87,13 +88,16 @@ export default function AIReceptionistShowcase({
 
   return (
     <section className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden text-neutral-900 dark:text-neutral-100 transition-colors duration-300">
+      {/* 3D Wireframe Orbit Canvas (Primary Orbit) */}
+      <SceneCanvasWrapper className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center" />
+
       {/* Editorial Ambient Background Elements */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-violet-500/10 via-purple-400/5 to-cyan-500/10 blur-[120px] rounded-full dark:from-violet-600/15 dark:via-purple-500/10 dark:to-cyan-400/10" />
       </div>
 
       {/* Section Header */}
-      <div className="max-w-3xl mb-14">
+      <div className="max-w-3xl mb-14 relative z-10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-sky-500/20 bg-sky-500/10 text-[10px] font-semibold tracking-widest uppercase text-sky-400 mb-4 backdrop-blur-md">
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
           <span>MEET YOUR AI RECEPTIONIST</span>
@@ -112,7 +116,7 @@ export default function AIReceptionistShowcase({
       </div>
 
       {/* Asymmetrical 60/40 Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center relative z-10">
         
         {/* LEFT COLUMN (60% Desktop) — From Ring to Revenue */}
         <div className="lg:col-span-7 flex flex-col justify-center">

@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import './globals.css';
 import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
 import ThemeProvider, { ThemeMode } from '@/components/providers/ThemeProvider';
-import SceneCanvasWrapper from '@/components/canvas/SceneCanvasWrapper';
 import VisitorTracker from '@/components/analytics/VisitorTracker';
 import { getStorefrontContent } from '@/lib/siteContent';
 
@@ -49,7 +48,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ThemeProvider initialThemeId={activeThemeId} initialMode={defaultMode}>
           <SmoothScrollProvider>
             <VisitorTracker />
-            <SceneCanvasWrapper />
             <div className="relative z-10">{children}</div>
           </SmoothScrollProvider>
         </ThemeProvider>
