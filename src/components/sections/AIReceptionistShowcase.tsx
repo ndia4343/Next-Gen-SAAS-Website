@@ -16,7 +16,7 @@ export default function AIReceptionistShowcase({
 }: AIReceptionistShowcaseProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(74); // 01:14 fallback duration
+  const [duration, setDuration] = useState(24); // 00:24 fallback duration
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Synchronize audio element state if an audio source is provided
@@ -218,130 +218,63 @@ export default function AIReceptionistShowcase({
           </div>
         </div>
 
-        {/* RIGHT COLUMN (40% Desktop) — Interactive Audio Player & Showcase Card */}
+        {/* RIGHT COLUMN (40% Desktop) — Live Simulation */}
         <div className="lg:col-span-5">
-          <div className="relative rounded-3xl p-6 sm:p-8 bg-zinc-900/80 dark:bg-zinc-900/90 border border-violet-500/25 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl">
-            {/* Ambient Corner Glow */}
-            <div className="absolute top-0 right-0 w-44 h-44 bg-violet-600/15 blur-3xl pointer-events-none rounded-full" />
-            <div className="absolute bottom-0 left-0 w-40 h-40 bg-[#FF6B00]/10 blur-3xl pointer-events-none rounded-full" />
-
-            {/* Card Header: Zara Avatar & Live Badge */}
-            <div className="flex items-center justify-between pb-6 border-b border-zinc-800/80">
-              <div className="flex items-center gap-3.5">
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-violet-600 to-purple-400 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-purple-500/30">
-                    Z
-                  </div>
-                  <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-zinc-900 flex items-center justify-center">
-                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                  </span>
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-bold text-white text-base">Zara</h4>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-violet-500/20 text-violet-300 border border-violet-500/30">
-                      AI RECEPTIONIST
-                    </span>
-                  </div>
-                  <p className="text-xs text-zinc-400 mt-0.5">Zavian Labs Inbound Engine</p>
-                </div>
+          <div className="rounded-2xl border border-violet-500/20 bg-neutral-900/90 p-5 shadow-2xl backdrop-blur-xl">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <span className="text-xs font-semibold text-neutral-300 uppercase tracking-wider">Live Simulation</span>
               </div>
+              <span className="text-xs font-mono text-violet-400">Step 02 / 04</span>
+            </div>
 
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                <span>ONLINE 24/7</span>
+            {/* Dynamic Typing Feed (The 'Train' Output) */}
+            <div className="my-4 space-y-2.5 font-mono text-xs">
+              <div className="text-neutral-500">[14:02:01] Inbound call received (0 missed calls)</div>
+              <div className="text-violet-300">
+                <span className="font-bold text-white">Attune:</span> "Thanks for calling Apex Dental! Looking for a checkup or a cosmetic consultation?"
+              </div>
+              <div className="text-neutral-300 pl-2 border-l border-neutral-700">
+                <span className="text-neutral-500">Caller:</span> "Cosmetic consultation for Invisalign."
+              </div>
+              <div className="text-emerald-400 flex items-center gap-1.5 pt-1">
+                <span>✓</span> Slot Reserved: Thursday 11:30 AM
               </div>
             </div>
 
-            {/* Audio Sample Player Block */}
-            <div className="py-6 space-y-4">
-              <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
-                <span className="flex items-center gap-1.5">
-                  <Volume2 className="w-3.5 h-3.5 text-violet-400" />
-                  Sample Inbound Interaction
-                </span>
-                <span>{formatTime(currentTime)} / {formatTime(duration)}</span>
-              </div>
-
-              {/* Dynamic Soundwave Scrubber */}
-              <div className="flex items-center justify-between gap-1 h-12 px-3 rounded-2xl bg-zinc-950/70 border border-zinc-800">
-                {[40, 65, 80, 50, 95, 70, 85, 45, 60, 90, 75, 40, 85, 95, 60, 50, 70, 80, 45, 65, 85, 75, 55, 90, 60, 40, 70, 85].map((height, i) => {
-                  const progressPct = (currentTime / duration) * 100;
-                  const barPct = (i / 28) * 100;
-                  const isPassed = barPct <= progressPct;
-
-                  return (
-                    <span
-                      key={i}
-                      className={`w-1 rounded-full transition-all duration-200 ${
-                        isPassed
-                          ? "bg-gradient-to-t from-violet-500 to-[#FF6B00]"
-                          : "bg-zinc-700/60"
-                      } ${isPlaying ? "animate-pulse" : ""}`}
-                      style={{
-                        height: isPlaying ? `${Math.max(20, Math.sin(i + currentTime) * 35 + 50)}%` : `${height}%`,
-                      }}
-                    />
-                  );
-                })}
-              </div>
-
-              {/* Play / Pause Toggle Button */}
-              <div className="flex items-center justify-center pt-2">
-                <button
-                  type="button"
-                  onClick={togglePlayback}
-                  className="group relative flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-violet-600 to-[#7C3AED] hover:from-violet-500 hover:to-[#8B5CF6] text-white font-medium text-xs tracking-wide shadow-lg shadow-purple-500/25 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
-                >
-                  <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-white">
-                    {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
-                  </span>
-                  <span>{isPlaying ? "Pause Call Sample" : "Listen to Sample Call"}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Feature Highlights Pills */}
-            <div className="grid grid-cols-2 gap-2.5 pt-4 pb-6 border-t border-zinc-800/80 text-xs">
-              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-zinc-950/50 border border-zinc-800 text-zinc-300">
-                <span className="text-violet-400 font-bold">⚡</span>
-                <span>Sub-2s Pickup</span>
-              </div>
-              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-zinc-950/50 border border-zinc-800 text-zinc-300">
-                <span className="text-emerald-400 font-bold">✓</span>
-                <span>Live Google Cal Sync</span>
-              </div>
-              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-zinc-950/50 border border-zinc-800 text-zinc-300">
-                <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Zero Robotic Menus</span>
-              </div>
-              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-zinc-950/50 border border-zinc-800 text-zinc-300">
-                <Sparkles className="w-3.5 h-3.5 text-[#FF6B00]" />
-                <span>Multi-Accent Clarity</span>
-              </div>
-            </div>
-
-            {/* Action CTA Buttons */}
-            <div className="space-y-2.5 pt-2">
+            {/* Compact Action Bar */}
+            <div className="pt-3 border-t border-neutral-800 flex items-center justify-between">
               <button
                 type="button"
-                onClick={handleOpenVoice}
-                className="w-full py-3.5 px-4 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                onClick={togglePlayback}
+                className="flex items-center gap-2 text-xs font-medium text-white bg-violet-600 hover:bg-violet-700 px-3.5 py-2 rounded-lg transition-all cursor-pointer"
               >
-                <PhoneCall className="w-4 h-4 text-violet-600" />
-                <span>Talk to Zara Live</span>
+                <span>{isPlaying ? "❚❚ Pause Sample" : "▶ Play Audio Sample"}</span>
               </button>
-
-              <button
-                type="button"
-                onClick={() => onBookCall && onBookCall()}
-                className="w-full py-2.5 px-4 rounded-xl bg-zinc-800/60 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs tracking-wide flex items-center justify-center gap-2 border border-zinc-700/60 transition-colors cursor-pointer"
-              >
-                <Calendar className="w-3.5 h-3.5 text-zinc-400" />
-                <span>Book Architecture Strategy Call</span>
-              </button>
+              <span className="text-[11px] text-neutral-500">Demo length: 00:24</span>
             </div>
+          </div>
 
+          {/* Action CTAs */}
+          <div className="mt-4 flex flex-col sm:flex-row items-center gap-3">
+            <button
+              type="button"
+              onClick={handleOpenVoice}
+              className="w-full sm:flex-1 py-2.5 px-3 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+            >
+              <PhoneCall className="w-3.5 h-3.5 text-violet-600" />
+              <span>Talk to Zara Live</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onBookCall && onBookCall()}
+              className="w-full sm:flex-1 py-2.5 px-3 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white font-medium text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            >
+              <Calendar className="w-3.5 h-3.5 text-zinc-400" />
+              <span>Book Strategy Call</span>
+            </button>
           </div>
         </div>
 
