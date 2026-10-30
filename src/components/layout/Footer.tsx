@@ -117,7 +117,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               </div>
             </a>
 
-            <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug">
+            <h3 className="text-lg sm:text-xl font-bold text-white dark:text-white tracking-tight leading-snug">
               Every missed lead is lost revenue. <br />
               <span className="text-[#8B5CF6]">We make sure none slip away.</span>
             </h3>
