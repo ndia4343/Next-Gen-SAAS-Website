@@ -80,11 +80,18 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
           ) : null}
         </h1>
 
-        {/* SUB-HEADLINE */}
-        <p className="hero-desc mt-6 text-base sm:text-lg text-neutral-400 max-w-2xl mx-auto text-center leading-relaxed mb-10">
-          {content?.description ||
-            'We answer instantly, capture every opportunity, and turn incoming conversations into actionable leads — around the clock.'}
-        </p>
+        {/* SUB-HEADLINE & PRIMARY SUPPORTING PARAGRAPH */}
+        <div className="hero-desc mt-6 max-w-2xl mx-auto text-center mb-10 space-y-3">
+          <p className="text-base sm:text-lg text-zinc-300 font-medium leading-relaxed">
+            We answer instantly, capture every opportunity, and turn incoming conversations into actionable leads — around the clock.
+          </p>
+
+          <p className="text-neutral-400 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto text-center">
+            We build custom <span className="text-white font-medium">AI receptionists</span>,{' '}
+            <span className="text-white font-medium">WhatsApp booking systems</span>, and autonomous workflows that convert opportunities into booked revenue —{' '}
+            <span className="text-white font-medium">24/7</span>.
+          </p>
+        </div>
 
         {/* Dual CTAs */}
         <div className="hero-cta-group flex flex-wrap items-center justify-center gap-4 mb-16">
