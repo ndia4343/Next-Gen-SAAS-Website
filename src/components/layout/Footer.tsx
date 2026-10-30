@@ -55,7 +55,7 @@ export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
             {/* Tagline */}
             <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight leading-snug pt-1">
               Every missed lead is lost revenue. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-[#FF6B00]">
+              <span className="text-[#8B5CF6]">
                 We make sure none slip away.
               </span>
             </h3>
