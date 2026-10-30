@@ -235,7 +235,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
         <div className="h-[1px] w-full bg-zinc-800/80 mb-6" />
 
         {/* Bottom Bar: Copyright with Bold Company Name, Operational Status, and Back to Top */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500 md:pr-32">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500">
           <div>
             © {new Date().getFullYear()} <strong className="font-bold text-white tracking-wider">ZAVIAN LABS</strong>. ALL RIGHTS RESERVED.
           </div>
@@ -251,7 +251,8 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               <span className="text-zinc-400">LATENCY: 24MS</span>
             </div>
 
-            <div className="flex items-center gap-3">
+            {/* Add md:pr-36 to push the controls away from the fixed widget */}
+            <div className="flex items-center gap-3 md:pr-36">
               <ThemeToggle />
               <button
                 onClick={scrollToTop}
