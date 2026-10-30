@@ -117,7 +117,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               </div>
             </a>
 
-            <h3 className="text-lg sm:text-xl font-bold text-white dark:text-white tracking-tight leading-snug">
+            <h3 className="text-lg sm:text-xl font-bold !text-white text-white dark:text-white tracking-tight leading-snug">
               Every missed lead is lost revenue. <br />
               <span className="text-[#8B5CF6]">We make sure none slip away.</span>
             </h3>
@@ -131,7 +131,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             <div className="pt-0.5">
               <a
                 href="mailto:contact@zavianlabs.com"
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-700/80 text-zinc-100 hover:text-white hover:border-zinc-500 transition-all text-xs font-mono group"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-700/80 text-zinc-200 hover:text-white hover:border-zinc-500 transition-all text-xs font-mono group"
               >
                 <svg className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect width="20" height="16" x="2" y="4" rx="2" />
