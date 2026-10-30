@@ -66,17 +66,10 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         )}
 
         {/* H1 HEADLINE */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] max-w-4xl mx-auto">
-          {content?.titleLine1 ? (
-            content.titleLine1.replace('High-Ticket', 'High\u2011Ticket')
-          ) : (
-            <>
-              Your Next <span className="inline-block whitespace-nowrap">High&#8209;Ticket</span> Client
-            </>
-          )}{' '}
-          <br className="hidden sm:inline" />
-          <span className="text-[#FF5500] dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-[#FF6B00] dark:via-orange-400 dark:to-amber-300 pb-1 inline-block">
-            {content?.titleHighlight || "Won't Wait 2 Hours for a Reply."}
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.1] text-center">
+          {content?.titleLine1 || 'Every Missed Call Is a'}{' '}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FF4500]">
+            {content?.titleHighlight || "Competitor's Opportunity."}
           </span>
           {content?.titleLine2 ? (
             <>
@@ -88,15 +81,10 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         </h1>
 
         {/* SUB-HEADLINE */}
-        <div className="hero-desc mt-6 max-w-2xl mx-auto text-center mb-10">
-          <p className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100 tracking-wide">
-            Zero missed calls. Instant booking. Smarter systems.
-          </p>
-          <p className="mt-2 text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
-            {content?.description ||
-              'We build AI voice agents, WhatsApp booking workflows, and custom software that turn incoming leads into booked appointments—24/7.'}
-          </p>
-        </div>
+        <p className="hero-desc mt-6 text-base sm:text-lg text-neutral-400 max-w-2xl mx-auto text-center leading-relaxed mb-10">
+          {content?.description ||
+            'We answer instantly, capture every opportunity, and turn incoming conversations into actionable leads — around the clock.'}
+        </p>
 
         {/* Dual CTAs */}
         <div className="hero-cta-group flex flex-wrap items-center justify-center gap-4 mb-16">
