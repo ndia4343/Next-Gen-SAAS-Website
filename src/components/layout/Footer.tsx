@@ -1,7 +1,6 @@
 'use client';
 
-import React from 'react';
-import { Boxes } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { FooterData, ThemeBrandingConfig } from '@/lib/types';
@@ -12,8 +11,53 @@ interface FooterProps {
   themeBranding?: ThemeBrandingConfig;
 }
 
-export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
+export default function Footer({ onOpenQuoteModal, themeBranding: initialBranding }: FooterProps = {}) {
   const { lenis } = useSmoothScroll();
+  const [branding, setBranding] = useState<ThemeBrandingConfig | undefined>(initialBranding);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('zavian_theme_branding');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && (parsed.logoImageUrl || parsed.logoMode)) {
+          setBranding((prev) => ({ ...prev, ...parsed }));
+        }
+      }
+    } catch {}
+
+    const handleUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<ThemeBrandingConfig>;
+      if (customEvent.detail) {
+        setBranding(customEvent.detail);
+      }
+    };
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'zavian_theme_branding' && e.newValue) {
+        try {
+          setBranding(JSON.parse(e.newValue));
+        } catch {}
+      }
+    };
+
+    window.addEventListener('zavian_branding_updated', handleUpdate);
+    window.addEventListener('storage', handleStorage);
+
+    return () => {
+      window.removeEventListener('zavian_branding_updated', handleUpdate);
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (initialBranding) {
+      setBranding((prev) => ({
+        ...initialBranding,
+        ...(prev?.logoImageUrl ? { logoImageUrl: prev.logoImageUrl, logoMode: prev.logoMode } : {}),
+      }));
+    }
+  }, [initialBranding]);
 
   const scrollToTop = () => {
     if (lenis) {
@@ -43,12 +87,66 @@ export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
           {/* Column 1: Exact Brand Logo & High-Impact Copy (Span 5) */}
           <div className="lg:col-span-5 space-y-4">
             
-            {/* Logo */}
-            <a href="#overview" className="inline-flex items-center gap-2.5 group">
-              <Boxes className="w-6 h-6 text-white" />
+            {/* Logo: Identical to Navbar */}
+            <a href="#overview" className="inline-flex items-center gap-2.5 group focus:outline-none">
+              <div className="w-7 h-7 flex items-center justify-center text-zinc-200 transition-transform duration-300 group-hover:scale-105 shrink-0">
+                {(branding?.logoMode === 'image' || (branding?.logoMode !== 'svg' && branding?.logoImageUrl)) && branding?.logoImageUrl ? (
+                  <img
+                    src={branding.logoImageUrl}
+                    alt="Brand Logo"
+                    className="w-full h-full object-contain p-0.5"
+                  />
+                ) : branding?.logoMode === 'svg' && branding?.logoSvgContent ? (
+                  <div
+                    className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full"
+                    dangerouslySetInnerHTML={{ __html: branding.logoSvgContent }}
+                  />
+                ) : (
+                  <svg
+                    viewBox="0 0 100 100"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-full h-full"
+                  >
+                    <defs>
+                      <linearGradient id="footerCubeDark" x1="10%" y1="0%" x2="90%" y2="100%">
+                        <stop offset="0%" stopColor="#FFFFFF" />
+                        <stop offset="50%" stopColor="#CBD5E1" />
+                        <stop offset="100%" stopColor="#64748B" />
+                      </linearGradient>
+                      <linearGradient id="footerCubeFacet" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.18" />
+                        <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.02" />
+                      </linearGradient>
+                    </defs>
+
+                    <g
+                      strokeWidth="5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="stroke-[url(#footerCubeDark)] drop-shadow-[0_0_10px_rgba(255,255,255,0.25)]"
+                    >
+                      <path d="M35 15 L12 30 L12 66 L35 81" />
+                      <path d="M65 85 L88 70 L88 34 L65 19" />
+                      <path d="M35 15 L50 25 L65 19" />
+                      <path d="M12 30 L35 45 L50 35 L35 15" />
+                      <path d="M50 25 L65 35" />
+                      <path d="M35 45 L35 81" />
+                      <path d="M65 19 L65 55" />
+                      <path d="M35 45 L50 55 L65 45 L88 34" />
+                      <path d="M50 55 L50 75 L35 81" />
+                      <path d="M50 75 L65 85" />
+                      <path d="M50 55 L65 65 L88 70" />
+                    </g>
+
+                    <polygon points="35,15 50,25 35,45 12,30" fill="url(#footerCubeFacet)" />
+                    <polygon points="65,19 88,34 65,45 50,25" fill="url(#footerCubeFacet)" />
+                  </svg>
+                )}
+              </div>
               <div className="flex items-center text-lg tracking-wider">
-                <span className="font-extrabold text-white">ZAVIAN</span>
-                <span className="font-bold text-[#8B5CF6] ml-1.5">LABS</span>
+                <span className="font-extrabold text-white">{branding?.wordmark1 || 'ZAVIAN'}</span>
+                <span className="font-bold text-[#8B5CF6] ml-1.5">{branding?.wordmark2 || 'LABS'}</span>
               </div>
             </a>
 
@@ -83,8 +181,7 @@ export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
 
           {/* Column 2: Exact Services (Span 3) */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8B5CF6]" />
+            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300">
               Services
             </h4>
             <ul className="space-y-2.5 text-sm">
@@ -135,8 +232,7 @@ export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
 
           {/* Column 3: Exact Navigation (Span 2) */}
           <div className="lg:col-span-2 space-y-4">
-            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300">
               Navigation
             </h4>
             <ul className="space-y-2.5 text-sm">
@@ -157,8 +253,7 @@ export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
 
           {/* Column 4: Direct Action (Span 2) */}
           <div className="lg:col-span-2 space-y-4">
-            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00]" />
+            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300">
               Get Started
             </h4>
             <div className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/80 space-y-3">
@@ -181,7 +276,7 @@ export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
         <div className="h-[1px] w-full bg-zinc-800/80 mb-6" />
 
         {/* Bottom Bar: Copyright with Bold Company Name, Operational Status, and Back to Top */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500 md:pr-32">
           <div>
             © {new Date().getFullYear()} <strong className="font-bold text-white tracking-wider">ZAVIAN LABS</strong>. ALL RIGHTS RESERVED.
           </div>
