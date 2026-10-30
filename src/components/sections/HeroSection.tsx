@@ -80,18 +80,10 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
           ) : null}
         </h1>
 
-        {/* SUB-HEADLINE & PRIMARY SUPPORTING PARAGRAPH */}
-        <div className="hero-desc mt-6 max-w-2xl mx-auto text-center mb-10 space-y-2.5">
-          <p className="text-base text-zinc-800 dark:text-zinc-100 font-medium tracking-tight leading-relaxed">
-            We answer instantly, capture every opportunity, and turn incoming conversations into actionable leads — around the clock.
-          </p>
-
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl mx-auto text-center">
-            We build custom <span className="text-zinc-900 dark:text-zinc-100 font-semibold">AI receptionists</span>,{' '}
-            <span className="text-zinc-900 dark:text-zinc-100 font-semibold">WhatsApp booking systems</span>, and autonomous workflows that convert opportunities into booked revenue —{' '}
-            <span className="text-zinc-900 dark:text-zinc-100 font-semibold">24/7</span>.
-          </p>
-        </div>
+        {/* SUB-HEADLINE */}
+        <p className="hero-desc text-neutral-600 dark:text-neutral-300 text-base sm:text-lg max-w-2xl mx-auto text-center mt-6 mb-10 leading-relaxed">
+          Custom AI voice receptionists, WhatsApp booking systems, and automated workflows that turn inbound callers into paid clients 24/7.
+        </p>
 
         {/* Dual CTAs */}
         <div className="hero-cta-group flex flex-wrap items-center justify-center gap-4 mb-16">
