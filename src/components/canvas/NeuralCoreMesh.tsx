@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Float, MeshTransmissionMaterial, Sparkles } from '@react-three/drei';
+import { Float, MeshTransmissionMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 import { ScrollTrigger } from '@/lib/gsap';
 import { ColorTheme } from '@/lib/theme';
@@ -22,7 +22,6 @@ export default function NeuralCoreMesh({ theme, mode = 'dark' }: NeuralCoreMeshP
   const ring1Ref = useRef<THREE.Mesh>(null);
   const ring2Ref = useRef<THREE.Mesh>(null);
   const innerIcosaRef = useRef<THREE.Mesh>(null);
-  const particlesRef = useRef<THREE.Points>(null);
 
   const scrollProgressRef = useRef(0);
 
@@ -43,24 +42,6 @@ export default function NeuralCoreMesh({ theme, mode = 'dark' }: NeuralCoreMeshP
       st.kill();
     };
   }, []);
-
-  // 1,800-Point GPU Reactive Particle Buffer
-  const particleCount = 1800;
-  const [positions, scales] = useMemo(() => {
-    const pos = new Float32Array(particleCount * 3);
-    const scl = new Float32Array(particleCount);
-    for (let i = 0; i < particleCount; i++) {
-      const radius = 2.1 + Math.random() * 4.4;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-
-      pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = radius * Math.cos(phi);
-      scl[i] = Math.random() * 2.5 + 0.5;
-    }
-    return [pos, scl];
-  }, [particleCount]);
 
   useFrame((state, delta) => {
     const scrollProgress = scrollProgressRef.current || ScrollTrigger.getAll()[0]?.progress || 0;
@@ -102,10 +83,6 @@ export default function NeuralCoreMesh({ theme, mode = 'dark' }: NeuralCoreMeshP
 
     if (innerIcosaRef.current) {
       innerIcosaRef.current.rotation.y -= delta * 0.5;
-    }
-
-    if (particlesRef.current) {
-      particlesRef.current.rotation.y += delta * 0.045;
     }
   });
 
@@ -155,32 +132,7 @@ export default function NeuralCoreMesh({ theme, mode = 'dark' }: NeuralCoreMeshP
             color={primaryColor}
           />
         </mesh>
-
-        {/* Ambient GPU Sparkles */}
-        <Sparkles
-          count={110}
-          scale={5}
-          size={isLight ? 2.6 : 2.2}
-          speed={0.4}
-          opacity={isLight ? 0.75 : 0.6}
-          color={highlightColor}
-        />
       </Float>
-
-      {/* Reactive GPU Particle Field - NormalBlending in Light Mode for crisp contrast */}
-      <points ref={particlesRef}>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-          <bufferAttribute attach="attributes-scale" args={[scales, 1]} />
-        </bufferGeometry>
-        <pointsMaterial
-          size={isLight ? 0.042 : 0.035}
-          color={primaryColor}
-          transparent
-          opacity={isLight ? 0.85 : 0.7}
-          blending={isLight ? THREE.NormalBlending : THREE.AdditiveBlending}
-        />
-      </points>
     </group>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Play, Pause, Check } from "lucide-react";
+import { Pause, Check } from "lucide-react";
 
 const WAVEFORM_BARS = [
   24, 38, 55, 72, 45, 60, 85, 96, 70, 50, 82, 100, 88, 64, 78, 92, 74, 52, 85, 95, 68, 48, 62, 80, 58, 42, 30, 22
@@ -94,21 +94,19 @@ export default function AIReceptionistShowcase({
 
       {/* Section Header */}
       <div className="max-w-3xl mb-14">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-sky-500/20 bg-sky-500/10 backdrop-blur-md mb-4">
-          <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
-          <span className="text-[10px] font-semibold tracking-widest text-sky-300 uppercase">
-            MEET YOUR AI RECEPTIONIST
-          </span>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-sky-500/20 bg-sky-500/10 text-[10px] font-semibold tracking-widest uppercase text-sky-400 mb-4 backdrop-blur-md">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+          <span>MEET YOUR AI RECEPTIONIST</span>
         </div>
 
-        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight lowercase">
+        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-950 dark:text-white leading-tight lowercase">
           meet your{" "}
           <span className="bg-gradient-to-r from-sky-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
             always-on receptionist.
           </span>
         </h2>
 
-        <p className="mt-4 text-base sm:text-lg text-neutral-300 leading-relaxed max-w-2xl">
+        <p className="mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl">
           Every missed call is a patient booking with your competitor. We answer enquiries, qualify patient needs, and book appointments directly into Google Calendar.
         </p>
       </div>
@@ -130,7 +128,7 @@ export default function AIReceptionistShowcase({
 
             {/* Stage 01 */}
             <div className="relative group">
-              <div className="absolute -left-[32px] sm:-left-[40px] top-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-neutral-900 border border-violet-500/30 flex items-center justify-center text-xs font-bold text-violet-600 dark:text-violet-300 shadow-sm transition-transform duration-300 group-hover:scale-110">
+              <div className="absolute -left-[32px] sm:-left-[40px] top-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-neutral-900 border border-sky-500/30 flex items-center justify-center text-xs font-bold text-sky-600 dark:text-sky-300 shadow-sm transition-transform duration-300 group-hover:scale-110">
                 01
               </div>
               <div>
@@ -143,7 +141,7 @@ export default function AIReceptionistShowcase({
                     Never leave callers waiting.
                   </span>
                 </h3>
-                <p className="mt-2 text-sm sm:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xl">
+                <p className="mt-2 text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-xl">
                   Answers incoming calls with a natural, conversational voice. Greets callers in real-time, eliminating busy tones, hold loops, and voicemails.
                 </p>
               </div>
@@ -151,7 +149,7 @@ export default function AIReceptionistShowcase({
 
             {/* Stage 02 */}
             <div className="relative group">
-              <div className="absolute -left-[32px] sm:-left-[40px] top-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-neutral-900 border border-violet-500/30 flex items-center justify-center text-xs font-bold text-violet-600 dark:text-violet-300 shadow-sm transition-transform duration-300 group-hover:scale-110">
+              <div className="absolute -left-[32px] sm:-left-[40px] top-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-neutral-900 border border-sky-500/30 flex items-center justify-center text-xs font-bold text-sky-600 dark:text-sky-300 shadow-sm transition-transform duration-300 group-hover:scale-110">
                 02
               </div>
               <div>
@@ -164,7 +162,7 @@ export default function AIReceptionistShowcase({
                     Know what they need.
                   </span>
                 </h3>
-                <p className="mt-2 text-sm sm:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xl">
+                <p className="mt-2 text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-xl">
                   Understands enquiries, appointment requests, and caller needs. Interprets patient or client context clearly without robotic menus.
                 </p>
               </div>
@@ -172,7 +170,7 @@ export default function AIReceptionistShowcase({
 
             {/* Stage 03 */}
             <div className="relative group">
-              <div className="absolute -left-[32px] sm:-left-[40px] top-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-neutral-900 border border-violet-500/30 flex items-center justify-center text-xs font-bold text-violet-600 dark:text-violet-300 shadow-sm transition-transform duration-300 group-hover:scale-110">
+              <div className="absolute -left-[32px] sm:-left-[40px] top-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-neutral-900 border border-sky-500/30 flex items-center justify-center text-xs font-bold text-sky-600 dark:text-sky-300 shadow-sm transition-transform duration-300 group-hover:scale-110">
                 03
               </div>
               <div>
@@ -185,26 +183,26 @@ export default function AIReceptionistShowcase({
                     Lock in appointments on the spot.
                   </span>
                 </h3>
-                <p className="mt-2 text-sm sm:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xl">
+                <p className="mt-2 text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-xl">
                   Checks your real-time availability, captures caller requirements, and schedules directly onto your calendar—saving hours of manual back-and-forth.
                 </p>
               </div>
             </div>
 
-            {/* Step 04 Replacement (Left Column) */}
+            {/* Step 04 */}
             <div className="relative group">
-              <div className="absolute -left-[32px] sm:-left-[40px] top-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-neutral-950 border border-sky-500/30 flex items-center justify-center text-xs font-bold text-sky-300 shadow-sm">
+              <div className="absolute -left-[32px] sm:-left-[40px] top-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-neutral-900 border border-sky-500/30 flex items-center justify-center text-xs font-bold text-sky-600 dark:text-sky-300 shadow-sm transition-transform duration-300 group-hover:scale-110">
                 04
               </div>
               <div>
-                <h3 className="text-base sm:text-lg font-bold tracking-tight text-white flex items-baseline gap-2">
+                <h3 className="text-base sm:text-lg font-bold tracking-tight text-neutral-900 dark:text-white flex items-baseline gap-2">
                   NOTIFY & DISPATCH
                   <span className="text-neutral-500 font-normal">—</span>
-                  <span className="text-sm font-medium text-neutral-300">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
                     Instant team updates.
                   </span>
                 </h3>
-                <p className="mt-1 text-sm text-neutral-400 leading-relaxed">
+                <p className="mt-2 text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-xl">
                   Automatically sends appointment details and a concise caller summary to your team.
                 </p>
               </div>
@@ -215,19 +213,19 @@ export default function AIReceptionistShowcase({
 
         {/* RIGHT COLUMN (40% Desktop) — Sleek Audio Preview Card */}
         <div className="lg:col-span-5 flex flex-col justify-center">
-          <div className="rounded-3xl border border-violet-500/20 bg-neutral-900/70 p-6 sm:p-8 shadow-2xl shadow-black/40 backdrop-blur-xl transition-all">
+          <div className="rounded-3xl border border-neutral-800/80 bg-neutral-900/60 dark:bg-neutral-950/70 backdrop-blur-xl p-6 shadow-2xl shadow-black/40 transition-all">
             {/* Top Bar */}
             <div className="flex items-center justify-between pb-4 border-b border-neutral-800/80">
               <div className="flex items-center gap-2.5">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
                 </span>
                 <span className="text-[11px] font-semibold tracking-wider text-neutral-300 uppercase font-mono">
                   SAMPLE INBOUND CALL
                 </span>
               </div>
-              <span className="text-xs font-mono font-medium text-violet-300/80">
+              <span className="text-xs font-mono font-medium text-cyan-300/80">
                 00:24
               </span>
             </div>
@@ -242,10 +240,10 @@ export default function AIReceptionistShowcase({
               </p>
             </div>
 
-            {/* Centered Elegant Horizontal Waveform with Violet Glow Highlights */}
-            <div className="my-6 p-4 rounded-2xl bg-neutral-950/60 border border-violet-500/15 shadow-inner">
+            {/* Centered Elegant Horizontal Waveform with Cyan Accents */}
+            <div className="my-6 p-4 rounded-2xl bg-neutral-950/60 border border-neutral-800/60 shadow-inner">
               <div className="flex items-center justify-between text-[11px] font-mono text-neutral-500 mb-2 px-1">
-                <span className="text-violet-400 font-medium">{formatTime(currentTime)}</span>
+                <span className="text-cyan-400 font-medium">{formatTime(currentTime)}</span>
                 <span>00:24</span>
               </div>
               <div className="flex items-center justify-center gap-1 sm:gap-1.5 h-14 sm:h-16 px-1">
@@ -259,8 +257,8 @@ export default function AIReceptionistShowcase({
                       key={idx}
                       className={`flex-1 rounded-full transition-all duration-200 ${
                         isPassed || isPlaying
-                          ? "bg-gradient-to-t from-violet-600 via-purple-400 to-violet-300 shadow-[0_0_10px_rgba(167,139,250,0.45)]"
-                          : "bg-neutral-800"
+                          ? "bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.5)]"
+                          : "bg-neutral-700"
                       }`}
                       style={{
                         height: isPlaying
@@ -273,11 +271,11 @@ export default function AIReceptionistShowcase({
               </div>
             </div>
 
-            {/* Single Prominent Button */}
+            {/* CTA Button (Keep Purple) */}
             <button
               type="button"
               onClick={togglePlayback}
-              className="w-full py-3.5 px-5 rounded-2xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2.5 shadow-lg shadow-violet-600/30 hover:shadow-violet-500/50 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
+              className="w-full py-3.5 px-5 rounded-2xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2.5 shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
             >
               {isPlaying ? (
                 <>
@@ -285,10 +283,7 @@ export default function AIReceptionistShowcase({
                   <span>Pause Voice Sample</span>
                 </>
               ) : (
-                <>
-                  <Play className="w-4 h-4 fill-current ml-0.5" />
-                  <span>Listen to Voice Sample</span>
-                </>
+                <span>▶ Listen to Voice Sample</span>
               )}
             </button>
 
@@ -308,12 +303,12 @@ export default function AIReceptionistShowcase({
               </div>
             </div>
 
-            {/* Demo Card Proof Badge (Right Column Footer) */}
+            {/* Proof Badge */}
             <div className="mt-4 pt-3 border-t border-neutral-800/80 flex flex-col items-center gap-2">
-              <div className="px-2.5 py-1 rounded-md bg-neutral-900 border border-neutral-800 text-[10px] font-mono tracking-wider text-neutral-400 uppercase">
-                DEMO WORKFLOW • GOOGLE CALENDAR BOOKING TESTED
+              <div className="text-[10px] font-mono tracking-wider text-neutral-500 dark:text-neutral-400 uppercase bg-neutral-900/40 border border-neutral-800 rounded px-2.5 py-1 text-center inline-block">
+                DEMO WORKFLOW · GOOGLE CALENDAR BOOKING TESTED
               </div>
-              <p className="text-[11px] text-neutral-500 text-center">
+              <p className="text-[11px] text-neutral-500 dark:text-neutral-400 text-center">
                 Live integration configured directly with your clinic's booking schedule during setup.
               </p>
             </div>
