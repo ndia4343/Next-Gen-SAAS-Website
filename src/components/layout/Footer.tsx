@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Boxes } from 'lucide-react';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { FooterData, ThemeBrandingConfig } from '@/lib/types';
@@ -42,28 +43,9 @@ export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
           {/* Column 1: Exact Brand Logo & High-Impact Copy (Span 5) */}
           <div className="lg:col-span-5 space-y-4">
             
-            {/* Logo: Isometric Cube */}
+            {/* Logo */}
             <a href="#overview" className="inline-flex items-center gap-2.5 group">
-              <svg 
-                className="w-6 h-6 text-white group-hover:text-purple-400 transition-colors" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="1.8" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-              >
-                {/* Outer isometric boundary */}
-                <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2" />
-                {/* Top center vertical drop */}
-                <line x1="12" y1="2" x2="12" y2="8.5" />
-                {/* Upper crossing diagonals */}
-                <polyline points="2 15.5 12 8.5 22 15.5" />
-                {/* Bottom center vertical rise */}
-                <line x1="12" y1="22" x2="12" y2="15.5" />
-                {/* Lower crossing diagonals */}
-                <polyline points="22 8.5 12 15.5 2 8.5" />
-              </svg>
+              <Boxes className="w-6 h-6 text-white" />
               <div className="flex items-center text-lg tracking-wider">
                 <span className="font-extrabold text-white">ZAVIAN</span>
                 <span className="font-bold text-[#8B5CF6] ml-1.5">LABS</span>
