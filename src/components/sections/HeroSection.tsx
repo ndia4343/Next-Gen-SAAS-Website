@@ -52,7 +52,7 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
     <section
       id="hero"
       ref={containerRef}
-      className="relative min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-12 z-10"
+      className="relative z-10 bg-transparent min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-12"
     >
       <div className="relative z-10 max-w-5xl mx-auto px-4 pt-28 sm:pt-36 pb-16 text-center flex flex-col items-center">
         {/* Subtle backdrop glow/mask to prevent 3D wireframe text collisions */}

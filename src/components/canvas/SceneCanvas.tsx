@@ -13,7 +13,7 @@ interface SceneCanvasProps {
 }
 
 export default function SceneCanvas({
-  className = "absolute inset-0 pointer-events-none z-0 flex items-center justify-center",
+  className = "w-full h-full pointer-events-none flex items-center justify-center",
 }: SceneCanvasProps) {
   const { theme, mode } = useTheme();
   const isLight = mode === 'light';
@@ -24,10 +24,8 @@ export default function SceneCanvas({
         className="w-full h-full pointer-events-none"
         gl={{
           antialias: true,
+          powerPreference: "high-performance",
           alpha: true,
-          powerPreference: 'high-performance',
-          stencil: false,
-          depth: true,
         }}
         dpr={[1, 1.8]}
       >
