@@ -66,9 +66,9 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         )}
 
         {/* H1 HEADLINE */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.1] text-center">
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-900 dark:text-white max-w-5xl mx-auto leading-[1.1] text-center">
           {content?.titleLine1 || 'Every Missed Call Is a'}{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A00] to-[#FF4500]">
+          <span className="bg-gradient-to-r from-orange-500 via-amber-400 to-orange-400 bg-clip-text text-transparent pb-1 inline-block">
             {content?.titleHighlight || "Competitor's Opportunity."}
           </span>
           {content?.titleLine2 ? (
@@ -82,14 +82,14 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
 
         {/* SUB-HEADLINE & PRIMARY SUPPORTING PARAGRAPH */}
         <div className="hero-desc mt-6 max-w-2xl mx-auto text-center mb-10 space-y-3">
-          <p className="text-base sm:text-lg text-zinc-300 font-medium leading-relaxed">
+          <p className="text-base sm:text-lg text-zinc-700 dark:text-zinc-300 font-medium leading-relaxed">
             We answer instantly, capture every opportunity, and turn incoming conversations into actionable leads — around the clock.
           </p>
 
-          <p className="text-neutral-400 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto text-center">
-            We build custom <span className="text-white font-medium">AI receptionists</span>,{' '}
-            <span className="text-white font-medium">WhatsApp booking systems</span>, and autonomous workflows that convert opportunities into booked revenue —{' '}
-            <span className="text-white font-medium">24/7</span>.
+          <p className="text-zinc-600 dark:text-zinc-400 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto text-center">
+            We build custom <span className="text-zinc-900 dark:text-white font-medium">AI receptionists</span>,{' '}
+            <span className="text-zinc-900 dark:text-white font-medium">WhatsApp booking systems</span>, and autonomous workflows that convert opportunities into booked revenue —{' '}
+            <span className="text-zinc-900 dark:text-white font-medium">24/7</span>.
           </p>
         </div>
 
