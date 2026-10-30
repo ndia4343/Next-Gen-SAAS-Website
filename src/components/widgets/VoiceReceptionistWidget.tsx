@@ -195,9 +195,17 @@ const VoiceReceptionistInner: React.FC = () => {
     };
   }, [callState]);
 
-  // Clean up on component unmount
+  // Clean up on component unmount & remote trigger listener
   useEffect(() => {
+    const handleRemoteOpen = () => {
+      if (callState === "idle") {
+        startVoiceCall();
+      }
+    };
+    window.addEventListener("open_voice_widget", handleRemoteOpen);
+
     return () => {
+      window.removeEventListener("open_voice_widget", handleRemoteOpen);
       stopRingingSound();
       if (cadenceTimeoutRef.current) clearTimeout(cadenceTimeoutRef.current);
       if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
@@ -209,7 +217,7 @@ const VoiceReceptionistInner: React.FC = () => {
         try { window.speechSynthesis.cancel(); } catch {}
       }
     };
-  }, []);
+  }, [callState]);
 
   const startVoiceCall = async () => {
     // 1. Microphone Permission & Audio Context Protocol
