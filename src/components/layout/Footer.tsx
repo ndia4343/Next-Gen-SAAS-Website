@@ -82,10 +82,10 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-[1px] bg-gradient-to-r from-transparent via-[#8B5CF6]/50 to-transparent" />
 
       <div className="max-w-5xl mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 lg:gap-8 pb-12">
           
-          {/* Column 1: Exact Brand Logo & High-Impact Copy (Span 5) */}
-          <div className="lg:col-span-5 space-y-4">
+          {/* Column 1: Exact Brand Logo & High-Impact Copy (Span 4) */}
+          <div className="lg:col-span-4 space-y-4">
             
             {/* Logo: Zavian Labs Emblem */}
             <a href="#overview" className="inline-flex items-center gap-2.5 group focus:outline-none">
@@ -210,8 +210,8 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             </ul>
           </div>
 
-          {/* Column 4: Direct Action (Span 2) */}
-          <div className="lg:col-span-2 space-y-4">
+          {/* Column 4: Direct Action (Span 3) */}
+          <div className="lg:col-span-3 space-y-4">
             <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300">
               Get Started
             </h4>
