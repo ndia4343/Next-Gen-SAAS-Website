@@ -232,12 +232,12 @@ export type FooterData = z.infer<typeof FooterDataSchema>;
 // 9. Freya Voice Agent Config Schema
 // ==========================================
 export const FreyaConfigSchema = z.object({
-  agentName: z.string().default("Zara"),
+  agentName: z.string().default("AI Receptionist"),
   systemPrompt: z.string().default(
-    "You are Zara, the intelligent voice receptionist and client intake specialist for Zavian Labs—a boutique AI automation and software engineering studio. You speak with natural executive warmth, crisp clarity, and subtle British/Global English cadence."
+    "You are the intelligent voice receptionist and client intake specialist for Zavian Labs—a boutique AI automation and software engineering studio. You speak with natural executive warmth, crisp clarity, and subtle British/Global English cadence."
   ),
   welcomeMessage: z.string().default(
-    "Hey! Welcome to Zavian Labs. I’m Zara—I handle our front desk so no one gets left on hold. Are you looking to automate your phone calls, set up WhatsApp booking funnels, or build custom software?"
+    "Hey! Welcome to Zavian Labs. I handle our front desk so no one gets left on hold. Are you looking to automate your phone calls, set up WhatsApp booking funnels, or build custom software?"
   ),
   isLiveIndicator: z.boolean().default(true),
 });

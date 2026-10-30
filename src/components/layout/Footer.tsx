@@ -229,7 +229,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             © {new Date().getFullYear()} <strong className="font-bold text-white">ZAVIAN LABS</strong>. ALL RIGHTS RESERVED.
           </div>
 
-          <div className="flex items-center gap-4 pr-32">
+          <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
               <span className="text-emerald-400 font-medium">SYSTEMS OPERATIONAL</span>

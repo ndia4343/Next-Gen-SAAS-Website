@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     // Forward to Google Sheets Webhook
     await forwardLeadToGoogleSheets({
-      source: data.source || 'Voice Receptionist (Zara)',
+      source: data.source || 'AI Voice Receptionist',
       caller_name: callerName,
       whatsapp_number: phone,
       work_email: email,

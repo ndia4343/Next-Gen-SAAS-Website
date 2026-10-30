@@ -6,7 +6,6 @@ import HeroSection from '@/components/sections/HeroSection';
 import AIReceptionistShowcase from '@/components/sections/AIReceptionistShowcase';
 import CoreExpertiseSection from '@/components/sections/CoreExpertiseSection';
 import ProjectSupportSection from '@/components/sections/ProjectSupportSection';
-import VoiceReceptionistWidget from '@/components/widgets/VoiceReceptionistWidget';
 import QuoteModal from '@/components/ui/QuoteModal';
 import Footer from '@/components/layout/Footer';
 import { WebsiteContent, ThemeBrandingConfig } from '@/lib/types';
@@ -81,12 +80,10 @@ export default function HomeClient({ content }: HomeClientProps) {
       />
       <HeroSection onOpenQuoteModal={handleOpenModal} content={content.hero} />
       <AIReceptionistShowcase
-        onOpenVoiceModal={() => handleOpenModal('AI Voice Receptionists')}
         onBookCall={() => handleOpenModal('Discovery Call')}
       />
       <CoreExpertiseSection onOpenQuoteModal={handleOpenModal} content={content.coreExpertise} />
       <ProjectSupportSection onOpenQuoteModal={handleOpenModal} content={content.projectSupport} />
-      <VoiceReceptionistWidget />
 
       <Footer
         onOpenQuoteModal={handleOpenModal}

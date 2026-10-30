@@ -300,31 +300,3 @@ html.light ::-webkit-scrollbar-thumb:hover {
     transparent 80%
   );
 }
-
-/* Animated Pulse Rings for Voice AI */
-@keyframes ring-pulse {
-  0% {
-    transform: scale(0.95);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.4);
-    opacity: 0.2;
-  }
-  100% {
-    transform: scale(1.8);
-    opacity: 0;
-  }
-}
-
-.animate-pulse-ring-1 {
-  animation: ring-pulse 2.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-}
-
-.animate-pulse-ring-2 {
-  animation: ring-pulse 2.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 0.8s;
-}
-
-.animate-pulse-ring-3 {
-  animation: ring-pulse 2.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 1.6s;
-}

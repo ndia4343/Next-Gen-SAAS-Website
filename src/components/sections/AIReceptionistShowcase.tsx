@@ -1,16 +1,14 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Play, Pause, PhoneCall, Calendar, Sparkles, Volume2, ShieldCheck } from "lucide-react";
+import { Calendar } from "lucide-react";
 
 interface AIReceptionistShowcaseProps {
-  onOpenVoiceModal?: () => void;
   onBookCall?: () => void;
   audioSrc?: string; // Optional URL to a real audio file
 }
 
 export default function AIReceptionistShowcase({
-  onOpenVoiceModal,
   onBookCall,
   audioSrc,
 }: AIReceptionistShowcaseProps) {
@@ -81,14 +79,6 @@ export default function AIReceptionistShowcase({
     return `${mins.toString().padStart(2, "0")}:${remainingSecs
       .toString()
       .padStart(2, "0")}`;
-  };
-
-  const handleOpenVoice = () => {
-    if (onOpenVoiceModal) {
-      onOpenVoiceModal();
-    } else if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("open_voice_widget"));
-    }
   };
 
   return (
@@ -257,22 +247,14 @@ export default function AIReceptionistShowcase({
             </div>
           </div>
 
-          {/* Action CTAs */}
-          <div className="mt-4 flex flex-col sm:flex-row items-center gap-3">
-            <button
-              type="button"
-              onClick={handleOpenVoice}
-              className="w-full sm:flex-1 py-2.5 px-3 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-            >
-              <PhoneCall className="w-3.5 h-3.5 text-violet-600" />
-              <span>Talk to Zara Live</span>
-            </button>
+          {/* Action CTA */}
+          <div className="mt-4">
             <button
               type="button"
               onClick={() => onBookCall && onBookCall()}
-              className="w-full sm:flex-1 py-2.5 px-3 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white font-medium text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
             >
-              <Calendar className="w-3.5 h-3.5 text-zinc-400" />
+              <Calendar className="w-3.5 h-3.5 text-violet-600" />
               <span>Book Strategy Call</span>
             </button>
           </div>
