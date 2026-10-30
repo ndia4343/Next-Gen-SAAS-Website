@@ -1,7 +1,6 @@
 'use client';
 
-import React from 'react';
-import { Box } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { FooterData, ThemeBrandingConfig } from '@/lib/types';
@@ -12,8 +11,53 @@ interface FooterProps {
   themeBranding?: ThemeBrandingConfig;
 }
 
-export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
+export default function Footer({ onOpenQuoteModal, themeBranding: initialBranding }: FooterProps = {}) {
   const { lenis } = useSmoothScroll();
+  const [branding, setBranding] = useState<ThemeBrandingConfig | undefined>(initialBranding);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('zavian_theme_branding');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && (parsed.logoImageUrl || parsed.logoMode)) {
+          setBranding((prev) => ({ ...prev, ...parsed }));
+        }
+      }
+    } catch {}
+
+    const handleUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<ThemeBrandingConfig>;
+      if (customEvent.detail) {
+        setBranding(customEvent.detail);
+      }
+    };
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'zavian_theme_branding' && e.newValue) {
+        try {
+          setBranding(JSON.parse(e.newValue));
+        } catch {}
+      }
+    };
+
+    window.addEventListener('zavian_branding_updated', handleUpdate);
+    window.addEventListener('storage', handleStorage);
+
+    return () => {
+      window.removeEventListener('zavian_branding_updated', handleUpdate);
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (initialBranding) {
+      setBranding((prev) => ({
+        ...initialBranding,
+        ...(prev?.logoImageUrl ? { logoImageUrl: prev.logoImageUrl, logoMode: prev.logoMode } : {}),
+      }));
+    }
+  }, [initialBranding]);
 
   const scrollToTop = () => {
     if (lenis) {
@@ -45,11 +89,31 @@ export default function Footer({ onOpenQuoteModal }: FooterProps = {}) {
           
           {/* Left Column (Span 5) */}
           <div className="lg:col-span-5 space-y-2.5">
-            <a href="#overview" className="inline-flex items-center gap-2 group">
-              <Box className="w-5 h-5 text-white group-hover:text-purple-400 transition-colors" />
+            <a href="#overview" className="inline-flex items-center gap-2.5 group focus:outline-none">
+              {/* Cube Icon: Exactly identical to Navbar */}
+              <div className="w-7 h-7 flex items-center justify-center text-zinc-200 transition-transform duration-300 group-hover:scale-105 shrink-0">
+                {(branding?.logoMode === 'image' || (branding?.logoMode !== 'svg' && branding?.logoImageUrl)) && branding?.logoImageUrl ? (
+                  <img
+                    src={branding.logoImageUrl}
+                    alt="Brand Logo"
+                    className="w-full h-full object-contain p-0.5"
+                  />
+                ) : branding?.logoMode === 'svg' && branding?.logoSvgContent ? (
+                  <div
+                    className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full"
+                    dangerouslySetInnerHTML={{ __html: branding.logoSvgContent }}
+                  />
+                ) : (
+                  <img
+                    src="/images/zavian-cube-mark.png"
+                    alt="Brand Logo"
+                    className="w-full h-full object-contain"
+                  />
+                )}
+              </div>
               <div className="flex items-center text-base tracking-wider">
-                <span className="font-extrabold text-white">ZAVIAN</span>
-                <span className="font-bold text-[#8B5CF6] ml-1">LABS</span>
+                <span className="font-extrabold text-white">{branding?.wordmark1 || 'ZAVIAN'}</span>
+                <span className="font-bold text-[#8B5CF6] ml-1">{branding?.wordmark2 || 'LABS'}</span>
               </div>
             </a>
 
