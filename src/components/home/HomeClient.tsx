@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
-import SceneCanvasWrapper from '@/components/canvas/SceneCanvasWrapper';
+import BackgroundOrbit from '@/components/canvas/BackgroundOrbit';
 import HeroSection from '@/components/sections/HeroSection';
 import AIReceptionistShowcase from '@/components/sections/AIReceptionistShowcase';
 import WorkflowPipelineSection from '@/components/sections/WorkflowPipelineSection';
@@ -75,12 +75,8 @@ export default function HomeClient({ content }: HomeClientProps) {
 
   return (
     <main className="relative min-h-screen">
-      {/* Root-Level Single 3D Background Canvas & Ambient Tech Depth */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        {/* Subtle radial glow in dark mode to restore ambient tech depth */}
-        <div className="absolute inset-0 hidden dark:block pointer-events-none [background:radial-gradient(ellipse_at_top,rgba(124,58,237,0.08),transparent_70%)]" />
-        <SceneCanvasWrapper />
-      </div>
+      {/* Root-Level Single 3D Background Canvas */}
+      <BackgroundOrbit />
 
       <Navbar
         onOpenQuoteModal={handleOpenModal}
