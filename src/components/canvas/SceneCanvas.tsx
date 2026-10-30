@@ -13,7 +13,7 @@ export default function SceneCanvas() {
   const isLight = mode === 'light';
 
   return (
-    <div className="fixed inset-0 pointer-events-none -z-10 opacity-30 dark:opacity-35 w-screen h-screen overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none z-0 opacity-30 dark:opacity-35 w-screen h-screen overflow-hidden">
       <Canvas
         gl={{
           antialias: false,
