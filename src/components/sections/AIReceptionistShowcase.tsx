@@ -92,21 +92,24 @@ export default function AIReceptionistShowcase({
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-violet-500/10 via-purple-400/5 to-cyan-500/10 blur-[120px] rounded-full dark:from-violet-600/15 dark:via-purple-500/10 dark:to-cyan-400/10" />
       </div>
 
-      {/* Header Section */}
-      <div className="max-w-3xl mb-14 sm:mb-20">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-500/25 bg-violet-500/5 dark:bg-violet-500/10 backdrop-blur-md mb-5">
-          <span className="w-1.5 h-1.5 rounded-full bg-violet-500 dark:bg-violet-400 animate-pulse" />
-          <span className="text-xs font-semibold tracking-wider text-violet-700 dark:text-violet-300 uppercase">
-            Meet Your AI Receptionist
+      {/* Section Header */}
+      <div className="max-w-3xl mb-14">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-sky-500/20 bg-sky-500/10 backdrop-blur-md mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
+          <span className="text-[10px] font-semibold tracking-widest text-sky-300 uppercase">
+            MEET YOUR AI RECEPTIONIST
           </span>
         </div>
 
-        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-950 dark:text-white leading-[1.15]">
-          Meet Your Always-On Receptionist.
+        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight lowercase">
+          meet your{" "}
+          <span className="bg-gradient-to-r from-sky-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
+            always-on receptionist.
+          </span>
         </h2>
 
-        <p className="mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl">
-          Every caller gets an answer. Every opportunity gets attention.
+        <p className="mt-4 text-base sm:text-lg text-neutral-300 leading-relaxed max-w-2xl">
+          Every missed call is a patient booking with your competitor. We answer enquiries, qualify patient needs, and book appointments directly into Google Calendar.
         </p>
       </div>
 
@@ -188,23 +191,21 @@ export default function AIReceptionistShowcase({
               </div>
             </div>
 
-            {/* Stage 04 */}
+            {/* Step 04 Replacement (Left Column) */}
             <div className="relative group">
-              <div className="absolute -left-[32px] sm:-left-[40px] top-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-neutral-900 border border-violet-500/30 flex items-center justify-center text-xs font-bold text-violet-600 dark:text-violet-300 shadow-sm transition-transform duration-300 group-hover:scale-110">
+              <div className="absolute -left-[32px] sm:-left-[40px] top-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-neutral-950 border border-sky-500/30 flex items-center justify-center text-xs font-bold text-sky-300 shadow-sm">
                 04
               </div>
               <div>
-                <h3 className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900 dark:text-white flex items-baseline gap-2">
-                  SYNC & NOTIFY
-                  <span className="text-sm font-normal text-neutral-400 dark:text-neutral-500">
-                    —
-                  </span>
-                  <span className="text-sm sm:text-base font-medium text-neutral-700 dark:text-neutral-200">
-                    Seamless CRM telemetry.
+                <h3 className="text-base sm:text-lg font-bold tracking-tight text-white flex items-baseline gap-2">
+                  NOTIFY & DISPATCH
+                  <span className="text-neutral-500 font-normal">—</span>
+                  <span className="text-sm font-medium text-neutral-300">
+                    Instant team updates.
                   </span>
                 </h3>
-                <p className="mt-2 text-sm sm:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xl">
-                  Transcribes call notes, routes urgent escalations via SMS/WhatsApp, and syncs full conversation records straight to your CRM and team dashboard.
+                <p className="mt-1 text-sm text-neutral-400 leading-relaxed">
+                  Automatically sends appointment details and a concise caller summary to your team.
                 </p>
               </div>
             </div>
@@ -305,6 +306,16 @@ export default function AIReceptionistShowcase({
                 </span>
                 <span>Lead brief sent to team dashboard</span>
               </div>
+            </div>
+
+            {/* Demo Card Proof Badge (Right Column Footer) */}
+            <div className="mt-4 pt-3 border-t border-neutral-800/80 flex flex-col items-center gap-2">
+              <div className="px-2.5 py-1 rounded-md bg-neutral-900 border border-neutral-800 text-[10px] font-mono tracking-wider text-neutral-400 uppercase">
+                DEMO WORKFLOW • GOOGLE CALENDAR BOOKING TESTED
+              </div>
+              <p className="text-[11px] text-neutral-500 text-center">
+                Live integration configured directly with your clinic's booking schedule during setup.
+              </p>
             </div>
 
           </div>
