@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Calendar } from "lucide-react";
+import { Play, Pause, Check } from "lucide-react";
+
+const WAVEFORM_BARS = [
+  24, 38, 55, 72, 45, 60, 85, 96, 70, 50, 82, 100, 88, 64, 78, 92, 74, 52, 85, 95, 68, 48, 62, 80, 58, 42, 30, 22
+];
 
 interface AIReceptionistShowcaseProps {
   onBookCall?: () => void;
@@ -208,55 +212,101 @@ export default function AIReceptionistShowcase({
           </div>
         </div>
 
-        {/* RIGHT COLUMN (40% Desktop) — Live Simulation */}
-        <div className="lg:col-span-5">
-          <div className="rounded-2xl border border-violet-500/20 bg-neutral-900/90 p-5 shadow-2xl backdrop-blur-xl">
-            {/* Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                <span className="text-xs font-semibold text-neutral-300 uppercase tracking-wider">Live Simulation</span>
+        {/* RIGHT COLUMN (40% Desktop) — Sleek Audio Preview Card */}
+        <div className="lg:col-span-5 flex flex-col justify-center">
+          <div className="rounded-3xl border border-violet-500/20 bg-neutral-900/70 p-6 sm:p-8 shadow-2xl shadow-black/40 backdrop-blur-xl transition-all">
+            {/* Top Bar */}
+            <div className="flex items-center justify-between pb-4 border-b border-neutral-800/80">
+              <div className="flex items-center gap-2.5">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
+                </span>
+                <span className="text-[11px] font-semibold tracking-wider text-neutral-300 uppercase font-mono">
+                  SAMPLE INBOUND CALL
+                </span>
               </div>
-              <span className="text-xs font-mono text-violet-400">Step 02 / 04</span>
+              <span className="text-xs font-mono font-medium text-violet-300/80">
+                00:24
+              </span>
             </div>
 
-            {/* Dynamic Typing Feed (The 'Train' Output) */}
-            <div className="my-4 space-y-2.5 font-mono text-xs">
-              <div className="text-neutral-500">[14:02:01] Inbound call received (0 missed calls)</div>
-              <div className="text-violet-300">
-                <span className="font-bold text-white">Attune:</span> "Thanks for calling Apex Dental! Looking for a checkup or a cosmetic consultation?"
+            {/* Heading & Subtext */}
+            <div className="mt-5 mb-6">
+              <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+                Attune™ Voice Preview
+              </h3>
+              <p className="mt-1 text-xs sm:text-sm text-neutral-400 font-medium">
+                Dental &amp; Aesthetics Intake Consultation
+              </p>
+            </div>
+
+            {/* Centered Elegant Horizontal Waveform with Violet Glow Highlights */}
+            <div className="my-6 p-4 rounded-2xl bg-neutral-950/60 border border-violet-500/15 shadow-inner">
+              <div className="flex items-center justify-between text-[11px] font-mono text-neutral-500 mb-2 px-1">
+                <span className="text-violet-400 font-medium">{formatTime(currentTime)}</span>
+                <span>00:24</span>
               </div>
-              <div className="text-neutral-300 pl-2 border-l border-neutral-700">
-                <span className="text-neutral-500">Caller:</span> "Cosmetic consultation for Invisalign."
-              </div>
-              <div className="text-emerald-400 flex items-center gap-1.5 pt-1">
-                <span>✓</span> Slot Reserved: Thursday 11:30 AM
+              <div className="flex items-center justify-center gap-1 sm:gap-1.5 h-14 sm:h-16 px-1">
+                {WAVEFORM_BARS.map((heightPercent, idx) => {
+                  const progressPercent = (currentTime / duration) * 100;
+                  const barPercent = (idx / WAVEFORM_BARS.length) * 100;
+                  const isPassed = barPercent <= progressPercent;
+
+                  return (
+                    <div
+                      key={idx}
+                      className={`flex-1 rounded-full transition-all duration-200 ${
+                        isPassed || isPlaying
+                          ? "bg-gradient-to-t from-violet-600 via-purple-400 to-violet-300 shadow-[0_0_10px_rgba(167,139,250,0.45)]"
+                          : "bg-neutral-800"
+                      }`}
+                      style={{
+                        height: isPlaying
+                          ? `${Math.max(18, Math.min(100, heightPercent * (0.6 + 0.4 * Math.sin(idx * 0.7 + currentTime * 3))))}%`
+                          : `${heightPercent}%`,
+                      }}
+                    />
+                  );
+                })}
               </div>
             </div>
 
-            {/* Compact Action Bar */}
-            <div className="pt-3 border-t border-neutral-800 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={togglePlayback}
-                className="flex items-center gap-2 text-xs font-medium text-white bg-violet-600 hover:bg-violet-700 px-3.5 py-2 rounded-lg transition-all cursor-pointer"
-              >
-                <span>{isPlaying ? "❚❚ Pause Sample" : "▶ Play Audio Sample"}</span>
-              </button>
-              <span className="text-[11px] text-neutral-500">Demo length: 00:24</span>
-            </div>
-          </div>
-
-          {/* Action CTA */}
-          <div className="mt-4">
+            {/* Single Prominent Button */}
             <button
               type="button"
-              onClick={() => onBookCall && onBookCall()}
-              className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+              onClick={togglePlayback}
+              className="w-full py-3.5 px-5 rounded-2xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2.5 shadow-lg shadow-violet-600/30 hover:shadow-violet-500/50 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
             >
-              <Calendar className="w-3.5 h-3.5 text-violet-600" />
-              <span>Book Strategy Call</span>
+              {isPlaying ? (
+                <>
+                  <Pause className="w-4 h-4 fill-current" />
+                  <span>Pause Voice Sample</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 fill-current ml-0.5" />
+                  <span>Listen to Voice Sample</span>
+                </>
+              )}
             </button>
+
+            {/* Two Clean Green Checkmark Bullet Points */}
+            <div className="mt-6 pt-5 border-t border-neutral-800/80 space-y-2.5">
+              <div className="flex items-center gap-2.5 text-xs sm:text-sm text-neutral-300">
+                <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 shrink-0">
+                  <Check className="w-3 h-3 stroke-[3]" />
+                </span>
+                <span>Appointment reserved in real-time</span>
+              </div>
+              <div className="flex items-center gap-2.5 text-xs sm:text-sm text-neutral-300">
+                <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 shrink-0">
+                  <Check className="w-3 h-3 stroke-[3]" />
+                </span>
+                <span>Lead brief sent to team dashboard</span>
+              </div>
+            </div>
+
           </div>
         </div>
 
