@@ -1,16 +1,45 @@
 'use client';
 
 import '@/lib/react-19-polyfill';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useTheme } from '@/components/providers/ThemeProvider';
+
+// Generate circular gradient texture (Purple -> Cyan -> Purple)
+function useOrbitGradient() {
+  return useMemo(() => {
+    if (typeof document === 'undefined') return null;
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 16;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    const grad = ctx.createLinearGradient(0, 0, 512, 0);
+    grad.addColorStop(0.0, '#8b5cf6'); // Neon Violet
+    grad.addColorStop(0.25, '#38bdf8'); // Electric Cyan
+    grad.addColorStop(0.5, '#7c3aed'); // Deep Indigo-Purple
+    grad.addColorStop(0.75, '#22d3ee'); // Ice Blue
+    grad.addColorStop(1.0, '#8b5cf6'); // Wrap back to Violet
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 512, 16);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    return texture;
+  }, []);
+}
 
 export function GyroscopeScene({ isLight }: { isLight: boolean }) {
   const systemRef = useRef<THREE.Group>(null!);
   const sphereRef = useRef<THREE.Mesh>(null!);
   const ring1Ref = useRef<THREE.Mesh>(null!);
   const ring2Ref = useRef<THREE.Mesh>(null!);
+
+  const gradientTexture = useOrbitGradient();
 
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
@@ -25,17 +54,13 @@ export function GyroscopeScene({ isLight }: { isLight: boolean }) {
       sphereRef.current.rotation.y += delta * 0.12;
     }
 
-    // 3. Ring 1 (Forward diagonal plane: ~40°)
+    // 3. Ring 1 (Locked diagonal orbital plane: spins cleanly on its Z-axis without tumbling)
     if (ring1Ref.current) {
-      ring1Ref.current.rotation.x = 0.7 + Math.sin(t * 0.35) * 0.06;
-      ring1Ref.current.rotation.y = 0.35 + Math.cos(t * 0.25) * 0.05;
       ring1Ref.current.rotation.z += delta * 0.16;
     }
 
-    // 4. Ring 2 (Opposing intersecting diagonal plane: ~38° — NEVER vertical)
+    // 4. Ring 2 (Locked opposing diagonal orbital plane: spins cleanly in opposing direction)
     if (ring2Ref.current) {
-      ring2Ref.current.rotation.x = -0.65 + Math.cos(t * 0.3) * 0.06;
-      ring2Ref.current.rotation.y = -0.55 + Math.sin(t * 0.2) * 0.05;
       ring2Ref.current.rotation.z -= delta * 0.12;
     }
   });
@@ -61,29 +86,35 @@ export function GyroscopeScene({ isLight }: { isLight: boolean }) {
           />
         </mesh>
 
-        {/* Ring 1 (Royal Indigo-Violet Orbit): Ultra-Thin Laser Profile */}
-        <mesh ref={ring1Ref} position={[0, 0, 0]}>
-          <torusGeometry args={[3.4, 0.016, 16, 120]} />
-          <meshBasicMaterial
-            color={isLight ? '#5b21b6' : '#7c3aed'}
-            transparent
-            opacity={isLight ? 0.75 : 0.42}
-            depthWrite={false}
-            blending={blending}
-          />
-        </mesh>
+        {/* Ring 1 (Forward diagonal plane: ~39° tilt locked, dual-tone violet-to-cyan gradient) */}
+        <group rotation={[0.68, 0.36, 0]}>
+          <mesh ref={ring1Ref} position={[0, 0, 0]}>
+            <torusGeometry args={[3.4, 0.016, 16, 120]} />
+            <meshBasicMaterial
+              map={gradientTexture ?? undefined}
+              color="#ffffff"
+              transparent
+              opacity={isLight ? 0.82 : 0.42}
+              depthWrite={false}
+              blending={blending}
+            />
+          </mesh>
+        </group>
 
-        {/* Ring 2 (Electric Cyan / Ice-Blue Counter-Orbit): Delicate Laser Profile */}
-        <mesh ref={ring2Ref} position={[0, 0, 0]}>
-          <torusGeometry args={[3.7, 0.014, 16, 120]} />
-          <meshBasicMaterial
-            color={isLight ? '#0284c7' : '#38bdf8'}
-            transparent
-            opacity={isLight ? 0.7 : 0.28}
-            depthWrite={false}
-            blending={blending}
-          />
-        </mesh>
+        {/* Ring 2 (Opposing intersecting diagonal plane: ~37° tilt locked, counter-spinning gradient) */}
+        <group rotation={[-0.62, -0.52, 0]}>
+          <mesh ref={ring2Ref} position={[0, 0, 0]}>
+            <torusGeometry args={[3.7, 0.014, 16, 120]} />
+            <meshBasicMaterial
+              map={gradientTexture ?? undefined}
+              color="#ffffff"
+              transparent
+              opacity={isLight ? 0.75 : 0.36}
+              depthWrite={false}
+              blending={blending}
+            />
+          </mesh>
+        </group>
       </group>
     </>
   );
