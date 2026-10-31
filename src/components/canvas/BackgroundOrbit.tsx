@@ -43,17 +43,17 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
 
-    // 1. Gentle anti-gravity vertical hover
+    // Subtle vertical hover (anti-gravity)
     if (systemRef.current) {
-      systemRef.current.position.y = Math.sin(t * 0.7) * 0.1;
+      systemRef.current.position.y = -0.25 + Math.sin(t * 0.7) * 0.08;
     }
 
-    // 2. Slow sphere rotation
+    // Slow sphere rotation
     if (sphereRef.current) {
       sphereRef.current.rotation.y += delta * 0.12;
     }
 
-    // 3. Smooth rotation strictly on each ring's local planar axis (zero wobble)
+    // Smooth orbital counter-rotation along local disk
     if (ring1MeshRef.current) ring1MeshRef.current.rotation.z += delta * 0.35;
     if (ring2MeshRef.current) ring2MeshRef.current.rotation.z -= delta * 0.25;
   });
@@ -65,24 +65,26 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
       <ambientLight intensity={isLight ? 0.8 : 0.5} />
       <pointLight color="#8b5cf6" intensity={isLight ? 1.5 : 1.0} distance={10} />
 
-      <group ref={systemRef} position={[0, 0, 0]}>
+      {/* Base position shifted to [0, -0.25, 0] to guarantee clearance under navbar */}
+      <group ref={systemRef} position={[0, -0.25, 0]}>
         {/* Central Wireframe Sphere */}
         <mesh ref={sphereRef} position={[0, 0, 0]}>
-          <icosahedronGeometry args={[2.2, 2]} />
+          <icosahedronGeometry args={[2.0, 2]} />
           <meshBasicMaterial
             color={isLight ? '#6d28d9' : '#a855f7'}
             wireframe
             transparent
-            opacity={isLight ? 0.6 : 0.34}
+            opacity={isLight ? 0.6 : 0.32}
             depthWrite={false}
             blending={blending}
           />
         </mesh>
 
-        {/* Ring 1 (Tilted +20°) */}
-        <group rotation={[1.01, 0, 0.35]}>
+        {/* Ring 1: Midway diagonal tilt (48° pitch, +25° roll) */}
+        <group rotation={[0.84, 0, 0.44]}>
           <mesh ref={ring1MeshRef}>
-            <torusGeometry args={[3.4, 0.015, 16, 120]} />
+            {/* Scaled down from 3.4 to 2.85 to eliminate navbar collision */}
+            <torusGeometry args={[2.85, 0.014, 16, 120]} />
             <meshBasicMaterial
               map={orbitTexture ?? undefined}
               transparent
@@ -93,10 +95,11 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
           </mesh>
         </group>
 
-        {/* Ring 2 (Tilted -20°) */}
-        <group rotation={[1.01, 0, -0.35]}>
+        {/* Ring 2: Midway diagonal tilt (48° pitch, -25° roll — 50° total scissor gap) */}
+        <group rotation={[0.84, 0, -0.44]}>
           <mesh ref={ring2MeshRef}>
-            <torusGeometry args={[3.65, 0.014, 16, 120]} />
+            {/* Scaled down from 3.65 to 3.10 */}
+            <torusGeometry args={[3.1, 0.013, 16, 120]} />
             <meshBasicMaterial
               map={orbitTexture ?? undefined}
               transparent
