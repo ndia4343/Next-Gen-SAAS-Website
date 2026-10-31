@@ -6,8 +6,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useTheme } from '@/components/providers/ThemeProvider';
 
-// Generate circular gradient texture (Purple -> Cyan -> Purple)
-function useOrbitGradient() {
+function useOrbitTexture() {
   return useMemo(() => {
     if (typeof document === 'undefined') return null;
     const canvas = document.createElement('canvas');
@@ -18,10 +17,10 @@ function useOrbitGradient() {
 
     const grad = ctx.createLinearGradient(0, 0, 512, 0);
     grad.addColorStop(0.0, '#8b5cf6'); // Neon Violet
-    grad.addColorStop(0.25, '#38bdf8'); // Electric Cyan
-    grad.addColorStop(0.5, '#7c3aed'); // Deep Indigo-Purple
-    grad.addColorStop(0.75, '#22d3ee'); // Ice Blue
-    grad.addColorStop(1.0, '#8b5cf6'); // Wrap back to Violet
+    grad.addColorStop(0.28, '#38bdf8'); // Electric Cyan
+    grad.addColorStop(0.5, '#7c3aed'); // Deep Indigo
+    grad.addColorStop(0.78, '#22d3ee'); // Ice Blue Glow
+    grad.addColorStop(1.0, '#8b5cf6');
 
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, 512, 16);
@@ -34,7 +33,7 @@ function useOrbitGradient() {
 }
 
 export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
-  const gradientTexture = useOrbitGradient();
+  const orbitTexture = useOrbitTexture();
 
   const systemRef = useRef<THREE.Group>(null!);
   const sphereRef = useRef<THREE.Mesh>(null!);
@@ -44,22 +43,22 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
 
-    // 1. Gentle anti-gravity vertical float
+    // 1. Gentle anti-gravity vertical hover
     if (systemRef.current) {
       systemRef.current.position.y = Math.sin(t * 0.7) * 0.1;
     }
 
     // 2. Slow sphere rotation
     if (sphereRef.current) {
-      sphereRef.current.rotation.y += delta * 0.1;
+      sphereRef.current.rotation.y += delta * 0.12;
     }
 
-    // 3. Smooth, stable orbit rotation along local ring plane (NO WOBBLE)
+    // 3. Smooth rotation strictly on each ring's local planar axis (zero wobble)
     if (ring1MeshRef.current) {
-      ring1MeshRef.current.rotation.z += delta * 0.22;
+      ring1MeshRef.current.rotation.z += delta * 0.2;
     }
     if (ring2MeshRef.current) {
-      ring2MeshRef.current.rotation.z -= delta * 0.18;
+      ring2MeshRef.current.rotation.z -= delta * 0.16;
     }
   });
 
@@ -72,40 +71,40 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
 
       <group ref={systemRef} position={[0, 0, 0]}>
         {/* Central Wireframe Sphere */}
-        <mesh ref={sphereRef}>
+        <mesh ref={sphereRef} position={[0, 0, 0]}>
           <icosahedronGeometry args={[2.2, 2]} />
           <meshBasicMaterial
             color={isLight ? '#6d28d9' : '#a855f7'}
             wireframe
             transparent
-            opacity={isLight ? 0.6 : 0.32}
+            opacity={isLight ? 0.6 : 0.34}
             depthWrite={false}
             blending={blending}
           />
         </mesh>
 
-        {/* Orbit 1: Locked Diagonal Tilt Group (~45°) */}
-        <group rotation={[0.75, 0.45, 0]}>
+        {/* Orbit Ring 1: Horizontal disk tilted +17.5° */}
+        <group rotation={[1.26, 0, 0.3]}>
           <mesh ref={ring1MeshRef}>
-            <torusGeometry args={[3.45, 0.016, 16, 120]} />
+            <torusGeometry args={[3.4, 0.015, 16, 120]} />
             <meshBasicMaterial
-              map={gradientTexture ?? undefined}
+              map={orbitTexture ?? undefined}
               transparent
-              opacity={isLight ? 0.82 : 0.45}
+              opacity={isLight ? 0.82 : 0.42}
               depthWrite={false}
               blending={blending}
             />
           </mesh>
         </group>
 
-        {/* Orbit 2: Locked Counter-Angle Intersecting Group (~-40°) */}
-        <group rotation={[-0.7, -0.5, 0.3]}>
+        {/* Orbit Ring 2: Horizontal disk tilted -17.5° (35° total separation) */}
+        <group rotation={[1.26, 0, -0.3]}>
           <mesh ref={ring2MeshRef}>
-            <torusGeometry args={[3.75, 0.014, 16, 120]} />
+            <torusGeometry args={[3.65, 0.014, 16, 120]} />
             <meshBasicMaterial
-              map={gradientTexture ?? undefined}
+              map={orbitTexture ?? undefined}
               transparent
-              opacity={isLight ? 0.75 : 0.38}
+              opacity={isLight ? 0.75 : 0.36}
               depthWrite={false}
               blending={blending}
             />
