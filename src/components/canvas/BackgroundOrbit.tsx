@@ -15,12 +15,12 @@ function useOrbitTexture() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
 
-    // High-contrast gradient with distinct light pulses so motion is immediately visible
+    // Two-tone gradient with distinct light pulses so motion is immediately visible
     const grad = ctx.createLinearGradient(0, 0, 1024, 0);
     grad.addColorStop(0.0, '#8b5cf6');   // Neon Violet
-    grad.addColorStop(0.2, '#38bdf8');   // Electric Cyan Beam
-    grad.addColorStop(0.4, 'transparent'); // Break gap (ensures rotation is clearly visible)
-    grad.addColorStop(0.6, '#a855f7');   // Synthwave Purple
+    grad.addColorStop(0.22, '#38bdf8');  // Electric Cyan Beam
+    grad.addColorStop(0.45, 'transparent'); // Break gap for visible rotation
+    grad.addColorStop(0.65, '#a855f7');  // Synthwave Violet
     grad.addColorStop(0.85, '#22d3ee');  // Bright Cyan Pulse
     grad.addColorStop(1.0, '#8b5cf6');
 
@@ -45,27 +45,27 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
 
-    // 1. Subtle anti-gravity vertical float (locked lower to clear navbar)
+    // 1. Subtle anti-gravity vertical float (docked at -0.4 to clear the navbar)
     if (systemRef.current) {
-      systemRef.current.position.y = -0.45 + Math.sin(t * 0.8) * 0.08;
+      systemRef.current.position.y = -0.4 + Math.sin(t * 0.7) * 0.06;
     }
 
-    // 2. Continuous sphere rotation
+    // 2. Slow sphere rotation
     if (sphereRef.current) {
-      sphereRef.current.rotation.y += delta * 0.15;
+      sphereRef.current.rotation.y += delta * 0.12;
     }
 
-    // 3. Ring mesh rotation
+    // 3. Counter-rotational orbital speeds
     if (ring1MeshRef.current) {
-      ring1MeshRef.current.rotation.z += delta * 0.4;
+      ring1MeshRef.current.rotation.z += delta * 0.28;
     }
     if (ring2MeshRef.current) {
-      ring2MeshRef.current.rotation.z -= delta * 0.28;
+      ring2MeshRef.current.rotation.z -= delta * 0.22;
     }
 
-    // 4. CRITICAL: Texture UV offset animation (guarantees visible orbital motion)
+    // 4. Texture UV offset animation (guarantees traveling light pulses)
     if (orbitTexture) {
-      orbitTexture.offset.x = (orbitTexture.offset.x + delta * 0.18) % 1;
+      orbitTexture.offset.x = (orbitTexture.offset.x + delta * 0.16) % 1;
     }
   });
 
@@ -76,8 +76,8 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
       <ambientLight intensity={isLight ? 0.8 : 0.5} />
       <pointLight color="#8b5cf6" intensity={isLight ? 1.5 : 1.0} distance={10} />
 
-      {/* Base position lowered to [0, -0.45, 0] to eliminate navbar collision */}
-      <group ref={systemRef} position={[0, -0.45, 0]}>
+      {/* Docked system group anchored low to prevent clipping floating navbar */}
+      <group ref={systemRef} position={[0, -0.4, 0]}>
         {/* Central Wireframe Sphere */}
         <mesh ref={sphereRef} position={[0, 0, 0]}>
           <icosahedronGeometry args={[2.0, 2]} />
@@ -91,28 +91,28 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
           />
         </mesh>
 
-        {/* Ring 1: Steep Diagonal Slash (/) */}
-        <group rotation={[0.72, 0.15, 0.70]}>
+        {/* Ring 1: Thin Near-Horizontal Equatorial Ring (Saturn Style) */}
+        <group rotation={[1.30, 0, -0.1]}>
           <mesh ref={ring1MeshRef}>
-            <torusGeometry args={[2.8, 0.014, 16, 120]} />
+            <torusGeometry args={[3.2, 0.012, 16, 120]} />
             <meshBasicMaterial
               map={orbitTexture ?? undefined}
               transparent
-              opacity={isLight ? 0.85 : 0.45}
+              opacity={isLight ? 0.8 : 0.38}
               depthWrite={false}
               blending={blending}
             />
           </mesh>
         </group>
 
-        {/* Ring 2: Close to Horizontal Equator (_) */}
-        <group rotation={[1.32, 0, -0.15]}>
+        {/* Ring 2: Noticeably Broader Diagonal Ribbon Slicing Upward */}
+        <group rotation={[0.70, 0.15, 0.72]}>
           <mesh ref={ring2MeshRef}>
-            <torusGeometry args={[3.15, 0.013, 16, 120]} />
+            <torusGeometry args={[2.8, 0.034, 16, 120]} />
             <meshBasicMaterial
               map={orbitTexture ?? undefined}
               transparent
-              opacity={isLight ? 0.8 : 0.38}
+              opacity={isLight ? 0.85 : 0.45}
               depthWrite={false}
               blending={blending}
             />
