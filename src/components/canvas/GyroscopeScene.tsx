@@ -76,8 +76,8 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
 
   const systemRef = useRef<THREE.Group>(null!);
   const sphereRef = useRef<THREE.Mesh>(null!);
-  const ring1MeshesRef = useRef<THREE.Group>(null!);
-  const ring2MeshesRef = useRef<THREE.Group>(null!);
+  const ring1MeshRef = useRef<THREE.Mesh>(null!);
+  const ring2MeshRef = useRef<THREE.Mesh>(null!);
 
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
@@ -94,13 +94,13 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
     }
 
     // Ring 1 counter-rotational spin
-    if (ring1MeshesRef.current) {
-      ring1MeshesRef.current.rotation.z += delta * 0.22;
+    if (ring1MeshRef.current) {
+      ring1MeshRef.current.rotation.z += delta * 0.22;
     }
 
     // Ring 2 counter-rotational spin
-    if (ring2MeshesRef.current) {
-      ring2MeshesRef.current.rotation.z -= delta * 0.18;
+    if (ring2MeshRef.current) {
+      ring2MeshRef.current.rotation.z -= delta * 0.18;
     }
 
     // Continuous visible pulse travel along circumference
@@ -108,8 +108,6 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
       orbitTexture.offset.x = (orbitTexture.offset.x + delta * 0.18) % 1;
     }
   });
-
-  const blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
 
   return (
     <>
@@ -142,118 +140,40 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
             color={isLight ? '#5b21b6' : '#a855f7'}
             wireframe
             transparent
-            opacity={isLight ? 0.42 : 0.26}
+            opacity={isLight ? 0.25 : 0.20}
             depthWrite={false}
-            blending={blending}
+            blending={THREE.NormalBlending}
           />
         </mesh>
 
-        {/* Ring 1: Horizontal Saturn-Style Disc Ring (Tilted forward ~75°) */}
-        <group rotation={[1.32, 0, -0.06]}>
-          <group ref={ring1MeshesRef}>
-            {/* Core Radiant Tube */}
-            <mesh>
-              <torusGeometry args={[2.45, 0.012, 16, 120]} />
-              <meshBasicMaterial
-                map={orbitTexture ?? undefined}
-                transparent
-                opacity={isLight ? 0.95 : 0.75}
-                depthWrite={false}
-                blending={blending}
-              />
-            </mesh>
-
-            {/* Inner Concentric Filament Strand */}
-            <mesh>
-              <torusGeometry args={[2.36, 0.008, 16, 120]} />
-              <meshBasicMaterial
-                map={orbitTexture ?? undefined}
-                transparent
-                opacity={isLight ? 0.85 : 0.50}
-                depthWrite={false}
-                blending={blending}
-              />
-            </mesh>
-
-            {/* Outer Concentric Filament Strand */}
-            <mesh>
-              <torusGeometry args={[2.54, 0.008, 16, 120]} />
-              <meshBasicMaterial
-                map={orbitTexture ?? undefined}
-                transparent
-                opacity={isLight ? 0.80 : 0.45}
-                depthWrite={false}
-                blending={blending}
-              />
-            </mesh>
-
-            {/* Atmospheric Depth Halo (Controlled for high contrast on light & dark) */}
-            <mesh>
-              <torusGeometry args={[2.45, 0.08, 16, 90]} />
-              <meshBasicMaterial
-                color={isLight ? '#3b82f6' : undefined}
-                map={isLight ? undefined : (orbitTexture ?? undefined)}
-                transparent
-                opacity={isLight ? 0.14 : 0.18}
-                depthWrite={false}
-                blending={blending}
-              />
-            </mesh>
-          </group>
+        {/* Ring 1: Equatorial Orbit (Dim & Delicate) */}
+        <group rotation={[1.38, 0, 0]}>
+          <mesh ref={ring1MeshRef}>
+            {/* Thinned tube from 0.012 to 0.009 */}
+            <torusGeometry args={[2.45, 0.009, 16, 120]} />
+            <meshBasicMaterial
+              map={orbitTexture ?? undefined}
+              transparent
+              opacity={0.32} // Dimmed so it sits gently in the background
+              depthWrite={false}
+              blending={THREE.NormalBlending}
+            />
+          </mesh>
         </group>
 
-        {/* Ring 2: Diagonal Slicing Ribbon (Tilted up to the right / across center) */}
-        <group rotation={[0.72, -0.14, -0.62]}>
-          <group ref={ring2MeshesRef}>
-            {/* Core Radiant Tube */}
-            <mesh>
-              <torusGeometry args={[2.65, 0.022, 16, 120]} />
-              <meshBasicMaterial
-                map={orbitTexture ?? undefined}
-                transparent
-                opacity={isLight ? 0.95 : 0.78}
-                depthWrite={false}
-                blending={blending}
-              />
-            </mesh>
-
-            {/* Inner Concentric Filament Strand */}
-            <mesh>
-              <torusGeometry args={[2.55, 0.010, 16, 120]} />
-              <meshBasicMaterial
-                map={orbitTexture ?? undefined}
-                transparent
-                opacity={isLight ? 0.85 : 0.52}
-                depthWrite={false}
-                blending={blending}
-              />
-            </mesh>
-
-            {/* Outer Concentric Filament Strand */}
-            <mesh>
-              <torusGeometry args={[2.75, 0.010, 16, 120]} />
-              <meshBasicMaterial
-                map={orbitTexture ?? undefined}
-                transparent
-                opacity={isLight ? 0.80 : 0.48}
-                depthWrite={false}
-                blending={blending}
-              />
-            </mesh>
-
-            {/* Atmospheric Depth Halo */}
-            <mesh>
-              <torusGeometry args={[2.65, 0.09, 16, 90]} />
-              <meshBasicMaterial
-                color={isLight ? '#3b82f6' : undefined}
-                map={isLight ? undefined : (orbitTexture ?? undefined)}
-                transparent
-                opacity={isLight ? 0.14 : 0.20}
-                depthWrite={false}
-                blending={blending}
-              />
-            </mesh>
-          </group>
+        {/* Ring 2: Diagonal Ribbon (Subtle Secondary Accent) */}
+        <group rotation={[1.05, 0, 0.38]}>
+          <mesh ref={ring2MeshRef}>
+            {/* Thinned tube from 0.024 down to 0.014 */}
+            <torusGeometry args={[2.65, 0.014, 16, 120]} />
+            <meshBasicMaterial
+              map={orbitTexture ?? undefined}
+              transparent
+              opacity={0.38} // Kept visible, but never blocks text
+              depthWrite={false}
+              blending={THREE.NormalBlending}
+            />
+          </mesh>
         </group>
       </group>
     </>
