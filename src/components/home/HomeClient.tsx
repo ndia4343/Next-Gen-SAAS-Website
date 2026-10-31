@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
-import BackgroundOrbit from '@/components/canvas/BackgroundOrbit';
 import HeroSection from '@/components/sections/HeroSection';
 import AIReceptionistShowcase from '@/components/sections/AIReceptionistShowcase';
 import WorkflowPipelineSection from '@/components/sections/WorkflowPipelineSection';
@@ -75,9 +74,6 @@ export default function HomeClient({ content }: HomeClientProps) {
 
   return (
     <main className="relative min-h-screen">
-      {/* Root-Level Single 3D Background Canvas */}
-      <BackgroundOrbit />
-
       <Navbar
         onOpenQuoteModal={handleOpenModal}
         content={content.header}

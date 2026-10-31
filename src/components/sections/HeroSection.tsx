@@ -5,6 +5,7 @@ import { useGSAP } from '@gsap/react';
 import { gsap } from '@/lib/gsap';
 import { HeroSectionData } from '@/lib/types';
 import { HeroTypewriter } from './HeroTypewriter';
+import GyroscopeCanvas from '@/components/canvas/BackgroundOrbit';
 
 interface HeroProps {
   onOpenQuoteModal?: (service: string) => void;
@@ -26,12 +27,10 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
     { scope: containerRef }
   );
 
-  const handlePrimaryClick = () => {
+  const handlePrimaryClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (onOpenQuoteModal) {
+      e.preventDefault();
       onOpenQuoteModal('Live Demo');
-    } else {
-      const el = document.getElementById('book') || document.getElementById('custom-quote');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -39,36 +38,40 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
     <section
       id="hero"
       ref={containerRef}
-      className="relative z-10 bg-transparent min-h-[calc(100vh-5rem)] flex flex-col justify-between items-center px-4 sm:px-6 lg:px-12 pt-24 sm:pt-28 pb-6 sm:pb-8 scroll-mt-28"
+      className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-between items-center pt-24 pb-6 overflow-hidden scroll-mt-28"
     >
-      <div className="relative z-10 max-w-5xl mx-auto px-4 text-center flex flex-col items-center my-auto">
-        {/* Subtle backdrop glow/mask to prevent 3D wireframe text collisions */}
-        <div className="absolute inset-0 -z-10 bg-radial from-white/80 via-white/40 to-transparent dark:from-black/80 dark:via-black/40 dark:to-transparent blur-2xl pointer-events-none" />
+      {/* 3D Canvas Background */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <GyroscopeCanvas />
+      </div>
 
-        {/* 1. EYEBROW BADGE */}
+      {/* Top / Main Hero Stack */}
+      <div className="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto px-4 my-auto">
+        {/* Eyebrow Badge */}
         {content?.badgeVisible !== false && (
-          <div className="hero-badge inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest px-3.5 py-1.5 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-700 dark:text-violet-400 mb-6 backdrop-blur-md">
-            <span>● AI VOICE & BUSINESS AUTOMATION</span>
+          <div className="hero-badge inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-700 dark:text-violet-400 text-xs font-mono mb-4">
+            ● AI VOICE & BUSINESS AUTOMATION
           </div>
         )}
 
-        {/* 2. HEADLINE */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-900 dark:text-white max-w-5xl mx-auto leading-[1.1] text-center">
+        {/* Main Headline */}
+        <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-neutral-900 dark:text-white leading-tight">
           Never Miss Another{' '}
-          <span className="bg-gradient-to-r from-violet-700 via-sky-600 to-cyan-600 dark:from-violet-400 dark:via-sky-300 dark:to-cyan-300 bg-clip-text text-transparent pb-1 inline-block">
+          <span className="bg-gradient-to-r from-violet-700 via-sky-600 to-cyan-600 dark:from-violet-400 dark:via-sky-300 dark:to-cyan-300 bg-clip-text text-transparent">
             Opportunity.
           </span>
         </h1>
 
-        {/* 3. SUPPORTING LINE */}
-        <p className="hero-desc text-neutral-600 dark:text-neutral-400 text-base sm:text-lg max-w-2xl mx-auto text-center mt-6 mb-6 leading-relaxed">
+        {/* Supporting Line */}
+        <p className="hero-desc mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
           AI receptionists and intelligent automations that capture leads, handle conversations, and book appointments — around the clock.
         </p>
 
-        {/* 4. ACTION BUTTONS & ANCHORS */}
+        {/* CTA Group */}
         <div className="hero-cta-group flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
           <a
             href="#book"
+            onClick={handlePrimaryClick}
             className="w-full sm:w-auto px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition-all shadow-lg shadow-violet-500/20 text-center"
           >
             Book a Live Demo →
@@ -82,10 +85,8 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         </div>
       </div>
 
-      {/* 5. ACCESSIBLE SHIFT-FREE TYPEWRITER (Anchored to the bottom base of the hero viewport) */}
-      <div className="relative z-10 w-full flex justify-center pb-2 sm:pb-3 mt-auto">
-        <HeroTypewriter />
-      </div>
+      {/* Bottom Docked Typewriter Pill */}
+      <HeroTypewriter />
     </section>
   );
 }

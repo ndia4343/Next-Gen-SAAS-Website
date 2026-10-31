@@ -50,12 +50,12 @@ export function HeroTypewriter() {
   // Reduced motion fallback: Clean static display
   if (prefersReducedMotion) {
     return (
-      <div className="mt-4 flex justify-center">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100/90 dark:bg-neutral-900/80 border border-neutral-300 dark:border-neutral-800 shadow-sm backdrop-blur-md">
-          <span className="text-xs sm:text-sm font-semibold tracking-wide text-neutral-950 dark:text-neutral-300 select-none">
+      <div className="relative z-10 mt-auto pt-4 flex justify-center w-full px-4" aria-live="off">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100/90 dark:bg-neutral-900/80 border border-neutral-300 dark:border-neutral-800 shadow-sm backdrop-blur-md max-w-full overflow-hidden">
+          <span className="text-xs sm:text-sm font-semibold tracking-wide text-neutral-950 dark:text-neutral-300 whitespace-nowrap select-none">
             We build
           </span>
-          <span className="text-xs sm:text-sm font-bold tracking-tight text-sky-600 dark:text-cyan-400 min-h-[1.25rem] flex items-center">
+          <span className="text-xs sm:text-sm font-bold tracking-tight text-sky-600 dark:text-cyan-400 min-h-[1.25rem] flex items-center whitespace-nowrap truncate">
             Autonomous Systems & AI Infrastructure
           </span>
         </div>
@@ -64,22 +64,19 @@ export function HeroTypewriter() {
   }
 
   return (
-    <div className="mt-4 flex justify-center" aria-live="off">
+    <div className="relative z-10 mt-auto pt-4 flex justify-center w-full px-4" aria-live="off">
       <span className="sr-only">We build {capabilities[index]}</span>
-      
-      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100/90 dark:bg-neutral-900/80 border border-neutral-300 dark:border-neutral-800 shadow-sm backdrop-blur-md">
-        {/* Light Mode: Solid Dark Charcoal | Dark Mode: Silver-White */}
-        <span className="text-xs sm:text-sm font-semibold tracking-wide text-neutral-950 dark:text-neutral-300 select-none">
+
+      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100/90 dark:bg-neutral-900/80 border border-neutral-300 dark:border-neutral-800 shadow-sm backdrop-blur-md max-w-full overflow-hidden">
+        <span className="text-xs sm:text-sm font-semibold tracking-wide text-neutral-950 dark:text-neutral-300 whitespace-nowrap select-none">
           We build
         </span>
-
-        {/* Light Mode: Deep Electric Blue | Dark Mode: Electric Cyan */}
         <span 
           aria-hidden="true" 
-          className="text-xs sm:text-sm font-bold tracking-tight text-sky-600 dark:text-cyan-400 min-h-[1.25rem] flex items-center"
+          className="text-xs sm:text-sm font-bold tracking-tight text-sky-600 dark:text-cyan-400 min-h-[1.25rem] flex items-center whitespace-nowrap truncate"
         >
           <span>{capabilities[index].substring(0, subIndex)}</span>
-          <span className="inline-block w-1.5 h-3.5 ml-1 bg-sky-600 dark:bg-cyan-400 animate-pulse" />
+          <span className="inline-block w-1.5 h-3.5 ml-1 bg-sky-600 dark:bg-cyan-400 animate-pulse flex-shrink-0" />
         </span>
       </div>
     </div>

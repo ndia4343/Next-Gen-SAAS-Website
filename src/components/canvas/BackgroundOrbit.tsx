@@ -123,7 +123,7 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
   );
 }
 
-export default function BackgroundOrbit() {
+export function GyroscopeCanvas() {
   const [mounted, setMounted] = useState(false);
   const { mode } = useTheme();
   const isLight = mode === 'light';
@@ -134,12 +134,12 @@ export default function BackgroundOrbit() {
 
   if (!mounted) {
     return (
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" />
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden" />
     );
   }
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
       {/* Ambient Synthwave Radial Flare (Behind Canvas) */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(99,102,241,0.12),rgba(139,92,246,0.05)_50%,transparent_85%)] dark:bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(99,102,241,0.18),rgba(139,92,246,0.08)_50%,transparent_85%)]" />
 
@@ -155,3 +155,5 @@ export default function BackgroundOrbit() {
     </div>
   );
 }
+
+export default GyroscopeCanvas;
