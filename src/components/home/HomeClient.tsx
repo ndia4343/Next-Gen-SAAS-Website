@@ -73,7 +73,7 @@ export default function HomeClient({ content }: HomeClientProps) {
   };
 
   return (
-    <main className="relative min-h-screen">
+    <main className="relative bg-white dark:bg-[#07070d] min-h-screen transition-colors">
       <Navbar
         onOpenQuoteModal={handleOpenModal}
         content={content.header}

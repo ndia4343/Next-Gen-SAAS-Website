@@ -49,7 +49,7 @@
 
   html,
   body {
-    background-color: #050508;
+    background-color: #07070d;
     color: #f4f4f5;
     font-family: var(--font-display);
     overflow-x: hidden;
@@ -58,7 +58,7 @@
 
   html.light,
   html.light body {
-    background-color: #fafafa !important;
+    background-color: #ffffff !important;
     color: #09090b !important;
   }
 
