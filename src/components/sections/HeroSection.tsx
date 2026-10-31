@@ -63,7 +63,7 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         </h1>
 
         {/* Supporting Line */}
-        <p className="hero-desc mt-4 text-base sm:text-lg font-semibold text-neutral-700 dark:text-neutral-200 max-w-2xl leading-relaxed">
+        <p className="hero-desc mt-4 text-base sm:text-lg font-medium text-neutral-900 dark:text-neutral-200 max-w-2xl leading-relaxed">
           AI receptionists and intelligent automations that capture leads, handle conversations, and book appointments — around the clock.
         </p>
 
