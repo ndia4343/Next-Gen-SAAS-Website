@@ -15,26 +15,28 @@ export function GyroscopeScene({ isLight }: { isLight: boolean }) {
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
 
-    // 1. Anti-gravity vertical hover
+    // 1. Anti-gravity hover
     if (systemRef.current) {
-      systemRef.current.position.y = Math.sin(t * 0.8) * 0.12;
+      systemRef.current.position.y = Math.sin(t * 0.75) * 0.12;
     }
 
-    // 2. Violet core sphere slow continuous spin
+    // 2. Violet core slow continuous rotation
     if (sphereRef.current) {
       sphereRef.current.rotation.y += delta * 0.12;
     }
 
-    // 3. Ring 1 (Forward orbital tilt)
+    // 3. Ring 1 (Forward diagonal plane: ~40°)
     if (ring1Ref.current) {
-      ring1Ref.current.rotation.x = 1.1 + Math.sin(t * 0.4) * 0.08;
-      ring1Ref.current.rotation.z += delta * 0.18;
+      ring1Ref.current.rotation.x = 0.7 + Math.sin(t * 0.35) * 0.06;
+      ring1Ref.current.rotation.y = 0.35 + Math.cos(t * 0.25) * 0.05;
+      ring1Ref.current.rotation.z += delta * 0.16;
     }
 
-    // 4. Ring 2 (Opposing counter-orbital tilt)
+    // 4. Ring 2 (Opposing intersecting diagonal plane: ~38° — NEVER vertical)
     if (ring2Ref.current) {
-      ring2Ref.current.rotation.y = -0.8 + Math.cos(t * 0.35) * 0.08;
-      ring2Ref.current.rotation.z -= delta * 0.14;
+      ring2Ref.current.rotation.x = -0.65 + Math.cos(t * 0.3) * 0.06;
+      ring2Ref.current.rotation.y = -0.55 + Math.sin(t * 0.2) * 0.05;
+      ring2Ref.current.rotation.z -= delta * 0.12;
     }
   });
 
@@ -46,7 +48,7 @@ export function GyroscopeScene({ isLight }: { isLight: boolean }) {
       <pointLight color="#8b5cf6" intensity={isLight ? 1.5 : 1.0} distance={10} />
 
       <group ref={systemRef} position={[0, 0, 0]}>
-        {/* Sole Violet Wireframe Sphere */}
+        {/* Central Wireframe Sphere: Synthwave Violet */}
         <mesh ref={sphereRef} position={[0, 0, 0]}>
           <icosahedronGeometry args={[2.2, 2]} />
           <meshBasicMaterial
@@ -59,25 +61,25 @@ export function GyroscopeScene({ isLight }: { isLight: boolean }) {
           />
         </mesh>
 
-        {/* Primary Slim Violet Orbit Ring */}
+        {/* Ring 1 (Royal Indigo-Violet Orbit): Ultra-Thin Laser Profile */}
         <mesh ref={ring1Ref} position={[0, 0, 0]}>
           <torusGeometry args={[3.4, 0.016, 16, 120]} />
           <meshBasicMaterial
             color={isLight ? '#5b21b6' : '#7c3aed'}
             transparent
-            opacity={isLight ? 0.75 : 0.4}
+            opacity={isLight ? 0.75 : 0.42}
             depthWrite={false}
             blending={blending}
           />
         </mesh>
 
-        {/* Secondary Slim Violet Orbit Ring */}
+        {/* Ring 2 (Electric Cyan / Ice-Blue Counter-Orbit): Delicate Laser Profile */}
         <mesh ref={ring2Ref} position={[0, 0, 0]}>
           <torusGeometry args={[3.7, 0.014, 16, 120]} />
           <meshBasicMaterial
-            color={isLight ? '#7c3aed' : '#8b5cf6'}
+            color={isLight ? '#0284c7' : '#38bdf8'}
             transparent
-            opacity={isLight ? 0.7 : 0.35}
+            opacity={isLight ? 0.7 : 0.28}
             depthWrite={false}
             blending={blending}
           />
@@ -108,7 +110,7 @@ export default function BackgroundOrbit() {
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(99,102,241,0.12),rgba(139,92,246,0.05)_50%,transparent_85%)] dark:bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(99,102,241,0.18),rgba(139,92,246,0.08)_50%,transparent_85%)]" />
 
       {/* Sphere Center Aura */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(124,58,237,0.12)_0%,rgba(99,102,241,0.05)_45%,transparent_70%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(124,58,237,0.22)_0%,rgba(99,102,241,0.08)_45%,transparent_70%)]" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(124,58,237,0.12)_0%,rgba(34,211,238,0.04)_35%,rgba(99,102,241,0.05)_55%,transparent_70%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(124,58,237,0.22)_0%,rgba(34,211,238,0.05)_35%,rgba(99,102,241,0.08)_55%,transparent_70%)]" />
 
       <Canvas
         camera={{ position: [0, 0, 7], fov: 45 }}
