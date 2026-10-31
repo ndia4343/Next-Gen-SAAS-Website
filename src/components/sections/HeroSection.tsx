@@ -39,9 +39,9 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
     <section
       id="hero"
       ref={containerRef}
-      className="relative z-10 bg-transparent min-h-[calc(100vh-5rem)] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-12 pt-24 sm:pt-28 pb-12 sm:pb-14 scroll-mt-28"
+      className="relative z-10 bg-transparent min-h-[calc(100vh-5rem)] flex flex-col justify-between items-center px-4 sm:px-6 lg:px-12 pt-24 sm:pt-28 pb-6 sm:pb-8 scroll-mt-28"
     >
-      <div className="relative z-10 max-w-5xl mx-auto px-4 text-center flex flex-col items-center">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 text-center flex flex-col items-center my-auto">
         {/* Subtle backdrop glow/mask to prevent 3D wireframe text collisions */}
         <div className="absolute inset-0 -z-10 bg-radial from-white/80 via-white/40 to-transparent dark:from-black/80 dark:via-black/40 dark:to-transparent blur-2xl pointer-events-none" />
 
@@ -80,8 +80,10 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
             Hear It in Action →
           </a>
         </div>
+      </div>
 
-        {/* 5. ACCESSIBLE SHIFT-FREE TYPEWRITER */}
+      {/* 5. ACCESSIBLE SHIFT-FREE TYPEWRITER (Anchored to the bottom base of the hero viewport) */}
+      <div className="relative z-10 w-full flex justify-center pb-2 sm:pb-3 mt-auto">
         <HeroTypewriter />
       </div>
     </section>

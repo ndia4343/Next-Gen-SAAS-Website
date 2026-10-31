@@ -10,20 +10,22 @@ function useOrbitTexture() {
   return useMemo(() => {
     if (typeof document === 'undefined') return null;
     const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 16;
+    canvas.width = 1024;
+    canvas.height = 32;
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
 
-    const grad = ctx.createLinearGradient(0, 0, 512, 0);
-    grad.addColorStop(0.0, '#8b5cf6'); // Neon Violet
-    grad.addColorStop(0.28, '#38bdf8'); // Electric Cyan
-    grad.addColorStop(0.5, '#7c3aed'); // Deep Indigo
-    grad.addColorStop(0.78, '#22d3ee'); // Ice Blue Glow
+    // High-contrast gradient with distinct light pulses so motion is immediately visible
+    const grad = ctx.createLinearGradient(0, 0, 1024, 0);
+    grad.addColorStop(0.0, '#8b5cf6');   // Neon Violet
+    grad.addColorStop(0.2, '#38bdf8');   // Electric Cyan Beam
+    grad.addColorStop(0.4, 'transparent'); // Break gap (ensures rotation is clearly visible)
+    grad.addColorStop(0.6, '#a855f7');   // Synthwave Purple
+    grad.addColorStop(0.85, '#22d3ee');  // Bright Cyan Pulse
     grad.addColorStop(1.0, '#8b5cf6');
 
     ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 512, 16);
+    ctx.fillRect(0, 0, 1024, 32);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.wrapS = THREE.RepeatWrapping;
@@ -43,19 +45,28 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
 
-    // Subtle vertical hover (anti-gravity)
+    // 1. Subtle anti-gravity vertical float (locked lower to clear navbar)
     if (systemRef.current) {
-      systemRef.current.position.y = -0.25 + Math.sin(t * 0.7) * 0.08;
+      systemRef.current.position.y = -0.45 + Math.sin(t * 0.8) * 0.08;
     }
 
-    // Slow sphere rotation
+    // 2. Continuous sphere rotation
     if (sphereRef.current) {
-      sphereRef.current.rotation.y += delta * 0.12;
+      sphereRef.current.rotation.y += delta * 0.15;
     }
 
-    // Smooth orbital counter-rotation along local disk
-    if (ring1MeshRef.current) ring1MeshRef.current.rotation.z += delta * 0.35;
-    if (ring2MeshRef.current) ring2MeshRef.current.rotation.z -= delta * 0.25;
+    // 3. Ring mesh rotation
+    if (ring1MeshRef.current) {
+      ring1MeshRef.current.rotation.z += delta * 0.4;
+    }
+    if (ring2MeshRef.current) {
+      ring2MeshRef.current.rotation.z -= delta * 0.28;
+    }
+
+    // 4. CRITICAL: Texture UV offset animation (guarantees visible orbital motion)
+    if (orbitTexture) {
+      orbitTexture.offset.x = (orbitTexture.offset.x + delta * 0.18) % 1;
+    }
   });
 
   const blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
@@ -65,8 +76,8 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
       <ambientLight intensity={isLight ? 0.8 : 0.5} />
       <pointLight color="#8b5cf6" intensity={isLight ? 1.5 : 1.0} distance={10} />
 
-      {/* Base position shifted to [0, -0.25, 0] to guarantee clearance under navbar */}
-      <group ref={systemRef} position={[0, -0.25, 0]}>
+      {/* Base position lowered to [0, -0.45, 0] to eliminate navbar collision */}
+      <group ref={systemRef} position={[0, -0.45, 0]}>
         {/* Central Wireframe Sphere */}
         <mesh ref={sphereRef} position={[0, 0, 0]}>
           <icosahedronGeometry args={[2.0, 2]} />
@@ -74,36 +85,34 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
             color={isLight ? '#6d28d9' : '#a855f7'}
             wireframe
             transparent
-            opacity={isLight ? 0.6 : 0.32}
+            opacity={isLight ? 0.6 : 0.3}
             depthWrite={false}
             blending={blending}
           />
         </mesh>
 
-        {/* Ring 1: Midway diagonal tilt (48° pitch, +25° roll) */}
-        <group rotation={[0.84, 0, 0.44]}>
+        {/* Ring 1: Steep Diagonal Slash (/) */}
+        <group rotation={[0.72, 0.15, 0.70]}>
           <mesh ref={ring1MeshRef}>
-            {/* Scaled down from 3.4 to 2.85 to eliminate navbar collision */}
-            <torusGeometry args={[2.85, 0.014, 16, 120]} />
+            <torusGeometry args={[2.8, 0.014, 16, 120]} />
             <meshBasicMaterial
               map={orbitTexture ?? undefined}
               transparent
-              opacity={isLight ? 0.82 : 0.42}
+              opacity={isLight ? 0.85 : 0.45}
               depthWrite={false}
               blending={blending}
             />
           </mesh>
         </group>
 
-        {/* Ring 2: Midway diagonal tilt (48° pitch, -25° roll — 50° total scissor gap) */}
-        <group rotation={[0.84, 0, -0.44]}>
+        {/* Ring 2: Close to Horizontal Equator (_) */}
+        <group rotation={[1.32, 0, -0.15]}>
           <mesh ref={ring2MeshRef}>
-            {/* Scaled down from 3.65 to 3.10 */}
-            <torusGeometry args={[3.1, 0.013, 16, 120]} />
+            <torusGeometry args={[3.15, 0.013, 16, 120]} />
             <meshBasicMaterial
               map={orbitTexture ?? undefined}
               transparent
-              opacity={isLight ? 0.75 : 0.36}
+              opacity={isLight ? 0.8 : 0.38}
               depthWrite={false}
               blending={blending}
             />
