@@ -43,9 +43,9 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
 
-    // 1. Subtle anti-gravity vertical float (docked at -0.40 to guarantee clearance below navbar)
+    // 1. Subtle anti-gravity vertical float (docked at -0.55 to guarantee clearance below eyebrow badge)
     if (systemRef.current) {
-      systemRef.current.position.y = -0.40 + Math.sin(t * 0.7) * 0.06;
+      systemRef.current.position.y = -0.55 + Math.sin(t * 0.7) * 0.06;
     }
 
     // 2. Slow sphere rotation
@@ -70,11 +70,11 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
   const blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
 
   return (
-    // Lowered origin prevents the upper arc from touching or clipping behind the navbar capsule
-    <group ref={systemRef} position={[0, -0.40, 0]}>
+    // Lowered origin prevents the upper arc from touching or clipping behind the eyebrow badge
+    <group ref={systemRef} position={[0, -0.55, 0]}>
       {/* Central Wireframe Sphere */}
       <mesh ref={sphereRef} position={[0, 0, 0]}>
-        <icosahedronGeometry args={[1.95, 2]} />
+        <icosahedronGeometry args={[1.9, 2]} />
         <meshBasicMaterial
           color={isLight ? '#6d28d9' : '#a855f7'}
           wireframe
@@ -88,7 +88,8 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
       {/* Ring 1: Thin Near-Horizontal Equatorial Ring */}
       <group rotation={[1.35, 0, 0]}>
         <mesh ref={ring1MeshRef}>
-          <torusGeometry args={[2.95, 0.012, 16, 120]} />
+          {/* Scaled to 2.85 */}
+          <torusGeometry args={[2.85, 0.012, 16, 120]} />
           <meshBasicMaterial
             map={orbitTexture ?? undefined}
             transparent
@@ -99,10 +100,11 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
         </mesh>
       </group>
 
-      {/* Ring 2: Broader Diagonal Slicing Ribbon */}
+      {/* Ring 2: Diagonal Slicing Ribbon */}
       <group rotation={[0.82, 0, 0.48]}>
         <mesh ref={ring2MeshRef}>
-          <torusGeometry args={[3.25, 0.024, 16, 120]} />
+          {/* Scaled from 3.25 down to 3.05 to clear the eyebrow */}
+          <torusGeometry args={[3.05, 0.022, 16, 120]} />
           <meshBasicMaterial
             map={orbitTexture ?? undefined}
             transparent

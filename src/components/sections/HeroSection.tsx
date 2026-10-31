@@ -38,7 +38,7 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
     <section
       id="hero"
       ref={containerRef}
-      className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-between items-center pt-24 pb-6 overflow-hidden scroll-mt-28"
+      className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-between items-center pt-20 sm:pt-24 pb-4 sm:pb-6 overflow-hidden scroll-mt-28"
     >
       {/* 3D Canvas Background */}
       <div className="absolute inset-0 pointer-events-none z-0">
