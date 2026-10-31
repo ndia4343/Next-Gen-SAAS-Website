@@ -47,6 +47,9 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
 
       {/* Top / Main Hero Stack */}
       <div className="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto px-4 my-auto">
+        {/* Subtle backdrop glow/mask to guarantee text legibility over glowing 3D rings */}
+        <div className="absolute inset-0 -z-10 bg-radial from-white/90 via-white/50 to-transparent dark:from-black/85 dark:via-black/50 dark:to-transparent blur-3xl pointer-events-none" />
+
         {/* Eyebrow Badge */}
         {content?.badgeVisible !== false && (
           <div className="hero-badge inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-700 dark:text-violet-400 text-xs font-mono mb-4">
