@@ -50,7 +50,7 @@ export function HeroTypewriter() {
   // Reduced motion fallback: Clean static display
   if (prefersReducedMotion) {
     return (
-      <div className="relative z-10 mt-5 pb-1 flex justify-center w-full px-4" aria-live="off">
+      <div className="relative z-10 mt-7 sm:mt-8 flex justify-center w-full px-4" aria-live="off">
         <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-neutral-100/95 dark:bg-neutral-900/90 border border-neutral-300 dark:border-neutral-800 shadow-md backdrop-blur-md">
           <span className="text-sm sm:text-base font-bold tracking-wide text-neutral-950 dark:text-neutral-200 select-none">
             We build
@@ -64,7 +64,7 @@ export function HeroTypewriter() {
   }
 
   return (
-    <div className="relative z-10 mt-5 pb-1 flex justify-center w-full px-4" aria-live="off">
+    <div className="relative z-10 mt-7 sm:mt-8 flex justify-center w-full px-4" aria-live="off">
       <span className="sr-only">We build {capabilities[index]}</span>
 
       <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-neutral-100/95 dark:bg-neutral-900/90 border border-neutral-300 dark:border-neutral-800 shadow-md backdrop-blur-md">
