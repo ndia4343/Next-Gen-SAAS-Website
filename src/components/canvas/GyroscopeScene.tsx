@@ -82,9 +82,9 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
 
-    // Subtle anti-gravity vertical float (docked at y = -0.20 to frame headline & center perfectly)
+    // Subtle anti-gravity vertical float (docked at y = -0.75 to pull rings below badge and clear buttons)
     if (systemRef.current) {
-      systemRef.current.position.y = -0.20 + Math.sin(t * 0.7) * 0.05;
+      systemRef.current.position.y = -0.75 + Math.sin(t * 0.7) * 0.05;
     }
 
     // Slow continuous sphere rotation
@@ -133,11 +133,11 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
         position={[0, 1, -2]}
       />
 
-      {/* Positioned at y = -0.20: centered in mid with equal navbar & bottom gaps */}
-      <group ref={systemRef} position={[0, -0.20, 0]}>
+      {/* Positioned at y = -0.75: pulls top ring arc below badge and clears bottom buttons */}
+      <group ref={systemRef} position={[0, -0.75, 0]}>
         {/* Central Wireframe Sphere */}
         <mesh ref={sphereRef} position={[0, 0, 0]}>
-          <icosahedronGeometry args={[1.85, 2]} />
+          <icosahedronGeometry args={[1.5, 2]} />
           <meshBasicMaterial
             color={isLight ? '#5b21b6' : '#a855f7'}
             wireframe
@@ -153,7 +153,7 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
           <group ref={ring1MeshesRef}>
             {/* Core Radiant Tube */}
             <mesh>
-              <torusGeometry args={[3.15, 0.055, 24, 160]} />
+              <torusGeometry args={[2.45, 0.012, 16, 120]} />
               <meshBasicMaterial
                 map={orbitTexture ?? undefined}
                 transparent
@@ -165,7 +165,7 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
 
             {/* Inner Concentric Filament Strand */}
             <mesh>
-              <torusGeometry args={[3.02, 0.018, 16, 140]} />
+              <torusGeometry args={[2.36, 0.008, 16, 120]} />
               <meshBasicMaterial
                 map={orbitTexture ?? undefined}
                 transparent
@@ -177,7 +177,7 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
 
             {/* Outer Concentric Filament Strand */}
             <mesh>
-              <torusGeometry args={[3.28, 0.016, 16, 140]} />
+              <torusGeometry args={[2.54, 0.008, 16, 120]} />
               <meshBasicMaterial
                 map={orbitTexture ?? undefined}
                 transparent
@@ -189,7 +189,7 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
 
             {/* Atmospheric Depth Halo (Controlled for high contrast on light & dark) */}
             <mesh>
-              <torusGeometry args={[3.15, 0.13, 16, 90]} />
+              <torusGeometry args={[2.45, 0.08, 16, 90]} />
               <meshBasicMaterial
                 color={isLight ? '#3b82f6' : undefined}
                 map={isLight ? undefined : (orbitTexture ?? undefined)}
@@ -207,7 +207,7 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
           <group ref={ring2MeshesRef}>
             {/* Core Radiant Tube */}
             <mesh>
-              <torusGeometry args={[2.78, 0.065, 24, 160]} />
+              <torusGeometry args={[2.65, 0.022, 16, 120]} />
               <meshBasicMaterial
                 map={orbitTexture ?? undefined}
                 transparent
@@ -219,7 +219,7 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
 
             {/* Inner Concentric Filament Strand */}
             <mesh>
-              <torusGeometry args={[2.66, 0.020, 16, 140]} />
+              <torusGeometry args={[2.55, 0.010, 16, 120]} />
               <meshBasicMaterial
                 map={orbitTexture ?? undefined}
                 transparent
@@ -231,7 +231,7 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
 
             {/* Outer Concentric Filament Strand */}
             <mesh>
-              <torusGeometry args={[2.90, 0.018, 16, 140]} />
+              <torusGeometry args={[2.75, 0.010, 16, 120]} />
               <meshBasicMaterial
                 map={orbitTexture ?? undefined}
                 transparent
@@ -243,7 +243,7 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
 
             {/* Atmospheric Depth Halo */}
             <mesh>
-              <torusGeometry args={[2.78, 0.15, 16, 90]} />
+              <torusGeometry args={[2.65, 0.09, 16, 90]} />
               <meshBasicMaterial
                 color={isLight ? '#3b82f6' : undefined}
                 map={isLight ? undefined : (orbitTexture ?? undefined)}

@@ -41,6 +41,18 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
       ref={containerRef}
       className="relative min-h-screen min-h-[100dvh] flex flex-col justify-center items-center pt-20 pb-4 overflow-hidden scroll-mt-24"
     >
+      {/* Dark Radial Contrast Stage */}
+      <div 
+        className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none"
+      >
+        <div 
+          className="w-[720px] h-[520px] rounded-full translate-y-16 blur-3xl opacity-70"
+          style={{
+            background: 'radial-gradient(circle, rgba(15, 23, 42, 0.45) 0%, rgba(30, 41, 59, 0.20) 45%, transparent 70%)'
+          }}
+        />
+      </div>
+
       {/* 3D Canvas Background */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <GyroscopeCanvas />
@@ -48,8 +60,6 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
 
       {/* Main Hero Stack: Unified Vertically-Centered Composition (Equal spacing top & bottom) */}
       <div className="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto px-4 my-auto">
-        {/* Subtle backdrop glow/mask in light mode; dark mode remains 100% unified with single page background */}
-        <div className="absolute -inset-10 -z-10 bg-radial from-white/85 via-white/45 to-transparent dark:hidden blur-3xl pointer-events-none" />
 
         {/* Eyebrow Badge */}
         {content?.badgeVisible !== false && (
