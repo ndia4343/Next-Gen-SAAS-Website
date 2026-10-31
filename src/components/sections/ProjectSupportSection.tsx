@@ -535,7 +535,8 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
 
         </div>
 
-        {/* Solutions-to-Footer Bridge (#custom-quote) */}
+        {/* Solutions-to-Footer Bridge (#custom-quote / #book) */}
+        <div id="book" className="scroll-mt-28" />
         <div id="custom-quote" className="mt-6 sm:mt-8 relative bg-transparent overflow-hidden rounded-2xl">
           {/* Bottom CTA Bar */}
           <div className="p-5 sm:p-6 rounded-2xl bg-white/80 dark:bg-[#12151E]/80 border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4">

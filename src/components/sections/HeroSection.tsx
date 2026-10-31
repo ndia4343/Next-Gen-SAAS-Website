@@ -66,25 +66,18 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         </p>
 
         {/* 4. ACTION BUTTONS & ANCHORS */}
-        <div className="hero-cta-group flex flex-wrap items-center justify-center gap-4">
-          <button
-            type="button"
-            onClick={handlePrimaryClick}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-violet-500/20 hover:shadow-violet-500/35 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+        <div className="hero-cta-group flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+          <a
+            href="#book"
+            className="w-full sm:w-auto px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition-all shadow-lg shadow-violet-500/20 text-center"
           >
-            <span>Book a Live Demo →</span>
-          </button>
-
+            Book a Live Demo →
+          </a>
           <a
             href="#voice-demo"
-            onClick={(e) => {
-              e.preventDefault();
-              const el = document.getElementById('voice-demo');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-900 dark:text-neutral-200 font-semibold text-sm tracking-wide transition-all duration-300 cursor-pointer"
+            className="w-full sm:w-auto px-6 py-3 rounded-full border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-900 dark:text-neutral-200 font-medium text-sm transition-all text-center"
           >
-            <span>Hear It in Action →</span>
+            Hear It in Action →
           </a>
         </div>
 
