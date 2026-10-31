@@ -50,35 +50,39 @@ export function HeroTypewriter() {
   // Reduced motion fallback: Clean static display
   if (prefersReducedMotion) {
     return (
-      <div className="flex items-center justify-center gap-2 font-mono text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-6 tracking-wide">
-        <span className="text-neutral-400 dark:text-neutral-500">We build</span>
-        <span className="text-violet-700 dark:text-cyan-400 font-medium">
-          Autonomous Systems & AI Infrastructure
-        </span>
+      <div className="flex items-center justify-center mt-6">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100/90 dark:bg-neutral-900/80 border border-neutral-300/80 dark:border-neutral-800 backdrop-blur-md shadow-sm">
+          <span className="text-xs sm:text-sm font-semibold tracking-wide text-neutral-950 dark:text-neutral-300">
+            We build
+          </span>
+          <span className="text-xs sm:text-sm font-bold tracking-tight text-sky-600 dark:text-cyan-400 min-h-[1.25rem] flex items-center">
+            Autonomous Systems & AI Infrastructure
+          </span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div 
-      className="flex items-center justify-center gap-2 font-mono text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-6 tracking-wide"
-      aria-live="off"
-    >
+    <div className="flex items-center justify-center mt-6" aria-live="off">
       {/* Screen reader static label to prevent character-by-character announcements */}
-      <span className="sr-only">
-        We build: {capabilities[index]}
-      </span>
+      <span className="sr-only">We build: {capabilities[index]}</span>
 
-      <span className="text-neutral-400 dark:text-neutral-500 select-none">We build</span>
-
-      {/* Reserved height and inline container prevents layout shifts and awkward mobile wrapping */}
-      <span 
+      <div 
         aria-hidden="true"
-        className="inline-flex items-center text-violet-700 dark:text-cyan-400 font-medium min-h-[1.5rem] tracking-tight sm:tracking-normal"
+        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100/90 dark:bg-neutral-900/80 border border-neutral-300/80 dark:border-neutral-800 backdrop-blur-md shadow-sm"
       >
-        <span>{capabilities[index].substring(0, subIndex)}</span>
-        <span className="inline-block w-1.5 h-3.5 sm:h-4 ml-1 bg-violet-600 dark:bg-cyan-400 animate-pulse" />
-      </span>
+        {/* Static Prefix: Solid Black in Light Mode, Silver-White in Dark Mode */}
+        <span className="text-xs sm:text-sm font-semibold tracking-wide text-neutral-950 dark:text-neutral-300 select-none">
+          We build
+        </span>
+
+        {/* Dynamic Animation: Deep Electric Blue in Light Mode, Vibrant Cyan in Dark Mode */}
+        <span className="text-xs sm:text-sm font-bold tracking-tight text-sky-600 dark:text-cyan-400 min-h-[1.25rem] flex items-center">
+          {capabilities[index].slice(0, subIndex)}
+          <span className="inline-block w-1.5 h-3.5 ml-1 bg-sky-600 dark:bg-cyan-400 animate-pulse" />
+        </span>
+      </div>
     </div>
   );
 }
