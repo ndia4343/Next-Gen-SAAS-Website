@@ -41,18 +41,6 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
       ref={containerRef}
       className="relative min-h-screen min-h-[100dvh] flex flex-col justify-center items-center pt-20 pb-4 overflow-hidden scroll-mt-24"
     >
-      {/* Dark Radial Contrast Stage */}
-      <div 
-        className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none"
-      >
-        <div 
-          className="w-[720px] h-[520px] rounded-full translate-y-16 blur-3xl opacity-70"
-          style={{
-            background: 'radial-gradient(circle, rgba(15, 23, 42, 0.45) 0%, rgba(30, 41, 59, 0.20) 45%, transparent 70%)'
-          }}
-        />
-      </div>
-
       {/* 3D Canvas Background */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <GyroscopeCanvas />
