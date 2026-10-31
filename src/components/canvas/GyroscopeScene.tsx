@@ -82,9 +82,9 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
 
-    // Subtle anti-gravity vertical float (docked at y = -0.48 for clean text framing and navbar clearance)
+    // Subtle anti-gravity vertical float (docked at y = -0.35 to center in mid with equal top/bottom gaps)
     if (systemRef.current) {
-      systemRef.current.position.y = -0.48 + Math.sin(t * 0.7) * 0.05;
+      systemRef.current.position.y = -0.35 + Math.sin(t * 0.7) * 0.05;
     }
 
     // Slow continuous sphere rotation
@@ -133,8 +133,8 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
         position={[0, 1, -2]}
       />
 
-      {/* Positioned at y = -0.48: frames the text, stays clear of the floating navbar */}
-      <group ref={systemRef} position={[0, -0.48, 0]}>
+      {/* Positioned at y = -0.35: centered in mid with equal navbar & bottom gaps */}
+      <group ref={systemRef} position={[0, -0.35, 0]}>
         {/* Central Wireframe Sphere */}
         <mesh ref={sphereRef} position={[0, 0, 0]}>
           <icosahedronGeometry args={[1.85, 2]} />

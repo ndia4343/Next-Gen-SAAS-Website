@@ -22,7 +22,8 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
       tl.from('.hero-badge', { y: -25, opacity: 0, duration: 0.8, delay: 0.15 })
         .from('h1', { y: 40, opacity: 0, duration: 0.95 }, '-=0.4')
         .from('.hero-desc', { y: 25, opacity: 0, duration: 0.8 }, '-=0.5')
-        .from('.hero-cta-group', { scale: 0.96, opacity: 0, duration: 0.6 }, '-=0.4');
+        .from('.hero-cta-group', { scale: 0.96, opacity: 0, duration: 0.6 }, '-=0.4')
+        .from('.hero-typewriter', { y: 15, opacity: 0, duration: 0.6 }, '-=0.3');
     },
     { scope: containerRef }
   );
@@ -38,60 +39,59 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
     <section
       id="hero"
       ref={containerRef}
-      className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-between items-center pt-20 sm:pt-24 pb-4 sm:pb-6 overflow-hidden scroll-mt-28"
+      className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-center items-center pt-24 sm:pt-28 pb-8 sm:pb-12 overflow-hidden scroll-mt-28"
     >
-      {/* Synchronized Hero Composition: 3D Canvas + Content Stack shifted down together as one unified unit */}
-      <div className="relative w-full flex-1 flex flex-col justify-between items-center translate-y-12 sm:translate-y-16 md:translate-y-20">
-        {/* 3D Canvas Background */}
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <GyroscopeCanvas />
-        </div>
+      {/* 3D Canvas Background */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <GyroscopeCanvas />
+      </div>
 
-        {/* Top / Main Hero Stack */}
-        <div className="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto px-4 my-auto">
-          {/* Subtle backdrop glow/mask in light mode; dark mode remains 100% unified with single page background */}
-          <div className="absolute -inset-10 -z-10 bg-radial from-white/85 via-white/45 to-transparent dark:hidden blur-3xl pointer-events-none" />
+      {/* Main Hero Stack: Unified Vertically-Centered Composition (Equal spacing top & bottom) */}
+      <div className="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto px-4 my-auto">
+        {/* Subtle backdrop glow/mask in light mode; dark mode remains 100% unified with single page background */}
+        <div className="absolute -inset-10 -z-10 bg-radial from-white/85 via-white/45 to-transparent dark:hidden blur-3xl pointer-events-none" />
 
-          {/* Eyebrow Badge */}
-          {content?.badgeVisible !== false && (
-            <div className="hero-badge inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-700 dark:text-violet-400 text-xs font-mono mb-4">
-              ● AI VOICE & BUSINESS AUTOMATION
-            </div>
-          )}
-
-          {/* Main Headline */}
-          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-neutral-900 dark:text-white leading-tight">
-            Never Miss Another{' '}
-            <span className="bg-gradient-to-r from-violet-700 via-sky-600 to-cyan-600 dark:from-violet-400 dark:via-sky-300 dark:to-cyan-300 bg-clip-text text-transparent">
-              Opportunity.
-            </span>
-          </h1>
-
-          {/* Supporting Line */}
-          <p className="hero-desc mt-4 text-base sm:text-lg font-medium text-neutral-900 dark:text-neutral-200 max-w-2xl leading-relaxed">
-            AI receptionists and intelligent automations that capture leads, handle conversations, and book appointments — around the clock.
-          </p>
-
-          {/* CTA Group */}
-          <div className="hero-cta-group flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-            <a
-              href="#book"
-              onClick={handlePrimaryClick}
-              className="w-full sm:w-auto px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition-all shadow-lg shadow-violet-500/20 text-center"
-            >
-              Book a Live Demo →
-            </a>
-            <a
-              href="#voice-demo"
-              className="w-full sm:w-auto px-6 py-3 rounded-full border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-900 dark:text-neutral-200 font-medium text-sm transition-all text-center"
-            >
-              Hear It in Action →
-            </a>
+        {/* Eyebrow Badge */}
+        {content?.badgeVisible !== false && (
+          <div className="hero-badge inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-700 dark:text-violet-400 text-xs font-mono mb-4">
+            ● AI VOICE & BUSINESS AUTOMATION
           </div>
+        )}
+
+        {/* Main Headline */}
+        <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-neutral-900 dark:text-white leading-tight">
+          Never Miss Another{' '}
+          <span className="bg-gradient-to-r from-violet-700 via-sky-600 to-cyan-600 dark:from-violet-400 dark:via-sky-300 dark:to-cyan-300 bg-clip-text text-transparent">
+            Opportunity.
+          </span>
+        </h1>
+
+        {/* Supporting Line */}
+        <p className="hero-desc mt-4 text-base sm:text-lg font-medium text-neutral-900 dark:text-neutral-200 max-w-2xl leading-relaxed">
+          AI receptionists and intelligent automations that capture leads, handle conversations, and book appointments — around the clock.
+        </p>
+
+        {/* CTA Group */}
+        <div className="hero-cta-group flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
+          <a
+            href="#book"
+            onClick={handlePrimaryClick}
+            className="w-full sm:w-auto px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition-all shadow-lg shadow-violet-500/20 text-center"
+          >
+            Book a Live Demo →
+          </a>
+          <a
+            href="#voice-demo"
+            className="w-full sm:w-auto px-6 py-3 rounded-full border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-900 dark:text-neutral-200 font-medium text-sm transition-all text-center"
+          >
+            Hear It in Action →
+          </a>
         </div>
 
-        {/* Bottom Docked Typewriter Pill */}
-        <HeroTypewriter />
+        {/* Typewriter Pill (Part of the centered hero unit — never cut off) */}
+        <div className="hero-typewriter w-full">
+          <HeroTypewriter />
+        </div>
       </div>
     </section>
   );
