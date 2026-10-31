@@ -50,12 +50,12 @@ export function HeroTypewriter() {
   // Reduced motion fallback: Clean static display
   if (prefersReducedMotion) {
     return (
-      <div className="relative z-10 mt-auto pt-2 pb-2 sm:pb-3 flex justify-center w-full px-4" aria-live="off">
-        <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-neutral-100/90 dark:bg-neutral-900/80 border border-neutral-300 dark:border-neutral-800 shadow-sm backdrop-blur-md max-w-full overflow-hidden">
-          <span className="text-sm sm:text-base font-semibold tracking-wide text-neutral-950 dark:text-neutral-200 whitespace-nowrap select-none">
+      <div className="relative z-10 mt-6 pb-4 flex justify-center w-full px-4" aria-live="off">
+        <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-neutral-100/95 dark:bg-neutral-900/90 border border-neutral-300 dark:border-neutral-800 shadow-md backdrop-blur-md">
+          <span className="text-sm sm:text-base font-bold tracking-wide text-neutral-950 dark:text-neutral-200 select-none">
             We build
           </span>
-          <span className="text-sm sm:text-base font-bold tracking-tight text-sky-600 dark:text-cyan-400 min-h-[1.5rem] flex items-center whitespace-nowrap truncate">
+          <span className="text-sm sm:text-base font-bold tracking-tight text-blue-600 dark:text-cyan-400 min-h-[1.5rem] flex items-center whitespace-nowrap">
             Autonomous Systems & AI Infrastructure
           </span>
         </div>
@@ -64,19 +64,19 @@ export function HeroTypewriter() {
   }
 
   return (
-    <div className="relative z-10 mt-auto pt-2 pb-2 sm:pb-3 flex justify-center w-full px-4" aria-live="off">
+    <div className="relative z-10 mt-6 pb-4 flex justify-center w-full px-4" aria-live="off">
       <span className="sr-only">We build {capabilities[index]}</span>
 
-      <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-neutral-100/90 dark:bg-neutral-900/80 border border-neutral-300 dark:border-neutral-800 shadow-sm backdrop-blur-md max-w-full overflow-hidden">
-        <span className="text-sm sm:text-base font-semibold tracking-wide text-neutral-950 dark:text-neutral-200 whitespace-nowrap select-none">
+      <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-neutral-100/95 dark:bg-neutral-900/90 border border-neutral-300 dark:border-neutral-800 shadow-md backdrop-blur-md">
+        <span className="text-sm sm:text-base font-bold tracking-wide text-neutral-950 dark:text-neutral-200 select-none">
           We build
         </span>
         <span 
           aria-hidden="true" 
-          className="text-sm sm:text-base font-bold tracking-tight text-sky-600 dark:text-cyan-400 min-h-[1.5rem] flex items-center whitespace-nowrap truncate"
+          className="text-sm sm:text-base font-bold tracking-tight text-blue-600 dark:text-cyan-400 min-h-[1.5rem] flex items-center whitespace-nowrap"
         >
           <span>{capabilities[index].substring(0, subIndex)}</span>
-          <span className="inline-block w-1.5 h-4 ml-1.5 bg-sky-600 dark:bg-cyan-400 animate-pulse flex-shrink-0" />
+          <span className="inline-block w-2 h-4 ml-1 bg-blue-600 dark:bg-cyan-400 animate-pulse flex-shrink-0" />
         </span>
       </div>
     </div>
