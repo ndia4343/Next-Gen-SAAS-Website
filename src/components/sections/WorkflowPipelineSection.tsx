@@ -13,7 +13,7 @@ export default function WorkflowPipelineSection({
   return (
     <section
       id="workflow-pipeline"
-      className="relative z-10 bg-transparent py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden text-neutral-900 dark:text-neutral-100 transition-colors duration-300"
+      className="relative z-10 bg-transparent py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden text-neutral-900 dark:text-neutral-100 transition-colors duration-300 scroll-mt-28"
     >
       {/* Editorial Ambient Background Glow */}
       <div className="absolute inset-0 pointer-events-none z-0">

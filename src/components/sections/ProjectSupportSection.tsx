@@ -269,7 +269,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
   const item = INDUSTRIES[activeIdx];
 
   return (
-    <section id="project-support" className="relative z-20 bg-white dark:bg-[#08080c] shadow-2xl w-full text-slate-900 dark:text-slate-100 pt-36 pb-24 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-300">
+    <section id="project-support" className="relative z-20 bg-white dark:bg-[#08080c] shadow-2xl w-full text-slate-900 dark:text-slate-100 pt-36 pb-24 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-300 scroll-mt-28">
       {/* Background glow accents */}
       <div className="absolute top-1/3 -left-40 w-96 h-96 bg-[#8B5CF6]/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-16 -right-20 w-80 h-80 bg-[#ff5722]/10 rounded-full blur-[140px] pointer-events-none" />
