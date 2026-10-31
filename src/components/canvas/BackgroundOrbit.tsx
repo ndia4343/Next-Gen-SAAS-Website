@@ -54,12 +54,8 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
     }
 
     // 3. Smooth rotation strictly on each ring's local planar axis (zero wobble)
-    if (ring1MeshRef.current) {
-      ring1MeshRef.current.rotation.z += delta * 0.2;
-    }
-    if (ring2MeshRef.current) {
-      ring2MeshRef.current.rotation.z -= delta * 0.16;
-    }
+    if (ring1MeshRef.current) ring1MeshRef.current.rotation.z += delta * 0.35;
+    if (ring2MeshRef.current) ring2MeshRef.current.rotation.z -= delta * 0.25;
   });
 
   const blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
@@ -83,8 +79,8 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
           />
         </mesh>
 
-        {/* Orbit Ring 1: Horizontal disk tilted +17.5° */}
-        <group rotation={[1.26, 0, 0.3]}>
+        {/* Ring 1 (Tilted +20°) */}
+        <group rotation={[1.01, 0, 0.35]}>
           <mesh ref={ring1MeshRef}>
             <torusGeometry args={[3.4, 0.015, 16, 120]} />
             <meshBasicMaterial
@@ -97,8 +93,8 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
           </mesh>
         </group>
 
-        {/* Orbit Ring 2: Horizontal disk tilted -17.5° (35° total separation) */}
-        <group rotation={[1.26, 0, -0.3]}>
+        {/* Ring 2 (Tilted -20°) */}
+        <group rotation={[1.01, 0, -0.35]}>
           <mesh ref={ring2MeshRef}>
             <torusGeometry args={[3.65, 0.014, 16, 120]} />
             <meshBasicMaterial
