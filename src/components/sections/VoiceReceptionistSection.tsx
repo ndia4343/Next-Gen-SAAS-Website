@@ -1,44 +1,48 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface Scenario {
   id: string;
-  label: string;
-  caller: string;
-  intent: string;
-  durationLabel: string;
-  slot: string;
+  tag: string;
+  callerName: string;
+  callerText: string;
+  agentReply: string;
+  outcome: string;
   audioSrc: string;
+  duration: number;
 }
 
 const SCENARIOS: Scenario[] = [
   {
     id: 'dental',
-    label: 'Dental Intake',
-    caller: 'Sarah M.',
-    intent: 'Invisalign Consultation',
-    durationLabel: '00:24',
-    slot: 'Thu, Nov 12 @ 11:30 AM',
+    tag: 'Dental Clinic Intake',
+    callerName: 'Sarah M.',
+    callerText: 'Hi, I need to schedule a consultation for Invisalign this Thursday.',
+    agentReply: 'I can help with that. Dr. Vance has an opening at 11:30 AM this Thursday. Shall I lock that in?',
+    outcome: 'Slot Reserved: Thu 11:30 AM',
     audioSrc: '/audio/dental-demo.mp3',
+    duration: 22,
   },
   {
     id: 'solar',
-    label: 'Solar Survey',
-    caller: 'David K.',
-    intent: '10kW Net Metering Inquiry',
-    durationLabel: '00:28',
-    slot: 'Fri, Nov 13 @ 2:00 PM',
+    tag: 'Solar & Roofing Inbound',
+    callerName: 'David K.',
+    callerText: 'Hello, looking for an estimate on a 10kW residential net-metering system.',
+    agentReply: 'Great. Let me pull up your area tariffs. Can you confirm your current monthly bill bracket?',
+    outcome: 'Lead Qualified & Dispatched',
     audioSrc: '/audio/solar-demo.mp3',
+    duration: 26,
   },
   {
     id: 'emergency',
-    label: 'Emergency Dispatch',
-    caller: 'Michael R.',
-    intent: 'Burst Pipe Urgent Service',
-    durationLabel: '00:19',
-    slot: 'Dispatched to On-Call Tech',
+    tag: 'Emergency Plumbing Dispatch',
+    callerName: 'Michael R.',
+    callerText: 'I have a burst pipe in my basement flooding the floor right now.',
+    agentReply: 'Understood. Shut off your main water valve immediately. Dispatching our on-call tech to your address now.',
+    outcome: 'Emergency Ticket Dispatched',
     audioSrc: '/audio/emergency-demo.mp3',
+    duration: 18,
   },
 ];
 
@@ -47,237 +51,226 @@ interface VoiceReceptionistSectionProps {
 }
 
 export function VoiceReceptionistSection({ onBookCall }: VoiceReceptionistSectionProps = {}) {
-  const [activeTab, setActiveTab] = useState<Scenario>(SCENARIOS[0]);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [audioError, setAudioError] = useState(false);
-
+  const [activeScenario, setActiveScenario] = useState<Scenario>(SCENARIOS[0]);
+  const [isCalling, setIsCalling] = useState(false);
+  const [seconds, setSeconds] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Switch tabs cleanly: pause previous track, reset timeline, load new audio
-  const handleTabChange = (scenario: Scenario) => {
+  // Call timer simulation
+  useEffect(() => {
+    let interval: NodeJS.Timeout | undefined;
+    if (isCalling) {
+      interval = setInterval(() => setSeconds((s) => s + 1), 1000);
+    } else {
+      setSeconds(0);
+    }
+    return () => clearInterval(interval);
+  }, [isCalling]);
+
+  const toggleCall = () => {
+    if (!audioRef.current) return;
+
+    if (isCalling) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsCalling(false);
+    } else {
+      audioRef.current.play().catch(() => {});
+      setIsCalling(true);
+    }
+  };
+
+  const handleScenarioChange = (s: Scenario) => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
-    setIsPlaying(false);
-    setCurrentTime(0);
-    setAudioError(false);
-    setActiveTab(scenario);
+    setIsCalling(false);
+    setActiveScenario(s);
   };
 
-  // Play/Pause toggle with native Audio API sync
-  const togglePlay = () => {
-    if (!audioRef.current) return;
-
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      setAudioError(false);
-      audioRef.current.play().catch(() => {
-        setAudioError(true);
-        setIsPlaying(false);
-      });
-    }
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60).toString().padStart(2, '0');
+    const s = (secs % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
   };
-
-  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <section
-      id="voice-demo"
-      className="relative z-10 py-24 bg-white dark:bg-[#07070a] text-neutral-900 dark:text-white border-t border-neutral-200 dark:border-neutral-900 scroll-mt-28"
-    >
-      {/* Hidden Native Audio Element */}
+    <section id="voice-demo" className="relative z-10 py-24 bg-neutral-50/50 dark:bg-[#07070a] text-neutral-900 dark:text-white border-t border-neutral-200 dark:border-neutral-900 transition-colors scroll-mt-28">
       <audio
         ref={audioRef}
-        src={activeTab.audioSrc}
-        preload="metadata"
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        onTimeUpdate={() => {
-          if (audioRef.current) setCurrentTime(audioRef.current.currentTime);
-        }}
-        onLoadedMetadata={() => {
-          if (audioRef.current) setDuration(audioRef.current.duration);
-        }}
-        onEnded={() => {
-          setIsPlaying(false);
-          setCurrentTime(0);
-        }}
-        onError={() => {
-          setAudioError(true);
-          setIsPlaying(false);
-        }}
+        src={activeScenario.audioSrc}
+        onEnded={() => setIsCalling(false)}
       />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="max-w-2xl mb-16">
+        {/* Header */}
+        <div className="max-w-3xl mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-700 dark:text-cyan-400 text-xs font-mono mb-4">
-            ● LIVE VOICE INFRASTRUCTURE
+            ● LIVE INTERACTIVE PROOF
           </div>
-          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight">
             Your front desk,{' '}
             <span className="bg-gradient-to-r from-violet-600 via-sky-500 to-cyan-400 bg-clip-text text-transparent">
               running 24/7.
             </span>
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed font-normal">
-            Answers around the clock, handles customer enquiries naturally, and
-            books appointments directly into your calendar.
+          <p className="mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Test the live agent below. Switch industries to hear how it greets callers, handles objections, and schedules appointments in real-time.
           </p>
         </div>
 
-        {/* 2-Column Split: Business Outcomes + Interactive Player */}
+        {/* 2-Column Showcase */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left: 4 Business Outcome Cards */}
+          
+          {/* Left Column: Outcome Pillars */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-900/40">
-              <h3 className="font-semibold text-neutral-950 dark:text-neutral-100 text-sm">
-                Natural Conversations
+            <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/40 backdrop-blur-sm shadow-sm">
+              <h3 className="font-semibold text-neutral-950 dark:text-neutral-100 text-sm flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-cyan-500" />
+                Zero Phone Menus
               </h3>
-              <p className="mt-1 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                No robotic phone menus. Callers speak naturally, ask questions,
-                and interrupt just like a normal conversation.
+              <p className="mt-1.5 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                Callers speak naturally in complete sentences. They can interrupt anytime without confusing the agent.
               </p>
             </div>
 
-            <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-900/40">
-              <h3 className="font-semibold text-neutral-950 dark:text-neutral-100 text-sm">
-                Your Business Knowledge
+            <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/40 backdrop-blur-sm shadow-sm">
+              <h3 className="font-semibold text-neutral-950 dark:text-neutral-100 text-sm flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-violet-500" />
+                Business Playbook Accuracy
               </h3>
-              <p className="mt-1 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Configured around your services, pricing, policies, and
-                frequently asked questions.
+              <p className="mt-1.5 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                Trained on your real pricing tables, services, and operational hours. Never invents facts.
               </p>
             </div>
 
-            <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-900/40">
-              <h3 className="font-semibold text-neutral-950 dark:text-neutral-100 text-sm">
-                Live Calendar Booking
+            <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/40 backdrop-blur-sm shadow-sm">
+              <h3 className="font-semibold text-neutral-950 dark:text-neutral-100 text-sm flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                Direct Calendar Booking
               </h3>
-              <p className="mt-1 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Checks availability and books appointments directly into your
-                connected calendar.
+              <p className="mt-1.5 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                Checks live availability and locks appointments straight into Google Calendar or your CRM.
               </p>
             </div>
 
-            <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-900/40">
-              <h3 className="font-semibold text-neutral-950 dark:text-neutral-100 text-sm">
-                Instant Team Updates
+            <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/40 backdrop-blur-sm shadow-sm">
+              <h3 className="font-semibold text-neutral-950 dark:text-neutral-100 text-sm flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-sky-500" />
+                Instant WhatsApp & Email Summary
               </h3>
-              <p className="mt-1 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Call summaries, recordings, and customer confirmations delivered
-                automatically.
+              <p className="mt-1.5 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                Sends an audio recording + transcript brief to your team and a booking confirmation to the caller.
               </p>
             </div>
           </div>
 
-          {/* Right: Functional Audio Demo Sandbox */}
-          <div className="lg:col-span-7">
-            <div className="rounded-2xl p-6 sm:p-8 bg-neutral-950 border border-neutral-800 shadow-2xl text-white">
-              {/* Scenario Tabs */}
-              <div className="flex flex-wrap gap-2 pb-6 border-b border-neutral-800">
-                {SCENARIOS.map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => handleTabChange(tab)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                      activeTab.id === tab.id
-                        ? 'bg-violet-600 text-white shadow-md shadow-violet-600/30'
-                        : 'bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
+          {/* Right Column: Devmate-Style Calling Handset Mockup */}
+          <div className="lg:col-span-7 flex justify-center">
+            <div className="w-full max-w-md rounded-[2.5rem] p-4 bg-gradient-to-b from-neutral-200 via-neutral-100 to-neutral-300 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-950 shadow-2xl border border-white/60 dark:border-neutral-700/50">
+              
+              {/* Screen Glass */}
+              <div className="rounded-[2rem] bg-white dark:bg-[#0c0d14] p-6 border border-neutral-200/80 dark:border-neutral-800/80 flex flex-col justify-between min-h-[540px] shadow-inner transition-colors">
+                
+                {/* Industry Tabs */}
+                <div className="flex gap-1.5 p-1 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+                  {SCENARIOS.map((s) => (
+                    <button
+                      key={s.id}
+                      onClick={() => handleScenarioChange(s)}
+                      className={`flex-1 py-1.5 text-[11px] font-semibold rounded-lg transition-all cursor-pointer ${
+                        activeScenario.id === s.id
+                          ? 'bg-white dark:bg-neutral-800 text-violet-700 dark:text-cyan-400 shadow-sm'
+                          : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300'
+                      }`}
+                    >
+                      {s.tag.split(' ')[0]}
+                    </button>
+                  ))}
+                </div>
 
-              {/* Call Telemetry */}
-              <div className="py-6 space-y-2">
-                <div className="flex items-center justify-between text-xs text-neutral-400 font-mono">
-                  <span>
-                    CALLER:{' '}
-                    <strong className="text-neutral-200">
-                      {activeTab.caller}
+                {/* Call Header / Status */}
+                <div className="text-center mt-6">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-cyan-300 text-xs font-mono font-medium">
+                    <span className={`w-2 h-2 rounded-full ${isCalling ? 'bg-emerald-500 animate-ping' : 'bg-neutral-400'}`} />
+                    {isCalling ? `LIVE CALL IN PROGRESS · ${formatTime(seconds)}` : 'READY TO TEST'}
+                  </div>
+                  <h4 className="mt-3 text-lg font-bold text-neutral-900 dark:text-white">
+                    Zara — AI Receptionist
+                  </h4>
+                  <p className="text-xs text-neutral-500 font-mono mt-0.5">{activeScenario.tag}</p>
+                </div>
+
+                {/* Central Glowing AI Orb & Audio Pulse */}
+                <div className="flex flex-col items-center justify-center my-6">
+                  <div className={`relative flex items-center justify-center w-28 h-28 rounded-full transition-all duration-700 ${
+                    isCalling 
+                      ? 'scale-110 shadow-[0_0_50px_rgba(139,92,246,0.35)]' 
+                      : 'scale-100 opacity-80'
+                  }`}>
+                    {/* Orb Gradient */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-violet-600 via-sky-400 to-cyan-300 animate-spin-slow opacity-80 blur-[2px]" />
+                    <div className="absolute inset-1 rounded-full bg-white dark:bg-neutral-950 flex items-center justify-center">
+                      {/* Pulse Bars inside Orb */}
+                      <div className="flex items-center gap-1">
+                        {[40, 75, 50, 90, 60].map((h, idx) => (
+                          <span
+                            key={idx}
+                            className={`w-1 rounded-full transition-all duration-200 ${
+                              isCalling ? 'bg-cyan-400 animate-pulse' : 'bg-neutral-300 dark:bg-neutral-700'
+                            }`}
+                            style={{ height: isCalling ? `${h * 0.4}px` : '10px' }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Live Conversation Transcript Bubbles */}
+                <div className="space-y-3 mb-6 font-sans">
+                  {/* Caller Bubble */}
+                  <div className="p-3 rounded-2xl rounded-tl-sm bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs text-neutral-700 dark:text-neutral-300">
+                    <strong className="block text-[10px] text-neutral-400 uppercase tracking-wider mb-1">
+                      {activeScenario.callerName} (Caller)
                     </strong>
-                  </span>
-                  <span>
-                    {currentTime > 0
-                      ? `${Math.floor(currentTime)}s / ${activeTab.durationLabel}`
-                      : `LENGTH: ${activeTab.durationLabel}`}
-                  </span>
-                </div>
-                <div className="text-sm font-medium text-cyan-400 font-mono">
-                  INTENT: {activeTab.intent}
-                </div>
-              </div>
-
-              {/* Functional Waveform & Controls */}
-              <div className="p-4 rounded-xl bg-neutral-900/80 border border-neutral-800 flex items-center gap-4">
-                <button
-                  onClick={togglePlay}
-                  aria-label={isPlaying ? 'Pause sample' : 'Play sample'}
-                  className="w-12 h-12 rounded-full bg-violet-600 hover:bg-violet-500 text-white flex items-center justify-center flex-shrink-0 transition-transform active:scale-95 shadow-lg shadow-violet-600/20"
-                >
-                  {isPlaying ? (
-                    <span className="text-sm font-mono">❚❚</span>
-                  ) : (
-                    <span className="text-sm font-mono pl-0.5">▶</span>
-                  )}
-                </button>
-
-                {/* Scannable Audio Progress Bar */}
-                <div className="flex-1 flex flex-col gap-2">
-                  <div className="flex items-center gap-1 h-7">
-                    {[40, 70, 30, 85, 55, 90, 45, 60, 100, 75, 40, 60, 80, 50, 30, 90, 65, 45, 80, 55].map((h, i) => {
-                      const barThreshold = (i / 20) * 100;
-                      const isPast = progressPercent >= barThreshold;
-                      return (
-                        <div
-                          key={i}
-                          className={`flex-1 rounded-full transition-all duration-150 ${
-                            isPlaying && isPast
-                              ? 'bg-cyan-400 shadow-[0_0_8px_rgba(56,189,248,0.5)]'
-                              : isPlaying
-                              ? 'bg-neutral-600 animate-pulse'
-                              : isPast
-                              ? 'bg-violet-400'
-                              : 'bg-neutral-800'
-                          }`}
-                          style={{ height: `${h}%` }}
-                        />
-                      );
-                    })}
+                    "{activeScenario.callerText}"
                   </div>
 
-                  {audioError && (
-                    <p className="text-[11px] text-amber-400 font-mono">
-                      Demo audio asset pending upload ({activeTab.audioSrc}).
-                    </p>
-                  )}
+                  {/* AI Agent Bubble */}
+                  <div className="p-3 rounded-2xl rounded-tr-sm bg-violet-50/80 dark:bg-violet-950/20 border border-violet-200/60 dark:border-violet-900/50 text-xs text-violet-950 dark:text-cyan-200">
+                    <strong className="block text-[10px] text-violet-600 dark:text-cyan-400 uppercase tracking-wider mb-1">
+                      Zara (AI Agent)
+                    </strong>
+                    "{activeScenario.agentReply}"
+                  </div>
                 </div>
-              </div>
 
-              {/* Honest Outcome Ledger */}
-              <div className="mt-6 pt-6 border-t border-neutral-800 flex flex-col sm:flex-row gap-3 sm:items-center justify-between text-xs font-mono">
-                <div className="flex items-center gap-2 text-neutral-400">
-                  <span className="text-neutral-500 uppercase tracking-wider text-[10px]">
-                    Simulated Output:
-                  </span>
-                  <span className="text-emerald-400">
-                    ● Calendar Slot: {activeTab.slot}
-                  </span>
+                {/* Handset Controls Tray */}
+                <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    {activeScenario.outcome}
+                  </div>
+
+                  {/* Call / End Button */}
+                  <button
+                    onClick={toggleCall}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all shadow-lg active:scale-95 cursor-pointer ${
+                      isCalling
+                        ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-600/30'
+                        : 'bg-violet-600 hover:bg-violet-500 text-white shadow-violet-600/30'
+                    }`}
+                  >
+                    <span>{isCalling ? 'End Demo Call' : '▶ Simulate Call'}</span>
+                  </button>
                 </div>
-                <div className="flex items-center gap-1.5 text-neutral-300">
-                  <span className="text-cyan-400">✓</span> WhatsApp Client
-                  Confirmation
-                </div>
+
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
