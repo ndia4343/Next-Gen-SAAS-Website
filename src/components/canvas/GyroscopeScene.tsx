@@ -13,14 +13,15 @@ function useOrbitTexture() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
 
-    // High-contrast gradient with cyan pulses and deliberate break gaps for visible motion
+    // Rich blend: Neon Violet -> Electric Blue -> Electric Cyan -> Deep Indigo
     const grad = ctx.createLinearGradient(0, 0, 1024, 0);
-    grad.addColorStop(0.0, '#8b5cf6');      // Neon Violet
-    grad.addColorStop(0.22, '#38bdf8');     // Electric Cyan Pulse
-    grad.addColorStop(0.45, 'transparent'); // Break gap (ensures rotation is clearly visible)
-    grad.addColorStop(0.65, '#a855f7');     // Synthwave Purple
-    grad.addColorStop(0.85, '#22d3ee');     // Bright Ice Cyan
-    grad.addColorStop(1.0, '#8b5cf6');
+    grad.addColorStop(0.0, '#7c3aed');      // Violet
+    grad.addColorStop(0.20, '#1d4ed8');     // Electric Royal Blue
+    grad.addColorStop(0.35, '#38bdf8');     // Vivid Cyan Pulse
+    grad.addColorStop(0.50, 'transparent'); // Break gap for clear motion
+    grad.addColorStop(0.68, '#2563eb');     // Electric Blue
+    grad.addColorStop(0.85, '#22d3ee');     // Ice Cyan
+    grad.addColorStop(1.0, '#7c3aed');
 
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, 1024, 32);
@@ -43,17 +44,17 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
 
-    // 1. Subtle anti-gravity vertical float (docked at -0.55 to guarantee clearance below eyebrow badge)
+    // Hover float anchored safely lower at y = -0.68
     if (systemRef.current) {
-      systemRef.current.position.y = -0.55 + Math.sin(t * 0.7) * 0.06;
+      systemRef.current.position.y = -0.68 + Math.sin(t * 0.7) * 0.05;
     }
 
-    // 2. Slow sphere rotation
+    // Slow sphere rotation
     if (sphereRef.current) {
       sphereRef.current.rotation.y += delta * 0.12;
     }
 
-    // 3. Counter-rotational orbital speeds
+    // Counter-rotational orbital speeds
     if (ring1MeshRef.current) {
       ring1MeshRef.current.rotation.z += delta * 0.28;
     }
@@ -61,54 +62,52 @@ export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
       ring2MeshRef.current.rotation.z -= delta * 0.22;
     }
 
-    // 4. Texture UV offset animation (forces visible light beam travel around the circumference)
+    // Continuous visible pulse travel
     if (orbitTexture) {
-      orbitTexture.offset.x = (orbitTexture.offset.x + delta * 0.15) % 1;
+      orbitTexture.offset.x = (orbitTexture.offset.x + delta * 0.16) % 1;
     }
   });
 
   const blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
 
   return (
-    // Lowered origin prevents the upper arc from touching or clipping behind the eyebrow badge
-    <group ref={systemRef} position={[0, -0.55, 0]}>
+    // Lowered origin completely clears the eyebrow badge and navbar
+    <group ref={systemRef} position={[0, -0.68, 0]}>
       {/* Central Wireframe Sphere */}
       <mesh ref={sphereRef} position={[0, 0, 0]}>
-        <icosahedronGeometry args={[1.9, 2]} />
+        <icosahedronGeometry args={[1.85, 2]} />
         <meshBasicMaterial
-          color={isLight ? '#6d28d9' : '#a855f7'}
+          color={isLight ? '#7c3aed' : '#9333ea'}
           wireframe
           transparent
-          opacity={isLight ? 0.55 : 0.28}
+          opacity={isLight ? 0.50 : 0.25}
           depthWrite={false}
           blending={blending}
         />
       </mesh>
 
-      {/* Ring 1: Thin Near-Horizontal Equatorial Ring */}
-      <group rotation={[1.35, 0, 0]}>
+      {/* Ring 1: Thin Equatorial Ring */}
+      <group rotation={[1.38, 0, 0]}>
         <mesh ref={ring1MeshRef}>
-          {/* Scaled to 2.85 */}
-          <torusGeometry args={[2.85, 0.012, 16, 120]} />
+          <torusGeometry args={[2.55, 0.012, 16, 120]} />
           <meshBasicMaterial
             map={orbitTexture ?? undefined}
             transparent
-            opacity={isLight ? 0.80 : 0.40}
+            opacity={isLight ? 0.80 : 0.42}
             depthWrite={false}
             blending={blending}
           />
         </mesh>
       </group>
 
-      {/* Ring 2: Diagonal Slicing Ribbon */}
-      <group rotation={[0.82, 0, 0.48]}>
+      {/* Ring 2: Broader Diagonal Slicing Ribbon */}
+      <group rotation={[1.05, 0, 0.38]}>
         <mesh ref={ring2MeshRef}>
-          {/* Scaled from 3.25 down to 3.05 to clear the eyebrow */}
-          <torusGeometry args={[3.05, 0.022, 16, 120]} />
+          <torusGeometry args={[2.80, 0.024, 16, 120]} />
           <meshBasicMaterial
             map={orbitTexture ?? undefined}
             transparent
-            opacity={isLight ? 0.85 : 0.48}
+            opacity={isLight ? 0.85 : 0.55}
             depthWrite={false}
             blending={blending}
           />
