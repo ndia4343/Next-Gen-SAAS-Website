@@ -33,35 +33,33 @@ function useOrbitGradient() {
   }, []);
 }
 
-export function GyroscopeScene({ isLight }: { isLight: boolean }) {
+export function GyroscopeScene({ isLight = false }: { isLight?: boolean }) {
+  const gradientTexture = useOrbitGradient();
+
   const systemRef = useRef<THREE.Group>(null!);
   const sphereRef = useRef<THREE.Mesh>(null!);
-  const ring1Ref = useRef<THREE.Mesh>(null!);
-  const ring2Ref = useRef<THREE.Mesh>(null!);
-
-  const gradientTexture = useOrbitGradient();
+  const ring1MeshRef = useRef<THREE.Mesh>(null!);
+  const ring2MeshRef = useRef<THREE.Mesh>(null!);
 
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
 
-    // 1. Anti-gravity hover
+    // 1. Gentle anti-gravity vertical float
     if (systemRef.current) {
-      systemRef.current.position.y = Math.sin(t * 0.75) * 0.12;
+      systemRef.current.position.y = Math.sin(t * 0.7) * 0.1;
     }
 
-    // 2. Violet core slow continuous rotation
+    // 2. Slow sphere rotation
     if (sphereRef.current) {
-      sphereRef.current.rotation.y += delta * 0.12;
+      sphereRef.current.rotation.y += delta * 0.1;
     }
 
-    // 3. Ring 1 (Locked diagonal orbital plane: spins cleanly on its Z-axis without tumbling)
-    if (ring1Ref.current) {
-      ring1Ref.current.rotation.z += delta * 0.16;
+    // 3. Smooth, stable orbit rotation along local ring plane (NO WOBBLE)
+    if (ring1MeshRef.current) {
+      ring1MeshRef.current.rotation.z += delta * 0.22;
     }
-
-    // 4. Ring 2 (Locked opposing diagonal orbital plane: spins cleanly in opposing direction)
-    if (ring2Ref.current) {
-      ring2Ref.current.rotation.z -= delta * 0.12;
+    if (ring2MeshRef.current) {
+      ring2MeshRef.current.rotation.z -= delta * 0.18;
     }
   });
 
@@ -73,43 +71,41 @@ export function GyroscopeScene({ isLight }: { isLight: boolean }) {
       <pointLight color="#8b5cf6" intensity={isLight ? 1.5 : 1.0} distance={10} />
 
       <group ref={systemRef} position={[0, 0, 0]}>
-        {/* Central Wireframe Sphere: Synthwave Violet */}
-        <mesh ref={sphereRef} position={[0, 0, 0]}>
+        {/* Central Wireframe Sphere */}
+        <mesh ref={sphereRef}>
           <icosahedronGeometry args={[2.2, 2]} />
           <meshBasicMaterial
             color={isLight ? '#6d28d9' : '#a855f7'}
             wireframe
             transparent
-            opacity={isLight ? 0.6 : 0.35}
+            opacity={isLight ? 0.6 : 0.32}
             depthWrite={false}
             blending={blending}
           />
         </mesh>
 
-        {/* Ring 1 (Forward diagonal plane: ~39° tilt locked, dual-tone violet-to-cyan gradient) */}
-        <group rotation={[0.68, 0.36, 0]}>
-          <mesh ref={ring1Ref} position={[0, 0, 0]}>
-            <torusGeometry args={[3.4, 0.016, 16, 120]} />
+        {/* Orbit 1: Locked Diagonal Tilt Group (~45°) */}
+        <group rotation={[0.75, 0.45, 0]}>
+          <mesh ref={ring1MeshRef}>
+            <torusGeometry args={[3.45, 0.016, 16, 120]} />
             <meshBasicMaterial
               map={gradientTexture ?? undefined}
-              color="#ffffff"
               transparent
-              opacity={isLight ? 0.82 : 0.42}
+              opacity={isLight ? 0.82 : 0.45}
               depthWrite={false}
               blending={blending}
             />
           </mesh>
         </group>
 
-        {/* Ring 2 (Opposing intersecting diagonal plane: ~37° tilt locked, counter-spinning gradient) */}
-        <group rotation={[-0.62, -0.52, 0]}>
-          <mesh ref={ring2Ref} position={[0, 0, 0]}>
-            <torusGeometry args={[3.7, 0.014, 16, 120]} />
+        {/* Orbit 2: Locked Counter-Angle Intersecting Group (~-40°) */}
+        <group rotation={[-0.7, -0.5, 0.3]}>
+          <mesh ref={ring2MeshRef}>
+            <torusGeometry args={[3.75, 0.014, 16, 120]} />
             <meshBasicMaterial
               map={gradientTexture ?? undefined}
-              color="#ffffff"
               transparent
-              opacity={isLight ? 0.75 : 0.36}
+              opacity={isLight ? 0.75 : 0.38}
               depthWrite={false}
               blending={blending}
             />
