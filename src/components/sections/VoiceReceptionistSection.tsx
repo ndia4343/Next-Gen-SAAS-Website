@@ -96,7 +96,7 @@ export function VoiceReceptionistSection({ onBookCall }: VoiceReceptionistSectio
   };
 
   return (
-    <section id="voice-demo" className="relative z-10 py-24 bg-transparent text-neutral-900 dark:text-white transition-colors scroll-mt-28">
+    <section id="voice-demo" className="relative z-10 py-24 bg-transparent text-neutral-900 dark:text-white scroll-mt-28">
       <audio
         ref={audioRef}
         src={activeScenario.audioSrc}
