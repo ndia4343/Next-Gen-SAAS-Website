@@ -3,8 +3,8 @@
 import React, { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from '@/lib/gsap';
-import { ArrowRight, Sparkles } from 'lucide-react';
 import { HeroSectionData } from '@/lib/types';
+import { HeroTypewriter } from './HeroTypewriter';
 
 interface HeroProps {
   onOpenQuoteModal?: (service: string) => void;
@@ -27,15 +27,12 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
   );
 
   const handlePrimaryClick = () => {
-    const rawTarget = content?.primaryCtaLink || '#core-expertise';
-    if (rawTarget.startsWith('#')) {
-      const el = document.getElementById(rawTarget.replace('#', ''));
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-        return;
-      }
+    if (onOpenQuoteModal) {
+      onOpenQuoteModal('Live Demo');
+    } else {
+      const el = document.getElementById('book') || document.getElementById('custom-quote');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
-    if (onOpenQuoteModal) onOpenQuoteModal('Discovery Call');
   };
 
   return (
@@ -48,53 +45,51 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         {/* Subtle backdrop glow/mask to prevent 3D wireframe text collisions */}
         <div className="absolute inset-0 -z-10 bg-radial from-white/80 via-white/40 to-transparent dark:from-black/80 dark:via-black/40 dark:to-transparent blur-2xl pointer-events-none" />
 
-        {/* EYEBROW */}
+        {/* 1. EYEBROW BADGE */}
         {content?.badgeVisible !== false && (
-          <div className="hero-badge inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest px-3.5 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-600 dark:text-orange-400 mb-6 backdrop-blur-md">
-            {content?.badgeText || '● SPEED-TO-LEAD AUTOMATION · 24/7 INBOUND AGENTS'}
+          <div className="hero-badge inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest px-3.5 py-1.5 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-700 dark:text-violet-400 mb-6 backdrop-blur-md">
+            <span>● AI VOICE & BUSINESS AUTOMATION</span>
           </div>
         )}
 
-        {/* H1 HEADLINE */}
+        {/* 2. HEADLINE */}
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-900 dark:text-white max-w-5xl mx-auto leading-[1.1] text-center">
-          {content?.titleLine1 || 'Every Missed Call Is a'}{' '}
-          <span className="bg-gradient-to-r from-orange-500 via-amber-400 to-orange-400 bg-clip-text text-transparent pb-1 inline-block">
-            {content?.titleHighlight || "Competitor's Opportunity."}
+          Never Miss Another{' '}
+          <span className="bg-gradient-to-r from-violet-700 via-sky-600 to-cyan-600 dark:from-violet-400 dark:via-sky-300 dark:to-cyan-300 bg-clip-text text-transparent pb-1 inline-block">
+            Opportunity.
           </span>
-          {content?.titleLine2 ? (
-            <>
-              {' '}
-              <br className="hidden sm:inline" />
-              {content.titleLine2}
-            </>
-          ) : null}
         </h1>
 
-        {/* SUB-HEADLINE */}
-        <p className="hero-desc text-neutral-600 dark:text-neutral-300 text-base sm:text-lg max-w-2xl mx-auto text-center mt-6 mb-10 leading-relaxed">
-          Custom AI voice receptionists, WhatsApp booking systems, and automated workflows that turn inbound callers into paid clients 24/7.
+        {/* 3. SUPPORTING LINE */}
+        <p className="hero-desc text-neutral-600 dark:text-neutral-400 text-base sm:text-lg max-w-2xl mx-auto text-center mt-6 mb-10 leading-relaxed">
+          AI receptionists and intelligent automations that capture leads, handle conversations, and book appointments — around the clock.
         </p>
 
-        {/* Dual CTAs */}
+        {/* 4. ACTION BUTTONS & ANCHORS */}
         <div className="hero-cta-group flex flex-wrap items-center justify-center gap-4">
           <button
+            type="button"
             onClick={handlePrimaryClick}
-            className="px-8 py-4 rounded-full glass-panel hover:bg-white/10 dark:hover:bg-white/10 light:hover:bg-black/5 text-zinc-900 dark:text-zinc-100 font-semibold text-sm tracking-wide transition-all duration-300 border border-neutral-300 dark:border-white/15 hover:border-violet-500/50 flex items-center gap-2 cursor-pointer shadow-sm"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-violet-500/20 hover:shadow-violet-500/35 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
           >
-            {content?.primaryCtaText || 'Explore Capabilities'}
-            <ArrowRight className="w-4 h-4 text-violet-400" />
+            <span>Book a Live Demo →</span>
           </button>
 
-          <button
-            onClick={() => {
-              if (onOpenQuoteModal) onOpenQuoteModal('Discovery Call');
+          <a
+            href="#voice-demo"
+            onClick={(e) => {
+              e.preventDefault();
+              const el = document.getElementById('voice-demo');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="px-8 py-4 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-sm tracking-wide transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:shadow-[0_0_30px_rgba(139,92,246,0.65)] hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-900 dark:text-neutral-200 font-semibold text-sm tracking-wide transition-all duration-300 cursor-pointer"
           >
-            <Sparkles className="w-4 h-4 text-violet-200" />
-            {content?.secondaryCtaText || 'Book Discovery Call'}
-          </button>
+            <span>Hear It in Action →</span>
+          </a>
         </div>
+
+        {/* 5. ACCESSIBLE SHIFT-FREE TYPEWRITER */}
+        <HeroTypewriter />
       </div>
     </section>
   );
