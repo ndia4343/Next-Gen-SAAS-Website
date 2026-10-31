@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import HeroSection from '@/components/sections/HeroSection';
-import VoiceReceptionistSection from '@/components/sections/VoiceReceptionistSection';
+import VoicePipelineSection from '@/components/sections/VoicePipelineSection';
 import WorkflowPipelineSection from '@/components/sections/WorkflowPipelineSection';
 import CoreExpertiseSection from '@/components/sections/CoreExpertiseSection';
 import ProjectSupportSection from '@/components/sections/ProjectSupportSection';
@@ -80,7 +80,7 @@ export default function HomeClient({ content }: HomeClientProps) {
         themeBranding={branding}
       />
       <HeroSection onOpenQuoteModal={handleOpenModal} content={content.hero} />
-      <VoiceReceptionistSection
+      <VoicePipelineSection
         onBookCall={() => handleOpenModal('Discovery Call')}
       />
       <WorkflowPipelineSection
