@@ -50,9 +50,9 @@ export function HeroTypewriter() {
   // Reduced motion fallback: Clean static display
   if (prefersReducedMotion) {
     return (
-      <div className="flex items-center justify-center mt-6">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100/90 dark:bg-neutral-900/80 border border-neutral-300/80 dark:border-neutral-800 backdrop-blur-md shadow-sm">
-          <span className="text-xs sm:text-sm font-semibold tracking-wide text-neutral-950 dark:text-neutral-300">
+      <div className="mt-4 flex justify-center">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100/90 dark:bg-neutral-900/80 border border-neutral-300 dark:border-neutral-800 shadow-sm backdrop-blur-md">
+          <span className="text-xs sm:text-sm font-semibold tracking-wide text-neutral-950 dark:text-neutral-300 select-none">
             We build
           </span>
           <span className="text-xs sm:text-sm font-bold tracking-tight text-sky-600 dark:text-cyan-400 min-h-[1.25rem] flex items-center">
@@ -64,22 +64,21 @@ export function HeroTypewriter() {
   }
 
   return (
-    <div className="flex items-center justify-center mt-6" aria-live="off">
-      {/* Screen reader static label to prevent character-by-character announcements */}
-      <span className="sr-only">We build: {capabilities[index]}</span>
-
-      <div 
-        aria-hidden="true"
-        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100/90 dark:bg-neutral-900/80 border border-neutral-300/80 dark:border-neutral-800 backdrop-blur-md shadow-sm"
-      >
-        {/* Static Prefix: Solid Black in Light Mode, Silver-White in Dark Mode */}
+    <div className="mt-4 flex justify-center" aria-live="off">
+      <span className="sr-only">We build {capabilities[index]}</span>
+      
+      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100/90 dark:bg-neutral-900/80 border border-neutral-300 dark:border-neutral-800 shadow-sm backdrop-blur-md">
+        {/* Light Mode: Solid Dark Charcoal | Dark Mode: Silver-White */}
         <span className="text-xs sm:text-sm font-semibold tracking-wide text-neutral-950 dark:text-neutral-300 select-none">
           We build
         </span>
 
-        {/* Dynamic Animation: Deep Electric Blue in Light Mode, Vibrant Cyan in Dark Mode */}
-        <span className="text-xs sm:text-sm font-bold tracking-tight text-sky-600 dark:text-cyan-400 min-h-[1.25rem] flex items-center">
-          {capabilities[index].slice(0, subIndex)}
+        {/* Light Mode: Deep Electric Blue | Dark Mode: Electric Cyan */}
+        <span 
+          aria-hidden="true" 
+          className="text-xs sm:text-sm font-bold tracking-tight text-sky-600 dark:text-cyan-400 min-h-[1.25rem] flex items-center"
+        >
+          <span>{capabilities[index].substring(0, subIndex)}</span>
           <span className="inline-block w-1.5 h-3.5 ml-1 bg-sky-600 dark:bg-cyan-400 animate-pulse" />
         </span>
       </div>

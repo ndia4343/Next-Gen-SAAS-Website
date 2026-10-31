@@ -39,7 +39,7 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
     <section
       id="hero"
       ref={containerRef}
-      className="relative z-10 bg-transparent min-h-[calc(100vh-4rem)] flex flex-col justify-start sm:justify-center items-center px-4 sm:px-6 lg:px-12 pt-36 sm:pt-40 lg:pt-44 pb-16 scroll-mt-28"
+      className="relative z-10 bg-transparent min-h-[calc(100vh-5rem)] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-12 pt-24 sm:pt-28 pb-12 sm:pb-14 scroll-mt-28"
     >
       <div className="relative z-10 max-w-5xl mx-auto px-4 text-center flex flex-col items-center">
         {/* Subtle backdrop glow/mask to prevent 3D wireframe text collisions */}
@@ -61,12 +61,12 @@ export default function HeroSection({ onOpenQuoteModal, content }: HeroProps) {
         </h1>
 
         {/* 3. SUPPORTING LINE */}
-        <p className="hero-desc text-neutral-600 dark:text-neutral-400 text-base sm:text-lg max-w-2xl mx-auto text-center mt-6 mb-10 leading-relaxed">
+        <p className="hero-desc text-neutral-600 dark:text-neutral-400 text-base sm:text-lg max-w-2xl mx-auto text-center mt-6 mb-6 leading-relaxed">
           AI receptionists and intelligent automations that capture leads, handle conversations, and book appointments — around the clock.
         </p>
 
         {/* 4. ACTION BUTTONS & ANCHORS */}
-        <div className="hero-cta-group flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+        <div className="hero-cta-group flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
           <a
             href="#book"
             className="w-full sm:w-auto px-6 py-3 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition-all shadow-lg shadow-violet-500/20 text-center"
