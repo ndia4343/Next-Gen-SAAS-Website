@@ -274,10 +274,10 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
       <div className="absolute top-1/3 -left-40 w-96 h-96 bg-[#8B5CF6]/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-16 -right-20 w-80 h-80 bg-[#ff5722]/10 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto space-y-12">
+      <div className="max-w-7xl mx-auto flex flex-col">
         
         {/* Section Header */}
-        <div className="max-w-3xl space-y-4">
+        <div className="max-w-3xl space-y-4 mb-8 sm:mb-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-200/80 dark:bg-white/5 border border-slate-300 dark:border-white/10 text-xs font-mono tracking-wider uppercase text-slate-700 dark:text-slate-300">
             <span className="w-2 h-2 rounded-full bg-[#ff5722] animate-pulse" />
             Turnkey Operations
@@ -293,7 +293,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
         </div>
 
         {/* 4 Industry Tabs */}
-        <div className="border-b border-slate-200 dark:border-white/10 pb-4">
+        <div className="border-b border-slate-200 dark:border-white/10 pb-4 mb-8 sm:mb-10">
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth snap-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {INDUSTRIES.map((ind, idx) => {
               const Icon = ind.icon;
@@ -318,7 +318,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
         </div>
 
         {/* Asymmetrical Editorial Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pb-0 mb-0">
           
           {/* Left: Interactive Preview Screen (7 Columns) */}
           <div className="lg:col-span-7 rounded-2xl bg-white dark:bg-[#12151E] border border-slate-200 dark:border-white/10 shadow-xl dark:shadow-2xl overflow-hidden flex flex-col justify-between h-[510px]">
@@ -536,7 +536,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
         </div>
 
         {/* Solutions-to-Footer Bridge (#custom-quote) */}
-        <div id="custom-quote" className="relative bg-transparent overflow-hidden rounded-2xl">
+        <div id="custom-quote" className="mt-6 sm:mt-8 relative bg-transparent overflow-hidden rounded-2xl">
           {/* Bottom CTA Bar */}
           <div className="p-5 sm:p-6 rounded-2xl bg-white/80 dark:bg-[#12151E]/80 border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
