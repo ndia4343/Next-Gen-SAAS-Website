@@ -209,18 +209,18 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
         <div className="text-center space-y-4 max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[11px] font-semibold tracking-wide text-zinc-800 dark:text-zinc-300 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            AUTONOMOUS CONCIERGE PIPELINE
+            AUTONOMOUS BOOKING PIPELINE
           </div>
 
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-white">
-            <span>Every inquiry negotiated.</span> <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-700 via-zinc-900 to-zinc-600 dark:from-white dark:via-zinc-200 dark:to-zinc-500">
-              Every table confirmed.
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-950 dark:text-white leading-[1.12]">
+            Every inquiry negotiated. <br />
+            <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 bg-clip-text text-transparent">
+              Every booking confirmed.
             </span>
           </h2>
           
-          <p className="text-zinc-600 dark:text-zinc-400 text-sm md:text-base font-normal leading-relaxed">
-            Inbound WhatsApp messages qualify guest preferences, assign prime tables, and lock into the host floor plan in real time.
+          <p className="mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto leading-relaxed">
+            Inbound WhatsApp messages qualify customer intent, verify real-time calendar availability, and lock confirmed appointments without human delay.
           </p>
 
           {/* Audio & Replay Controls */}
@@ -258,9 +258,9 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
               />
             </div>
             <div className="flex justify-between items-center text-[10px] text-zinc-400 dark:text-zinc-500 mt-1.5 font-mono">
-              <span>01 Inbound</span>
-              <span>02 WhatsApp</span>
-              <span>03 Host Stand</span>
+              <span>01 Inbound Lead</span>
+              <span>02 Autonomous Chat</span>
+              <span>03 Calendar Lock</span>
             </div>
           </div>
         </div>
@@ -315,7 +315,7 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
             </div>
 
             <div className="py-3">
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-white">VIP Dining Widget</h3>
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Omnichannel Inbound</h3>
               <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">Guest taps WhatsApp reservation link.</p>
             </div>
 
@@ -454,7 +454,7 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
           }`}>
             <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800">
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
-                03 &bull; Host Stand
+                03 &bull; Calendar Lock
               </span>
               <span className={`text-[10.5px] font-semibold ${pipelinePhase === 3 ? "text-emerald-600 dark:text-emerald-400" : "text-zinc-400"}`}>
                 {pipelinePhase === 3 ? "Locked" : "Awaiting Turn"}
@@ -462,7 +462,7 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
             </div>
 
             <div className="py-3">
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Floor Reservation</h3>
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Confirmed Calendar Lock</h3>
               <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">Direct calendar lock via Google Calendar API.</p>
             </div>
 
@@ -540,5 +540,6 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
   );
 }
 
+export const WhatsAppPipelineSection = AsymmetricLuxuryPipeline;
 export const WorkflowPipelineSection = AsymmetricLuxuryPipeline;
 export default AsymmetricLuxuryPipeline;
