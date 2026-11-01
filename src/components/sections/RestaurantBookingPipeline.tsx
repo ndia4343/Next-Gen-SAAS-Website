@@ -399,10 +399,10 @@ export default function RestaurantBookingPipeline({ onOpenQuoteModal }: Restaura
                     className={`flex ${msg.sender === "client" ? "justify-end" : "justify-start"}`}
                   >
                     <div
-                      className={`max-w-[85%] px-3.5 py-2 rounded-2xl text-[12px] leading-relaxed shadow-xs ${
+                      className={`max-w-[85%] px-3.5 py-2 rounded-2xl text-[12px] leading-relaxed ${
                         msg.sender === "client"
-                          ? "bg-[#18181b] dark:bg-violet-600 text-white rounded-br-xs"
-                          : "bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 text-[#09090b] dark:text-neutral-100 rounded-bl-xs"
+                          ? "bg-[#18181b] border border-white/10 text-white rounded-br-xs shadow-md"
+                          : "bg-white border border-slate-200 text-[#09090b] dark:bg-white/10 dark:border-white/10 dark:text-slate-200 rounded-bl-xs shadow-xs"
                       }`}
                     >
                       <p>{msg.text}</p>
