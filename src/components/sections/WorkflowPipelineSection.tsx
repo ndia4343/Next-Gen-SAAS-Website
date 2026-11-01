@@ -1,1 +1,1 @@
-export { default, LuxuryWorkflowPipeline, WorkflowPipelineSection } from './LuxuryWorkflowPipeline';
+export { default, LuxuryPipelineShowcase, WorkflowPipelineSection } from './LuxuryPipelineShowcase';
