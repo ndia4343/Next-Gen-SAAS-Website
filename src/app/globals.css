@@ -17,6 +17,7 @@
   --font-display: "Plus Jakarta Sans", "Inter", -apple-system, sans-serif;
   --font-sans: "Plus Jakarta Sans", "Inter", -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
+  --animate-marquee: marquee 28s linear infinite;
 }
 
 :root {
