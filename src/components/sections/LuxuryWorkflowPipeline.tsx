@@ -207,9 +207,9 @@ export function LuxuryWorkflowPipeline({ onOpenQuoteModal }: LuxuryWorkflowPipel
             AUTONOMOUS CONCIERGE PIPELINE
           </div>
 
-          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-[#09090b] dark:text-white">
-            The call ends. <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#09090b] via-slate-700 to-[#18181b] dark:from-white dark:via-slate-200 dark:to-neutral-400">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-center">
+            <span className="text-[#09090b] dark:text-white">The call ends.</span> <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#09090b] via-slate-700 to-slate-500 dark:from-white dark:via-slate-200 dark:to-slate-400">
               The reservation completes itself.
             </span>
           </h2>
