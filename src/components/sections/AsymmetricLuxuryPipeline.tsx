@@ -361,7 +361,7 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
             </div>
 
             {/* Chat Screen Chassis */}
-            <div className="flex-1 rounded-2xl bg-[#F8FAFC] dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 flex flex-col h-[420px] overflow-hidden">
+            <div className="flex-1 rounded-2xl bg-[#F8FAFC] dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 flex flex-col h-[465px] overflow-hidden">
               
               {/* WhatsApp Top Bar */}
               <div className="px-4 py-2.5 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
@@ -387,10 +387,10 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
                 </span>
               </div>
 
-              {/* Message Feed (Auto-scrolling with Apple tones) */}
+              {/* Message Feed (Locked height to eliminate CLS flickering) */}
               <div 
                 ref={chatScrollRef}
-                className="flex-1 p-3.5 overflow-y-auto space-y-2.5 scroll-smooth"
+                className="min-h-[380px] max-h-[380px] flex flex-col justify-end gap-3 p-4 overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
               >
                 {CONVERSATION.slice(0, visibleCount).map((msg, idx) => (
                   <motion.div
@@ -511,33 +511,42 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
 
         </div>
 
-        {/* Integration Ticker: Framed Top & Bottom + High-Contrast Bold Text */}
-        <div className="w-full mt-16 border-y border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 py-4 overflow-hidden">
-          <div className="flex items-center justify-center flex-wrap gap-x-8 gap-y-3 px-4 text-xs font-bold tracking-wider uppercase text-neutral-800 dark:text-neutral-200">
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
-              Stripe Concierge Invoicing
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
-              Twilio High-Throughput SMS
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
-              Google Calendar API
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
-              Meta Cloud WhatsApp Business
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
-              HubSpot CRM Sync
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
-              Retell AI Voice Core
-            </span>
+        {/* 1. Ensure the ticker uses an infinite horizontal scroll */}
+        <div className="w-full mt-24 border-y border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/40 py-4 overflow-hidden relative">
+          {/* Left & Right Edge Vignette Fades */}
+          <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#f8f9fb] dark:from-[#07070a] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#f8f9fb] dark:from-[#07070a] to-transparent z-10 pointer-events-none" />
+
+          {/* Marquee Track: Duplicated list for seamless -50% translation */}
+          <div className="flex w-max animate-marquee space-x-10">
+            {[0, 1].map((copyIndex) => (
+              <div key={copyIndex} className="flex items-center space-x-10 text-xs font-bold tracking-wider uppercase text-neutral-800 dark:text-neutral-200 shrink-0">
+                <span className="flex items-center gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                  Stripe Concierge Invoicing
+                </span>
+                <span className="flex items-center gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                  Twilio High-Throughput SMS
+                </span>
+                <span className="flex items-center gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                  Google Calendar API
+                </span>
+                <span className="flex items-center gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                  Meta Cloud WhatsApp Business
+                </span>
+                <span className="flex items-center gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                  HubSpot CRM Sync
+                </span>
+                <span className="flex items-center gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                  Retell AI Voice Core
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
