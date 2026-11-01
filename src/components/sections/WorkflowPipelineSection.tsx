@@ -1,1 +1,1 @@
-export { default, default as WorkflowPipelineSection } from './RestaurantBookingPipeline';
+export { default, AutomatedPipelineLoop, WorkflowPipelineSection } from './AutomatedPipelineLoop';
