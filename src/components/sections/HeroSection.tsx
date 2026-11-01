@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { GyroscopeScene } from '@/components/canvas/GyroscopeScene';
 import { HeroSectionData } from '@/lib/types';
+import { useTheme } from '@/components/providers/ThemeProvider';
 
 const CAPABILITIES = [
   'AI Voice Receptionists',
@@ -19,6 +20,8 @@ interface HeroProps {
 }
 
 export function Hero({ onOpenQuoteModal, content }: HeroProps = {}) {
+  const { mode } = useTheme();
+  const isLight = mode === 'light';
   const [index, setIndex] = useState(0);
   const [subIndex, setSubIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -64,7 +67,7 @@ export function Hero({ onOpenQuoteModal, content }: HeroProps = {}) {
             camera={{ position: [0, 0, 7.2], fov: 42 }}
             gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
           >
-            <GyroscopeScene />
+            <GyroscopeScene isLight={isLight} />
           </Canvas>
         )}
       </div>

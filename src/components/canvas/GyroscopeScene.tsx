@@ -4,7 +4,7 @@ import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-function useSilverSparkTexture() {
+function useSilverSparkTexture(isLight = false) {
   return useMemo(() => {
     if (typeof document === 'undefined') return null;
     const canvas = document.createElement('canvas');
@@ -15,15 +15,27 @@ function useSilverSparkTexture() {
 
     // Liquid Platinum Base with High-Voltage Diamond & Cyan Sparks
     const grad = ctx.createLinearGradient(0, 0, 1024, 0);
-    grad.addColorStop(0.0, 'rgba(203, 213, 225, 0.25)'); // Delicate platinum edge
-    grad.addColorStop(0.20, 'rgba(148, 163, 184, 0.40)'); // Brushed silver
-    grad.addColorStop(0.38, '#38bdf8');                  // Electric Cyan spark trace
-    grad.addColorStop(0.42, '#ffffff');                  // Pure Diamond White specular flash
-    grad.addColorStop(0.46, '#38bdf8');                  // Cyan falloff
-    grad.addColorStop(0.60, 'rgba(148, 163, 184, 0.20)'); // Silver bridge
-    grad.addColorStop(0.78, '#a855f7');                  // Faint violet shimmer
-    grad.addColorStop(0.82, '#ffffff');                  // Second diamond spark
-    grad.addColorStop(1.0, 'rgba(203, 213, 225, 0.25)');
+    if (isLight) {
+      grad.addColorStop(0.0, 'rgba(100, 116, 139, 0.35)'); // Platinum steel
+      grad.addColorStop(0.20, 'rgba(71, 85, 105, 0.55)');  // Brushed graphite silver
+      grad.addColorStop(0.38, '#0284c7');                   // Vivid Sky spark
+      grad.addColorStop(0.42, '#ffffff');                   // Pure specular flash
+      grad.addColorStop(0.46, '#0284c7');                   // Cyan falloff
+      grad.addColorStop(0.60, 'rgba(71, 85, 105, 0.40)');  // Silver bridge
+      grad.addColorStop(0.78, '#7c3aed');                   // Violet shimmer
+      grad.addColorStop(0.82, '#ffffff');                   // Second diamond spark
+      grad.addColorStop(1.0, 'rgba(100, 116, 139, 0.35)');
+    } else {
+      grad.addColorStop(0.0, 'rgba(203, 213, 225, 0.25)'); // Delicate platinum edge
+      grad.addColorStop(0.20, 'rgba(148, 163, 184, 0.40)'); // Brushed silver
+      grad.addColorStop(0.38, '#38bdf8');                  // Electric Cyan spark trace
+      grad.addColorStop(0.42, '#ffffff');                  // Pure Diamond White specular flash
+      grad.addColorStop(0.46, '#38bdf8');                  // Cyan falloff
+      grad.addColorStop(0.60, 'rgba(148, 163, 184, 0.20)'); // Silver bridge
+      grad.addColorStop(0.78, '#a855f7');                  // Faint violet shimmer
+      grad.addColorStop(0.82, '#ffffff');                  // Second diamond spark
+      grad.addColorStop(1.0, 'rgba(203, 213, 225, 0.25)');
+    }
 
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, 1024, 32);
@@ -32,11 +44,11 @@ function useSilverSparkTexture() {
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.ClampToEdgeWrapping;
     return texture;
-  }, []);
+  }, [isLight]);
 }
 
 export function GyroscopeScene({ isLight = false }: { isLight?: boolean } = {}) {
-  const silverSparkTexture = useSilverSparkTexture();
+  const silverSparkTexture = useSilverSparkTexture(isLight);
   const groupRef = useRef<THREE.Group>(null!);
   const ring1Ref = useRef<THREE.Mesh>(null!);
   const ring2Ref = useRef<THREE.Mesh>(null!);
