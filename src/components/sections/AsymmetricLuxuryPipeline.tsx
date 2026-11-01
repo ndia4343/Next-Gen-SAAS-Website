@@ -68,16 +68,6 @@ const CONVERSATION: Message[] = [
   },
 ];
 
-const INTEGRATIONS = [
-  "Google Calendar API",
-  "Meta Cloud WhatsApp Business",
-  "SevenRooms Table Management",
-  "OpenTable Floor System",
-  "Resy Real-Time API",
-  "Stripe Concierge Deposits",
-  "Twilio High-Throughput SMS",
-];
-
 interface AsymmetricLuxuryPipelineProps {
   onOpenQuoteModal?: (service: string) => void;
 }
@@ -521,17 +511,33 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
 
         </div>
 
-        {/* ========================================================= */}
-        {/* SLOW-SCROLLING INTEGRATIONS TICKER                        */}
-        {/* ========================================================= */}
-        <div className="pt-8 border-t border-zinc-200 dark:border-zinc-800/80 overflow-hidden relative">
-          <div className="flex items-center gap-10 whitespace-nowrap animate-marquee">
-            {[...INTEGRATIONS, ...INTEGRATIONS].map((item, i) => (
-              <div key={i} className="flex items-center gap-3 text-xs font-medium text-zinc-500 dark:text-zinc-400 tracking-wide">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/60" />
-                <span>{item}</span>
-              </div>
-            ))}
+        {/* Integration Ticker: Framed Top & Bottom + High-Contrast Bold Text */}
+        <div className="w-full mt-16 border-y border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 py-4 overflow-hidden">
+          <div className="flex items-center justify-center flex-wrap gap-x-8 gap-y-3 px-4 text-xs font-bold tracking-wider uppercase text-neutral-800 dark:text-neutral-200">
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+              Stripe Concierge Invoicing
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+              Twilio High-Throughput SMS
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+              Google Calendar API
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+              Meta Cloud WhatsApp Business
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+              HubSpot CRM Sync
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+              Retell AI Voice Core
+            </span>
           </div>
         </div>
 
