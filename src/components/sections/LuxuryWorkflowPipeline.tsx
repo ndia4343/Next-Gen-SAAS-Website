@@ -101,8 +101,8 @@ export function LuxuryWorkflowPipeline({ onOpenQuoteModal }: LuxuryWorkflowPipel
     return () => observer.disconnect();
   }, []);
 
-  // 2. Synthesized Pop Tone
-  const playPopTone = (freq = 580, duration = 0.08) => {
+  // 2. Synthesized Glass Pop Tone (A5 Crisp Upper Overtone & Smooth Glass Tail)
+  const playPopTone = (baseFreq = 880, duration = 0.22) => {
     if (!soundEnabled || !isInView) return;
     try {
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
@@ -118,11 +118,11 @@ export function LuxuryWorkflowPipeline({ onOpenQuoteModal }: LuxuryWorkflowPipel
       const gain = ctx.createGain();
 
       osc.type = "sine";
-      osc.frequency.setValueAtTime(freq, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(freq * 1.4, ctx.currentTime + duration);
+      osc.frequency.setValueAtTime(baseFreq, ctx.currentTime); // Base note (880Hz A5)
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 2, ctx.currentTime + 0.05); // Crisp upper overtone (1760Hz)
 
-      gain.gain.setValueAtTime(0.04, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration); // Smooth glass tail
 
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -161,13 +161,13 @@ export function LuxuryWorkflowPipeline({ onOpenQuoteModal }: LuxuryWorkflowPipel
           setIsTyping(false);
           step += 1;
           setVisibleCount(step);
-          playPopTone(step % 2 === 0 ? 500 : 640, 0.06);
+          playPopTone(step % 2 === 0 ? 784 : 880, 0.22);
 
           if (step >= CONVERSATION.length) {
             clearInterval(interval);
             setTimeout(() => {
               setPipelinePhase(3);
-              playPopTone(820, 0.1);
+              playPopTone(880, 0.25);
             }, 1100);
           }
         }, 900);
@@ -221,7 +221,13 @@ export function LuxuryWorkflowPipeline({ onOpenQuoteModal }: LuxuryWorkflowPipel
           {/* Sound & Manual Replay Controls */}
           <div className="pt-2 flex items-center justify-center gap-3">
             <button
-              onClick={() => setSoundEnabled((prev) => !prev)}
+              onClick={() => {
+                const next = !soundEnabled;
+                setSoundEnabled(next);
+                if (next) {
+                  setTimeout(() => playPopTone(880, 0.22), 50);
+                }
+              }}
               className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border ${
                 soundEnabled 
                   ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-300 shadow-xs" 

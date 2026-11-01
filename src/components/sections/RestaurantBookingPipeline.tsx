@@ -79,8 +79,8 @@ export default function RestaurantBookingPipeline({ onOpenQuoteModal }: Restaura
   const chatScrollRef = useRef<HTMLDivElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
-  // Initialize Web Audio API for message pops
-  const playPopTone = (freq = 600, duration = 0.08) => {
+  // Initialize Web Audio API for message pops (A5 Crisp Upper Overtone & Smooth Glass Tail)
+  const playPopTone = (baseFreq = 880, duration = 0.22) => {
     if (!soundEnabled) return;
     try {
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
@@ -96,11 +96,11 @@ export default function RestaurantBookingPipeline({ onOpenQuoteModal }: Restaura
       const gain = ctx.createGain();
 
       osc.type = "sine";
-      osc.frequency.setValueAtTime(freq, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(freq * 1.5, ctx.currentTime + duration);
+      osc.frequency.setValueAtTime(baseFreq, ctx.currentTime); // Base note (880Hz A5)
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 2, ctx.currentTime + 0.05); // Crisp upper overtone (1760Hz)
 
-      gain.gain.setValueAtTime(0.06, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration); // Smooth glass tail
 
       osc.connect(gain);
       gain.connect(ctx.destination);
