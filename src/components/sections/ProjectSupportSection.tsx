@@ -75,9 +75,9 @@ const INDUSTRIES: IndustrySolution[] = [
         desc: "Delivers WhatsApp quotation proposals instantly.",
       },
       {
-        tag: "03 // PROFIT TELEMETRY",
-        title: "Contractor Profit Telemetry",
-        desc: "Tracks inverter margins and EPC commission splits.",
+        tag: "03 // CONTRACTOR MARGINS",
+        title: "Contractor Profit Margins",
+        desc: "Monitors gross margin per installed kilowatt and hardware costs in real time.",
       },
     ],
   },
@@ -161,9 +161,9 @@ const INDUSTRIES: IndustrySolution[] = [
         desc: "Dispatches Gate Village parking pass & confirmation.",
       },
       {
-        tag: "03 // COVER TELEMETRY",
-        title: "Cover Turnover Telemetry",
-        desc: "Monitors dining floor occupancy and repeat guest spend.",
+        tag: "03 // TABLE OCCUPANCY",
+        title: "Live Table Occupancy",
+        desc: "Tracks live table turnover, seat yields, and peak dining spend.",
       },
     ],
   },
@@ -203,12 +203,12 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
   return (
     <section 
       id="industries" 
-      className="relative z-20 bg-white dark:bg-[#08080c] shadow-2xl w-full text-slate-900 dark:text-slate-100 scroll-mt-32 pt-20 pb-24 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-300"
+      className="scroll-mt-36 pt-16 pb-24 px-4 md:px-8 bg-[#F8F9FB] dark:bg-[#08090D] transition-colors relative z-20 w-full text-slate-900 dark:text-slate-100 font-sans overflow-hidden"
     >
       {/* Compatibility anchors for legacy internal links */}
-      <div id="solutions" className="scroll-mt-32 pointer-events-none" />
-      <div id="project-support" className="scroll-mt-32 pointer-events-none" />
-      <div id="services" className="scroll-mt-32 pointer-events-none" />
+      <div id="solutions" className="scroll-mt-36 pointer-events-none" />
+      <div id="project-support" className="scroll-mt-36 pointer-events-none" />
+      <div id="services" className="scroll-mt-36 pointer-events-none" />
 
       {/* Background glow accents (Emerald / Cyan theme) */}
       <div className="absolute top-1/3 -left-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none" />
@@ -218,20 +218,20 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
         
         {/* Section Header */}
         <div className="max-w-3xl space-y-4 mb-8 sm:mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/20 text-xs font-mono tracking-wider uppercase text-emerald-700 dark:text-emerald-300">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/20 text-xs font-mono tracking-wider uppercase text-emerald-700 dark:text-emerald-300 font-bold">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            Turnkey Operations
+            TURNKEY ARCHITECTURES
           </div>
           
           <h2 className="text-3xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-white">
             One engine.{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500">
-              Three turnkey industries.
+              Built for your industry.
             </span>
           </h2>
           
           <p className="text-slate-600 dark:text-slate-400 text-base sm:text-lg leading-relaxed">
-            {content?.subtitle || "Autonomous infrastructure customized around the exact operational deliverables of your industry—from initial inquiry triage to verified calendar conversion."}
+            {content?.subtitle || "From instant lead capture to live profit tracking, deploy purpose-built automation designed for your exact operations."}
           </p>
         </div>
 
@@ -313,7 +313,9 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
                   <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 space-y-1.5 flex-1 flex flex-col justify-between">
                     <div className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
                       <span>{item.telemetry.chartTitle}</span>
-                      <span className="text-[10px] font-mono text-cyan-600 dark:text-cyan-400">TELEMETRY CORRIDOR</span>
+                      <span className="text-[10px] font-mono text-cyan-600 dark:text-cyan-400 uppercase tracking-wider font-semibold">
+                        30-DAY PERFORMANCE TREND
+                      </span>
                     </div>
                     <div className="h-28 sm:h-36 flex items-center justify-center">
                       {item.telemetry.chartType === "solar" && <SolarChart />}
@@ -337,7 +339,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
                 <div className="px-5 py-3 bg-slate-100/80 dark:bg-black/50 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400 shrink-0">
                   <span className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                    AUTONOMOUS DELIVERABLES
+                    OPERATIONAL ARCHITECTURE
                   </span>
                   <span className="text-cyan-600 dark:text-cyan-400 font-semibold flex items-center gap-1">
                     <Activity className="w-3.5 h-3.5" /> 100% VERIFIED
@@ -383,17 +385,25 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
 
         </div>
 
-        {/* Solutions-to-Footer Bridge (#custom-quote / #book) */}
-        <div id="book" className="scroll-mt-28" />
-        <div id="custom-quote" className="mt-8 relative bg-transparent overflow-hidden rounded-2xl">
-          {/* Bottom CTA Bar */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-white/80 dark:bg-[#12151E]/80 border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-              <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
-                Ready to deploy these turnkey automated systems into your business?
+        {/* High-Converting "Other Industries" Executive Callout Card */}
+        <div id="book" className="scroll-mt-36" />
+        <div id="custom-quote" className="mt-12 relative bg-transparent overflow-hidden rounded-2xl">
+          <div className="bg-white/80 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm backdrop-blur-md">
+            {/* Left Content */}
+            <div className="space-y-2 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-bold">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                CUSTOM WORKFLOWS
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">
+                Don&apos;t see your sector? Run a different business?
+              </h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
+                Imagine opening your phone every morning to see every lead qualified, appointments locked on your calendar, and your net revenue streaming live. We build custom pipelines for any booking or quote-driven business.
               </p>
             </div>
+
+            {/* Right Action Button */}
             <button
               type="button"
               onClick={() => {
@@ -403,9 +413,9 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
                   document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:shadow-[0_0_30px_rgba(139,92,246,0.65)] hover:-translate-y-0.5 active:translate-y-0 shrink-0 cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-black dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 font-semibold px-6 py-3.5 rounded-full text-xs sm:text-sm transition-all shadow-md active:scale-95 shrink-0 cursor-pointer"
             >
-              <span>Request Custom Quote</span>
+              <span>Request Custom Architecture</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
