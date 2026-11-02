@@ -117,9 +117,9 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               </div>
             </a>
 
-            <h3 className="text-lg sm:text-xl font-bold !text-white text-white dark:text-white tracking-tight leading-snug">
-              Zero missed inquiries. <br className="hidden sm:inline" />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-cyan-400">
+            <h3 className="text-2xl font-bold tracking-tight text-white mb-2">
+              Zero missed inquiries.{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-400">
                 Zero human delay.
               </span>
             </h3>
@@ -271,7 +271,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             <a
               href="#industries"
               onClick={handleStartProject}
-              className="inline-flex items-center justify-center w-full px-4 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white font-medium transition-all shadow-md shadow-indigo-500/20 cursor-pointer"
+              className="inline-flex items-center justify-center w-full px-4 py-2.5 text-xs font-semibold rounded-lg bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white font-medium shadow-md shadow-indigo-500/20 transition-all cursor-pointer"
             >
               Start a Project →
             </a>

@@ -225,9 +225,9 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
             TURNKEY ARCHITECTURES
           </div>
           
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-white">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-100">
             One engine.{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-500 via-indigo-500 to-cyan-400">
               Built for your industry.
             </span>
           </h2>
@@ -365,10 +365,10 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
                 {item.features.map((feat, fIdx) => (
                   <div
                     key={fIdx}
-                    className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#12151E] border border-slate-200 dark:border-white/10 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 shadow-sm hover:shadow-[0_0_25px_rgba(16,185,129,0.1)] transition-all duration-300 flex-1 flex flex-col justify-center"
+                    className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#12151E] border border-slate-200 dark:border-white/10 hover:border-violet-500/40 dark:hover:border-violet-500/40 shadow-sm hover:shadow-[0_0_25px_rgba(139,92,246,0.08)] transition-all duration-300 flex-1 flex flex-col justify-center"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono font-bold tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-md">
+                      <span className="bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20 rounded-md px-2.5 py-0.5 text-[10px] font-mono tracking-wider font-semibold">
                         {feat.tag}
                       </span>
                       <span className="w-2 h-2 rounded-full bg-cyan-400" />
