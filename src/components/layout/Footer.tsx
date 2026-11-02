@@ -11,6 +11,8 @@ interface FooterProps {
   themeBranding?: ThemeBrandingConfig;
 }
 
+const BOOKING_URL = 'https://calendar.app.google/u5vL88X41qmGBCky5';
+
 export default function Footer({ onOpenQuoteModal, themeBranding: initialBranding }: FooterProps = {}) {
   const { lenis } = useSmoothScroll();
   const [branding, setBranding] = useState<ThemeBrandingConfig | undefined>(initialBranding);
@@ -67,16 +69,12 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
     }
   };
 
-  const handleStartProject = (e: React.MouseEvent) => {
-    if (onOpenQuoteModal) {
-      e.preventDefault();
-      onOpenQuoteModal('Discovery Call');
+  const handleNavScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    if (lenis) {
+      lenis.scrollTo(`#${targetId}`);
     } else {
-      const el = document.getElementById('industries') || document.getElementById('how-it-works');
-      if (el) {
-        e.preventDefault();
-        el.scrollIntoView({ behavior: 'smooth' });
-      }
+      document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -84,13 +82,17 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
     <footer className="relative z-20 bg-neutral-950 border-t border-neutral-800 text-zinc-400 pt-8 pb-10">
       <div className="max-w-6xl mx-auto px-6">
         
-        {/* Main Grid - Reduced padding & tighter gaps */}
+        {/* Main Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 lg:gap-8 pb-6">
           
-          {/* Left Column (Span 5) */}
+          {/* Left Column (Brand Anchor) */}
           <div className="lg:col-span-5 space-y-2.5">
-            <a href="#overview" className="inline-flex items-center gap-2.5 group focus:outline-none">
-              {/* Cube Icon: Exactly identical to Navbar */}
+            <a 
+              href="#hero" 
+              onClick={(e) => handleNavScroll(e, 'hero')} 
+              className="inline-flex items-center gap-2.5 group focus:outline-none"
+            >
+              {/* Cube Icon */}
               <div className="w-7 h-7 flex items-center justify-center text-zinc-200 transition-transform duration-300 group-hover:scale-105 shrink-0">
                 {(branding?.logoMode === 'image' || (branding?.logoMode !== 'svg' && branding?.logoImageUrl)) && branding?.logoImageUrl ? (
                   <img
@@ -117,19 +119,18 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               </div>
             </a>
 
-            <h3 className="text-2xl font-bold tracking-tight text-white mb-2">
+            <h3 className="text-2xl font-bold tracking-tight text-white mb-2 leading-snug">
               Zero missed inquiries.{" "}
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-400">
                 Zero human delay.
               </span>
             </h3>
 
-            {/* Tightened 2-line subtext */}
             <p className="text-xs text-zinc-400 leading-relaxed max-w-sm">
               Intelligent voice agents, WhatsApp booking systems, and custom software that capture and track every opportunity around the clock.
             </p>
 
-            {/* Compact Email Pill */}
+            {/* Email Contact Pill */}
             <div className="pt-0.5">
               <a
                 href="mailto:contact@zavianlabs.com"
@@ -145,7 +146,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             </div>
           </div>
 
-          {/* Systems (Span 3) */}
+          {/* Systems Column */}
           <div className="lg:col-span-3 space-y-2">
             <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300">Systems</h4>
             <ul className="space-y-1.5 text-xs">
@@ -156,6 +157,8 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                     if (onOpenQuoteModal) {
                       e.preventDefault();
                       onOpenQuoteModal('voice_receptionist');
+                    } else {
+                      handleNavScroll(e, 'how-it-works');
                     }
                   }}
                   className="text-zinc-400 hover:text-white transition-colors"
@@ -170,6 +173,8 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                     if (onOpenQuoteModal) {
                       e.preventDefault();
                       onOpenQuoteModal('whatsapp_funnel');
+                    } else {
+                      handleNavScroll(e, 'how-it-works');
                     }
                   }}
                   className="text-zinc-400 hover:text-white transition-colors"
@@ -184,6 +189,8 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                     if (onOpenQuoteModal) {
                       e.preventDefault();
                       onOpenQuoteModal('profit_dashboard');
+                    } else {
+                      handleNavScroll(e, 'how-it-works');
                     }
                   }}
                   className="text-zinc-400 hover:text-white transition-colors"
@@ -198,6 +205,8 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                     if (onOpenQuoteModal) {
                       e.preventDefault();
                       onOpenQuoteModal('estimation_engine');
+                    } else {
+                      handleNavScroll(e, 'industries');
                     }
                   }}
                   className="text-zinc-400 hover:text-white transition-colors"
@@ -208,17 +217,14 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             </ul>
           </div>
 
-          {/* Navigation (Span 2) */}
+          {/* Navigation Column */}
           <div className="lg:col-span-2 space-y-2">
             <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300">Navigation</h4>
             <ul className="space-y-1.5 text-xs">
               <li>
                 <a 
                   href="#hero" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={(e) => handleNavScroll(e, 'hero')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
                   Overview
@@ -227,10 +233,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               <li>
                 <a 
                   href="#how-it-works" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={(e) => handleNavScroll(e, 'how-it-works')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
                   How It Works
@@ -239,10 +242,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               <li>
                 <a 
                   href="#industries" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById('industries')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={(e) => handleNavScroll(e, 'industries')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
                   Industries
@@ -262,19 +262,22 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             </ul>
           </div>
 
-          {/* Get Started (Span 2) - Compact without oversized card */}
+          {/* Action Column */}
           <div className="lg:col-span-2 space-y-2">
             <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300">Get Started</h4>
             <p className="text-xs text-zinc-400 leading-snug">
               Deploy autonomous systems into your business.
             </p>
-            <a
-              href="#industries"
-              onClick={handleStartProject}
-              className="inline-flex items-center justify-center w-full px-4 py-2.5 text-xs font-semibold rounded-lg bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white font-medium shadow-md shadow-indigo-500/20 transition-all cursor-pointer"
-            >
-              Start a Project →
-            </a>
+            <div className="pt-1">
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-full px-4 py-2.5 text-xs font-semibold rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white shadow-md shadow-indigo-500/20 transition-all cursor-pointer whitespace-nowrap"
+              >
+                Book Discovery Call →
+              </a>
+            </div>
           </div>
 
         </div>
@@ -282,7 +285,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
         {/* Divider */}
         <div className="h-[1px] w-full bg-zinc-800/80 mb-4" />
 
-        {/* Bottom Bar */}
+        {/* Operational Status Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono text-zinc-500">
           <div>
             © {new Date().getFullYear()} <strong className="font-bold text-white">ZAVIAN LABS</strong>. ALL RIGHTS RESERVED.
@@ -290,11 +293,14 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
 
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10B981] animate-pulse" />
               <span className="text-emerald-400 font-medium">SYSTEMS OPERATIONAL</span>
             </div>
             <ThemeToggle />
-            <button onClick={scrollToTop} className="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-zinc-200 hover:text-white text-xs cursor-pointer">
+            <button 
+              onClick={scrollToTop} 
+              className="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-zinc-200 hover:text-white text-xs cursor-pointer transition-colors"
+            >
               TOP ↑
             </button>
           </div>
