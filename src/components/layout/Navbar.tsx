@@ -74,18 +74,21 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
   };
 
   const defaultNavLinks = [
-    { id: '1', label: 'Overview', href: '#hero', target: '_self' },
-    { id: '2', label: 'Services', href: '#core-expertise', target: '_self' },
-    { id: '3', label: 'Solutions', href: '#project-support', target: '_self' },
+    { id: '1', label: 'Overview', href: '#overview', target: '_self' },
+    { id: '2', label: 'Services', href: '#services', target: '_self' },
+    { id: '3', label: 'How It Works', href: '#workflow', target: '_self' },
   ];
 
   const rawLinks = content?.navItems?.filter((i) => i.active !== false) || defaultNavLinks;
   const navLinks = rawLinks.map((item) => {
-    if (item.href === '#core-expertise' || item.label === 'Core Expertise') {
-      return { ...item, label: 'Services', href: '#core-expertise' };
+    if (item.href === '#hero' || item.label === 'Overview') {
+      return { ...item, label: 'Overview', href: '#overview' };
     }
-    if (item.href === '#project-support' || item.label === 'Project Support') {
-      return { ...item, label: 'Solutions', href: '#project-support' };
+    if (item.href === '#core-expertise' || item.label === 'Services' || item.label === 'Core Expertise') {
+      return { ...item, label: 'Services', href: '#services' };
+    }
+    if (item.href === '#project-support' || item.href === '#workflow' || item.label === 'How It Works' || item.label === 'Solutions') {
+      return { ...item, label: 'How It Works', href: '#workflow' };
     }
     return item;
   });
@@ -130,12 +133,12 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((item) => (
             <a
-              key={item.id}
+              key={item.id || item.href}
               href={item.href}
               target={item.target || '_self'}
               className="text-zinc-300 hover:text-white transition-colors duration-200 font-medium text-xs tracking-wider uppercase"
             >
-              {item.label}
+              {(item as any).name || item.label}
             </a>
           ))}
         </div>

@@ -19,9 +19,9 @@ export const initialContent: WebsiteContent = {
     ctaText: "Book Discovery Call",
     ctaActionId: "discovery-call",
     navItems: [
-      { id: "nav-1", label: "Overview", href: "#hero", target: "_self", active: true },
-      { id: "nav-2", label: "Services", href: "#core-expertise", target: "_self", active: true },
-      { id: "nav-3", label: "Solutions", href: "#project-support", target: "_self", active: true },
+      { id: "nav-1", label: "Overview", href: "#overview", target: "_self", active: true },
+      { id: "nav-2", label: "Services", href: "#services", target: "_self", active: true },
+      { id: "nav-3", label: "How It Works", href: "#workflow", target: "_self", active: true },
     ],
   },
   hero: {

@@ -94,6 +94,7 @@ export default function CoreExpertiseSection({ onOpenQuoteModal, content }: Prop
 
   return (
     <section id="core-expertise" className="relative z-10 bg-transparent py-28 px-4 sm:px-6 lg:px-12 scroll-mt-28">
+      <div id="services" className="absolute top-0 left-0 scroll-mt-28 pointer-events-none" />
       <div className="max-w-7xl mx-auto">
         {/* SECTION HEADER */}
         <div className="text-center mb-16 sm:mb-20 flex flex-col items-center">

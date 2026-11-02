@@ -22,21 +22,21 @@
         {
           "id": "nav-1",
           "label": "Overview",
-          "href": "#hero",
+          "href": "#overview",
           "target": "_self",
           "active": true
         },
         {
           "id": "nav-2",
           "label": "Services",
-          "href": "#core-expertise",
+          "href": "#services",
           "target": "_self",
           "active": true
         },
         {
           "id": "nav-3",
-          "label": "Solutions",
-          "href": "#project-support",
+          "label": "How It Works",
+          "href": "#workflow",
           "target": "_self",
           "active": true
         }
@@ -927,12 +927,12 @@
       "region": "Sindh",
       "country": "Pakistan",
       "currentPage": "/",
-      "referrer": "Direct",
+      "referrer": "http://localhost:3000/",
       "deviceType": "Desktop",
       "browser": "Chrome",
-      "visitCount": 28,
+      "visitCount": 30,
       "firstSeenAt": "2026-10-26T20:26:46.052Z",
-      "lastVisitedAt": "2026-10-26T22:22:00.875Z"
+      "lastVisitedAt": "2026-11-01T22:42:50.036Z"
     },
     {
       "visitorId": "test_vis_999",
@@ -964,6 +964,22 @@
     }
   ],
   "leadSubmissions": [
+    {
+      "id": "lead-1793572981065-ixp80",
+      "name": "Nadia Shabbir",
+      "email": "nadia.shabbir4343@gmail.com",
+      "phone": "+923343100040",
+      "company": "",
+      "selectedService": "AI Voice Receptionist (Inbound / Outbound), WhatsApp Booking & Triage Funnel",
+      "projectScope": "[Monthly Volume: Unspecified] Inbound scope inquiry via booking modal.",
+      "timeline": "Immediate",
+      "ipAddress": "::1",
+      "city": "Localhost Dev",
+      "region": "Sindh",
+      "country": "Pakistan",
+      "timestamp": "2026-11-01T22:43:01.065Z",
+      "visitCountAtSubmission": 1
+    },
     {
       "id": "lead-1793045928037-hkh7d",
       "name": "Elena Rostova",
