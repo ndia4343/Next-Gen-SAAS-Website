@@ -543,7 +543,7 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
                 </span>
                 <span className="flex items-center gap-2.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-                  Retell AI Voice Core
+                  Neural Voice Engine
                 </span>
               </div>
             ))}

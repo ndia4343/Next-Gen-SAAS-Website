@@ -31,6 +31,7 @@ interface IndustrySolution {
   telemetry: {
     statusLabel: string;
     chartTitle: string;
+    trendBadge?: string;
     chartType: "solar" | "clinic" | "restaurant";
     kpis: { label: string; value: string; delta: string }[];
     pipeline: { label: string; val: string }[];
@@ -93,6 +94,7 @@ const INDUSTRIES: IndustrySolution[] = [
     telemetry: {
       statusLabel: "Dubai Health Authority Compliant • DHA / MOH",
       chartTitle: "Chair Occupancy & Treatment Value Yield",
+      trendBadge: "30-DAY OCCUPANCY TREND",
       chartType: "clinic",
       kpis: [
         { label: "Case Acceptance", value: "68%", delta: "+14.2%" },
@@ -314,7 +316,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
                     <div className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
                       <span>{item.telemetry.chartTitle}</span>
                       <span className="text-[10px] font-mono text-cyan-600 dark:text-cyan-400 uppercase tracking-wider font-semibold">
-                        30-DAY PERFORMANCE TREND
+                        {item.telemetry.trendBadge || "30-DAY PERFORMANCE TREND"}
                       </span>
                     </div>
                     <div className="h-28 sm:h-36 flex items-center justify-center">
@@ -413,9 +415,9 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
                   document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-black dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 font-semibold px-6 py-3.5 rounded-full text-xs sm:text-sm transition-all shadow-md active:scale-95 shrink-0 cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white font-medium shadow-md shadow-indigo-500/20 px-6 py-3.5 rounded-full text-xs sm:text-sm transition-all active:scale-95 shrink-0 cursor-pointer"
             >
-              <span>Request Custom Architecture</span>
+              <span>Request Custom Quote</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

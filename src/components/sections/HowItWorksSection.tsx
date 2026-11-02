@@ -133,7 +133,7 @@ const RECENT_TRANSACTIONS = [
     name: "Marcus Vance (4 Pax)",
     venue: "Skyline Terrace • Table 12",
     time: "Just now",
-    deposit: "$250.00",
+    deposit: "AED 950",
     status: "SYNCED",
     tag: "VIP Birthday",
   },
@@ -142,7 +142,7 @@ const RECENT_TRANSACTIONS = [
     name: "Dr. Aris Thorne (2 Pax)",
     venue: "Executive Suite • High Table",
     time: "4m ago",
-    deposit: "$450.00",
+    deposit: "AED 1,650",
     status: "CONFIRMED",
     tag: "Corporate",
   },
@@ -151,7 +151,7 @@ const RECENT_TRANSACTIONS = [
     name: "Sophia Lin (6 Pax)",
     venue: "Dining Salon • Table 4",
     time: "12m ago",
-    deposit: "$300.00",
+    deposit: "AED 1,200",
     status: "LOCKED",
     tag: "Private Dining",
   },
@@ -801,7 +801,7 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
                   </span>
                   <span className="flex items-center gap-2.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-                    Retell AI Voice Core
+                    Neural Voice Engine
                   </span>
                 </div>
               ))}
@@ -817,7 +817,7 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
           <div className="w-[2px] h-14 bg-gradient-to-b from-emerald-500 via-teal-400 to-cyan-500" />
           <div className="my-1 px-3 py-1 rounded-full bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-neutral-800 text-[10px] font-mono text-neutral-600 dark:text-neutral-400 shadow-sm flex items-center gap-1.5">
             <Sparkles className="w-3 h-3 text-cyan-500" />
-            <span>REAL-TIME WEBHOOK // REVENUE EVENT WRITTEN TO TELEMETRY</span>
+            <span>DIRECT SYNC // REVENUE WRITTEN TO DASHBOARD</span>
           </div>
           <div className="w-[2px] h-14 bg-gradient-to-b from-cyan-500 via-sky-400 to-transparent" />
         </div>
@@ -839,7 +839,7 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
                 </h3>
               </div>
               <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                End-to-end conversion attribution from inbound voice ring to locked settlement.
+                End-to-end conversion attribution from inbound voice ring to confirmed booking.
               </p>
             </div>
 
@@ -857,7 +857,7 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
                 Captured Revenue (30D)
               </div>
               <div className="mt-2 text-2xl sm:text-3xl font-black text-neutral-950 dark:text-white tracking-tight">
-                $142,850
+                AED 142,850
               </div>
               <div className="mt-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" /> +34.2% vs human front desk

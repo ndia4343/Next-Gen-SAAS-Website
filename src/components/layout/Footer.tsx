@@ -72,7 +72,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
       e.preventDefault();
       onOpenQuoteModal('Discovery Call');
     } else {
-      const el = document.getElementById('project-support');
+      const el = document.getElementById('industries') || document.getElementById('how-it-works');
       if (el) {
         e.preventDefault();
         el.scrollIntoView({ behavior: 'smooth' });
@@ -118,8 +118,10 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             </a>
 
             <h3 className="text-lg sm:text-xl font-bold !text-white text-white dark:text-white tracking-tight leading-snug">
-              Every missed lead is lost revenue. <br />
-              <span className="text-[#8B5CF6]">We make sure none slip away.</span>
+              Zero missed inquiries. <br className="hidden sm:inline" />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-cyan-400">
+                Zero human delay.
+              </span>
             </h3>
 
             {/* Tightened 2-line subtext */}
@@ -143,13 +145,13 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             </div>
           </div>
 
-          {/* Services (Span 3) */}
+          {/* Systems (Span 3) */}
           <div className="lg:col-span-3 space-y-2">
-            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300">Services</h4>
+            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300">Systems</h4>
             <ul className="space-y-1.5 text-xs">
               <li>
                 <a 
-                  href="#services" 
+                  href="#how-it-works" 
                   onClick={(e) => {
                     if (onOpenQuoteModal) {
                       e.preventDefault();
@@ -158,12 +160,12 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                   }}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  AI Voice Receptionists
+                  AI Voice Receptionist
                 </a>
               </li>
               <li>
                 <a 
-                  href="#services" 
+                  href="#how-it-works" 
                   onClick={(e) => {
                     if (onOpenQuoteModal) {
                       e.preventDefault();
@@ -172,21 +174,35 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                   }}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  WhatsApp Booking Systems
+                  WhatsApp Booking Concierge
                 </a>
               </li>
               <li>
                 <a 
-                  href="#services" 
+                  href="#how-it-works" 
                   onClick={(e) => {
                     if (onOpenQuoteModal) {
                       e.preventDefault();
-                      onOpenQuoteModal('multi_agent');
+                      onOpenQuoteModal('profit_dashboard');
                     }
                   }}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  Custom Software & Dashboards
+                  Live Revenue Dashboards
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="#industries" 
+                  onClick={(e) => {
+                    if (onOpenQuoteModal) {
+                      e.preventDefault();
+                      onOpenQuoteModal('estimation_engine');
+                    }
+                  }}
+                  className="text-zinc-400 hover:text-white transition-colors"
+                >
+                  SolarPro Calculation Engine
                 </a>
               </li>
             </ul>
@@ -196,10 +212,53 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
           <div className="lg:col-span-2 space-y-2">
             <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-300">Navigation</h4>
             <ul className="space-y-1.5 text-xs">
-              <li><a href="#overview" className="text-zinc-400 hover:text-white transition-colors">Overview</a></li>
-              <li><a href="#services" className="text-zinc-400 hover:text-white transition-colors">Services</a></li>
-              <li><a href="#solutions" className="text-zinc-400 hover:text-white transition-colors">Solutions</a></li>
-              <li><a href="#project-support" className="text-zinc-400 hover:text-white transition-colors">Support</a></li>
+              <li>
+                <a 
+                  href="#hero" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-zinc-400 hover:text-white transition-colors"
+                >
+                  Overview
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="#how-it-works" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-zinc-400 hover:text-white transition-colors"
+                >
+                  How It Works
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="#industries" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('industries')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-zinc-400 hover:text-white transition-colors"
+                >
+                  Industries
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://wa.me/971500000000?text=Hi%20Zavian%20Labs%2C%20I%20would%20like%20to%20learn%20more%20about%20your%20autonomous%20systems"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-zinc-400 hover:text-white transition-colors inline-flex items-center gap-1"
+                >
+                  <span>Direct WhatsApp</span>
+                  <span className="text-zinc-500 text-[10px]">↗</span>
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -210,9 +269,9 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               Deploy autonomous systems into your business.
             </p>
             <a
-              href="#project-support"
+              href="#industries"
               onClick={handleStartProject}
-              className="inline-flex items-center justify-center w-full px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#8B5CF6] hover:bg-[#7C3AED] text-white transition-all shadow-[0_0_12px_rgba(139,92,246,0.25)] cursor-pointer"
+              className="inline-flex items-center justify-center w-full px-4 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white font-medium transition-all shadow-md shadow-indigo-500/20 cursor-pointer"
             >
               Start a Project →
             </a>
