@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import HeroSection from '@/components/sections/HeroSection';
 import HowItWorksSection from '@/components/sections/HowItWorksSection';
-import CoreExpertiseSection from '@/components/sections/CoreExpertiseSection';
 import ProjectSupportSection from '@/components/sections/ProjectSupportSection';
 import QuoteModal from '@/components/ui/QuoteModal';
 import Footer from '@/components/layout/Footer';
@@ -82,7 +81,6 @@ export default function HomeClient({ content }: HomeClientProps) {
       <HowItWorksSection
         onOpenQuoteModal={handleOpenModal}
       />
-      <CoreExpertiseSection onOpenQuoteModal={handleOpenModal} content={content.coreExpertise} />
       <ProjectSupportSection onOpenQuoteModal={handleOpenModal} content={content.projectSupport} />
 
       <Footer

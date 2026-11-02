@@ -68,33 +68,20 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
   }, [initialBranding]);
 
   const handleOpen = () => {
+    if (content?.ctaLink) {
+      window.open(content.ctaLink, '_blank');
+      return;
+    }
     if (onOpenQuoteModal) {
       onOpenQuoteModal(content?.ctaActionId || 'Discovery Call');
     }
   };
 
-  const defaultNavLinks = [
+  const navLinks = [
     { id: '1', label: 'Overview', href: '#hero', target: '_self' },
     { id: '2', label: 'How It Works', href: '#how-it-works', target: '_self' },
-    { id: '3', label: 'Services', href: '#services', target: '_self' },
+    { id: '3', label: 'Industries', href: '#industries', target: '_self' },
   ];
-
-  const rawLinks = content?.navItems?.filter((i) => i.active !== false) || defaultNavLinks;
-  const navLinks = rawLinks.map((item) => {
-    if (item.href === '#hero' || item.href === '#overview' || item.label === 'Overview') {
-      return { ...item, label: 'Overview', href: '#hero' };
-    }
-    if (item.href === '#how-it-works' || item.href === '#workflow' || item.label === 'How It Works') {
-      return { ...item, label: 'How It Works', href: '#how-it-works' };
-    }
-    if (item.href === '#core-expertise' || item.href === '#services' || item.label === 'Services' || item.label === 'Core Expertise') {
-      return { ...item, label: 'Services', href: '#services' };
-    }
-    if (item.href === '#project-support' || item.label === 'Solutions') {
-      return { ...item, label: 'Services', href: '#services' };
-    }
-    return item;
-  });
 
   return (
     <header className="contents">
@@ -169,7 +156,7 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
             className="px-5 py-2.5 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs font-mono uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:shadow-[0_0_30px_rgba(139,92,246,0.65)] hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 cursor-pointer"
           >
             <Sparkles className="w-3.5 h-3.5 text-violet-200" />
-            <span>{content?.ctaText || 'Book Discovery'}</span>
+            <span>{content?.ctaText || 'Book Discovery Call'}</span>
           </button>
         </div>
       </nav>

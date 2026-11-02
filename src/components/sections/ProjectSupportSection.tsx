@@ -202,11 +202,13 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
 
   return (
     <section 
-      id="solutions" 
-      className="relative z-20 bg-white dark:bg-[#08080c] shadow-2xl w-full text-slate-900 dark:text-slate-100 pt-36 pb-24 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-300 scroll-mt-32"
+      id="industries" 
+      className="relative z-20 bg-white dark:bg-[#08080c] shadow-2xl w-full text-slate-900 dark:text-slate-100 scroll-mt-32 pt-20 pb-24 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-300"
     >
-      {/* Anchor compatibility */}
+      {/* Compatibility anchors for legacy internal links */}
+      <div id="solutions" className="scroll-mt-32 pointer-events-none" />
       <div id="project-support" className="scroll-mt-32 pointer-events-none" />
+      <div id="services" className="scroll-mt-32 pointer-events-none" />
 
       {/* Background glow accents (Emerald / Cyan theme) */}
       <div className="absolute top-1/3 -left-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none" />

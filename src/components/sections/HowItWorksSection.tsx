@@ -296,7 +296,7 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
     <section 
       ref={sectionRef}
       id="how-it-works"
-      className="relative w-full scroll-mt-32 pt-24 pb-28 px-4 md:px-8 bg-[#F8F9FA] dark:bg-[#08090D] text-zinc-900 dark:text-white transition-colors duration-300 overflow-hidden"
+      className="relative w-full scroll-mt-32 pt-24 pb-20 px-4 md:px-8 bg-[#F8F9FA] dark:bg-[#08090D] text-zinc-900 dark:text-white transition-colors duration-300 overflow-hidden"
     >
       {/* Compatibility Anchors for Legacy Internal Links */}
       <div id="workflow" className="scroll-mt-32" />
