@@ -1,0 +1,61 @@
+name: Nightly Automated Backup & Version History
+
+on:
+  schedule:
+    # 12:00 AM Pakistan Time (PKT / UTC+5) = 19:00 UTC
+    - cron: '0 19 * * *'
+  # Enables the manual "Run workflow" button in GitHub Actions
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate Backup Version Identifier
+        id: vars
+        run: |
+          DATE=$(date +'%Y.%m.%d')
+          TAG="backup-$DATE"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "date=$DATE" >> $GITHUB_OUTPUT
+
+      - name: Resolve Duplicate Tags
+        id: check_changes
+        run: |
+          git fetch --tags
+          if git rev-parse "${{ steps.vars.outputs.tag }}" >/dev/null 2>&1; then
+            TAG="${{ steps.vars.outputs.tag }}-$(date +'%H%M%S')"
+            echo "tag=$TAG" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Tag Repository Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.vars.outputs.tag }}" -m "Automated nightly backup snapshot on ${{ steps.vars.outputs.date }}"
+          git push origin "${{ steps.vars.outputs.tag }}"
+
+      - name: Create Versioned GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.tag }}
+          name: "Nightly Snapshot — ${{ steps.vars.outputs.date }}"
+          body: |
+            ### Automated Nightly Backup (${{ steps.vars.outputs.date }})
+            - **Repository:** `ndia4343/Next-Gen-SAAS-Website`
+            - **Live Deployment:** [Vercel Production](https://vercel.com/nadiashabbir4343-7141s-projects/next-gen-saas-website-cuqz)
+            - **Commit SHA:** `${{ github.sha }}`
+
+            *Complete codebase archive (.zip & .tar.gz) attached below.*
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
