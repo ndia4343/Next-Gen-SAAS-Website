@@ -21,9 +21,7 @@ interface QuoteModalProps {
 
 export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, preselectedService }) => {
   const [step, setStep] = useState(1);
-  const [selectedArchitectures, setSelectedArchitectures] = useState<string[]>([
-    "voice_receptionist"
-  ]);
+  const [selectedArchitectures, setSelectedArchitectures] = useState<string[]>([]);
   const [selectedVolume, setSelectedVolume] = useState("under_100");
   const [formData, setFormData] = useState({
     name: "",
@@ -36,21 +34,39 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
 
   // Sync preselectedService when opened
   useEffect(() => {
-    if (preselectedService && isOpen) {
-      const lower = preselectedService.toLowerCase();
-      let matchedId: string | null = null;
-      if (lower.includes("voice") || lower.includes("receptionist")) {
-        matchedId = "voice_receptionist";
-      } else if (lower.includes("whatsapp") || lower.includes("triage") || lower.includes("booking")) {
-        matchedId = "whatsapp_funnel";
-      } else if (lower.includes("estimat") || lower.includes("quote") || lower.includes("software") || lower.includes("solar") || lower.includes("restaurant")) {
-        matchedId = "estimation_engine";
-      } else if (lower.includes("dashboard") || lower.includes("profit") || lower.includes("analytics") || lower.includes("intelligence")) {
-        matchedId = "profit_dashboard";
-      }
+    if (isOpen) {
+      if (preselectedService && preselectedService.trim() !== "") {
+        const lower = preselectedService.toLowerCase();
 
-      if (matchedId && !selectedArchitectures.includes(matchedId)) {
-        setSelectedArchitectures((prev) => (prev.length === 0 ? [matchedId!] : [...prev, matchedId!]));
+        // If it's a general discovery or custom quote request, do not select any option by default
+        if (
+          lower.includes("custom") ||
+          lower.includes("quote") ||
+          lower.includes("discovery") ||
+          lower.includes("general")
+        ) {
+          setSelectedArchitectures([]);
+          return;
+        }
+
+        let matchedId: string | null = null;
+        if (lower.includes("voice") || lower.includes("receptionist")) {
+          matchedId = "voice_receptionist";
+        } else if (lower.includes("whatsapp") || lower.includes("triage") || lower.includes("booking")) {
+          matchedId = "whatsapp_funnel";
+        } else if (lower.includes("estimat") || lower.includes("software") || lower.includes("solar") || lower.includes("restaurant")) {
+          matchedId = "estimation_engine";
+        } else if (lower.includes("dashboard") || lower.includes("profit") || lower.includes("analytics") || lower.includes("intelligence")) {
+          matchedId = "profit_dashboard";
+        }
+
+        if (matchedId) {
+          setSelectedArchitectures([matchedId]);
+        } else {
+          setSelectedArchitectures([]);
+        }
+      } else {
+        setSelectedArchitectures([]);
       }
     }
   }, [preselectedService, isOpen]);
@@ -60,6 +76,9 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
     if (!isOpen) {
       const timer = setTimeout(() => {
         setStep(1);
+        setSelectedArchitectures([]);
+        setSelectedVolume("under_100");
+        setFormData({ name: "", email: "", phone: "" });
         setIsSubmitted(false);
         setError(null);
       }, 200);
@@ -119,6 +138,8 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
       .filter((opt) => selectedArchitectures.includes(opt.id))
       .map((opt) => opt.title);
     const volumeLabel = volumeOptions.find((v) => v.id === selectedVolume)?.label || selectedVolume;
+    const requestedSystems = selectedTitles.length > 0 ? selectedTitles : ["Custom Enterprise Architecture (General Quote)"];
+    const serviceSummary = selectedTitles.join(", ") || "Custom Architecture Quote";
 
     // 1. Direct Webhook Dispatch to Google Apps Script
     // Set header 'Content-Type': 'text/plain' to prevent CORS preflight blocks
@@ -135,8 +156,8 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
             work_email: formData.email,
             phone: formData.phone,
             whatsapp_number: formData.phone,
-            selectedArchitectures,
-            requested_systems: selectedTitles,
+            selectedArchitectures: selectedArchitectures.length > 0 ? selectedArchitectures : ["custom_quote"],
+            requested_systems: requestedSystems,
             selectedVolume,
             volume: volumeLabel,
             estimated_monthly_volume: volumeLabel,
@@ -157,8 +178,8 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          services: selectedTitles,
-          selectedService: selectedTitles.join(", ") || "Custom Architecture",
+          services: requestedSystems,
+          selectedService: serviceSummary,
           leadVolume: volumeLabel,
           projectScope: `[Volume: ${volumeLabel}] Custom blueprint request submitted via 3-step modal.`,
           timeline: "Within 30 Days",
@@ -178,20 +199,20 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-xl bg-[#12151E] border border-white/10 rounded-2xl shadow-2xl p-6 sm:p-8 text-slate-100 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm dark:backdrop-blur-md animate-in fade-in duration-200">
+      <div className="relative w-full max-w-xl bg-white dark:bg-[#12151E] border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl p-6 sm:p-8 text-slate-900 dark:text-slate-100 overflow-hidden">
         
         {/* Top Progress Bar */}
         <div className="flex items-center justify-between gap-4 mb-6">
           <div className="flex-1 grid grid-cols-3 gap-2">
-            <div className={`h-1.5 rounded-full transition-all duration-300 ${step >= 1 ? "bg-[#8B5CF6]" : "bg-white/10"}`} />
-            <div className={`h-1.5 rounded-full transition-all duration-300 ${step >= 2 ? "bg-[#8B5CF6]" : "bg-white/10"}`} />
-            <div className={`h-1.5 rounded-full transition-all duration-300 ${step >= 3 ? "bg-[#8B5CF6]" : "bg-white/10"}`} />
+            <div className={`h-1.5 rounded-full transition-all duration-300 ${step >= 1 ? "bg-violet-600 dark:bg-[#8B5CF6]" : "bg-slate-200 dark:bg-white/10"}`} />
+            <div className={`h-1.5 rounded-full transition-all duration-300 ${step >= 2 ? "bg-violet-600 dark:bg-[#8B5CF6]" : "bg-slate-200 dark:bg-white/10"}`} />
+            <div className={`h-1.5 rounded-full transition-all duration-300 ${step >= 3 ? "bg-violet-600 dark:bg-[#8B5CF6]" : "bg-slate-200 dark:bg-white/10"}`} />
           </div>
           <button 
             type="button"
             onClick={onClose} 
-            className="text-slate-400 hover:text-white transition-colors p-1 cursor-pointer"
+            className="text-slate-400 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors p-1 cursor-pointer rounded-lg hover:bg-slate-100 dark:hover:bg-white/5"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -199,7 +220,7 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
         </div>
 
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+          <div className="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-400 text-xs font-medium">
             {error}
           </div>
         )}
@@ -210,9 +231,9 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
             {step === 1 && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-white tracking-tight">Step 1: Select Architectures</h3>
-                  <p className="text-sm text-slate-400 mt-1">
-                    Select the AI systems you want deployed (choose all that apply):
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Step 1: Select Architectures</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                    Select the AI systems you want deployed (choose all that apply, or continue for custom):
                   </p>
                 </div>
 
@@ -226,19 +247,29 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
                         onClick={() => toggleArchitecture(opt.id)}
                         className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all duration-200 ${
                           active
-                            ? "bg-[#8B5CF6]/15 border-[#8B5CF6] shadow-[0_0_15px_rgba(139,92,246,0.25)]"
-                            : "bg-white/5 border-white/5 hover:border-white/20 hover:bg-white/[0.07]"
+                            ? "bg-violet-50/80 dark:bg-[#8B5CF6]/15 border-violet-500 dark:border-[#8B5CF6] shadow-[0_0_15px_rgba(139,92,246,0.12)] dark:shadow-[0_0_15px_rgba(139,92,246,0.25)]"
+                            : "bg-slate-50 hover:bg-slate-100/80 border-slate-200 dark:bg-white/5 dark:border-white/5 dark:hover:border-white/20 dark:hover:bg-white/[0.07]"
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-lg ${active ? "bg-[#8B5CF6] text-white" : "bg-white/5 text-slate-400"}`}>
+                          <div className={`p-2 rounded-lg transition-colors ${
+                            active 
+                              ? "bg-violet-600 text-white dark:bg-[#8B5CF6]" 
+                              : "bg-slate-200/70 text-slate-600 dark:bg-white/5 dark:text-slate-400"
+                          }`}>
                             <Icon className="w-4 h-4" />
                           </div>
-                          <span className="text-sm font-semibold text-slate-200">{opt.title}</span>
+                          <span className={`text-sm font-semibold transition-colors ${
+                            active ? "text-slate-900 dark:text-white" : "text-slate-700 dark:text-slate-200"
+                          }`}>
+                            {opt.title}
+                          </span>
                         </div>
 
                         <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
-                          active ? "bg-[#8B5CF6] border-[#8B5CF6] text-white" : "border-white/20 bg-black/30"
+                          active
+                            ? "bg-violet-600 border-violet-600 text-white dark:bg-[#8B5CF6] dark:border-[#8B5CF6]"
+                            : "border-slate-300 dark:border-white/20 bg-white dark:bg-black/30"
                         }`}>
                           {active && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                         </div>
@@ -247,12 +278,11 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
                   })}
                 </div>
 
-                <div className="pt-4 border-t border-white/10 flex justify-end">
+                <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex justify-end">
                   <button
                     type="button"
-                    disabled={selectedArchitectures.length === 0}
                     onClick={() => setStep(2)}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-white bg-[#8B5CF6] hover:bg-[#7C3AED] disabled:opacity-50 transition-all shadow-[0_0_15px_rgba(139,92,246,0.35)] cursor-pointer"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-white bg-violet-600 hover:bg-violet-500 dark:bg-[#8B5CF6] dark:hover:bg-[#7C3AED] transition-all shadow-[0_0_15px_rgba(139,92,246,0.35)] cursor-pointer"
                   >
                     <span>Continue</span>
                     <ArrowRight className="w-4 h-4" />
@@ -265,8 +295,8 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
             {step === 2 && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-white tracking-tight">Step 2: Monthly Inbound Volume</h3>
-                  <p className="text-sm text-slate-400 mt-1">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Step 2: Monthly Inbound Volume</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
                     Select your estimated monthly customer inquiries (calls, WhatsApp, or web):
                   </p>
                 </div>
@@ -280,13 +310,19 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
                         onClick={() => setSelectedVolume(v.id)}
                         className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all duration-200 ${
                           active
-                            ? "bg-[#8B5CF6]/15 border-[#8B5CF6] shadow-[0_0_20px_rgba(139,92,246,0.25)]"
-                            : "bg-white/5 border-white/5 hover:border-white/20 hover:bg-white/[0.07]"
+                            ? "bg-violet-50/80 dark:bg-[#8B5CF6]/15 border-violet-500 dark:border-[#8B5CF6] shadow-[0_0_20px_rgba(139,92,246,0.12)] dark:shadow-[0_0_20px_rgba(139,92,246,0.25)]"
+                            : "bg-slate-50 hover:bg-slate-100/80 border-slate-200 dark:bg-white/5 dark:border-white/5 dark:hover:border-white/20 dark:hover:bg-white/[0.07]"
                         }`}
                       >
-                        <span className="text-sm font-medium text-slate-200">{v.label}</span>
+                        <span className={`text-sm transition-colors ${
+                          active ? "text-slate-900 dark:text-white font-semibold" : "text-slate-700 dark:text-slate-200 font-medium"
+                        }`}>
+                          {v.label}
+                        </span>
                         <span className={`text-[10px] font-mono tracking-widest px-2.5 py-1 rounded transition-colors ${
-                          active ? "text-[#FF6B00] font-bold bg-[#FF6B00]/10 border border-[#FF6B00]/30" : "text-slate-500 bg-white/5"
+                          active 
+                            ? "text-[#ea580c] dark:text-[#FF6B00] font-bold bg-[#FF6B00]/10 border border-[#FF6B00]/30" 
+                            : "text-slate-500 dark:text-slate-400 bg-slate-200/60 dark:bg-white/5"
                         }`}>
                           {v.tier}
                         </span>
@@ -295,18 +331,18 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
                   })}
                 </div>
 
-                <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+                <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="inline-flex items-center gap-1.5 text-xs font-mono text-slate-400 hover:text-white transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-xs font-mono text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" /> Back
                   </button>
                   <button
                     type="button"
                     onClick={() => setStep(3)}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-white bg-[#8B5CF6] hover:bg-[#7C3AED] transition-all shadow-[0_0_15px_rgba(139,92,246,0.35)] cursor-pointer"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-white bg-violet-600 hover:bg-violet-500 dark:bg-[#8B5CF6] dark:hover:bg-[#7C3AED] transition-all shadow-[0_0_15px_rgba(139,92,246,0.35)] cursor-pointer"
                   >
                     <span>Continue</span>
                     <ArrowRight className="w-4 h-4" />
@@ -319,70 +355,70 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
             {step === 3 && (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-white tracking-tight">Step 3: Contact Information</h3>
-                  <p className="text-sm text-slate-400 mt-1">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Step 3: Contact Information</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
                     Where should we dispatch your custom architecture blueprint and cost breakdown?
                   </p>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-mono text-slate-400 uppercase tracking-wider mb-1.5">Your Name *</label>
+                    <label className="block text-xs font-mono text-slate-700 dark:text-slate-400 uppercase tracking-wider mb-1.5 font-medium">Your Name *</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. Tariq Mahmood or Marcus Vance"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full bg-white/5 border border-white/10 focus:border-[#8B5CF6] rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-colors"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-300 dark:border-white/10 focus:border-violet-600 dark:focus:border-[#8B5CF6] focus:ring-2 focus:ring-violet-500/20 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono text-slate-400 uppercase tracking-wider mb-1.5">Work Email *</label>
+                    <label className="block text-xs font-mono text-slate-700 dark:text-slate-400 uppercase tracking-wider mb-1.5 font-medium">Work Email *</label>
                     <input
                       type="email"
                       required
                       placeholder="name@company.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full bg-white/5 border border-white/10 focus:border-[#8B5CF6] rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-colors"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-300 dark:border-white/10 focus:border-violet-600 dark:focus:border-[#8B5CF6] focus:ring-2 focus:ring-violet-500/20 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono text-slate-400 uppercase tracking-wider mb-1.5">Phone / WhatsApp *</label>
+                    <label className="block text-xs font-mono text-slate-700 dark:text-slate-400 uppercase tracking-wider mb-1.5 font-medium">Phone / WhatsApp *</label>
                     <input
                       type="tel"
                       placeholder="+44 / +971 / +92 / +1 WhatsApp Number"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full bg-white/5 border border-white/10 focus:border-[#8B5CF6] rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-colors"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-300 dark:border-white/10 focus:border-violet-600 dark:focus:border-[#8B5CF6] focus:ring-2 focus:ring-violet-500/20 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-all"
                     />
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-white/10 space-y-3">
+                <div className="pt-4 border-t border-slate-200 dark:border-white/10 space-y-3">
                   <div className="flex items-center justify-between">
                     <button
                       type="button"
                       onClick={() => setStep(2)}
-                      className="inline-flex items-center gap-1.5 text-xs font-mono text-slate-400 hover:text-white transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
                     >
                       <ArrowLeft className="w-3.5 h-3.5" /> Back
                     </button>
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-[#8B5CF6] hover:bg-[#7C3AED] transition-all shadow-[0_0_20px_rgba(139,92,246,0.35)] disabled:opacity-50 cursor-pointer"
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-violet-600 hover:bg-violet-500 dark:bg-[#8B5CF6] dark:hover:bg-[#7C3AED] transition-all shadow-[0_0_20px_rgba(139,92,246,0.35)] disabled:opacity-50 cursor-pointer"
                     >
                       <span>{isSubmitting ? "Submitting..." : "Submit Quote Request ↗"}</span>
                     </button>
                   </div>
 
                   {/* Trust Badge */}
-                  <div className="flex items-center justify-center gap-1.5 text-xs text-slate-400 font-mono pt-2">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <div className="flex items-center justify-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono pt-2">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     <span>Fixed-scope architecture proposal sent within 24 hours. No sales spam.</span>
                   </div>
                 </div>
@@ -392,28 +428,28 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
         ) : (
           /* Confirmation State */
           <div className="py-8 text-center space-y-4">
-            <div className="w-14 h-14 rounded-full bg-[#8B5CF6]/15 border border-[#8B5CF6]/40 text-[#8B5CF6] flex items-center justify-center text-2xl mx-auto shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+            <div className="w-14 h-14 rounded-full bg-violet-100 dark:bg-[#8B5CF6]/15 border border-violet-200 dark:border-[#8B5CF6]/40 text-violet-600 dark:text-[#8B5CF6] flex items-center justify-center text-2xl mx-auto shadow-[0_0_20px_rgba(139,92,246,0.2)]">
               <Check className="w-7 h-7 stroke-[2.5]" />
             </div>
 
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF6B00]/10 border border-[#FF6B00]/30 text-[#FF6B00] text-[10px] font-mono uppercase font-bold tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF6B00]/10 border border-[#FF6B00]/30 text-[#ea580c] dark:text-[#FF6B00] text-[10px] font-mono uppercase font-bold tracking-wider">
               <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] animate-pulse" />
               Blueprint Request Staged
             </div>
 
-            <h3 className="text-xl font-bold text-white">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">
               Inquiry Received
             </h3>
 
-            <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
               Our engineering team will review your selected architectures and dispatch your custom blueprint to{" "}
-              <span className="font-semibold text-white">{formData.email}</span> within 24 business hours.
+              <span className="font-semibold text-slate-900 dark:text-white">{formData.email}</span> within 24 business hours.
             </p>
 
             <button
               type="button"
               onClick={onClose}
-              className="mt-6 px-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-white text-xs font-semibold transition-all cursor-pointer"
+              className="mt-6 px-6 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 dark:bg-white/10 dark:hover:bg-white/15 dark:border-white/10 dark:text-white text-xs font-semibold transition-all cursor-pointer"
             >
               Close Window
             </button>

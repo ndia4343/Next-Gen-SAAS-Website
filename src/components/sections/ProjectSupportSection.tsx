@@ -550,7 +550,7 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
               type="button"
               onClick={() => {
                 if (onOpenQuoteModal) {
-                  onOpenQuoteModal(item.tabLabel);
+                  onOpenQuoteModal('');
                 } else {
                   document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
                 }

@@ -16,7 +16,7 @@ interface HomeClientProps {
 
 export default function HomeClient({ content }: HomeClientProps) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState('Agentic AI');
+  const [selectedService, setSelectedService] = useState('');
   const [branding, setBranding] = useState<ThemeBrandingConfig>(content.themeBranding);
 
   useEffect(() => {
@@ -66,8 +66,8 @@ export default function HomeClient({ content }: HomeClientProps) {
     };
   }, []);
 
-  const handleOpenModal = (service: string) => {
-    setSelectedService(service || 'Discovery Call');
+  const handleOpenModal = (service?: string) => {
+    setSelectedService(service || '');
     setModalOpen(true);
   };
 
