@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { ProjectSupportSectionData } from "@/lib/types";
 
+const BOOKING_URL = "https://calendar.app.google/u5vL88X41qmGBCky5";
+
 interface IndustryFeature {
   tag: string;
   title: string;
@@ -405,21 +407,16 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
               </p>
             </div>
 
-            {/* Right Action Button */}
-            <button
-              type="button"
-              onClick={() => {
-                if (onOpenQuoteModal) {
-                  onOpenQuoteModal('');
-                } else {
-                  document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white font-medium shadow-md shadow-indigo-500/20 px-6 py-3.5 rounded-full text-xs sm:text-sm transition-all active:scale-95 shrink-0 cursor-pointer"
+            {/* Right Action Button -> Direct Google Calendar Link */}
+            <a
+              href={BOOKING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white font-medium shadow-md shadow-indigo-500/20 px-6 py-3.5 rounded-full text-xs sm:text-sm transition-all active:scale-95 shrink-0 cursor-pointer whitespace-nowrap"
             >
-              <span>Request Custom Quote</span>
+              <span>Book Discovery Call</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </a>
           </div>
         </div>
 
