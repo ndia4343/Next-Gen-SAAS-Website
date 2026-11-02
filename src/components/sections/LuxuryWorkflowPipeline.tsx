@@ -192,7 +192,7 @@ export function LuxuryWorkflowPipeline({ onOpenQuoteModal }: LuxuryWorkflowPipel
     <section 
       ref={sectionRef}
       id="workflow"
-      className="relative w-full scroll-mt-28 pt-24 pb-28 px-4 md:px-8 bg-[#F8F9FA] dark:bg-[#07070a] text-[#09090b] dark:text-white overflow-hidden transition-colors"
+      className="relative w-full scroll-mt-32 pt-24 pb-28 px-4 md:px-8 bg-[#F8F9FA] dark:bg-[#07070a] text-[#09090b] dark:text-white overflow-hidden transition-colors"
     >
       {/* Subtle Warm Backdrop Lighting */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-slate-200/40 dark:from-violet-900/10 via-purple-100/10 dark:via-purple-900/5 to-transparent blur-3xl pointer-events-none" />

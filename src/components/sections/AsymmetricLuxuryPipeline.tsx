@@ -187,7 +187,7 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
     <section 
       ref={sectionRef}
       id="workflow"
-      className="relative w-full scroll-mt-24 pt-28 pb-28 px-4 md:px-8 bg-[#F8F9FA] dark:bg-[#08090D] text-zinc-900 dark:text-white transition-colors duration-300 overflow-hidden"
+      className="relative w-full scroll-mt-32 pt-28 pb-28 px-4 md:px-8 bg-[#F8F9FA] dark:bg-[#08090D] text-zinc-900 dark:text-white transition-colors duration-300 overflow-hidden"
     >
       {/* Dynamic Ambient Background Aura */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[350px] bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none" />

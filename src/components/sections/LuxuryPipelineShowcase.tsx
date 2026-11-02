@@ -206,7 +206,7 @@ export function LuxuryPipelineShowcase({ onOpenQuoteModal }: LuxuryPipelineShowc
     <section 
       ref={sectionRef}
       id="workflow"
-      className="relative w-full scroll-mt-28 pt-36 pb-24 px-4 md:px-8 bg-[#09090b] text-white overflow-hidden"
+      className="relative w-full scroll-mt-32 pt-36 pb-24 px-4 md:px-8 bg-[#09090b] text-white overflow-hidden"
     >
       {/* Background Architectural Mesh & Dimmed Radial Glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none" />
