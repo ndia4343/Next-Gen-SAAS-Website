@@ -74,21 +74,24 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
   };
 
   const defaultNavLinks = [
-    { id: '1', label: 'Overview', href: '#overview', target: '_self' },
-    { id: '2', label: 'Services', href: '#services', target: '_self' },
-    { id: '3', label: 'How It Works', href: '#workflow', target: '_self' },
+    { id: '1', label: 'Overview', href: '#hero', target: '_self' },
+    { id: '2', label: 'How It Works', href: '#how-it-works', target: '_self' },
+    { id: '3', label: 'Services', href: '#services', target: '_self' },
   ];
 
   const rawLinks = content?.navItems?.filter((i) => i.active !== false) || defaultNavLinks;
   const navLinks = rawLinks.map((item) => {
-    if (item.href === '#hero' || item.label === 'Overview') {
-      return { ...item, label: 'Overview', href: '#overview' };
+    if (item.href === '#hero' || item.href === '#overview' || item.label === 'Overview') {
+      return { ...item, label: 'Overview', href: '#hero' };
     }
-    if (item.href === '#core-expertise' || item.label === 'Services' || item.label === 'Core Expertise') {
+    if (item.href === '#how-it-works' || item.href === '#workflow' || item.label === 'How It Works') {
+      return { ...item, label: 'How It Works', href: '#how-it-works' };
+    }
+    if (item.href === '#core-expertise' || item.href === '#services' || item.label === 'Services' || item.label === 'Core Expertise') {
       return { ...item, label: 'Services', href: '#services' };
     }
-    if (item.href === '#project-support' || item.href === '#workflow' || item.label === 'How It Works' || item.label === 'Solutions') {
-      return { ...item, label: 'How It Works', href: '#workflow' };
+    if (item.href === '#project-support' || item.label === 'Solutions') {
+      return { ...item, label: 'Services', href: '#services' };
     }
     return item;
   });

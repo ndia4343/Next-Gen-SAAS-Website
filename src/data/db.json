@@ -22,21 +22,21 @@
         {
           "id": "nav-1",
           "label": "Overview",
-          "href": "#overview",
+          "href": "#hero",
           "target": "_self",
           "active": true
         },
         {
           "id": "nav-2",
-          "label": "Services",
-          "href": "#services",
+          "label": "How It Works",
+          "href": "#how-it-works",
           "target": "_self",
           "active": true
         },
         {
           "id": "nav-3",
-          "label": "How It Works",
-          "href": "#workflow",
+          "label": "Services",
+          "href": "#services",
           "target": "_self",
           "active": true
         }
