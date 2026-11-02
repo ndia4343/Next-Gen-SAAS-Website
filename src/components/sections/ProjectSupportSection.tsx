@@ -283,8 +283,11 @@ export const SolutionsShowcase: React.FC<SolutionsShowcaseProps> = ({ onOpenQuot
             Turnkey Operations
           </div>
           
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.15]">
-            One engine. <span className="text-[#ff5722]">Four built-in industries.</span>
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-white">
+            One engine.{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500">
+              Four turnkey industries.
+            </span>
           </h2>
           
           <p className="text-slate-600 dark:text-slate-400 text-base sm:text-lg leading-relaxed">
