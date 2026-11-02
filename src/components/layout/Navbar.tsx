@@ -99,7 +99,15 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
   return (
     <header className="contents">
       <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl h-16 rounded-full px-5 sm:px-7 flex items-center justify-between bg-zinc-950/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
-        <a href="#hero" className="flex items-center gap-2.5 group focus:outline-none">
+        <a 
+          href="#hero" 
+          onClick={(e) => {
+            e.preventDefault();
+            document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" });
+            window.history.pushState(null, '', '#hero');
+          }}
+          className="flex items-center gap-2.5 group focus:outline-none cursor-pointer"
+        >
           {/* Cube Icon */}
           <div className="w-7 h-7 flex items-center justify-center text-zinc-200 transition-transform duration-300 group-hover:scale-105 shrink-0">
             {(branding?.logoMode === 'image' || (branding?.logoMode !== 'svg' && branding?.logoImageUrl)) && branding?.logoImageUrl ? (
@@ -139,7 +147,15 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
               key={item.id || item.href}
               href={item.href}
               target={item.target || '_self'}
-              className="text-zinc-300 hover:text-white transition-colors duration-200 font-medium text-xs tracking-wider uppercase"
+              onClick={(e) => {
+                if (item.href?.startsWith('#')) {
+                  e.preventDefault();
+                  const targetId = item.href.slice(1);
+                  document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+                  window.history.pushState(null, '', item.href);
+                }
+              }}
+              className="text-zinc-300 hover:text-white transition-colors duration-200 font-medium text-xs tracking-wider uppercase cursor-pointer"
             >
               {(item as any).name || item.label}
             </a>
