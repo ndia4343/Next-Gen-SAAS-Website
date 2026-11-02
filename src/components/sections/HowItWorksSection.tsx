@@ -25,6 +25,8 @@ import {
   ChevronRight
 } from "lucide-react";
 
+const BOOKING_URL = "https://calendar.app.google/u5vL88X41qmGBCky5";
+
 interface HowItWorksSectionProps {
   onOpenQuoteModal?: (service: string) => void;
 }
@@ -981,18 +983,20 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
                 </div>
               </div>
 
-              {/* Bottom Action CTA inside Stage 03 */}
+              {/* Bottom Action CTA inside Stage 03 -> Direct Google Calendar Link */}
               <div className="pt-4 border-t border-neutral-200/60 dark:border-neutral-800/80 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <span className="text-xs text-neutral-600 dark:text-neutral-400">
                   Ready to deploy this autonomous pipeline in your business?
                 </span>
-                <button
-                  onClick={() => onOpenQuoteModal && onOpenQuoteModal("Discovery Call")}
-                  className="px-5 py-2.5 rounded-full bg-neutral-950 dark:bg-white text-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-200 font-bold text-xs tracking-wider uppercase transition-all shadow-md active:scale-95 cursor-pointer flex items-center gap-1.5"
+                <a
+                  href={BOOKING_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-2.5 rounded-full bg-neutral-950 dark:bg-white text-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-200 font-bold text-xs tracking-wider uppercase transition-all shadow-md active:scale-95 cursor-pointer flex items-center gap-1.5 whitespace-nowrap"
                 >
                   <span>Book Discovery Call</span>
                   <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                </a>
               </div>
 
             </div>

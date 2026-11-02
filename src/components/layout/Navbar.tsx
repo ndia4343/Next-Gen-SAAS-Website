@@ -5,6 +5,8 @@ import ThemeToggle from '@/components/ui/ThemeToggle';
 import { Sparkles } from 'lucide-react';
 import { HeaderData, ThemeBrandingConfig } from '@/lib/types';
 
+const BOOKING_URL = 'https://calendar.app.google/u5vL88X41qmGBCky5';
+
 interface NavbarProps {
   onOpenQuoteModal?: (service: string) => void;
   content?: HeaderData;
@@ -66,16 +68,6 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
       setBranding((prev) => ({ ...initialBranding, ...(prev?.logoImageUrl ? { logoImageUrl: prev.logoImageUrl, logoMode: prev.logoMode } : {}) }));
     }
   }, [initialBranding]);
-
-  const handleOpen = () => {
-    if (content?.ctaLink) {
-      window.open(content.ctaLink, '_blank');
-      return;
-    }
-    if (onOpenQuoteModal) {
-      onOpenQuoteModal(content?.ctaActionId || 'Discovery Call');
-    }
-  };
 
   const navLinks = [
     { id: '1', label: 'Overview', href: '#hero', target: '_self' },
@@ -151,13 +143,15 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
 
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <button
-            onClick={handleOpen}
-            className="px-5 py-2.5 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs font-mono uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:shadow-[0_0_30px_rgba(139,92,246,0.65)] hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 cursor-pointer"
+          <a
+            href={content?.ctaLink || BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-5 py-2.5 rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white font-semibold text-xs font-mono uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.35)] hover:shadow-[0_0_30px_rgba(139,92,246,0.6)] hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 cursor-pointer whitespace-nowrap"
           >
-            <Sparkles className="w-3.5 h-3.5 text-violet-200" />
-            <span>{content?.ctaText || 'Book Discovery Call'}</span>
-          </button>
+            <Sparkles className="w-3.5 h-3.5 text-violet-100" />
+            <span>{content?.ctaText || 'BOOK DISCOVERY CALL'}</span>
+          </a>
         </div>
       </nav>
     </header>
