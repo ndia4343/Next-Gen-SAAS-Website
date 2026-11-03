@@ -192,8 +192,16 @@
   }
 
   /* Preserve high contrast on permanent dark footer in light mode */
+  html.light footer {
+    background-color: #07070a !important;
+    color: #a1a1aa !important;
+  }
   html.light footer h3 {
     color: #ffffff !important;
+  }
+  html.light footer h3 span.bg-clip-text {
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
   }
   html.light footer .text-zinc-100 {
     color: #f4f4f5 !important;

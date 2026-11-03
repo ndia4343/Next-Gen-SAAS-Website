@@ -79,7 +79,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
   };
 
   return (
-    <footer className="relative z-20 bg-[#F8FAFC] dark:bg-[#07070A] border-t border-slate-200/80 dark:border-white/10 text-slate-600 dark:text-zinc-400 pt-12 pb-12 transition-colors duration-300">
+    <footer className="relative z-20 bg-[#07070A] border-t border-neutral-800 text-zinc-400 pt-12 pb-12 transition-colors duration-300">
       <div className="max-w-6xl mx-auto px-6">
         
         {/* Main Grid */}
@@ -93,41 +93,48 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               className="inline-flex items-center gap-2.5 group focus:outline-none"
             >
               {/* Cube Icon */}
-              <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-white/5 p-1 border border-slate-200/80 dark:border-white/10 flex items-center justify-center text-slate-900 dark:text-zinc-200 transition-transform duration-300 group-hover:scale-105 shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-white/[0.08] p-1 border border-white/15 flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-105 shrink-0 shadow-sm">
                 {(branding?.logoMode === 'image' || (branding?.logoMode !== 'svg' && branding?.logoImageUrl)) && branding?.logoImageUrl ? (
                   <img
                     src={branding.logoImageUrl}
                     alt="Brand Logo"
-                    className="w-full h-full object-contain p-0.5"
+                    className="w-full h-full object-contain p-0.5 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
                   />
                 ) : branding?.logoMode === 'svg' && branding?.logoSvgContent ? (
                   <div
-                    className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full"
+                    className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full text-white"
                     dangerouslySetInnerHTML={{ __html: branding.logoSvgContent }}
                   />
                 ) : (
                   <img
                     src="/images/zavian-cube-mark.png"
                     alt="Brand Logo"
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
                   />
                 )}
               </div>
               <div className="flex items-center text-base tracking-wider leading-none">
-                <span className="font-extrabold text-slate-950 dark:text-white transition-colors">{branding?.wordmark1 || 'ZAVIAN'}</span>
-                <span className="font-bold text-[#9333EA] dark:text-[#A855F7] ml-1.5 transition-colors">{branding?.wordmark2 || 'LABS'}</span>
+                <span className="font-extrabold text-white">{branding?.wordmark1 || 'ZAVIAN'}</span>
+                <span className="font-bold text-[#A855F7] ml-1.5">{branding?.wordmark2 || 'LABS'}</span>
               </div>
             </a>
 
             {/* High-Contrast Visible Headline */}
-            <h3 className="text-2xl font-extrabold tracking-tight text-slate-950 dark:text-white mb-2 leading-snug transition-colors">
-              Zero missed inquiries.{' '}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-indigo-500 to-[#38BDF8]">
+            <h3 className="text-2xl font-extrabold tracking-tight text-white mb-2 leading-snug">
+              <span className="text-white" style={{ color: '#ffffff' }}>Zero missed inquiries.</span>{' '}
+              <span 
+                className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-400 inline-block font-extrabold"
+                style={{
+                  backgroundImage: 'linear-gradient(to right, #a78bfa, #a5b4fc, #22d3ee)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
                 Zero human delay.
               </span>
             </h3>
 
-            <p className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed max-w-sm transition-colors">
+            <p className="text-xs text-zinc-400 leading-relaxed max-w-sm">
               Intelligent voice agents, WhatsApp booking systems, and custom software that capture and track every opportunity around the clock.
             </p>
 
@@ -135,21 +142,21 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             <div className="pt-1">
               <a
                 href="mailto:contact@zavianlabs.com"
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 text-slate-700 dark:text-zinc-200 hover:text-purple-600 dark:hover:text-white hover:border-purple-300 dark:hover:border-white/30 shadow-xs transition-all text-xs font-mono group"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700 shadow-xs transition-all text-xs font-mono group"
               >
-                <svg className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect width="20" height="16" x="2" y="4" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
-                <span className="font-medium">contact@zavianlabs.com</span>
-                <span className="text-slate-400 group-hover:text-purple-600 dark:group-hover:text-white transition-colors">↗</span>
+                <span className="font-medium text-zinc-300 group-hover:text-white">contact@zavianlabs.com</span>
+                <span className="text-zinc-500 group-hover:text-white transition-colors">↗</span>
               </a>
             </div>
           </div>
 
           {/* Systems Column */}
           <div className="lg:col-span-3 space-y-3">
-            <h4 className="text-xs uppercase font-mono tracking-widest text-slate-900 dark:text-zinc-300 font-bold">Systems</h4>
+            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-200 font-bold">Systems</h4>
             <ul className="space-y-2 text-xs">
               <li>
                 <a 
@@ -162,7 +169,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                       handleNavScroll(e, 'how-it-works');
                     }
                   }}
-                  className="text-slate-600 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-white transition-colors"
+                  className="text-zinc-400 hover:text-white transition-colors"
                 >
                   AI Voice Receptionist
                 </a>
@@ -178,7 +185,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                       handleNavScroll(e, 'how-it-works');
                     }
                   }}
-                  className="text-slate-600 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-white transition-colors"
+                  className="text-zinc-400 hover:text-white transition-colors"
                 >
                   WhatsApp Booking Concierge
                 </a>
@@ -194,23 +201,23 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                       handleNavScroll(e, 'how-it-works');
                     }
                   }}
-                  className="text-slate-600 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-white transition-colors"
+                  className="text-zinc-400 hover:text-white transition-colors"
                 >
                   Live Revenue Dashboards
                 </a>
               </li>
               <li>
                 <a 
-                  href="#core-expertise" 
+                  href="#industries" 
                   onClick={(e) => {
                     if (onOpenQuoteModal) {
                       e.preventDefault();
                       onOpenQuoteModal('estimation_engine');
                     } else {
-                      handleNavScroll(e, 'core-expertise');
+                      handleNavScroll(e, 'industries');
                     }
                   }}
-                  className="text-slate-600 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-white transition-colors"
+                  className="text-zinc-400 hover:text-white transition-colors"
                 >
                   SolarPro Calculation Engine
                 </a>
@@ -220,13 +227,13 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
 
           {/* Navigation Column */}
           <div className="lg:col-span-2 space-y-3">
-            <h4 className="text-xs uppercase font-mono tracking-widest text-slate-900 dark:text-zinc-300 font-bold">Navigation</h4>
+            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-200 font-bold">Navigation</h4>
             <ul className="space-y-2 text-xs">
               <li>
                 <a 
                   href="#hero" 
                   onClick={(e) => handleNavScroll(e, 'hero')}
-                  className="text-slate-600 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-white transition-colors"
+                  className="text-zinc-400 hover:text-white transition-colors"
                 >
                   Overview
                 </a>
@@ -235,16 +242,16 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                 <a 
                   href="#how-it-works" 
                   onClick={(e) => handleNavScroll(e, 'how-it-works')}
-                  className="text-slate-600 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-white transition-colors"
+                  className="text-zinc-400 hover:text-white transition-colors"
                 >
                   How It Works
                 </a>
               </li>
               <li>
                 <a 
-                  href="#core-expertise" 
-                  onClick={(e) => handleNavScroll(e, 'core-expertise')}
-                  className="text-slate-600 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-white transition-colors"
+                  href="#industries" 
+                  onClick={(e) => handleNavScroll(e, 'industries')}
+                  className="text-zinc-400 hover:text-white transition-colors"
                 >
                   Industries
                 </a>
@@ -254,10 +261,10 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                   href="https://wa.me/971500000000?text=Hi%20Zavian%20Labs%2C%20I%20would%20like%20to%20learn%20more%20about%20your%20autonomous%20systems"
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-slate-600 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-white transition-colors inline-flex items-center gap-1"
+                  className="text-zinc-400 hover:text-white transition-colors inline-flex items-center gap-1"
                 >
                   <span>Direct WhatsApp</span>
-                  <span className="text-slate-400 text-[10px]">↗</span>
+                  <span className="text-zinc-500 text-[10px]">↗</span>
                 </a>
               </li>
             </ul>
@@ -265,8 +272,8 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
 
           {/* Action Column */}
           <div className="lg:col-span-2 space-y-3">
-            <h4 className="text-xs uppercase font-mono tracking-widest text-slate-900 dark:text-zinc-300 font-bold">Get Started</h4>
-            <p className="text-xs text-slate-600 dark:text-zinc-400 leading-snug">
+            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-200 font-bold">Get Started</h4>
+            <p className="text-xs text-zinc-400 leading-snug">
               Deploy autonomous systems into your business.
             </p>
             <div className="pt-1">
@@ -274,7 +281,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                 href={BOOKING_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full px-4 py-2.5 text-xs font-semibold rounded-full bg-purple-600 hover:bg-purple-700 text-white shadow-[0_2px_12px_rgba(147,51,234,0.25)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+                className="inline-flex items-center justify-center w-full px-4 py-2.5 text-xs font-semibold rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white shadow-md shadow-indigo-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
               >
                 Book Discovery Call →
               </a>
@@ -284,23 +291,23 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
         </div>
 
         {/* Divider */}
-        <div className="h-[1px] w-full bg-slate-200/80 dark:border-white/10 mb-6" />
+        <div className="h-[1px] w-full bg-zinc-800/80 mb-6" />
 
         {/* Operational Status Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-slate-500 dark:text-zinc-500">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-zinc-500">
           <div>
-            &copy; 2026 <strong className="font-bold text-slate-900 dark:text-white">ZAVIAN LABS</strong>. ALL RIGHTS RESERVED.
+            &copy; 2026 <strong className="font-bold text-white">ZAVIAN LABS</strong>. ALL RIGHTS RESERVED.
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
+            <div className="flex items-center gap-1.5 text-emerald-400 font-medium">
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>SYSTEMS OPERATIONAL</span>
             </div>
             <ThemeToggle />
             <button 
               onClick={scrollToTop} 
-              className="px-2.5 py-1 rounded-lg bg-white dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-slate-700 dark:text-zinc-300 hover:text-purple-600 dark:hover:text-white text-xs cursor-pointer transition-colors"
+              className="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white text-xs cursor-pointer transition-colors"
             >
               TOP ↑
             </button>

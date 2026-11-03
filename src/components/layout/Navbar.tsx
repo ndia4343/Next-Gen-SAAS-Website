@@ -17,7 +17,6 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
   const [branding, setBranding] = useState<ThemeBrandingConfig | undefined>(initialBranding);
 
   useEffect(() => {
-    // 1. Sync from localStorage for instant client reflection
     try {
       const saved = localStorage.getItem('zavian_theme_branding');
       if (saved) {
@@ -28,7 +27,6 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
       }
     } catch {}
 
-    // 2. Listen to live branding updates from admin panel in same tab or across tabs
     const handleUpdate = (e: Event) => {
       const customEvent = e as CustomEvent<ThemeBrandingConfig>;
       if (customEvent.detail) {
@@ -47,7 +45,6 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
     window.addEventListener('zavian_branding_updated', handleUpdate);
     window.addEventListener('storage', handleStorage);
 
-    // 3. Background fetch latest from server API
     fetch('/api/content')
       .then((res) => res.json())
       .then((data) => {
@@ -65,94 +62,99 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
 
   useEffect(() => {
     if (initialBranding) {
-      setBranding((prev) => ({ ...initialBranding, ...(prev?.logoImageUrl ? { logoImageUrl: prev.logoImageUrl, logoMode: prev.logoMode } : {}) }));
+      setBranding((prev) => ({
+        ...initialBranding,
+        ...(prev?.logoImageUrl ? { logoImageUrl: prev.logoImageUrl, logoMode: prev.logoMode } : {}),
+      }));
     }
   }, [initialBranding]);
 
   const navLinks = [
-    { id: '1', label: 'Overview', href: '#hero', target: '_self' },
-    { id: '2', label: 'How It Works', href: '#how-it-works', target: '_self' },
-    { id: '3', label: 'Industries', href: '#industries', target: '_self' },
+    { id: '1', label: 'Overview', href: '#hero' },
+    { id: '2', label: 'How It Works', href: '#how-it-works' },
+    { id: '3', label: 'Industries', href: '#industries' },
   ];
 
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const targetId = href.slice(1);
+      document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+      window.history.pushState(null, '', href);
+    }
+  };
+
   return (
-    <header className="contents">
-      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl h-16 rounded-full px-5 sm:px-7 flex items-center justify-between bg-zinc-950/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4 sm:pt-5 pointer-events-none transition-all duration-300">
+      <nav className="pointer-events-auto w-full max-w-5xl mx-auto h-16 rounded-full px-5 sm:px-7 flex items-center justify-between bg-white/80 dark:bg-[#0B0F19]/80 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-[0_4px_24px_-4px_rgba(15,23,42,0.06)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-colors duration-300">
+        
+        {/* Brand Mark Link */}
         <a 
           href="#hero" 
-          onClick={(e) => {
-            e.preventDefault();
-            document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" });
-            window.history.pushState(null, '', '#hero');
-          }}
-          className="flex items-center gap-2.5 group focus:outline-none cursor-pointer"
+          onClick={(e) => handleScroll(e, '#hero')}
+          className="flex items-center gap-3 group focus:outline-none cursor-pointer"
         >
-          {/* Cube Icon */}
-          <div className="w-7 h-7 flex items-center justify-center text-zinc-200 transition-transform duration-300 group-hover:scale-105 shrink-0">
+          {/* Logo Container */}
+          <div className="w-8 h-8 rounded-xl bg-slate-900 dark:bg-white/[0.08] p-1 border border-slate-800 dark:border-white/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shrink-0 shadow-xs">
             {(branding?.logoMode === 'image' || (branding?.logoMode !== 'svg' && branding?.logoImageUrl)) && branding?.logoImageUrl ? (
               <img
                 src={branding.logoImageUrl}
                 alt="Brand Logo"
-                className="w-full h-full object-contain p-0.5"
+                className="w-full h-full object-contain p-0.5 filter drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]"
               />
             ) : branding?.logoMode === 'svg' && branding?.logoSvgContent ? (
               <div
-                className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full"
+                className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full text-white"
                 dangerouslySetInnerHTML={{ __html: branding.logoSvgContent }}
               />
             ) : (
               <img
                 src="/images/zavian-cube-mark.png"
                 alt="Brand Logo"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain filter drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]"
               />
             )}
           </div>
 
-          {/* Clean Wordmark */}
-          <div className="flex items-center gap-2 leading-none">
-            <span className="font-black text-base tracking-wider text-zinc-100">
+          {/* Wordmark */}
+          <div className="flex items-center tracking-tight text-[15px] leading-none">
+            <span className="font-black text-slate-900 dark:text-white transition-colors">
               {branding?.wordmark1 || 'ZAVIAN'}
             </span>
-            <span className="font-light text-base tracking-widest text-[#A855F7]">
+            <span className="font-light tracking-widest text-[#9333EA] dark:text-[#A855F7] ml-1.5 transition-colors">
               {branding?.wordmark2 || 'LABS'}
             </span>
           </div>
         </a>
 
+        {/* Minimal Navigation */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((item) => (
             <a
-              key={item.id || item.href}
+              key={item.id}
               href={item.href}
-              target={item.target || '_self'}
-              onClick={(e) => {
-                if (item.href?.startsWith('#')) {
-                  e.preventDefault();
-                  const targetId = item.href.slice(1);
-                  document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
-                  window.history.pushState(null, '', item.href);
-                }
-              }}
-              className="text-zinc-300 hover:text-white transition-colors duration-200 font-medium text-xs tracking-wider uppercase cursor-pointer"
+              onClick={(e) => handleScroll(e, item.href)}
+              className="text-slate-600 dark:text-zinc-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-200 font-medium text-xs tracking-wider uppercase cursor-pointer"
             >
-              {(item as any).name || item.label}
+              {item.label}
             </a>
           ))}
         </div>
 
+        {/* Actions */}
         <div className="flex items-center gap-3">
           <ThemeToggle />
           <a
             href={content?.ctaLink || BOOKING_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-5 py-2.5 rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white font-semibold text-xs font-mono uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.35)] hover:shadow-[0_0_30px_rgba(139,92,246,0.6)] hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 cursor-pointer whitespace-nowrap"
+            className="px-5 py-2.5 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-sky-500 hover:opacity-95 text-white font-semibold text-xs font-mono uppercase tracking-wider transition-all duration-300 shadow-[0_2px_12px_rgba(147,51,234,0.25)] hover:shadow-[0_4px_18px_rgba(147,51,234,0.35)] hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 cursor-pointer whitespace-nowrap"
           >
-            <Sparkles className="w-3.5 h-3.5 text-violet-100" />
+            <Sparkles className="w-3.5 h-3.5 text-purple-100" />
             <span>{content?.ctaText || 'BOOK DISCOVERY CALL'}</span>
           </a>
         </div>
+
       </nav>
     </header>
   );
