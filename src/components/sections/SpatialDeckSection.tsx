@@ -1,139 +1,76 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import { 
-  PhoneCall, 
-  MessageSquare, 
-  TrendingUp, 
-  Sparkles, 
-  CalendarCheck, 
   Play, 
   Pause, 
-  RotateCcw,
+  RotateCcw, 
   Volume2, 
-  VolumeX,
+  VolumeX, 
+  CheckCheck, 
+  CalendarCheck, 
+  TrendingUp, 
+  Sparkles,
+  PhoneCall,
+  MessageSquare,
   ShieldCheck,
-  CheckCheck,
-  Layers,
-  ArrowRight,
-  User,
-  Clock,
-  Activity,
-  CheckCircle2,
-  DollarSign
+  Wifi,
+  BatteryCharging,
+  ArrowRight
 } from 'lucide-react';
 
-// Stages defined for the interactive demo
-type StageId = 'voice' | 'whatsapp' | 'revenue';
-
-interface StageMeta {
-  id: StageId;
-  stepNumber: string;
-  tabLabel: string;
-  badge: string;
-  title: string;
-  description: string;
-  tagColor: string;
-}
-
-const STAGES: StageMeta[] = [
-  {
-    id: 'voice',
-    stepNumber: '01',
-    tabLabel: 'Voice Receptionist',
-    badge: 'STAGE 01 // NEURAL INTAKE',
-    title: 'Instant Voice Intake. Zero Human Hold Time.',
-    description: 'Zara answers priority inquiries within 400ms. She listens with human cadence, qualifies intent, and negotiates available appointments in real time.',
-    tagColor: 'from-emerald-500 to-teal-400',
-  },
-  {
-    id: 'whatsapp',
-    stepNumber: '02',
-    tabLabel: 'WhatsApp Concierge',
-    badge: 'STAGE 02 // INSTANT DISPATCH',
-    title: 'Conversational Slot Lock & Verified Calendar Sync.',
-    description: 'Dispatches booking packets and location directions via verified WhatsApp within 0.08 seconds of call termination with two-way confirmation.',
-    tagColor: 'from-[#00E599] to-[#06B6D4]',
-  },
-  {
-    id: 'revenue',
-    stepNumber: '03',
-    tabLabel: 'Revenue Telemetry',
-    badge: 'STAGE 03 // FINANCIAL LEDGER',
-    title: 'Real-Time Yield Telemetry & Recovery Attribution.',
-    description: 'Tracks every captured dollar against front-desk capacity. Real-time multi-currency attribution gives stakeholders continuous visibility into margin gains.',
-    tagColor: 'from-cyan-400 to-emerald-400',
-  },
-];
-
 export default function SpatialDeckSection() {
-  const [activeStage, setActiveStage] = useState<StageId>('voice');
-  const [isPlayingVideo, setIsPlayingVideo] = useState(true);
-  const [progress, setProgress] = useState(0); // 0 to 100
-  const [isAudioMuted, setIsAudioMuted] = useState(true);
-  const [expandedMode, setExpandedMode] = useState(false);
-  const [audioWaveProgress, setAudioWaveProgress] = useState(35);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0); // 0 to 12 seconds
+  const [isMuted, setIsMuted] = useState(true);
+  const totalDuration = 12; // 12s video loop
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-play video simulation loop (cycles through stages: 0-33% Voice, 34-66% WhatsApp, 67-100% Revenue)
+  // 12-second continuous animation loop
   useEffect(() => {
     let animFrame: number;
-    let lastTime = performance.now();
+    let lastStamp = performance.now();
 
-    const loop = (currentTime: number) => {
-      const delta = (currentTime - lastTime) / 1000;
-      lastTime = currentTime;
+    const tick = (now: number) => {
+      const delta = (now - lastStamp) / 1000;
+      lastStamp = now;
 
-      if (isPlayingVideo) {
-        setProgress((prev) => {
-          const next = prev + (delta / 12) * 100; // 12-second full video cycle
-          if (next >= 100) return 0;
+      if (isPlaying) {
+        setCurrentTime((prev) => {
+          const next = prev + delta;
+          if (next >= totalDuration) return 0;
           return next;
         });
       }
 
-      animFrame = requestAnimationFrame(loop);
+      animFrame = requestAnimationFrame(tick);
     };
 
-    animFrame = requestAnimationFrame(loop);
+    animFrame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animFrame);
-  }, [isPlayingVideo]);
+  }, [isPlaying]);
 
-  // Sync active stage with auto-play timeline progress
-  useEffect(() => {
-    if (!isPlayingVideo) return;
-    if (progress < 33.3) {
-      setActiveStage('voice');
-    } else if (progress < 66.6) {
-      setActiveStage('whatsapp');
-    } else {
-      setActiveStage('revenue');
-    }
-  }, [progress, isPlayingVideo]);
+  // Derived animation phase:
+  // Phase 1 (0s - 3.2s): App Launch & Pulsing 3D Icon
+  // Phase 2 (3.2s - 7.8s): 3D Cards Cascade & Explosion Out of Screen
+  // Phase 3 (7.8s - 11.2s): WhatsApp Slot Lock & Rate Inspection
+  // Phase 4 (11.2s - 12.0s): Smooth Fold Back
+  const phase = currentTime < 3.2 ? 1 : currentTime < 7.8 ? 2 : currentTime < 11.2 ? 3 : 4;
 
-  // Audio wave oscillating animation
-  useEffect(() => {
-    const waveTimer = setInterval(() => {
-      setAudioWaveProgress((p) => (p >= 100 ? 0 : p + 4));
-    }, 180);
-    return () => clearInterval(waveTimer);
-  }, []);
-
-  // 3D Mouse Parallax Tracking
+  // 3D Mouse / Touch Tilt Physics for the Mobile Device
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const springConfig = { damping: 28, stiffness: 200 };
-  const smoothX = useSpring(mouseX, springConfig);
-  const smoothY = useSpring(mouseY, springConfig);
+  const springSettings = { damping: 25, stiffness: 180 };
+  const smoothX = useSpring(mouseX, springSettings);
+  const smoothY = useSpring(mouseY, springSettings);
 
-  // Card stack 3D tilts
-  const rotateX = useTransform(smoothY, [-400, 400], [7, -7]);
-  const rotateY = useTransform(smoothX, [-600, 600], [-8, 8]);
-  const shineX = useTransform(smoothX, [-600, 600], ['20%', '80%']);
-  const shineY = useTransform(smoothY, [-400, 400], ['20%', '80%']);
+  const phoneRotateX = useTransform(smoothY, [-300, 300], [10, -10]);
+  const phoneRotateY = useTransform(smoothX, [-400, 400], [-12, 12]);
+  const glareX = useTransform(smoothX, [-400, 400], ['15%', '85%']);
+  const glareY = useTransform(smoothY, [-300, 300], ['15%', '85%']);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
@@ -149,513 +86,421 @@ export default function SpatialDeckSection() {
     mouseY.set(0);
   }, [mouseX, mouseY]);
 
-  const currentStageMeta = STAGES.find((s) => s.id === activeStage) || STAGES[0];
+  // Waveform animated frequency bars
+  const [waveSeed, setWaveSeed] = useState(0);
+  useEffect(() => {
+    const waveTimer = setInterval(() => {
+      setWaveSeed((s) => (s + 1) % 100);
+    }, 150);
+    return () => clearInterval(waveTimer);
+  }, []);
 
   return (
     <section
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full py-20 lg:py-28 overflow-hidden bg-gradient-to-b from-[#021f18] via-[#043328] to-[#01140f] text-white selection:bg-[#00E599]/30 font-sans"
+      className="relative w-full min-h-screen py-16 lg:py-24 flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-[#01221b] via-[#033b2e] to-[#01140f] text-white selection:bg-[#00E599]/30"
     >
-      {/* Background Spatial Atmosphere (Emerald / Cyan / Mint Glow) */}
+      {/* Background Mint / Emerald Glowing Atmospheric Orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Top luminous radial ambient */}
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[850px] h-[550px] bg-gradient-to-b from-[#00E599]/20 via-[#06B6D4]/15 to-transparent rounded-full blur-[140px]" />
+        {/* Giant soft central aura */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] sm:w-[950px] h-[700px] sm:h-[950px] bg-gradient-to-tr from-[#00E599]/18 via-[#06B6D4]/12 to-transparent rounded-full blur-[140px]" />
         
-        {/* Soft bottom side accents */}
-        <div className="absolute bottom-10 -left-40 w-[600px] h-[600px] bg-[#10B981]/15 rounded-full blur-[150px]" />
-        <div className="absolute top-1/3 -right-40 w-[600px] h-[600px] bg-[#06B6D4]/15 rounded-full blur-[150px]" />
-
-        {/* Spatial Grid Lines (Subtle Perspective Grid) */}
-        <div 
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage: `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 1px, transparent 1px)`,
-            backgroundSize: '40px 40px',
-          }}
-        />
+        {/* Soft corner ambient gradients */}
+        <div className="absolute top-10 left-10 w-[500px] h-[500px] bg-[#10B981]/15 rounded-full blur-[150px]" />
+        <div className="absolute bottom-10 right-10 w-[550px] h-[550px] bg-[#06B6D4]/15 rounded-full blur-[150px]" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header: English, Executive-Grade */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-[#00E599]/30 text-xs font-mono tracking-wider uppercase text-[#00E599] shadow-[0_0_15px_rgba(0,229,153,0.2)]">
-            <span className="w-2 h-2 rounded-full bg-[#00E599] animate-pulse" />
-            <span>Interactive 3D Video Experience</span>
+      {/* Floating Blurred Parallax Cards in Background (Direct Homage to Video Background) */}
+      <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+        {/* Left giant tilted background card */}
+        <motion.div
+          animate={{
+            y: [0, -18, 0],
+            rotateZ: [-18, -16, -18],
+          }}
+          transition={{ repeat: Infinity, duration: 8, ease: 'easeInOut' }}
+          className="absolute -left-20 sm:left-4 lg:left-24 top-1/4 w-72 sm:w-80 h-96 rounded-[36px] bg-gradient-to-br from-[#065f46]/85 via-[#047857]/60 to-[#022c22]/90 border border-white/10 p-6 shadow-2xl opacity-40 blur-[5px]"
+        >
+          <div className="w-10 h-10 rounded-2xl bg-white/20 mb-4" />
+          <div className="h-4 w-3/4 bg-white/20 rounded-md mb-2" />
+          <div className="h-3 w-1/2 bg-white/10 rounded-md" />
+          <div className="mt-16 space-y-3">
+            <div className="h-10 w-full bg-white/10 rounded-xl" />
+            <div className="h-10 w-full bg-white/10 rounded-xl" />
           </div>
+        </motion.div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.12]">
-            One Engine.{' '}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#00E599] via-[#2DD4BF] to-[#38BDF8]">
-              Pure Spatial Symphony.
-            </span>
-          </h2>
+        {/* Right giant tilted background card */}
+        <motion.div
+          animate={{
+            y: [0, 20, 0],
+            rotateZ: [20, 22, 20],
+          }}
+          transition={{ repeat: Infinity, duration: 9, ease: 'easeInOut' }}
+          className="absolute -right-20 sm:right-4 lg:right-24 bottom-1/4 w-72 sm:w-80 h-96 rounded-[36px] bg-gradient-to-br from-[#022c22]/90 via-[#064e3b]/60 to-[#0f766e]/70 border border-white/10 p-6 shadow-2xl opacity-35 blur-[7px]"
+        >
+          <div className="w-10 h-10 rounded-2xl bg-white/20 mb-4" />
+          <div className="h-4 w-2/3 bg-white/20 rounded-md mb-2" />
+          <div className="h-3 w-1/3 bg-white/10 rounded-md" />
+        </motion.div>
+      </div>
 
-          <p className="text-sm sm:text-base text-emerald-100/70 leading-relaxed max-w-2xl mx-auto">
-            Experience our 3-stage autonomous pipeline live. Watch the video synchronization loop or take interactive control of the 3D spatial stack below.
-          </p>
-        </div>
+      {/* Floating 3D Refractive Glass Sphere / Bubble (From Video) */}
+      <motion.div
+        animate={{
+          y: [-12, 12, -12],
+          x: [6, -6, 6],
+          rotate: [0, 180, 360],
+        }}
+        transition={{ repeat: Infinity, duration: 7, ease: 'easeInOut' }}
+        className="absolute top-16 sm:top-20 z-40 w-16 h-16 sm:w-20 sm:h-20 rounded-full pointer-events-none shadow-[0_20px_50px_rgba(0,229,153,0.45)]"
+        style={{
+          background: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.95), rgba(0,229,153,0.5) 45%, rgba(6,182,212,0.65) 75%, rgba(2,44,34,0.95))',
+          backdropFilter: 'blur(8px)',
+          border: '1.5px solid rgba(255,255,255,0.7)',
+        }}
+      >
+        {/* Specular Glare */}
+        <div className="absolute top-2.5 left-3 w-5 h-2.5 rounded-full bg-white/90 blur-[0.6px] rotate-[-30deg]" />
+      </motion.div>
 
-        {/* Video Scrubber & Playback Sync Dock */}
-        <div className="max-w-4xl mx-auto mb-10 p-3 sm:p-4 rounded-2xl bg-white/[0.06] backdrop-blur-xl border border-white/10 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* MAIN VIEWPORT: THE 3D SMARTPHONE */}
+      <div 
+        style={{ perspective: 1400 }}
+        className="relative z-30 flex items-center justify-center w-full max-w-sm sm:max-w-md my-auto px-4"
+      >
+        <motion.div
+          style={{
+            rotateX: phoneRotateX,
+            rotateY: phoneRotateY,
+            transformStyle: 'preserve-3d',
+          }}
+          className="relative w-[320px] sm:w-[360px] h-[640px] sm:h-[680px] rounded-[52px] bg-slate-950 p-3 sm:p-3.5 shadow-[0_25px_80px_rgba(0,0,0,0.8),0_0_60px_rgba(0,229,153,0.3)] border-[9px] sm:border-[10px] border-slate-900/95 ring-1 ring-white/20 select-none"
+        >
+          {/* Phone Glare Reflection Overlay */}
+          <motion.div
+            className="absolute inset-0 rounded-[44px] pointer-events-none z-50 opacity-20"
+            style={{
+              background: `radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.8), transparent 70%)`,
+            }}
+          />
+
+          {/* Phone Screen Container */}
+          <div className="relative w-full h-full rounded-[40px] overflow-hidden bg-gradient-to-b from-[#023326] via-[#034d3a] to-[#012219] flex flex-col justify-between p-4 sm:p-5">
+            
+            {/* 1. Phone Top Status Bar */}
+            <div className="relative z-40 flex items-center justify-between text-[11px] font-mono font-bold text-white/90 px-2 pt-1">
+              <span>9:41</span>
+              {/* Dynamic Island Pill */}
+              <div className="w-20 h-4 rounded-full bg-black/90 border border-white/10 flex items-center justify-center gap-1.5 px-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[8.5px] font-mono text-[#00E599] font-bold">ZAVIAN 5G</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-white/90">
+                <Wifi className="w-3 h-3" />
+                <BatteryCharging className="w-3.5 h-3.5 text-[#00E599]" />
+              </div>
+            </div>
+
+            {/* 2. Top Brand Header inside Phone (Like "СБЕР" in video, but Zavian Labs in English) */}
+            <div className="relative z-40 flex items-center justify-between pt-3 pb-2 px-1 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                {/* Brand Cube Logo */}
+                <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-[#00E599] to-[#06B6D4] flex items-center justify-center shadow-sm">
+                  <Sparkles className="w-3.5 h-3.5 text-slate-950 fill-current" />
+                </div>
+                <div className="flex items-center tracking-wider text-xs">
+                  <span className="font-extrabold text-white">ZAVIAN</span>
+                  <span className="font-bold text-[#00E599] ml-1">LABS</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-1 text-[9.5px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/10 text-emerald-300 border border-white/15">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00E599] animate-pulse" />
+                <span>3-NODE ENGINE</span>
+              </div>
+            </div>
+
+            {/* 3. DYNAMIC ANIMATION SCENE (Exact Choreography from Video) */}
+            <div className="relative flex-1 flex items-center justify-center my-auto overflow-visible" style={{ perspective: 1000 }}>
+              
+              {/* SCENE 01 (0s - 3.2s): Glossy 3D App Icon Launch (Exact Match to thumb_1.jpg) */}
+              <AnimatePresence>
+                {phase === 1 && (
+                  <motion.div
+                    key="app-icon"
+                    initial={{ scale: 0.6, opacity: 0 }}
+                    animate={{ scale: [0.85, 1.05, 1], opacity: 1 }}
+                    exit={{ scale: 1.4, opacity: 0, filter: 'blur(8px)' }}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="flex flex-col items-center justify-center text-center space-y-4"
+                  >
+                    {/* Glowing Aura Ring */}
+                    <div className="relative flex items-center justify-center">
+                      <motion.div
+                        animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0.8, 0.5] }}
+                        transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+                        className="absolute w-36 h-36 rounded-full bg-gradient-to-tr from-[#00E599]/40 via-[#06B6D4]/30 to-transparent blur-xl"
+                      />
+
+                      {/* The 3D Frosted App Squircle Icon */}
+                      <div className="relative w-28 h-28 rounded-[28px] bg-gradient-to-b from-white/95 to-slate-100 p-1 shadow-[0_20px_45px_rgba(0,0,0,0.35),0_0_30px_rgba(0,229,153,0.4)] border border-white flex items-center justify-center">
+                        {/* Inner Gradient Circle Ring (Just like in the video) */}
+                        <div className="w-20 h-20 rounded-full p-1 bg-gradient-to-tr from-[#00E599] via-[#06B6D4] to-[#10B981] flex items-center justify-center shadow-inner">
+                          <div className="w-full h-full rounded-full bg-white flex items-center justify-center shadow-md">
+                            <Sparkles className="w-9 h-9 text-emerald-600 fill-emerald-500" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="text-sm font-bold text-white tracking-wide">
+                        Autonomous Ecosystem
+                      </div>
+                      <div className="text-[10px] font-mono text-[#00E599] tracking-wider uppercase">
+                        Launching Spatial Pipeline...
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* SCENE 02 & 03 (3.2s - 12s): The 3D Cascading Stack Erupts (Exact Match to thumb_2.jpg & thumb_3.jpg) */}
+              {phase >= 2 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  style={{ transformStyle: 'preserve-3d' }}
+                  className="relative w-full flex flex-col items-center justify-center py-2"
+                >
+
+                  {/* 1. TOP CARD (Back Layer): Stage 01 - Voice Receptionist ("Кошелёк / Саша") */}
+                  <motion.div
+                    animate={{
+                      y: phase === 2 ? -28 : -40,
+                      z: phase === 2 ? 10 : 25,
+                      rotateX: phase === 2 ? 6 : 8,
+                      rotateZ: phase === 2 ? -4 : -5,
+                    }}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="w-[92%] rounded-2xl p-3.5 bg-white/95 text-slate-900 border border-white shadow-xl backdrop-blur-xl"
+                  >
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-[#00E599] text-slate-950 font-bold text-[10px] flex items-center justify-center">
+                          Z
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-bold text-slate-900 leading-tight">ZARA // VOICE INTAKE</div>
+                          <div className="text-[8.5px] font-mono text-emerald-600 font-semibold">Line Connected • &lt;400ms</div>
+                        </div>
+                      </div>
+                      <span className="text-[8.5px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        CALL 01
+                      </span>
+                    </div>
+
+                    {/* Audio Waveform */}
+                    <div className="mt-2 p-2 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center justify-between gap-2">
+                      <div className="w-5 h-5 rounded-full bg-[#00E599] text-slate-950 flex items-center justify-center shrink-0">
+                        <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
+                      </div>
+                      <div className="flex-1 flex items-center gap-0.5 h-4">
+                        {[40, 70, 30, 90, 100, 50, 80, 60, 95, 40, 75, 100, 55, 85, 30].map((h, i) => (
+                          <div
+                            key={i}
+                            className="flex-1 bg-gradient-to-t from-emerald-600 to-[#00E599] rounded-full transition-all duration-150"
+                            style={{
+                              height: `${Math.max(25, (h * ((i % 3) + 1.2) + waveSeed * 2) % 100)}%`,
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-[9px] font-mono text-slate-500 font-bold">00:34</span>
+                    </div>
+                  </motion.div>
+
+                  {/* 2. MID CARD (The Signature Neon Mint/Lime Gradient Card from Video) */}
+                  <motion.div
+                    animate={{
+                      y: phase === 2 ? -8 : -14,
+                      z: phase === 2 ? 35 : 55,
+                      rotateX: phase === 2 ? 4 : 5,
+                      rotateZ: phase === 2 ? 2 : 1,
+                      scale: phase === 3 ? 1.02 : 1,
+                    }}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="w-[96%] mt-[-10px] rounded-2xl p-3.5 bg-gradient-to-tr from-[#00E599] via-[#00D26A] to-[#06B6D4] text-slate-950 border border-white/50 shadow-[0_15px_35px_rgba(0,229,153,0.4)] relative overflow-hidden"
+                  >
+                    <div className="flex items-center justify-between pb-1.5 border-b border-black/10">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-slate-950" />
+                        <span className="text-[10px] font-mono font-black tracking-wider uppercase">
+                          STAGE 02 // WHATSAPP LOCK
+                        </span>
+                      </div>
+                      <span className="text-[8.5px] font-mono font-bold bg-black/15 px-1.5 py-0.2 rounded-full">
+                        0.08S DISPATCH
+                      </span>
+                    </div>
+
+                    <div className="mt-2 space-y-1.5">
+                      <div className="p-2 rounded-xl bg-white/95 text-slate-900 text-[10px] font-medium shadow-xs">
+                        Marcus, your reservation is ready. Confirm Table 12 Terrace?
+                      </div>
+                      <div className="p-1.5 rounded-lg bg-black/15 text-slate-950 text-[9.5px] font-mono font-bold flex items-center justify-between">
+                        <span>Calendar Synced • AED 950 Deposit</span>
+                        <CheckCheck className="w-3.5 h-3.5 text-slate-950" />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* 3. FRONT CARD (Frosted Glass Currency Rates / Telemetry Card from Video) */}
+                  <motion.div
+                    animate={{
+                      y: phase === 2 ? 14 : 10,
+                      z: phase === 2 ? 65 : 85,
+                      rotateX: phase === 2 ? 2 : 2,
+                      rotateZ: phase === 2 ? -1 : 0,
+                    }}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="w-[100%] mt-[-8px] rounded-2xl p-3.5 bg-white text-slate-900 border border-slate-200 shadow-[0_20px_45px_rgba(0,0,0,0.35)]"
+                  >
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                      <div className="flex items-center gap-1.5">
+                        <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-[10px] font-mono font-black uppercase tracking-wider text-slate-900">
+                          STAGE 03 // YIELD TELEMETRY
+                        </span>
+                      </div>
+                      <span className="text-[8.5px] font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                        +34.2% NET
+                      </span>
+                    </div>
+
+                    <div className="mt-2 flex items-center justify-between">
+                      <div>
+                        <div className="text-[8.5px] font-mono text-slate-400 uppercase">Captured Revenue</div>
+                        <div className="text-base font-black font-mono text-slate-950">AED 142,850</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[8.5px] font-mono text-slate-400 uppercase">Case Acceptance</div>
+                        <div className="text-base font-black font-mono text-emerald-600">68.4%</div>
+                      </div>
+                    </div>
+
+                    {/* Rates Multi-Currency Grid (Exact Replica of "Курсы валют" in Video) */}
+                    <div className="mt-2 pt-2 border-t border-slate-100">
+                      <div className="grid grid-cols-4 gap-1 text-center font-mono">
+                        <div className="p-1 rounded-md bg-slate-50 border border-slate-100">
+                          <div className="text-[8px] text-slate-400">AED</div>
+                          <div className="text-[9.5px] font-bold text-slate-900">142k</div>
+                          <div className="text-[7.5px] text-emerald-600 font-bold">▲ +14%</div>
+                        </div>
+                        <div className="p-1 rounded-md bg-slate-50 border border-slate-100">
+                          <div className="text-[8px] text-slate-400">USD</div>
+                          <div className="text-[9.5px] font-bold text-slate-900">$38k</div>
+                          <div className="text-[7.5px] text-emerald-600 font-bold">▲ +22%</div>
+                        </div>
+                        <div className="p-1 rounded-md bg-slate-50 border border-slate-100">
+                          <div className="text-[8px] text-slate-400">EUR</div>
+                          <div className="text-[9.5px] font-bold text-slate-900">€35k</div>
+                          <div className="text-[7.5px] text-emerald-600 font-bold">▲ +18%</div>
+                        </div>
+                        <div className="p-1 rounded-md bg-slate-50 border border-slate-100">
+                          <div className="text-[8px] text-slate-400">GBP</div>
+                          <div className="text-[9.5px] font-bold text-slate-900">£30k</div>
+                          <div className="text-[7.5px] text-emerald-600 font-bold">▲ +12%</div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                </motion.div>
+              )}
+
+            </div>
+
+            {/* 4. Phone Bottom Home Indicator */}
+            <div className="relative z-40 flex flex-col items-center pt-2">
+              <div className="w-32 h-1 bg-white/40 rounded-full" />
+            </div>
+
+          </div>
+        </motion.div>
+      </div>
+
+      {/* MINIMAL SLEEK VIDEO CONTROLLER DOCK (Below Phone) */}
+      <div className="relative z-40 max-w-sm w-full mx-auto mt-8 px-4">
+        <div className="p-3 rounded-2xl bg-slate-900/90 backdrop-blur-xl border border-white/10 shadow-2xl flex items-center justify-between gap-3">
           
-          {/* Play/Pause & Reset Controls */}
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
-            <button
-              onClick={() => setIsPlayingVideo(!isPlayingVideo)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#00E599] hover:bg-[#00c985] text-slate-950 font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,153,0.35)] active:scale-95 cursor-pointer"
-            >
-              {isPlayingVideo ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-              <span>{isPlayingVideo ? 'Pause Video' : 'Play Video'}</span>
-            </button>
+          <button
+            onClick={() => setIsPlaying(!isPlaying)}
+            className="w-9 h-9 rounded-xl bg-[#00E599] hover:bg-[#00c985] text-slate-950 flex items-center justify-center shrink-0 cursor-pointer shadow-md transition-all active:scale-95"
+            title={isPlaying ? "Pause Animation" : "Play Animation"}
+          >
+            {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+          </button>
 
-            <button
-              onClick={() => {
-                setProgress(0);
-                setActiveStage('voice');
-              }}
-              title="Reset Video Loop"
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/15 text-white/80 hover:text-white transition-colors cursor-pointer"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
+          <button
+            onClick={() => setCurrentTime(0)}
+            className="p-2 rounded-xl bg-white/10 hover:bg-white/15 text-white/80 hover:text-white transition-colors cursor-pointer"
+            title="Replay Video"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </button>
 
-            <button
-              onClick={() => setExpandedMode(!expandedMode)}
-              className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer ${
-                expandedMode 
-                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40 shadow-[0_0_12px_rgba(6,182,212,0.3)]' 
-                  : 'bg-white/5 text-emerald-200/80 border-white/10 hover:bg-white/10'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span>{expandedMode ? 'Deck: Fanned Out' : 'Deck: Cascaded'}</span>
-            </button>
-          </div>
-
-          {/* Timeline Scrubber */}
-          <div className="flex-1 w-full max-w-md flex items-center gap-3">
-            <span className="text-[11px] font-mono text-emerald-200/60 w-10 text-right">
-              {Math.floor((progress / 100) * 12)}s
+          {/* Scrubber Bar */}
+          <div className="flex-1 flex items-center gap-2">
+            <span className="text-[10px] font-mono text-emerald-200/70 w-7 text-right">
+              {Math.floor(currentTime)}s
             </span>
-
-            <div 
-              className="relative flex-1 h-2 rounded-full bg-black/40 overflow-hidden cursor-pointer group"
+            <div
               onClick={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
-                const newProgress = Math.max(0, Math.min(100, (clickX / rect.width) * 100));
-                setProgress(newProgress);
+                const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+                setCurrentTime(ratio * totalDuration);
               }}
+              className="relative flex-1 h-2 rounded-full bg-black/60 overflow-hidden cursor-pointer"
             >
-              <motion.div
-                className="h-full bg-gradient-to-r from-[#00E599] via-[#2DD4BF] to-[#06B6D4] relative"
-                style={{ width: `${progress}%` }}
-              >
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white rounded-full shadow-sm" />
-              </motion.div>
+              <div
+                className="h-full bg-gradient-to-r from-[#00E599] to-[#06B6D4]"
+                style={{ width: `${(currentTime / totalDuration) * 100}%` }}
+              />
             </div>
-
-            <span className="text-[11px] font-mono text-emerald-200/60 w-10">
+            <span className="text-[10px] font-mono text-emerald-200/70 w-7">
               12s
             </span>
           </div>
 
-          {/* Audio Mute / Sound Beacon */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setIsAudioMuted(!isAudioMuted)}
-              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-emerald-200/80 hover:text-white transition-colors cursor-pointer text-xs flex items-center gap-1.5"
-            >
-              {isAudioMuted ? <VolumeX className="w-3.5 h-3.5 text-zinc-400" /> : <Volume2 className="w-3.5 h-3.5 text-[#00E599]" />}
-              <span className="font-mono text-[10px] hidden sm:inline">{isAudioMuted ? 'Muted' : 'Audio Synced'}</span>
-            </button>
-          </div>
+          <button
+            onClick={() => setIsMuted(!isMuted)}
+            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-emerald-300 transition-colors cursor-pointer"
+            title="Audio Sync"
+          >
+            {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5 text-[#00E599]" />}
+          </button>
 
         </div>
 
-        {/* Stage Selector Pills (English, Synchronized) */}
-        <div className="flex justify-center mb-10">
-          <div className="inline-flex p-1.5 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 gap-1.5">
-            {STAGES.map((stg) => {
-              const active = activeStage === stg.id;
-              return (
-                <button
-                  key={stg.id}
-                  onClick={() => {
-                    setActiveStage(stg.id);
-                    setIsPlayingVideo(false);
-                    if (stg.id === 'voice') setProgress(15);
-                    if (stg.id === 'whatsapp') setProgress(50);
-                    if (stg.id === 'revenue') setProgress(85);
-                  }}
-                  className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs font-semibold font-mono tracking-wider uppercase transition-all duration-300 cursor-pointer ${
-                    active
-                      ? 'bg-gradient-to-r from-[#00E599] to-[#06B6D4] text-slate-950 font-bold shadow-[0_0_20px_rgba(0,229,153,0.35)] scale-[1.02]'
-                      : 'text-emerald-100/70 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  <span className="opacity-60">{stg.stepNumber}.</span>
-                  <span>{stg.tabLabel}</span>
-                  {active && <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-pulse ml-0.5" />}
-                </button>
-              );
-            })}
-          </div>
+        {/* Phase Pill Indicator below Player */}
+        <div className="text-center mt-3">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-emerald-300 font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00E599] animate-pulse" />
+            {phase === 1 && "SCENE 01: SQUIRCLE APP LAUNCH"}
+            {phase === 2 && "SCENE 02: 3D SPATIAL CARD CASCADE"}
+            {phase === 3 && "SCENE 03: MULTI-CURRENCY & WHATSAPP SYNC"}
+            {phase === 4 && "SCENE 04: SEAMLESS LOOP RESET"}
+          </span>
         </div>
-
-        {/* MAIN 3D SPATIAL PRESENTATION STAGE */}
-        <div style={{ perspective: 1800 }} className="relative w-full max-w-6xl mx-auto py-6">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            
-            {/* Left Column: Context, Features, & Telemetry Badge */}
-            <div className="lg:col-span-5 space-y-6">
-              
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentStageMeta.id}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.28, ease: 'easeOut' }}
-                  className="space-y-4"
-                >
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#00E599]/10 border border-[#00E599]/25 text-xs font-mono font-bold text-[#00E599]">
-                    <Activity className="w-3.5 h-3.5" />
-                    <span>{currentStageMeta.badge}</span>
-                  </div>
-
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight">
-                    {currentStageMeta.title}
-                  </h3>
-
-                  <p className="text-sm sm:text-base text-emerald-100/75 leading-relaxed font-normal">
-                    {currentStageMeta.description}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Dynamic Feature Badges */}
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <div className="p-3.5 rounded-xl bg-white/[0.05] border border-white/10 backdrop-blur-md">
-                  <div className="text-[10px] font-mono uppercase text-emerald-300 font-semibold flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#00E599]" />
-                    <span>Deployment Speed</span>
-                  </div>
-                  <div className="text-base sm:text-lg font-bold text-white mt-1 font-mono">
-                    Sub-24 Hours
-                  </div>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-white/[0.05] border border-white/10 backdrop-blur-md">
-                  <div className="text-[10px] font-mono uppercase text-cyan-300 font-semibold flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Accuracy & Guardrails</span>
-                  </div>
-                  <div className="text-base sm:text-lg font-bold text-white mt-1 font-mono">
-                    99.8% Deterministic
-                  </div>
-                </div>
-              </div>
-
-              {/* Call-to-Action Pill */}
-              <div className="pt-2">
-                <a
-                  href="#contact"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#00E599] via-[#2DD4BF] to-[#06B6D4] hover:opacity-95 text-slate-950 font-bold text-xs sm:text-sm tracking-wide uppercase shadow-[0_0_25px_rgba(0,229,153,0.35)] transition-all active:scale-95 cursor-pointer"
-                >
-                  <span>Deploy This Architecture</span>
-                  <ArrowRight className="w-4 h-4" />
-                </a>
-              </div>
-
-            </div>
-
-            {/* Right Column: THE 3D SPATIAL CARD DECK (Video Clone in English) */}
-            <div className="lg:col-span-7 flex items-center justify-center relative min-h-[520px] sm:min-h-[580px]">
-              
-              {/* Floating Background Parallax Card (Blurred Depth of Field, exactly like Video) */}
-              <motion.div
-                style={{
-                  rotateX,
-                  rotateY,
-                  transformStyle: 'preserve-3d',
-                }}
-                animate={{
-                  y: [0, -12, 0],
-                  rotateZ: [-14, -12, -14],
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 6,
-                  ease: 'easeInOut',
-                }}
-                className="absolute -left-10 sm:-left-16 top-12 w-64 sm:w-72 h-80 rounded-[32px] bg-gradient-to-br from-[#064e3b]/80 via-[#047857]/60 to-[#022c22]/90 border border-white/15 backdrop-blur-[10px] p-5 shadow-2xl opacity-40 pointer-events-none -z-10"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/20 mb-4" />
-                <div className="h-4 w-3/4 bg-white/20 rounded-md mb-2" />
-                <div className="h-3 w-1/2 bg-white/10 rounded-md" />
-                <div className="mt-12 space-y-2">
-                  <div className="h-8 w-full bg-white/10 rounded-lg" />
-                  <div className="h-8 w-full bg-white/10 rounded-lg" />
-                </div>
-              </motion.div>
-
-              {/* Right Floating Parallax Card (Deep Depth) */}
-              <motion.div
-                style={{
-                  rotateX,
-                  rotateY,
-                  transformStyle: 'preserve-3d',
-                }}
-                animate={{
-                  y: [0, 14, 0],
-                  rotateZ: [16, 18, 16],
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 7,
-                  ease: 'easeInOut',
-                }}
-                className="absolute -right-8 sm:-right-12 bottom-12 w-60 sm:w-68 h-72 rounded-[32px] bg-gradient-to-br from-[#022c22]/90 via-[#065f46]/60 to-[#0f766e]/70 border border-white/15 backdrop-blur-[12px] p-5 shadow-2xl opacity-35 pointer-events-none -z-10"
-              >
-                <div className="w-7 h-7 rounded-full bg-white/20 mb-3" />
-                <div className="h-3 w-2/3 bg-white/20 rounded-md mb-2" />
-                <div className="h-2 w-1/3 bg-white/10 rounded-md" />
-              </motion.div>
-
-              {/* Floating 3D Refractive Glass Sphere (As seen in the Video) */}
-              <motion.div
-                animate={{
-                  y: [-8, 8, -8],
-                  x: [4, -4, 4],
-                  rotate: [0, 180, 360],
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 8,
-                  ease: 'easeInOut',
-                }}
-                className="absolute top-2 right-12 sm:right-24 w-14 h-14 rounded-full z-30 pointer-events-none shadow-[0_15px_35px_rgba(0,229,153,0.4)]"
-                style={{
-                  background: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.95), rgba(0,229,153,0.4) 40%, rgba(6,182,212,0.6) 80%, rgba(2,44,34,0.9))',
-                  backdropFilter: 'blur(8px)',
-                  border: '1px solid rgba(255,255,255,0.6)',
-                }}
-              >
-                {/* Specular Highlight Gloss */}
-                <div className="absolute top-2 left-2.5 w-4 h-2 rounded-full bg-white/80 blur-[0.5px] rotate-[-30deg]" />
-              </motion.div>
-
-              {/* CORE 3D INTERACTIVE TILT DECK */}
-              <motion.div
-                style={{
-                  rotateX,
-                  rotateY,
-                  transformStyle: 'preserve-3d',
-                }}
-                className="relative w-full max-w-md sm:max-w-lg z-20"
-              >
-
-                {/* CARD LAYER 1 (BACK CARD): Systems Header & Profile */}
-                <motion.div
-                  style={{
-                    transform: expandedMode
-                      ? 'translateZ(0px) translateY(-50px) rotate(-4deg)'
-                      : activeStage === 'voice'
-                      ? 'translateZ(50px) translateY(-20px)'
-                      : 'translateZ(10px) translateY(-10px)',
-                  }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="rounded-3xl p-5 bg-white/95 text-slate-900 border border-white/80 shadow-[0_15px_35px_rgba(0,0,0,0.25)] backdrop-blur-xl transition-all duration-300"
-                >
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-[#00E599] flex items-center justify-center text-white shadow-sm font-bold text-xs">
-                        Z
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-slate-900 leading-tight">ZARA // VOICE CONCIERGE</div>
-                        <div className="text-[10px] font-mono text-emerald-600 font-semibold">Active Line • Sub-400ms</div>
-                      </div>
-                    </div>
-                    <div className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-mono text-[10px] font-bold border border-emerald-200">
-                      LIVE INTAKE
-                    </div>
-                  </div>
-
-                  {/* Audio Waveform Scrub Bar */}
-                  <div className="mt-3.5 p-3 rounded-2xl bg-slate-50 border border-slate-200/70">
-                    <div className="flex items-center justify-between gap-3 text-xs">
-                      <button
-                        onClick={() => setIsPlayingVideo(!isPlayingVideo)}
-                        className="w-8 h-8 rounded-full bg-[#00E599] hover:bg-[#00c985] text-slate-950 flex items-center justify-center shrink-0 cursor-pointer shadow-sm transition-transform active:scale-95"
-                      >
-                        {isPlayingVideo ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
-                      </button>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs font-bold text-slate-900 truncate">Marcus Vance (4 Pax)</div>
-                        <div className="text-[10px] font-mono text-slate-500">VIP Terrace Consultation</div>
-                      </div>
-                      <span className="text-[11px] font-mono font-bold text-slate-600">00:34</span>
-                    </div>
-
-                    {/* Fanned Waveform Bars */}
-                    <div className="flex items-center gap-1 h-7 mt-2.5 px-1">
-                      {[30, 65, 40, 85, 100, 50, 70, 90, 45, 80, 95, 60, 40, 75, 90, 35, 60, 85, 100, 45, 70, 90].map((h, i) => (
-                        <div
-                          key={i}
-                          className="flex-1 bg-gradient-to-t from-emerald-600 to-[#00E599] rounded-full transition-all duration-200"
-                          style={{
-                            height: isPlayingVideo ? `${Math.max(25, (h * ((i % 3) + 1.2)) % 100)}%` : `${h * 0.4}%`,
-                            opacity: (i / 22) * 100 <= audioWaveProgress ? 1 : 0.35,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* CARD LAYER 2 (MID ACCENT NEON CARD): The Signature Vivid Green/Cyan Card */}
-                <motion.div
-                  style={{
-                    transform: expandedMode
-                      ? 'translateZ(40px) translateY(10px) rotate(-1deg)'
-                      : activeStage === 'whatsapp'
-                      ? 'translateZ(80px) translateY(-5px) scale(1.02)'
-                      : 'translateZ(30px) translateY(12px)',
-                  }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="mt-3 rounded-3xl p-5 bg-gradient-to-tr from-[#00E599] via-[#00D26A] to-[#06B6D4] text-slate-950 border border-white/40 shadow-[0_20px_45px_rgba(0,229,153,0.35)] relative overflow-hidden"
-                >
-                  {/* Glossy Diagonal Light Sweep */}
-                  <div className="absolute -top-12 -left-12 w-44 h-44 bg-white/30 rounded-full blur-2xl pointer-events-none" />
-
-                  <div className="flex items-center justify-between pb-3 border-b border-black/10 relative z-10">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2.5 h-2.5 rounded-full bg-slate-950" />
-                      <span className="text-xs font-mono font-black uppercase tracking-wider">
-                        STAGE 02 // WHATSAPP SLOT LOCK
-                      </span>
-                    </div>
-                    <span className="text-[10px] font-mono font-bold bg-black/15 px-2 py-0.5 rounded-full">
-                      SPEED: 0.08S
-                    </span>
-                  </div>
-
-                  {/* WhatsApp Conversation Micro-Card */}
-                  <div className="mt-3 space-y-2 relative z-10">
-                    <div className="p-2.5 rounded-xl bg-white/90 text-slate-900 text-xs shadow-xs font-medium max-w-[88%]">
-                      <div className="text-[9px] font-mono font-bold text-emerald-700">Sarah AI Assistant</div>
-                      Marcus, your table request is ready. Tomorrow 8:00 PM Terrace?
-                    </div>
-
-                    <div className="p-2.5 rounded-xl bg-slate-950 text-white text-xs shadow-md font-medium max-w-[85%] ml-auto flex items-center justify-between gap-2">
-                      <span>Confirmed. Lock Table 12.</span>
-                      <CheckCheck className="w-3.5 h-3.5 text-[#00E599] shrink-0" />
-                    </div>
-
-                    <div className="p-2 rounded-lg bg-black/10 text-slate-950 text-[11px] font-mono font-bold flex items-center gap-1.5">
-                      <CalendarCheck className="w-3.5 h-3.5 text-slate-950" />
-                      <span>Host Stand Synchronized • AED 950 Min Spend</span>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* CARD LAYER 3 (FRONT CARD): Live Financial & Multi-Currency Telemetry */}
-                <motion.div
-                  style={{
-                    transform: expandedMode
-                      ? 'translateZ(90px) translateY(80px) rotate(2deg)'
-                      : activeStage === 'revenue'
-                      ? 'translateZ(110px) translateY(20px) scale(1.03)'
-                      : 'translateZ(60px) translateY(28px)',
-                  }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="mt-3 rounded-3xl p-5 bg-white text-slate-900 border border-slate-200/80 shadow-[0_25px_50px_rgba(0,0,0,0.3)] relative overflow-hidden"
-                >
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <div className="flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-emerald-600" />
-                      <span className="text-xs font-mono font-black uppercase tracking-wider text-slate-900">
-                        STAGE 03 // CONVERSION LEDGER
-                      </span>
-                    </div>
-                    <span className="text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                      +34.2% YIELD
-                    </span>
-                  </div>
-
-                  {/* Big Number KPI */}
-                  <div className="mt-3 grid grid-cols-2 gap-3 items-center">
-                    <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/70">
-                      <div className="text-[10px] font-mono text-slate-500 uppercase">30D Captured Net</div>
-                      <div className="text-lg sm:text-xl font-black font-mono text-slate-950 mt-0.5">
-                        AED 142,850
-                      </div>
-                      <div className="text-[10px] text-emerald-600 font-bold font-mono mt-0.5">
-                        Zero Missed Calls
-                      </div>
-                    </div>
-
-                    <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/70">
-                      <div className="text-[10px] font-mono text-slate-500 uppercase">Show-Up Conversion</div>
-                      <div className="text-lg sm:text-xl font-black font-mono text-emerald-600 mt-0.5">
-                        68.4%
-                      </div>
-                      <div className="text-[10px] text-slate-500 font-mono mt-0.5">
-                        WhatsApp 2-Way Lock
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Multi-Currency Mini Rates Table (Exact Video Homage) */}
-                  <div className="mt-3 pt-3 border-t border-slate-100">
-                    <div className="text-[10px] font-mono uppercase text-slate-400 font-semibold mb-1.5 flex justify-between">
-                      <span>Multi-Currency Telemetry</span>
-                      <span>Real-Time Index</span>
-                    </div>
-
-                    <div className="grid grid-cols-4 gap-1.5 text-center font-mono">
-                      <div className="p-1.5 rounded-lg bg-slate-50 border border-slate-200/50">
-                        <div className="text-[9px] text-slate-400">AED</div>
-                        <div className="text-[11px] font-bold text-slate-900">142.8k</div>
-                        <div className="text-[9px] text-emerald-600 font-bold">▲ +14%</div>
-                      </div>
-
-                      <div className="p-1.5 rounded-lg bg-slate-50 border border-slate-200/50">
-                        <div className="text-[9px] text-slate-400">USD</div>
-                        <div className="text-[11px] font-bold text-slate-900">$38.9k</div>
-                        <div className="text-[9px] text-emerald-600 font-bold">▲ +22%</div>
-                      </div>
-
-                      <div className="p-1.5 rounded-lg bg-slate-50 border border-slate-200/50">
-                        <div className="text-[9px] text-slate-400">EUR</div>
-                        <div className="text-[11px] font-bold text-slate-900">€35.4k</div>
-                        <div className="text-[9px] text-emerald-600 font-bold">▲ +18%</div>
-                      </div>
-
-                      <div className="p-1.5 rounded-lg bg-slate-50 border border-slate-200/50">
-                        <div className="text-[9px] text-slate-400">GBP</div>
-                        <div className="text-[11px] font-bold text-slate-900">£30.2k</div>
-                        <div className="text-[9px] text-emerald-600 font-bold">▲ +12%</div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-              </motion.div>
-
-            </div>
-
-          </div>
-
-        </div>
-
       </div>
+
     </section>
   );
 }
