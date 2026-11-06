@@ -95,23 +95,23 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
           className="flex items-center gap-3 group focus:outline-none cursor-pointer"
         >
           {/* Logo Container */}
-          <div className="w-8 h-8 rounded-xl bg-slate-900 dark:bg-white/[0.08] p-1 border border-slate-800 dark:border-white/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shrink-0 shadow-xs">
+          <div className="h-8 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shrink-0">
             {(branding?.logoMode === 'image' || (branding?.logoMode !== 'svg' && branding?.logoImageUrl)) && branding?.logoImageUrl ? (
               <img
                 src={branding.logoImageUrl}
                 alt="Brand Logo"
-                className="w-full h-full object-contain p-0.5 filter drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]"
+                className="h-8 w-auto object-contain filter drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]"
               />
             ) : branding?.logoMode === 'svg' && branding?.logoSvgContent ? (
               <div
-                className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full text-white"
+                className="h-8 w-auto flex items-center justify-center [&>svg]:h-8 [&>svg]:w-auto text-white"
                 dangerouslySetInnerHTML={{ __html: branding.logoSvgContent }}
               />
             ) : (
               <img
                 src="/images/zavian-cube-mark.png"
                 alt="Brand Logo"
-                className="w-full h-full object-contain filter drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]"
+                className="h-8 w-auto object-contain rounded-lg bg-slate-900 dark:bg-white/[0.08] p-0.5 border border-slate-800 dark:border-white/10 filter drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]"
               />
             )}
           </div>
