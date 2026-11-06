@@ -105,42 +105,42 @@ const WHATSAPP_CONVERSATION: Message[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// STAGE 03 DATA: Funnel Telemetry & Real-Time Settlement Ledger
+// STAGE 03 DATA: Funnel Telemetry & Real-Time Clinic Chair Ledger
 // ---------------------------------------------------------------------------
 const FUNNEL_STEPS = [
-  { label: "Inbound Call / WhatsApp Trigger", count: "1,842 Leads", rate: "100%", width: "100%" },
-  { label: "Autonomous AI Qualification", count: "1,528 Qualified", rate: "82.9%", width: "83%" },
-  { label: "Real-Time Slot Negotiation", count: "984 Slotted", rate: "53.4%", width: "54%" },
-  { label: "Confirmed Calendar Lock & Deposit", count: "770 Confirmed", rate: "41.8%", width: "42%" },
+  { label: "Inbound Call / WhatsApp Trigger", count: "468 Leads", rate: "100%", width: "100%" },
+  { label: "Autonomous AI Qualification", count: "402 Qualified", rate: "85.8%", width: "86%" },
+  { label: "Operatory Slot Matching", count: "246 Slotted", rate: "52.5%", width: "53%" },
+  { label: "Confirmed PMS Booking & Intake", count: "198 Confirmed", rate: "42.3%", width: "42%" },
 ];
 
 const RECENT_TRANSACTIONS = [
   {
     id: "tx-1",
-    name: "Farah Al-Hashimi",
-    venue: "Operatory Chair 02 • Level 18",
-    time: "Just now",
-    deposit: "AED 950",
+    name: "James Miller",
+    venue: "Operatory 2",
+    time: "3m ago",
+    deposit: "AED 1,250",
     status: "SYNCED",
-    tag: "Aesthetic Consult",
+    tag: "Hygiene & Veneer Review",
   },
   {
     id: "tx-2",
-    name: "Dr. Aris Thorne (2 Pax)",
-    venue: "Executive Suite • High Table",
-    time: "4m ago",
-    deposit: "AED 1,650",
+    name: "Farah Al-Hashimi",
+    venue: "Consultation Suite",
+    time: "14m ago",
+    deposit: "AED 3,800",
     status: "CONFIRMED",
-    tag: "Corporate",
+    tag: "Aesthetic Consult + 3D Scan",
   },
   {
     id: "tx-3",
-    name: "Sophia Lin (6 Pax)",
-    venue: "Dining Salon • Table 4",
-    time: "12m ago",
-    deposit: "AED 1,200",
+    name: "David Wright",
+    venue: "Operatory 1",
+    time: "28m ago",
+    deposit: "AED 1,850",
     status: "LOCKED",
-    tag: "Private Dining",
+    tag: "Emergency Margin Polish",
   },
 ];
 
@@ -654,20 +654,20 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 uppercase tracking-wider">
-                  Stage 03
+                  STAGE 03
                 </span>
                 <h3 className="text-xl font-bold text-slate-950 dark:text-white">
-                  Live Revenue &amp; Margin Dashboard
+                  Live Practice Telemetry &amp; Chair Utilization
                 </h3>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                End-to-end conversion attribution from inbound voice ring to confirmed booking.
+                End-to-end patient attribution from inbound voice ring to confirmed operatory booking.
               </p>
             </div>
 
             <div className="inline-flex items-center gap-2 self-start sm:self-auto px-3 py-1 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-mono text-[11px]">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Real-Time Conversion Ledger
+              Clinical PMS Live Sync
             </div>
           </div>
 
@@ -676,49 +676,49 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
             
             <div className="p-5 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/5">
               <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                Captured Revenue (30D)
+                Recovered Production (30D)
               </div>
               <div className="mt-2 text-2xl sm:text-3xl font-black text-slate-950 dark:text-white tracking-tight font-mono">
-                AED 142,850
+                AED 218,400
               </div>
               <div className="mt-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1 font-mono">
-                <TrendingUp className="w-3 h-3" /> +34.2% vs human front desk
+                <TrendingUp className="w-3 h-3" /> +31.4% vs unreturned calls
               </div>
             </div>
 
             <div className="p-5 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/5">
               <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                Speed to Lead
+                Speed to Intake
               </div>
               <div className="mt-2 text-2xl sm:text-3xl font-black text-slate-950 dark:text-white tracking-tight font-mono">
                 &lt; 2.4s
               </div>
               <div className="mt-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1 font-mono">
-                <Zap className="w-3 h-3" /> 100% instant response rate
+                <Zap className="w-3 h-3" /> 100% zero-ring drop rate
               </div>
             </div>
 
             <div className="p-5 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/5">
               <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                Booking Conversion
+                Chair Conversion
               </div>
               <div className="mt-2 text-2xl sm:text-3xl font-black text-purple-600 dark:text-purple-400 tracking-tight font-mono">
-                41.8%
+                42.6%
               </div>
               <div className="mt-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1 font-mono">
-                <ShieldCheck className="w-3 h-3" /> +18.4% industry benchmark
+                <ShieldCheck className="w-3 h-3" /> +16.2% vs industry benchmark
               </div>
             </div>
 
             <div className="p-5 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/5">
               <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                Labor Hours Saved
+                Front Desk Time Saved
               </div>
               <div className="mt-2 text-2xl sm:text-3xl font-black text-[#38BDF8] tracking-tight font-mono">
-                124 Hrs/Mo
+                118 Hrs/Mo
               </div>
               <div className="mt-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1 font-mono">
-                <Clock className="w-3 h-3" /> $8,400 monthly overhead saved
+                <Clock className="w-3 h-3" /> AED 18,500 monthly overhead saved
               </div>
             </div>
 
@@ -731,7 +731,7 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
             <div className="lg:col-span-6 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/5 p-5 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-200/60 dark:border-white/10 text-xs">
                 <span className="font-bold text-slate-900 dark:text-white">Conversion Telemetry Funnel</span>
-                <span className="font-mono text-slate-500">Live 30D Cohort</span>
+                <span className="font-mono text-slate-500">Live 30D Clinic Cohort</span>
               </div>
 
               <div className="space-y-3 pt-1">
@@ -756,7 +756,7 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
               </div>
 
               <div className="pt-3 border-t border-slate-200/60 dark:border-white/10 text-[11px] text-slate-500 flex items-center justify-between">
-                <span>Zero drop-off from unreturned missed calls</span>
+                <span>Zero drop-off from after-hours missed calls</span>
                 <span className="font-mono font-semibold text-emerald-600 dark:text-emerald-400">99.8% System Uptime</span>
               </div>
             </div>
@@ -765,10 +765,10 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
             <div className="lg:col-span-6 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/5 p-5 space-y-3 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200/60 dark:border-white/10 text-xs">
-                  <span className="font-bold text-slate-900 dark:text-white">Recent Locked Settlements</span>
+                  <span className="font-bold text-slate-900 dark:text-white">Recent Confirmed Chairs</span>
                   <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    Practice Management System (PMS) Active
+                    Two-Way PMS Sync Active
                   </span>
                 </div>
 
