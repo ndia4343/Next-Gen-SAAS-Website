@@ -100,7 +100,8 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
               <img
                 src={branding.logoImageUrl}
                 alt="Brand Logo"
-                className="h-8 w-auto object-contain filter drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]"
+                style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18))' }}
+                className="h-8 w-auto object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
               />
             ) : branding?.logoMode === 'svg' && branding?.logoSvgContent ? (
               <div
@@ -111,7 +112,8 @@ export default function Navbar({ onOpenQuoteModal, content, themeBranding: initi
               <img
                 src="/images/zavian-cube-mark.png"
                 alt="Brand Logo"
-                className="h-8 w-auto object-contain rounded-lg bg-slate-900 dark:bg-white/[0.08] p-0.5 border border-slate-800 dark:border-white/10 filter drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]"
+                style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18))' }}
+                className="h-8 w-auto object-contain rounded-lg bg-slate-900 dark:bg-white/[0.08] p-0.5 border border-slate-800 dark:border-white/10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
               />
             )}
           </div>

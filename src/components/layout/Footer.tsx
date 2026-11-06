@@ -98,7 +98,8 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                   <img
                     src={branding.logoImageUrl}
                     alt="Brand Logo"
-                    className="w-full h-full object-contain p-0.5 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+                    style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18))' }}
+                    className="w-full h-full object-contain p-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
                   />
                 ) : branding?.logoMode === 'svg' && branding?.logoSvgContent ? (
                   <div
@@ -109,7 +110,8 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                   <img
                     src="/images/zavian-cube-mark.png"
                     alt="Brand Logo"
-                    className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+                    style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18))' }}
+                    className="w-full h-full object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
                   />
                 )}
               </div>
