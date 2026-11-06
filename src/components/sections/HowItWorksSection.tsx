@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { 
+  motion, 
+  AnimatePresence, 
+  useScroll, 
+  useTransform, 
+  useSpring, 
+  useMotionValueEvent 
+} from "framer-motion";
 import { 
   PhoneCall, 
   Play, 
@@ -146,6 +153,38 @@ const RECENT_TRANSACTIONS = [
 
 export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps = {}) {
   const sectionRef = useRef<HTMLElement>(null);
+  const pipelineRef = useRef<HTMLDivElement>(null);
+
+  // TELEMETRY SPINE & VIBRATING DATA ORB SCROLL TRACKING
+  const { scrollYProgress } = useScroll({
+    target: pipelineRef,
+    offset: ["start 70%", "end 60%"],
+  });
+
+  const clampedProgress = useTransform(scrollYProgress, (v) => Math.min(Math.max(v, 0), 1));
+  const smoothProgress = useSpring(clampedProgress, {
+    stiffness: 260,
+    damping: 28,
+    restDelta: 0.001,
+  });
+
+  const orbTop = useTransform(smoothProgress, [0, 1], ["14px", "calc(100% - 14px)"]);
+
+  const [activeMilestone, setActiveMilestone] = useState<'stage1' | 'connector1' | 'stage2' | 'connector2' | 'stage3'>('stage1');
+
+  useMotionValueEvent(smoothProgress, "change", (latest) => {
+    if (latest < 0.20) {
+      setActiveMilestone('stage1');
+    } else if (latest >= 0.20 && latest < 0.38) {
+      setActiveMilestone('connector1');
+    } else if (latest >= 0.38 && latest < 0.68) {
+      setActiveMilestone('stage2');
+    } else if (latest >= 0.68 && latest < 0.85) {
+      setActiveMilestone('connector2');
+    } else {
+      setActiveMilestone('stage3');
+    }
+  });
 
   // STAGE 01 STATE
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(true);
@@ -310,31 +349,151 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
           </p>
         </div>
 
+        {/* Jitter Micro-Vibration Keyframes for Humming Telemetry Signal */}
+        <style>{`
+          @keyframes jitter {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-1.5px, 1px); }
+            75% { transform: translate(1.5px, -1px); }
+          }
+          .telemetry-vibe {
+            animation: jitter 0.08s infinite linear;
+          }
+        `}</style>
+
         {/* ========================================================= */}
-        {/* STAGE 01: AI VOICE RECEPTIONIST (Audio Waveform Player)   */}
+        {/* SCROLL-REACTIVE VERTICAL TELEMETRY PIPELINE SPINE        */}
         {/* ========================================================= */}
-        <div className="relative rounded-3xl p-6 sm:p-8 bg-white dark:bg-[#0B0F19] border border-slate-200/80 dark:border-white/10 shadow-[0_4px_24px_-4px_rgba(15,23,42,0.04)] dark:shadow-none backdrop-blur-md">
-          {/* Stage Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100 dark:border-white/10 gap-3">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 uppercase tracking-wider">
-                  Stage 01
-                </span>
-                <h3 className="text-xl font-bold text-slate-950 dark:text-white">
-                  Instant Voice Receptionist
-                </h3>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Picks up in under 400ms, understands caller context, and dispatches real-time booking payloads.
-              </p>
+        <div ref={pipelineRef} className="relative">
+          
+          {/* Continuous Left Telemetry Guide Rail & Vibrating Data Orb (Visible on White / Light Mode) */}
+          <div className="absolute left-0 sm:left-1 md:left-2 lg:left-3 top-6 bottom-6 w-8 flex flex-col items-center pointer-events-none z-20">
+            {/* Inner groove: Light background glow giving physical depth on pure white surfaces */}
+            <div className="absolute top-0 bottom-0 w-3 rounded-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-900/40 shadow-inner" />
+            
+            {/* Outer track: Solid 2px line in Deep Slate/Indigo (#312E81) */}
+            <div className="absolute top-0 bottom-0 w-[2px] bg-[#312E81] dark:bg-indigo-400/80 shadow-[0_0_6px_rgba(49,46,129,0.3)]" />
+
+            {/* Active Data Packet Stream Fill Line */}
+            <motion.div 
+              style={{ scaleY: smoothProgress }}
+              className="absolute top-0 w-[2px] h-full bg-gradient-to-b from-[#2563EB] via-[#06B6D4] to-[#10B981] origin-top shadow-[0_0_12px_rgba(6,182,212,0.9)]"
+            />
+
+            {/* Stage Milestone Anchor Nodes along the Rail */}
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border border-[#312E81]/40 dark:border-indigo-600 bg-white dark:bg-zinc-900 flex items-center justify-center shadow-xs">
+              <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${activeMilestone === 'stage1' ? 'bg-cyan-500 shadow-[0_0_8px_#06B6D4]' : 'bg-[#312E81] dark:bg-indigo-400'}`} />
             </div>
 
-            <div className="inline-flex items-center gap-2 self-start sm:self-auto px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-400 font-mono text-[11px]">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Sub-400ms Handshake &bull; Zero Ring Drop
+            <div className="absolute top-[28%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border border-[#312E81]/40 dark:border-indigo-600 bg-white dark:bg-zinc-900 flex items-center justify-center shadow-xs">
+              <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${activeMilestone === 'connector1' ? 'bg-cyan-500 shadow-[0_0_8px_#06B6D4]' : 'bg-[#312E81] dark:bg-indigo-400'}`} />
             </div>
+
+            <div className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border border-[#312E81]/40 dark:border-indigo-600 bg-white dark:bg-zinc-900 flex items-center justify-center shadow-xs">
+              <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${activeMilestone === 'stage2' ? 'bg-cyan-500 shadow-[0_0_8px_#06B6D4]' : 'bg-[#312E81] dark:bg-indigo-400'}`} />
+            </div>
+
+            <div className="absolute top-[72%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border border-[#312E81]/40 dark:border-indigo-600 bg-white dark:bg-zinc-900 flex items-center justify-center shadow-xs">
+              <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${activeMilestone === 'connector2' ? 'bg-teal-500 shadow-[0_0_8px_#14B8A6]' : 'bg-[#312E81] dark:bg-indigo-400'}`} />
+            </div>
+
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-1/2 w-3.5 h-3.5 rounded-full border border-[#312E81]/40 dark:border-indigo-600 bg-white dark:bg-zinc-900 flex items-center justify-center shadow-xs">
+              <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${activeMilestone === 'stage3' ? 'bg-emerald-500 shadow-[0_0_8px_#10B981]' : 'bg-[#312E81] dark:bg-indigo-400'}`} />
+            </div>
+
+            {/* The Vibrating Data Orb (Traveling Packet) */}
+            <motion.div
+              style={{ top: orbTop }}
+              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none"
+            >
+              <div className="relative flex items-center justify-center">
+                
+                {/* Concentric Aura 1: Outer Pulse Ring */}
+                <div className={`absolute rounded-full transition-all duration-300 ${
+                  activeMilestone === 'stage3'
+                    ? "w-10 h-10 bg-emerald-400/25 border border-emerald-400/50 shadow-[0_0_25px_rgba(16,185,129,0.9)] animate-pulse"
+                    : activeMilestone === 'stage2'
+                    ? "w-14 h-14 bg-cyan-400/25 border border-cyan-400/60 shadow-[0_0_28px_rgba(6,182,212,0.95)] animate-ping"
+                    : "w-9 h-9 bg-cyan-400/20 border border-cyan-400/40 shadow-[0_0_20px_rgba(6,182,212,0.8)] animate-pulse"
+                }`} />
+
+                {/* Concentric Aura 2: Mid Concentric Halo */}
+                <div className={`absolute rounded-full transition-all duration-300 ${
+                  activeMilestone === 'stage3'
+                    ? "w-7 h-7 bg-emerald-500/35 border border-emerald-400/60"
+                    : activeMilestone === 'stage2'
+                    ? "w-9 h-9 bg-cyan-500/35 border border-cyan-400/70"
+                    : "w-6 h-6 bg-cyan-500/25 border border-cyan-400/50"
+                }`} />
+
+                {/* The 18px x 18px Core Vibrating Orb (High Contrast on White) */}
+                <div className={`w-[18px] h-[18px] rounded-full telemetry-vibe flex items-center justify-center transition-all duration-300 ${
+                  activeMilestone === 'stage3'
+                    ? "bg-gradient-to-tr from-emerald-600 to-teal-400 shadow-[0_0_22px_#10B981]"
+                    : "bg-gradient-to-tr from-[#2563EB] to-[#06B6D4] shadow-[0_0_20px_rgba(6,182,212,0.8)]"
+                }`}>
+                  {/* Center White Hot Packet Core */}
+                  <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_4px_#fff]" />
+                </div>
+
+                {/* Live Floating Telemetry Beacon Tag (Desktop) */}
+                <div className={`hidden lg:flex absolute left-8 items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[9px] font-bold tracking-wider uppercase whitespace-nowrap shadow-lg backdrop-blur-md transition-all duration-300 border ${
+                  activeMilestone === 'stage3'
+                    ? "bg-slate-950/90 text-emerald-300 border-emerald-500/50 shadow-[0_0_14px_rgba(16,185,129,0.4)]"
+                    : activeMilestone === 'stage2'
+                    ? "bg-slate-950/90 text-cyan-300 border-cyan-500/50 shadow-[0_0_14px_rgba(6,182,212,0.4)]"
+                    : activeMilestone === 'connector1' || activeMilestone === 'connector2'
+                    ? "bg-slate-950/90 text-indigo-300 border-indigo-500/50"
+                    : "bg-slate-950/90 text-cyan-300 border-cyan-500/50 shadow-[0_0_10px_rgba(37,99,235,0.3)]"
+                }`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${
+                    activeMilestone === 'stage3' ? "bg-emerald-400 animate-ping" : "bg-cyan-400 animate-ping"
+                  }`} />
+                  <span>
+                    {activeMilestone === 'stage1' && "VOICE INTAKE // ACTIVE"}
+                    {activeMilestone === 'connector1' && "PAYLOAD DISPATCH // 0.08s"}
+                    {activeMilestone === 'stage2' && "WHATSAPP NEGOTIATION // SYNC"}
+                    {activeMilestone === 'connector2' && "PMS SYNC // 0.4s"}
+                    {activeMilestone === 'stage3' && "PMS CONFIRMED // LIVE"}
+                  </span>
+                </div>
+
+              </div>
+            </motion.div>
           </div>
+
+          {/* Main Pipeline Content Container with Left Gutter for Guide Rail */}
+          <div className="space-y-12 pl-7 sm:pl-10 md:pl-14 lg:pl-16">
+
+            {/* ========================================================= */}
+            {/* STAGE 01: AI VOICE RECEPTIONIST (Audio Waveform Player)   */}
+            {/* ========================================================= */}
+            <div className="relative rounded-3xl p-6 sm:p-8 bg-white dark:bg-[#0B0F19] border border-slate-200/80 dark:border-white/10 shadow-[0_4px_24px_-4px_rgba(15,23,42,0.04)] dark:shadow-none backdrop-blur-md">
+              {/* Stage Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100 dark:border-white/10 gap-3">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 uppercase tracking-wider">
+                      Stage 01
+                    </span>
+                    <h3 className="text-xl font-bold text-slate-950 dark:text-white">
+                      Instant Voice Receptionist
+                    </h3>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Picks up in under 400ms, understands caller context, and dispatches real-time booking payloads.
+                  </p>
+                </div>
+
+                <div className={`inline-flex items-center gap-2 self-start sm:self-auto px-3 py-1 rounded-full border font-mono text-[11px] transition-all duration-300 ${
+                  activeMilestone === 'stage1'
+                    ? "bg-cyan-500/15 border-cyan-400 text-cyan-800 dark:text-cyan-200 ring-4 ring-cyan-400/25 shadow-[0_0_18px_rgba(6,182,212,0.4)]"
+                    : "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-400"
+                }`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${activeMilestone === 'stage1' ? "bg-cyan-400 animate-ping" : "bg-emerald-500 animate-pulse"}`} />
+                  Sub-400ms Handshake &bull; Zero Ring Drop
+                </div>
+              </div>
 
           {/* Interactive Player Grid (Desktop 7-5 split) */}
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
@@ -459,9 +618,15 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
         {/* ========================================================= */}
         <div className="relative flex flex-col items-center justify-center my-6">
           <div className="w-[2px] h-14 bg-gradient-to-b from-purple-500 via-sky-400 to-emerald-500" />
-          <div className="my-1 px-3 py-1 rounded-full bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 text-[10px] font-mono text-slate-600 dark:text-slate-400 shadow-sm flex items-center gap-1.5">
-            <Zap className="w-3 h-3 text-emerald-500" />
-            <span>0.08s LATENCY // PAYLOAD DISPATCHED TO WHATSAPP</span>
+          <div className={`my-1 px-3.5 py-1.5 rounded-full border text-[10px] font-mono shadow-sm flex items-center gap-1.5 transition-all duration-300 ${
+            activeMilestone === 'connector1'
+              ? "bg-cyan-500/15 border-cyan-400 text-cyan-800 dark:text-cyan-200 ring-4 ring-cyan-400/30 shadow-[0_0_20px_rgba(6,182,212,0.6)] scale-105"
+              : "bg-white dark:bg-zinc-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400"
+          }`}>
+            <Zap className={`w-3.5 h-3.5 transition-colors ${activeMilestone === 'connector1' ? "text-cyan-400 animate-bounce" : "text-emerald-500"}`} />
+            <span className={activeMilestone === 'connector1' ? "font-bold text-cyan-900 dark:text-cyan-100" : ""}>
+              0.08s LATENCY // PAYLOAD DISPATCHED TO WHATSAPP
+            </span>
           </div>
           <div className="w-[2px] h-14 bg-gradient-to-b from-emerald-500 via-emerald-400 to-transparent" />
         </div>
@@ -792,9 +957,15 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
         {/* ========================================================= */}
         <div className="relative flex flex-col items-center justify-center my-6">
           <div className="w-[2px] h-14 bg-gradient-to-b from-emerald-500 via-teal-400 to-cyan-500" />
-          <div className="my-1 px-3 py-1 rounded-full bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 text-[10px] font-mono text-slate-600 dark:text-slate-400 shadow-sm flex items-center gap-1.5">
-            <Sparkles className="w-3 h-3 text-cyan-500" />
-            <span>DIRECT SYNC // REVENUE WRITTEN TO DASHBOARD</span>
+          <div className={`my-1 px-3.5 py-1.5 rounded-full border text-[10px] font-mono shadow-sm flex items-center gap-1.5 transition-all duration-300 ${
+            activeMilestone === 'connector2'
+              ? "bg-teal-500/15 border-teal-400 text-teal-800 dark:text-teal-200 ring-4 ring-teal-400/30 shadow-[0_0_20px_rgba(20,184,166,0.6)] scale-105"
+              : "bg-white dark:bg-zinc-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400"
+          }`}>
+            <Sparkles className={`w-3.5 h-3.5 transition-colors ${activeMilestone === 'connector2' ? "text-teal-400 animate-spin" : "text-cyan-500"}`} />
+            <span className={activeMilestone === 'connector2' ? "font-bold text-teal-900 dark:text-teal-100" : ""}>
+              DIRECT SYNC // REVENUE WRITTEN TO DASHBOARD
+            </span>
           </div>
           <div className="w-[2px] h-14 bg-gradient-to-b from-cyan-500 via-sky-400 to-transparent" />
         </div>
@@ -820,8 +991,12 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
               </p>
             </div>
 
-            <div className="inline-flex items-center gap-2 self-start sm:self-auto px-3 py-1 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-mono text-[11px]">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <div className={`inline-flex items-center gap-2 self-start sm:self-auto px-3 py-1 rounded-full border font-mono text-[11px] transition-all duration-300 ${
+              activeMilestone === 'stage3'
+                ? "bg-emerald-500/15 border-emerald-400 text-emerald-800 dark:text-emerald-200 ring-4 ring-emerald-400/25 shadow-[0_0_18px_rgba(16,185,129,0.5)]"
+                : "bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300"
+            }`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${activeMilestone === 'stage3' ? "bg-emerald-400 animate-ping" : "bg-emerald-500 animate-pulse"}`} />
               Clinical PMS Live Sync
             </div>
           </div>
@@ -978,6 +1153,9 @@ export function HowItWorksSection({ onOpenQuoteModal }: HowItWorksSectionProps =
 
           </div>
 
+        </div>
+
+          </div>
         </div>
 
       </div>
