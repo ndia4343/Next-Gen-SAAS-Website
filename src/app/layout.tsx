@@ -4,6 +4,7 @@ import './globals.css';
 import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
 import ThemeProvider, { ThemeMode } from '@/components/providers/ThemeProvider';
 import VisitorTracker from '@/components/analytics/VisitorTracker';
+import AmbientOrbitalCursor from '@/components/ui/AmbientOrbitalCursor';
 import { getStorefrontContent } from '@/lib/siteContent';
 
 export const metadata: Metadata = {
@@ -48,6 +49,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ThemeProvider initialThemeId={activeThemeId} initialMode={defaultMode}>
           <SmoothScrollProvider>
             <VisitorTracker />
+            <AmbientOrbitalCursor />
             <div className="relative z-10">{children}</div>
           </SmoothScrollProvider>
         </ThemeProvider>
