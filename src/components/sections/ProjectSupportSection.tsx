@@ -488,45 +488,81 @@ const SolarChart = () => (
 );
 
 // 2. Dental & Aesthetics: Clinic Capacity & Treatment Acceptance Pillars
-const ClinicBarChart = () => (
-  <div className="w-full h-full relative flex items-end justify-between px-4 pb-2">
-    {/* Floating Neural Overlay Curve */}
-    <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
-      <path
-        d="M 25,65 Q 100,50 180,35 T 375,18"
-        fill="none"
-        stroke="#06B6D4"
-        strokeWidth="2"
-        strokeDasharray="3 3"
-      />
-      <circle cx="280" cy="22" r="3.5" fill="#10B981" />
-      <text x="200" y="14" fill="#10B981" fontSize="8" fontFamily="monospace" fontWeight="bold">
-        AI Optimal Fill: 92%
-      </text>
-    </svg>
+const CLINIC_DAYS = [
+  { cap: 64, label: "Mon", active: false },
+  { cap: 78, label: "Tue", active: false },
+  { cap: 86, label: "Wed", active: false, hasPlotPoint: true },
+  { cap: 92, label: "Thu", active: false },
+  { cap: 98, label: "Sat", active: true, hasPlotPoint: true, isPeak: true },
+];
 
-    {/* Holographic Capacity Columns */}
-    {[
-      { cap: 65, pred: 60, label: "Mon" },
-      { cap: 80, pred: 76, label: "Tue" },
-      { cap: 88, pred: 85, label: "Wed" },
-      { cap: 94, pred: 90, label: "Thu" },
-      { cap: 100, pred: 98, label: "Sat", active: true },
-    ].map((col, idx) => (
-      <div key={idx} className="flex flex-col items-center gap-1.5 z-10">
-        <div className="w-6 sm:w-8 h-20 bg-slate-200/80 dark:bg-slate-800/40 rounded-lg p-0.5 flex flex-col justify-end border border-slate-300/50 dark:border-white/5">
-          <div
-            className={`w-full rounded-md transition-all duration-500 ${
-              col.active
-                ? "bg-gradient-to-t from-emerald-600 via-teal-500 to-cyan-400 shadow-[0_0_15px_rgba(16,185,129,0.5)]"
-                : "bg-gradient-to-t from-slate-400 to-teal-600/60 dark:from-slate-700 dark:to-teal-500/50"
-            }`}
-            style={{ height: `${col.cap}%` }}
-          />
-        </div>
-        <span className="text-[9px] font-mono text-slate-500 dark:text-slate-400">{col.label}</span>
+const ClinicBarChart = () => (
+  <div className="w-full h-full relative flex flex-col justify-between pt-1 pb-1 px-2 sm:px-4">
+    {/* Target Chair Utilization Benchmark Pill */}
+    <div className="flex items-center justify-between z-20">
+      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-900 dark:bg-black text-white dark:text-emerald-400 border border-emerald-500/30 shadow-md font-mono text-[9.5px] sm:text-[10.5px] font-bold tracking-tight">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        <span>Target Chair Utilization: 85%</span>
       </div>
-    ))}
+      <span className="text-[9.5px] font-mono text-emerald-600 dark:text-emerald-400 font-bold hidden sm:inline">
+        Optimal Yield &ge; 85%
+      </span>
+    </div>
+
+    {/* Chart Stage with Dotted Target Line & Bar Tracks */}
+    <div className="relative w-full h-20 sm:h-24 flex items-end justify-between px-2 sm:px-4 mt-1">
+      {/* Crisp Neon Mint Dotted Target Benchmark Line at 85% */}
+      <div 
+        className="absolute left-0 right-0 z-0 pointer-events-none flex items-center"
+        style={{ bottom: "85%" }}
+      >
+        <div className="w-full border-t-2 border-dashed border-[#10B981] shadow-[0_0_8px_rgba(16,185,129,0.35)]" />
+      </div>
+
+      {/* Columns & Indicator Dots */}
+      {CLINIC_DAYS.map((col, idx) => (
+        <div key={idx} className="relative flex flex-col items-center z-10 h-full justify-end">
+          {/* Key Plot Point Indicator Dot (Pulsing Glow Ring) */}
+          {col.hasPlotPoint && (
+            <div 
+              className="absolute z-20 pointer-events-none flex items-center justify-center -translate-y-1/2"
+              style={{ bottom: col.isPeak ? "98%" : "85%" }}
+            >
+              <span className="absolute w-3 h-3 rounded-full bg-emerald-400 animate-ping opacity-60" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 ring-4 ring-emerald-400/30 shadow-xs" />
+            </div>
+          )}
+
+          {/* Background Rail / Track */}
+          <div className="w-7 sm:w-9 h-full bg-slate-200/60 dark:bg-slate-800/60 rounded-t-lg p-0.5 flex flex-col justify-end border border-slate-300/40 dark:border-white/5 shadow-inner">
+            {/* Filled Volume Bar */}
+            <div
+              className={`w-full rounded-t-lg transition-all duration-500 ${
+                col.active
+                  ? "bg-gradient-to-t from-orange-600 via-amber-500 to-yellow-400 shadow-[0_0_22px_rgba(245,158,11,0.45)]"
+                  : "bg-gradient-to-t from-indigo-600 via-violet-600 to-purple-500"
+              }`}
+              style={{ height: `${col.cap}%` }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Day Labels */}
+    <div className="flex items-center justify-between px-2 sm:px-4 pt-1">
+      {CLINIC_DAYS.map((col, idx) => (
+        <div key={idx} className="w-7 sm:w-9 text-center">
+          <span className={`text-[9.5px] font-mono font-semibold ${
+            col.active
+              ? "text-amber-600 dark:text-amber-400 font-bold"
+              : "text-slate-500 dark:text-slate-400"
+          }`}>
+            {col.label}
+          </span>
+        </div>
+      ))}
+    </div>
   </div>
 );
 
