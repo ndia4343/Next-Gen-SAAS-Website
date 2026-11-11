@@ -49,13 +49,14 @@ export const defaultConfig: SiteConfig = {
         id: 'dental',
         label: 'Dental & Aesthetics',
         channelNote: 'Voice Recording + PMS Booking',
+        regionBadge: 'DIFC Dubai (DHA Licensed) · AED',
         agentName: 'Sarah',
         agentRole: 'Dubai DIFC Clinical Receptionist',
-        callerName: 'Farah Al-Hashimi',
+        callerName: 'Marcus Vance',
         script: [
           {
             at: 0,
-            who: 'Patient (Farah)',
+            who: 'Patient (Marcus)',
             isAi: false,
             text: "Hi, I work in DIFC and usually finish late. Do you have an assessment slot for clear aligners after 5:30 PM this week?",
           },
@@ -67,7 +68,7 @@ export const defaultConfig: SiteConfig = {
           },
           {
             at: 11,
-            who: 'Patient (Farah)',
+            who: 'Patient (Marcus)',
             isAi: false,
             text: 'Thursday at 6:00 PM works best for my commute.',
           },
@@ -75,18 +76,21 @@ export const defaultConfig: SiteConfig = {
             at: 15,
             who: 'Sarah · Reception Desk',
             isAi: true,
-            text: "Reserved in Chair 2 for Thursday at 6:00 PM. I'm sending your valet access and WhatsApp confirmation now.",
+            text: "Reserved in Operatory Chair 2 for Thursday at 6:00 PM. I'm sending your valet access and WhatsApp confirmation now.",
           },
         ],
         lockedSlotMessage: 'Thursday · 6:00 PM · Aligner Assessment + 3D Scan',
         lockedSlotSub: 'Locked in PMS · Operatory Chair 2 (Dr. Thorne)',
+        completionSummary:
+          'Sarah just qualified the caller and locked Operatory Chair 2 in under 28 seconds.',
         whatsAppContactName: 'Sarah • Clinic Desk',
         whatsAppNotice:
-          'Hi Farah — your aligner assessment & 3D scan with Dr. Thorne is booked for Thursday at 6:00 PM (Chair 2, complimentary tower valet). Reply 1 to confirm or 2 to reschedule.',
+          'Hi Marcus — your aligner assessment & 3D scan with Dr. Thorne is booked for Thursday at 6:00 PM (Operatory Chair 2, complimentary tower valet). Tap below to confirm.',
         whatsAppReply: '1 — Confirm',
-        whatsAppFollowup: 'Confirmed. Your digital clinic pass and calendar invite are ready below.',
+        whatsAppFollowup:
+          'Thank you Marcus! Operatory Chair 2 is fully locked in our diary. We have sent the calendar invite to your phone.',
         whatsAppAttachmentName: 'PMS_Chair2_Pass.ics',
-        whatsAppAttachmentMeta: 'Operatory 2 • Sheikh Zayed Rd Valet',
+        whatsAppAttachmentMeta: 'Operatory Chair 2 • Sheikh Zayed Rd Valet',
         outcomes: [
           'Picks up after-hours & busy-hour clinic calls immediately',
           'Checks real doctor availability and locks PMS chair slots',
@@ -97,6 +101,7 @@ export const defaultConfig: SiteConfig = {
         id: 'solar',
         label: 'Solar EPC & Installers',
         channelNote: 'Automated Qualification Flow',
+        regionBadge: 'Pakistan Net-Metering · LESCO/IESCO',
         agentName: 'Hassan',
         agentRole: 'SolarPro Sizing & Survey Coordinator',
         callerName: 'Tariq Mahmood',
@@ -128,11 +133,14 @@ export const defaultConfig: SiteConfig = {
         ],
         lockedSlotMessage: 'Wednesday · 10:00 AM · 12 kW Hybrid Site Survey',
         lockedSlotSub: 'LESCO Net-Metering Estimate + Roof Engineer Assigned',
+        completionSummary:
+          'Hassan just sized the 12 kW load, booked the site survey, and sent the WhatsApp quote in under 28 seconds.',
         whatsAppContactName: 'Hassan • SolarPro EPC',
         whatsAppNotice:
           'SolarPro Estimate: Recommended 12 kW Tier-1 Hybrid array for your LESCO tariff (~Rs 74,000/mo savings). Survey confirmed Wednesday 10:00 AM.',
-        whatsAppReply: 'Got the PDF, looks clear. See the engineer Wednesday.',
-        whatsAppFollowup: 'Great — share your gate pin anytime and our engineer will call 15 mins prior.',
+        whatsAppReply: '1 — Confirm Survey',
+        whatsAppFollowup:
+          'Confirmed! Your engineer dispatch sheet and 12 kW net-metering PDF are locked to Wednesday 10:00 AM.',
         whatsAppAttachmentName: 'SolarPro_12kW_Proposal.pdf',
         whatsAppAttachmentMeta: '12 kW Sizing • ROI & Net-Metering Spec',
         outcomes: [
@@ -145,6 +153,7 @@ export const defaultConfig: SiteConfig = {
         id: 'hr',
         label: 'HR & Recruitment',
         channelNote: 'Automated Candidate Flow',
+        regionBadge: 'US / UK Remote Hub · Multi-Currency',
         agentName: 'Maya',
         agentRole: 'Talent Screening Coordinator',
         callerName: 'Bilal Ahmed',
@@ -159,13 +168,13 @@ export const defaultConfig: SiteConfig = {
             at: 5,
             who: 'Maya · Talent Desk',
             isAi: true,
-            text: 'Yes, the role is open. To save time before our recruiter call, what is your current notice period and are you comfortable working on-site in Dubai?',
+            text: 'Yes, the role is open. To save time before our recruiter call, what is your current notice period and are you comfortable working across US/UK core hours?',
           },
           {
             at: 11,
             who: 'Candidate (Bilal)',
             isAi: false,
-            text: "30 days notice, and I'm already based in Business Bay so on-site is easy.",
+            text: '30 days notice, and I already support remote US/UK finance overlapping schedules.',
           },
           {
             at: 15,
@@ -176,13 +185,16 @@ export const defaultConfig: SiteConfig = {
         ],
         lockedSlotMessage: 'Tomorrow · 11:00 AM · Recruiter Screening Confirmed',
         lockedSlotSub: 'Senior Accountant Role • CV & 30-Day Notice Captured',
+        completionSummary:
+          'Maya just qualified the candidate, parsed notice period, and synced the interview to ATS in under 28 seconds.',
         whatsAppContactName: 'Maya • Talent Desk',
         whatsAppNotice:
-          'Hi Bilal — your screening call for Senior Accountant is booked for tomorrow at 11:00 AM. Please reply with your updated CV PDF and confirm your 30-day notice period.',
-        whatsAppReply: 'Uploaded my CV below — 30 days notice confirmed.',
-        whatsAppFollowup: 'Received and attached to your recruiter scorecard. Speak tomorrow at 11:00 AM.',
+          'Hi Bilal — your screening call for Senior Accountant is booked for tomorrow at 11:00 AM. Confirm your 30-day notice period and attach your updated CV below.',
+        whatsAppReply: '1 — Confirm + Attach CV',
+        whatsAppFollowup:
+          'Received and attached to your Greenhouse recruiter scorecard. Speak tomorrow at 11:00 AM!',
         whatsAppAttachmentName: 'Bilal_Ahmed_Senior_Accountant_CV.pdf',
-        whatsAppAttachmentMeta: '30 Days Notice • Business Bay',
+        whatsAppAttachmentMeta: '30 Days Notice • ATS Verified',
         outcomes: [
           'Pre-qualifies location, salary expectations & notice period automatically',
           'Books qualified candidates directly onto recruiter calendars',
@@ -193,6 +205,7 @@ export const defaultConfig: SiteConfig = {
         id: 'custom',
         label: 'Custom Workflows',
         channelNote: 'Custom API & Dispatch Flow',
+        regionBadge: 'Enterprise SLA · Custom Timezones',
         agentName: 'Zed',
         agentRole: 'Multi-Turn Operations Coordinator',
         callerName: 'Nadia Al-Mansoor',
@@ -224,11 +237,14 @@ export const defaultConfig: SiteConfig = {
         ],
         lockedSlotMessage: 'Tuesday · 2:00 PM · Inspection Dispatch #ZL-408',
         lockedSlotSub: 'Written to ERP + Field Crew Notified via WhatsApp',
+        completionSummary:
+          'Zed just logged ERP ticket #ZL-408, scheduled Crew B, and dispatched WhatsApp instructions in under 28 seconds.',
         whatsAppContactName: 'Zed • Dispatch Desk',
         whatsAppNotice:
-          'Ticket #ZL-408 is locked for Tuesday 2:00 PM (Al Quoz Warehouse 4). Reply with your WhatsApp location pin and security gate pass so Crew B checks straight in.',
-        whatsAppReply: 'Location pin & gate pass attached.',
-        whatsAppFollowup: 'Logged into dispatch. Crew ETA updates will stream here 20 mins before arrival.',
+          'Ticket #ZL-408 is locked for Tuesday 2:00 PM (Al Quoz Warehouse 4). Confirm below to share location pin & gate pass with Crew B.',
+        whatsAppReply: '1 — Confirm Dispatch',
+        whatsAppFollowup:
+          'Confirmed! Gate pass & location pin synced to ERP. Crew B ETA alerts will stream here.',
         whatsAppAttachmentName: 'Warehouse4_Gate_Pass.pdf',
         whatsAppAttachmentMeta: 'Pinned: Al Quoz Industrial 4 • Gate B',
         outcomes: [

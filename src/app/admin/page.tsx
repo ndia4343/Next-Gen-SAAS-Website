@@ -1255,6 +1255,25 @@ export default function SuperAdminCmsPage() {
                       className="app-input"
                     />
                   </div>
+                  <div className="md:col-span-3">
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#5ee3ff] mb-1">
+                      Global Region Attribution Badge
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. DIFC Dubai (DHA Licensed) · AED"
+                      value={activeIndustry.regionBadge || ''}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setDraft((prev) => {
+                          const next = cloneConfig(prev);
+                          next.voiceTheatre.industries[selectedIndustryIdx].regionBadge = val;
+                          return next;
+                        });
+                      }}
+                      className="app-input"
+                    />
+                  </div>
                 </div>
 
                 {/* Call Transcript Turns */}
@@ -1417,6 +1436,20 @@ export default function SuperAdminCmsPage() {
                         setDraft((prev) => {
                           const next = cloneConfig(prev);
                           next.voiceTheatre.industries[selectedIndustryIdx].lockedSlotSub = val;
+                          return next;
+                        });
+                      }}
+                      className="app-input"
+                    />
+                    <input
+                      type="text"
+                      placeholder="End-of-Call Completion Banner Copy"
+                      value={activeIndustry.completionSummary || ''}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setDraft((prev) => {
+                          const next = cloneConfig(prev);
+                          next.voiceTheatre.industries[selectedIndustryIdx].completionSummary = val;
                           return next;
                         });
                       }}

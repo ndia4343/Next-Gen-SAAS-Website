@@ -14,6 +14,11 @@ import {
   Workflow,
   CalendarCheck,
   PhoneCall,
+  Globe,
+  Radio,
+  Cpu,
+  ArrowRight,
+  Sparkles,
 } from 'lucide-react';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { VoiceIndustryConfig } from '@/types/site-config';
@@ -31,6 +36,38 @@ function getIndustryIcon(id: string): React.ComponentType<{ className?: string }
   }
 }
 
+function getRegionBadge(ind: VoiceIndustryConfig): string {
+  if (ind.regionBadge && ind.regionBadge.trim().length > 0) {
+    return ind.regionBadge;
+  }
+  switch (ind.id) {
+    case 'dental':
+      return 'DIFC Dubai (DHA Licensed) · AED';
+    case 'solar':
+      return 'Pakistan Net-Metering · LESCO/IESCO';
+    case 'hr':
+      return 'US / UK Remote Hub · Multi-Currency';
+    default:
+      return 'Enterprise SLA · Custom Timezones';
+  }
+}
+
+function getCompletionSummary(ind: VoiceIndustryConfig): string {
+  if (ind.completionSummary && ind.completionSummary.trim().length > 0) {
+    return ind.completionSummary;
+  }
+  switch (ind.id) {
+    case 'dental':
+      return 'Sarah just qualified the caller and locked Operatory Chair 2 in under 28 seconds.';
+    case 'solar':
+      return 'Hassan just sized the 12 kW load, booked the site survey, and sent the WhatsApp quote in under 28 seconds.';
+    case 'hr':
+      return 'Maya just qualified the candidate, parsed notice period, and synced the interview to ATS in under 28 seconds.';
+    default:
+      return 'Zed just triaged the job ticket, scheduled the crew, and synced to your ERP in under 28 seconds.';
+  }
+}
+
 export default function VoiceSimulationSection() {
   const { config } = useSiteConfig();
   const vt = config.voiceTheatre;
@@ -41,6 +78,7 @@ export default function VoiceSimulationSection() {
   const [currentSec, setCurrentSec] = useState(0);
   const [audioDuration, setAudioDuration] = useState(28);
   const [audioAvailable, setAudioAvailable] = useState(true);
+  const [waConfirmed, setWaConfirmed] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -48,12 +86,18 @@ export default function VoiceSimulationSection() {
     industries.find((ind) => ind.id === activeId) || industries[0];
   const isDentalRealAudio = current.id === 'dental';
   const durationSec = isDentalRealAudio && audioAvailable ? audioDuration : 28;
+  const timeScale = durationSec > 0 ? durationSec / 28 : 1;
+
+  const WA_ARRIVAL_SEC = 22 * timeScale;
+  const BOOKING_SEC = 19 * timeScale;
+  const AUTO_COMPLETE_SEC = 26.8 * timeScale;
 
   // Listen to global Hero events ("Hear a sample call" & "WhatsApp" tag)
   useEffect(() => {
     const onPlayClinic = () => {
       const firstDental = industries.find((i) => i.id === 'dental') || industries[0];
       if (firstDental) setActiveId(firstDental.id);
+      setWaConfirmed(false);
       setCurrentSec(0.1);
       setPlaying(true);
       setTimeout(() => {
@@ -69,7 +113,8 @@ export default function VoiceSimulationSection() {
     const onFocusWhatsapp = () => {
       const firstDental = industries.find((i) => i.id === 'dental') || industries[0];
       if (firstDental) setActiveId(firstDental.id);
-      setCurrentSec(23.5);
+      setWaConfirmed(false);
+      setCurrentSec(22.2);
       setPlaying(false);
       if (audioRef.current) {
         audioRef.current.pause();
@@ -84,7 +129,7 @@ export default function VoiceSimulationSection() {
     };
   }, [industries]);
 
-  // Playback loop: real <audio> sync for Dental when available, visual progress timer otherwise
+  // Playback loop: real <audio> sync for Dental when available, smooth simulation clock otherwise
   useEffect(() => {
     if (!playing) return;
 
@@ -104,7 +149,7 @@ export default function VoiceSimulationSection() {
       return () => clearInterval(safetyIv);
     }
 
-    const step = isDentalRealAudio ? 0.12 : 0.32;
+    const step = isDentalRealAudio ? 0.14 : 0.28;
     const iv = setInterval(() => {
       setCurrentSec((prev) => {
         const next = Math.min(prev + step, 28);
@@ -118,8 +163,32 @@ export default function VoiceSimulationSection() {
     return () => clearInterval(iv);
   }, [playing, isDentalRealAudio, audioAvailable, durationSec]);
 
+  const started = currentSec > 0 || playing;
+  const showBooking = currentSec >= BOOKING_SEC;
+  const showWa = currentSec >= WA_ARRIVAL_SEC;
+  const showCompletion = currentSec >= AUTO_COMPLETE_SEC;
+
+  // Reset confirmation when scrubbing back before WhatsApp stage, auto-confirm if scrubbed past 26.8s
+  useEffect(() => {
+    if (currentSec < WA_ARRIVAL_SEC) {
+      setWaConfirmed(false);
+    } else if (currentSec >= AUTO_COMPLETE_SEC) {
+      setWaConfirmed(true);
+    }
+  }, [currentSec, WA_ARRIVAL_SEC, AUTO_COMPLETE_SEC]);
+
+  // 4-second fallback auto-advance if visitor does not click the interactive "1 — Confirm" pill
+  useEffect(() => {
+    if (!showWa || waConfirmed) return;
+    const fallbackTimer = setTimeout(() => {
+      setWaConfirmed(true);
+    }, 4000);
+    return () => clearTimeout(fallbackTimer);
+  }, [showWa, waConfirmed, current.id]);
+
   const handleSelectIndustry = (id: string) => {
     setActiveId(id);
+    setWaConfirmed(false);
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
@@ -128,7 +197,6 @@ export default function VoiceSimulationSection() {
       setCurrentSec(0);
       setPlaying(false);
     } else {
-      // Immediately start transcript & WhatsApp simulation without synthetic TTS
       setCurrentSec(0.5);
       setPlaying(true);
     }
@@ -139,7 +207,9 @@ export default function VoiceSimulationSection() {
       setPlaying(false);
       audioRef.current?.pause();
     } else {
-      const startFrom = currentSec >= durationSec - 0.3 ? 0 : currentSec;
+      const restarting = currentSec >= durationSec - 0.3;
+      const startFrom = restarting ? 0 : currentSec;
+      if (restarting) setWaConfirmed(false);
       setCurrentSec(startFrom || 0.1);
       setPlaying(true);
       if (isDentalRealAudio && audioRef.current) {
@@ -151,42 +221,68 @@ export default function VoiceSimulationSection() {
     }
   };
 
-  const seekTo = (sec: number) => {
-    const clamped = Math.min(Math.max(sec, 0), durationSec);
+  // Click-to-scrub helper (supports both karaoke turns and milestone / slider scrubbing)
+  const scrubTo = (scriptSec: number, autoPlay = true) => {
+    const rawTarget = scriptSec === 0 ? 0.1 : scriptSec * timeScale;
+    const clamped = Math.min(Math.max(rawTarget, 0.1), durationSec);
+    if (clamped < WA_ARRIVAL_SEC) {
+      setWaConfirmed(false);
+    } else if (clamped >= AUTO_COMPLETE_SEC) {
+      setWaConfirmed(true);
+    }
     setCurrentSec(clamped);
-    setPlaying(true);
+    if (autoPlay) {
+      setPlaying(true);
+    }
     if (isDentalRealAudio && audioRef.current) {
       audioRef.current.currentTime = clamped;
-      audioRef.current.play().catch(() => {
-        setAudioAvailable(false);
-      });
+      if (autoPlay) {
+        audioRef.current.play().catch(() => {
+          setAudioAvailable(false);
+        });
+      }
     }
   };
 
   const handleScrubBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const ratio = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
-    seekTo(ratio * durationSec);
+    const targetSec = ratio * durationSec;
+    if (targetSec < WA_ARRIVAL_SEC) setWaConfirmed(false);
+    setCurrentSec(targetSec);
+    setPlaying(true);
+    if (isDentalRealAudio && audioRef.current) {
+      audioRef.current.currentTime = targetSec;
+      audioRef.current.play().catch(() => {
+        setAudioAvailable(false);
+      });
+    }
   };
 
-  const timeScale = durationSec > 0 ? durationSec / 28 : 1;
-  const started = currentSec > 0 || playing;
+  const handleQuickReplyConfirm = () => {
+    setWaConfirmed(true);
+    // If paused during manual exploration at Stage 02, smoothly bring timeline to completion
+    if (!playing && currentSec < AUTO_COMPLETE_SEC) {
+      setTimeout(() => {
+        setCurrentSec((prev) => Math.max(prev, Math.min(27.3 * timeScale, durationSec)));
+      }, 450);
+    }
+  };
 
-  const visibleTurns = started
-    ? current.script.filter((turn) => turn.at * timeScale <= currentSec)
-    : [];
-
-  let activeSpeaker: 0 | 1 | 2 = 0;
-  for (let i = 0; i < current.script.length; i++) {
-    if (current.script[i].at * timeScale <= currentSec) {
-      activeSpeaker = current.script[i].isAi ? 2 : 1;
+  // Active turn index for karaoke highlight
+  let activeTurnIdx = -1;
+  if (started) {
+    for (let i = 0; i < current.script.length; i++) {
+      if (current.script[i].at * timeScale <= currentSec) {
+        activeTurnIdx = i;
+      }
     }
   }
-  if (currentSec >= 19 * timeScale) activeSpeaker = 0;
 
-  const showBooking = currentSec >= 19 * timeScale;
-  const showWa = currentSec >= 23 * timeScale;
-  const showReply = currentSec >= 26.5 * timeScale;
+  let activeSpeaker: 0 | 1 | 2 = 0;
+  if (activeTurnIdx >= 0 && currentSec < BOOKING_SEC) {
+    activeSpeaker = current.script[activeTurnIdx].isAi ? 2 : 1;
+  }
 
   const formatClock = (s: number) => {
     const mm = Math.floor(s / 60);
@@ -195,6 +291,10 @@ export default function VoiceSimulationSection() {
   };
 
   const progressPct = Math.min((currentSec / durationSec) * 100, 100);
+  const bookingUrl =
+    config.branding.calendarBookingUrl || 'https://calendar.app.google/u5vL88X41qmGBCky5';
+  const regionBadge = getRegionBadge(current);
+  const completionSummary = getCompletionSummary(current);
 
   return (
     <section
@@ -207,7 +307,7 @@ export default function VoiceSimulationSection() {
       <div id="voice-demo" className="scroll-mt-20 pointer-events-none" />
       <div id="industries" className="scroll-mt-20 pointer-events-none" />
 
-      {/* Subtle Warm / Neutral Studio Architectural Light (Zero Bluish Tint) */}
+      {/* Subtle Warm / Neutral Studio Architectural Light */}
       <div
         className="pointer-events-none absolute -top-32 right-0 w-[560px] h-[560px] rounded-full blur-3xl opacity-35"
         style={{
@@ -235,6 +335,7 @@ export default function VoiceSimulationSection() {
         }}
         onEnded={() => {
           setPlaying(false);
+          setWaConfirmed(true);
           setCurrentSec(durationSec);
         }}
         onError={() => {
@@ -301,15 +402,15 @@ export default function VoiceSimulationSection() {
           })}
         </div>
 
-        {/* Interactive Theatre: Anchored Dark Voice Console + Angled 3D WhatsApp Device */}
-        <div className="mt-9 grid grid-cols-1 lg:grid-cols-12 items-start gap-8 lg:gap-0">
+        {/* Interactive Sandbox Theatre: Responsive flex-col lg:flex-row */}
+        <div className="mt-9 flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-0">
           
-          {/* LEFT: Anchored Obsidian Voice Console (8 cols) */}
-          <div className="lg:col-span-8 relative z-10 rounded-[28px] border border-[rgba(0,0,0,0.12)] bg-[#0A0B0F] text-[#eceef2] shadow-[0_32px_80px_rgba(0,0,0,0.16)] overflow-hidden">
+          {/* LEFT: Anchored Obsidian Voice Console */}
+          <div className="w-full lg:w-[66%] xl:w-[68%] relative z-10 rounded-[28px] border border-[rgba(0,0,0,0.12)] bg-[#0A0B0F] text-[#eceef2] shadow-[0_32px_80px_rgba(0,0,0,0.16)] overflow-hidden">
             
-            {/* Console Header Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 px-6 sm:px-7 py-5 border-b border-white/10">
-              <div className="flex items-center gap-3.5">
+            {/* Console Header Bar + Global Multi-Region Attribution */}
+            <div className="flex flex-wrap items-center justify-between gap-4 px-5 sm:px-7 py-5 border-b border-white/10">
+              <div className="flex items-center gap-3.5 min-w-0">
                 <div
                   className="w-11 h-11 rounded-full flex items-center justify-center font-serif-instrument text-2xl text-[#07080b] shrink-0 shadow-[0_0_20px_rgba(94,227,255,0.25)]"
                   style={{
@@ -320,9 +421,9 @@ export default function VoiceSimulationSection() {
                   {current.agentName.charAt(0)}
                 </div>
 
-                <div>
-                  <div className="flex items-center gap-2 text-[15px] sm:text-base font-semibold text-[#eceef2]">
-                    <span>{current.agentRole}</span>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 text-[15px] sm:text-base font-semibold text-[#eceef2]">
+                    <span className="truncate">{current.agentRole}</span>
                     {playing && (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 font-mono text-[10px] text-emerald-300 uppercase">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
@@ -330,13 +431,19 @@ export default function VoiceSimulationSection() {
                       </span>
                     )}
                   </div>
-                  <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#9aa1ad] mt-0.5">
+                  <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#9aa1ad] mt-0.5 truncate">
                     {current.label} &bull; {current.channelNote}
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3.5">
+              <div className="flex flex-wrap items-center gap-3 ml-auto">
+                {/* 5. Global Multi-Region Attribution Badge */}
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/15 font-mono text-[10.5px] tracking-[0.04em] text-[#d5dbe6]">
+                  <Globe className="w-3.5 h-3.5 text-[#5ee3ff] shrink-0" />
+                  <span>{regionBadge}</span>
+                </div>
+
                 <span className="font-mono text-xs sm:text-[13px] text-[#c9ced8] tabular-nums">
                   {formatClock(currentSec)} / {formatClock(durationSec)}
                 </span>
@@ -345,7 +452,7 @@ export default function VoiceSimulationSection() {
                   type="button"
                   onClick={togglePlay}
                   aria-label={playing ? 'Pause sample' : 'Play sample'}
-                  className="zl-btn w-12 h-12 rounded-full bg-[#eceef2] hover:bg-white text-[#07080b] flex items-center justify-center shadow-[0_4px_18px_rgba(236,238,242,0.25)] cursor-pointer"
+                  className="zl-btn w-12 h-12 rounded-full bg-[#eceef2] hover:bg-white text-[#07080b] flex items-center justify-center shadow-[0_4px_18px_rgba(236,238,242,0.25)] cursor-pointer shrink-0"
                 >
                   {playing ? (
                     <Pause className="w-4 h-4 fill-current" />
@@ -357,7 +464,7 @@ export default function VoiceSimulationSection() {
             </div>
 
             {/* Waveform & Timeline Scrubbing */}
-            <div className="px-6 sm:px-7 pt-6 pb-3">
+            <div className="px-5 sm:px-7 pt-6 pb-3">
               {/* 42 Animated Audio Wave Bars */}
               <div className="h-14 flex items-center gap-[3px] sm:gap-1">
                 {Array.from({ length: 42 }).map((_, i) => {
@@ -417,9 +524,9 @@ export default function VoiceSimulationSection() {
               <div className="mt-4 flex flex-wrap items-center gap-2.5">
                 <button
                   type="button"
-                  onClick={() => seekTo(0.1)}
-                  className={`zl-btn min-h-[38px] px-3.5 rounded-xl border font-mono text-[11px] tracking-[0.06em] uppercase transition-all cursor-pointer ${
-                    started && currentSec < 19 * timeScale
+                  onClick={() => scrubTo(0)}
+                  className={`zl-btn min-h-[36px] px-3.5 rounded-xl border font-mono text-[11px] tracking-[0.06em] uppercase transition-all cursor-pointer ${
+                    started && currentSec < BOOKING_SEC
                       ? 'border-[#5ee3ff]/60 bg-[#5ee3ff]/12 text-[#9fe9ff]'
                       : 'border-white/15 bg-white/[0.04] text-[#c9ced8] hover:border-white/30'
                   }`}
@@ -429,8 +536,8 @@ export default function VoiceSimulationSection() {
 
                 <button
                   type="button"
-                  onClick={() => seekTo(19 * timeScale)}
-                  className={`zl-btn min-h-[38px] px-3.5 rounded-xl border font-mono text-[11px] tracking-[0.06em] uppercase transition-all cursor-pointer ${
+                  onClick={() => scrubTo(19)}
+                  className={`zl-btn min-h-[36px] px-3.5 rounded-xl border font-mono text-[11px] tracking-[0.06em] uppercase transition-all cursor-pointer ${
                     showBooking && !showWa
                       ? 'border-[#5ee3ff]/60 bg-[#5ee3ff]/12 text-[#9fe9ff]'
                       : 'border-white/15 bg-white/[0.04] text-[#c9ced8] hover:border-white/30'
@@ -441,97 +548,215 @@ export default function VoiceSimulationSection() {
 
                 <button
                   type="button"
-                  onClick={() => seekTo(23 * timeScale)}
-                  className={`zl-btn min-h-[38px] px-3.5 rounded-xl border font-mono text-[11px] tracking-[0.06em] uppercase transition-all cursor-pointer ${
+                  onClick={() => scrubTo(22.2)}
+                  className={`zl-btn min-h-[36px] px-3.5 rounded-xl border font-mono text-[11px] tracking-[0.06em] uppercase transition-all cursor-pointer ${
                     showWa
                       ? 'border-[#25D366]/60 bg-[#25D366]/12 text-emerald-300'
                       : 'border-white/15 bg-white/[0.04] text-[#c9ced8] hover:border-white/30'
                   }`}
                 >
-                  0:23 &middot; WhatsApp
+                  0:22 &middot; WhatsApp
                 </button>
+              </div>
+
+              {/* 1. TECHNICAL HUD TELEMETRY STRIP */}
+              <div
+                className={`mt-4 p-2.5 sm:px-3.5 rounded-2xl border flex flex-wrap items-center justify-between gap-2.5 transition-all duration-300 ${
+                  playing
+                    ? 'border-[#5ee3ff]/40 bg-[#5ee3ff]/[0.07] shadow-[0_0_24px_rgba(94,227,255,0.12)]'
+                    : 'border-white/10 bg-white/[0.025]'
+                }`}
+              >
+                {/* Latency Badge */}
+                <div
+                  className={`inline-flex items-center gap-2 font-mono text-[10.5px] sm:text-[11px] uppercase tracking-[0.05em] transition-colors ${
+                    playing ? 'text-[#9fe9ff] font-semibold' : 'text-[#9aa1ad]'
+                  }`}
+                >
+                  <span className="relative flex h-2 w-2 shrink-0">
+                    <span
+                      className={`absolute inline-flex h-full w-full rounded-full bg-[#5ee3ff] opacity-75 ${
+                        playing ? 'animate-ping' : 'animate-pulse'
+                      }`}
+                    />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#5ee3ff] shadow-[0_0_8px_#5ee3ff]" />
+                  </span>
+                  <span>LATENCY: 340ms (Sub-400ms SLA)</span>
+                </div>
+
+                {/* Stream Engine */}
+                <div
+                  className={`inline-flex items-center gap-1.5 font-mono text-[10.5px] sm:text-[11px] uppercase tracking-[0.05em] transition-colors ${
+                    playing ? 'text-[#eceef2]' : 'text-[#9aa1ad]'
+                  }`}
+                >
+                  <Radio
+                    className={`w-3.5 h-3.5 shrink-0 ${
+                      playing ? 'text-[#5ee3ff]' : 'text-[#7f8796]'
+                    }`}
+                  />
+                  <span>PIPELINE: WebSockets // Streaming TTS</span>
+                </div>
+
+                {/* Webhook Status */}
+                <div
+                  className={`inline-flex items-center gap-1.5 font-mono text-[10.5px] sm:text-[11px] uppercase tracking-[0.05em] transition-colors ${
+                    playing || showBooking ? 'text-emerald-300 font-semibold' : 'text-[#9aa1ad]'
+                  }`}
+                >
+                  <Cpu
+                    className={`w-3.5 h-3.5 shrink-0 ${
+                      playing || showBooking ? 'text-emerald-400' : 'text-[#7f8796]'
+                    }`}
+                  />
+                  <span>PMS DISPATCH: 2-Way Lock Active</span>
+                </div>
               </div>
             </div>
 
-            {/* Live Transcript Feed & Booking Lock */}
-            <div className="px-6 sm:px-7 pt-3 pb-7 min-h-[325px] flex flex-col justify-start gap-3">
-              {!started ? (
-                <div className="my-auto p-6 rounded-2xl border border-dashed border-white/20 text-center space-y-3">
-                  <div className="w-10 h-10 rounded-full bg-white/[0.06] border border-white/15 mx-auto flex items-center justify-center text-[#5ee3ff]">
-                    <PhoneCall className="w-4 h-4" />
-                  </div>
-                  <p className="text-sm sm:text-[15px] text-[#c9ced8] max-w-md mx-auto leading-relaxed">
-                    Press <strong className="text-white">Play</strong> above to hear how{' '}
-                    {current.agentName} handles {current.callerName}&apos;s call, checks live availability, and triggers the WhatsApp confirmation.
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <AnimatePresence initial={false}>
-                    {visibleTurns.map((turn, idx) => (
-                      <motion.div
-                        key={`${current.id}-${idx}`}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.22 }}
-                        className={`flex ${turn.isAi ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div
-                          className={`max-w-[85%] px-4 py-3 text-[13.5px] sm:text-[14.5px] leading-[1.5] border ${
-                            turn.isAi
-                              ? 'rounded-[18px_18px_4px_18px] bg-gradient-to-br from-[#5ee3ff]/20 to-[#a78bfa]/18 border-[#5ee3ff]/35 text-[#eceef2]'
-                              : 'rounded-[18px_18px_18px_4px] bg-white/[0.06] border-white/12 text-[#e4e7ee]'
-                          }`}
-                        >
-                          <div className="font-mono text-[10px] tracking-[0.1em] uppercase text-[#a0a7b3] mb-1">
-                            {turn.who}
-                          </div>
-                          <div>{turn.text}</div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
+            {/* 2. CLICK-TO-SCRUB "KARAOKE" TRANSCRIPT FEED & BOOKING LOCK */}
+            <div className="px-5 sm:px-7 pt-3 pb-7 min-h-[340px] flex flex-col justify-start gap-3">
+              <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.08em] text-[#8d95a3]">
+                <span>Click any line to scrub call &amp; device preview</span>
+                {!started && (
+                  <span className="text-[#5ee3ff]">Ready · Interactive Script</span>
+                )}
+              </div>
 
-                  {showBooking && (
+              <div className="space-y-3">
+                {current.script.map((turn, idx) => {
+                  const isReached = started && turn.at * timeScale <= currentSec;
+                  const isActiveLine = started && idx === activeTurnIdx;
+
+                  return (
                     <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-1 p-4 rounded-2xl border border-[#5ee3ff]/45 flex items-center gap-3.5"
-                      style={{
-                        background:
-                          'linear-gradient(135deg, rgba(94,227,255,0.16), rgba(167,139,250,0.15))',
+                      key={`${current.id}-turn-${idx}`}
+                      layout
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => scrubTo(turn.at)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          scrubTo(turn.at);
+                        }
                       }}
+                      className={`flex ${turn.isAi ? 'justify-end' : 'justify-start'}`}
                     >
-                      <span className="w-8 h-8 rounded-full bg-[#5ee3ff] text-[#06222b] flex items-center justify-center shrink-0">
-                        <CalendarCheck className="w-4 h-4" />
-                      </span>
-                      <div>
-                        <div className="font-mono text-[10px] tracking-[0.1em] uppercase text-[#9fe9ff]">
-                          Confirmed in Calendar / PMS
+                      <div
+                        className={`max-w-[88%] px-4 py-3 text-[13.5px] sm:text-[14.5px] leading-[1.5] border cursor-pointer hover:border-cyan-400/60 transition-colors duration-200 ${
+                          turn.isAi
+                            ? 'rounded-[18px_18px_4px_18px]'
+                            : 'rounded-[18px_18px_18px_4px]'
+                        } ${
+                          isActiveLine
+                            ? turn.isAi
+                              ? 'bg-gradient-to-br from-[#5ee3ff]/24 to-[#a78bfa]/22 border-[#5ee3ff]/75 text-white shadow-[0_0_24px_rgba(94,227,255,0.16)] opacity-100'
+                              : 'bg-white/[0.11] border-[#5ee3ff]/70 text-white shadow-[0_0_20px_rgba(94,227,255,0.12)] opacity-100'
+                            : isReached
+                            ? turn.isAi
+                              ? 'bg-gradient-to-br from-[#5ee3ff]/16 to-[#a78bfa]/14 border-[#5ee3ff]/30 text-[#eceef2] opacity-95'
+                              : 'bg-white/[0.06] border-white/12 text-[#e4e7ee] opacity-95'
+                            : 'bg-white/[0.03] border-white/10 text-[#9aa1ad] opacity-60 hover:opacity-100'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-3 font-mono text-[10px] tracking-[0.1em] uppercase mb-1">
+                          <span className={isActiveLine ? 'text-[#5ee3ff] font-semibold' : 'text-[#a0a7b3]'}>
+                            {turn.who}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 text-[9.5px] text-[#9aa1ad] tabular-nums">
+                            {isActiveLine && (
+                              <span className="inline-flex items-center gap-1 text-[#5ee3ff] font-bold">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#5ee3ff] animate-pulse" />
+                                Active
+                              </span>
+                            )}
+                            <span>{formatClock(turn.at * timeScale)}</span>
+                          </span>
                         </div>
-                        <div className="text-sm sm:text-[15px] font-semibold text-white">
-                          {current.lockedSlotMessage}
-                        </div>
-                        <div className="text-xs text-[#c9ced8] mt-0.5">
-                          {current.lockedSlotSub}
-                        </div>
+                        <div>{turn.text}</div>
                       </div>
                     </motion.div>
-                  )}
-                </>
-              )}
+                  );
+                })}
+              </div>
+
+              <AnimatePresence>
+                {showBooking && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    className="mt-1 p-4 rounded-2xl border border-[#5ee3ff]/45 flex items-center gap-3.5"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(94,227,255,0.16), rgba(167,139,250,0.15))',
+                    }}
+                  >
+                    <span className="w-8 h-8 rounded-full bg-[#5ee3ff] text-[#06222b] flex items-center justify-center shrink-0">
+                      <CalendarCheck className="w-4 h-4" />
+                    </span>
+                    <div className="min-w-0">
+                      <div className="font-mono text-[10px] tracking-[0.1em] uppercase text-[#9fe9ff]">
+                        Confirmed in Calendar / PMS
+                      </div>
+                      <div className="text-sm sm:text-[15px] font-semibold text-white">
+                        {current.lockedSlotMessage}
+                      </div>
+                      <div className="text-xs text-[#c9ced8] mt-0.5">
+                        {current.lockedSlotSub}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* 4. END-OF-CALL CONVERSION CTA BRIDGE */}
+              <AnimatePresence>
+                {showCompletion && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    className="mt-2 p-4 sm:p-5 rounded-2xl border border-emerald-400/40 bg-gradient-to-r from-emerald-500/15 via-[#5ee3ff]/10 to-[#8B5CF6]/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-[0_12px_36px_rgba(16,185,129,0.12)]"
+                  >
+                    <div className="flex items-start gap-3 min-w-0">
+                      <span className="w-8 h-8 rounded-full bg-emerald-400 text-[#052e16] flex items-center justify-center shrink-0 mt-0.5">
+                        <Sparkles className="w-4 h-4" />
+                      </span>
+                      <div className="min-w-0">
+                        <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-emerald-300 font-bold">
+                          End-of-Call Summary · Complete
+                        </div>
+                        <p className="text-sm font-medium text-white leading-snug mt-0.5">
+                          {completionSummary}
+                        </p>
+                      </div>
+                    </div>
+
+                    <a
+                      href={bookingUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="zl-btn inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#eceef2] hover:bg-white text-[#07080b] font-semibold text-xs sm:text-sm whitespace-nowrap shadow-[0_6px_22px_rgba(236,238,242,0.22)] cursor-pointer shrink-0"
+                    >
+                      <span>Deploy This Pipeline On Your Business Line</span>
+                      <ArrowRight className="w-4 h-4 shrink-0" />
+                    </a>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
-          {/* RIGHT: Angled 3D Metallic Phone Mockup */}
-          <div className="lg:col-span-4 relative z-20 flex justify-center lg:justify-start lg:-ml-12 lg:mt-10">
+          {/* RIGHT: Responsive 3D Metallic Phone Mockup (6. Stacks cleanly on <1024px without overlap/rotation) */}
+          <div className="w-full lg:w-[34%] xl:w-[32%] relative z-20 flex justify-center lg:justify-start ml-0 lg:-ml-12 mt-0 lg:mt-10 max-lg:!ml-0">
             <motion.div
               key={current.id}
-              initial={{ opacity: 0.7, y: 12, rotate: 3 }}
-              animate={{ opacity: 1, y: 0, rotate: 3 }}
-              whileHover={{ rotate: 1 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full max-w-[335px] rounded-[42px] p-3 transition-shadow"
+              initial={{ opacity: 0.75, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full max-w-[335px] rounded-[42px] p-3 rotate-0 lg:rotate-3 lg:hover:rotate-1 transition-transform duration-300 max-lg:[transform:none!important]"
               style={{
                 background: 'linear-gradient(145deg, #e4e4e7 0%, #9ca3af 52%, #52525b 100%)',
                 boxShadow:
@@ -577,18 +802,18 @@ export default function VoiceSimulationSection() {
                   {!showWa ? (
                     <div className="my-auto text-center px-4 space-y-3">
                       <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 mx-auto flex items-center justify-center text-[#5ee3ff]">
-                        <CheckCheck className="w-4 h-4" />
+                        <PhoneCall className="w-4 h-4" />
                       </div>
                       <p className="text-[#8696a0] text-[13px] leading-relaxed">
-                        The WhatsApp confirmation &amp; files arrive here right after the slot locks, or press{' '}
+                        The WhatsApp confirmation &amp; files arrive at Stage 02, or click{' '}
                         <button
                           type="button"
-                          onClick={() => seekTo(23 * timeScale)}
+                          onClick={() => scrubTo(22.2, false)}
                           className="text-[#5ee3ff] underline underline-offset-2 cursor-pointer"
                         >
-                          0:23 · WhatsApp
+                          0:22 · WhatsApp
                         </button>{' '}
-                        to preview.
+                        to test interactive confirmation.
                       </p>
                     </div>
                   ) : (
@@ -622,28 +847,55 @@ export default function VoiceSimulationSection() {
 
                         <div className="mt-1.5 text-right text-[10px] text-[#8696a0] flex items-center justify-end gap-1">
                           <span>now</span>
-                          <CheckCheck className="w-3 h-3 text-[#53bdeb]" />
+                          <CheckCheck
+                            className={`w-3.5 h-3.5 transition-colors duration-300 ${
+                              waConfirmed ? 'text-[#53bdeb]' : 'text-[#8696a0]'
+                            }`}
+                          />
                         </div>
                       </motion.div>
 
-                      {/* Client Reply & Confirmation */}
-                      {showReply && (
+                      {/* 3. Tactile Interactive Quick-Reply Pill vs Confirmed Thread */}
+                      {!waConfirmed ? (
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="self-end flex flex-col items-end gap-1.5 mt-1"
+                        >
+                          <button
+                            type="button"
+                            onClick={handleQuickReplyConfirm}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#005c4b] hover:bg-[#047857] text-white font-semibold text-[13px] border border-emerald-400/50 shadow-[0_6px_20px_rgba(16,185,129,0.28)] active:scale-95 transition-all duration-150 cursor-pointer"
+                          >
+                            <span className="w-2 h-2 rounded-full bg-emerald-300 animate-ping" />
+                            <span>{current.whatsAppReply || '1 — Confirm'}</span>
+                          </button>
+                          <span className="font-mono text-[9.5px] text-[#8696a0] pr-1">
+                            Tap quick-reply &middot; auto-sends in 4s
+                          </span>
+                        </motion.div>
+                      ) : (
                         <>
                           <motion.div
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="self-end max-w-[82%] px-3 py-2 rounded-[14px_14px_4px_14px] bg-[#005c4b] text-[#e9edef] text-[13px]"
+                            className="self-end max-w-[82%] px-3 py-2 rounded-[14px_14px_4px_14px] bg-[#005c4b] text-[#e9edef] text-[13px] flex items-end gap-2"
                           >
-                            {current.whatsAppReply}
+                            <span>{current.whatsAppReply || '1 — Confirm'}</span>
+                            <CheckCheck className="w-3.5 h-3.5 text-[#53bdeb] shrink-0" />
                           </motion.div>
 
                           <motion.div
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.15 }}
-                            className="self-start max-w-[88%] p-3 rounded-[14px_14px_14px_4px] bg-[#202c33] text-[#e9edef] text-[13px] leading-[1.45]"
+                            transition={{ delay: 0.12 }}
+                            className="self-start max-w-[90%] p-3 rounded-[14px_14px_14px_4px] bg-[#202c33] text-[#e9edef] text-[13px] leading-[1.45]"
                           >
-                            {current.whatsAppFollowup}
+                            <p>{current.whatsAppFollowup}</p>
+                            <div className="mt-1 text-right text-[10px] text-[#8696a0] flex items-center justify-end gap-1">
+                              <span>just now</span>
+                              <CheckCheck className="w-3.5 h-3.5 text-[#53bdeb]" />
+                            </div>
                           </motion.div>
                         </>
                       )}

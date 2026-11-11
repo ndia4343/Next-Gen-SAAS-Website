@@ -46,12 +46,14 @@ export interface VoiceIndustryConfig {
   id: string;
   label: string;
   channelNote: string;
+  regionBadge?: string;
   agentName: string;
   agentRole: string;
   callerName: string;
   script: VoiceScriptTurn[];
   lockedSlotMessage: string;
   lockedSlotSub: string;
+  completionSummary?: string;
   whatsAppContactName: string;
   whatsAppNotice: string;
   whatsAppReply: string;
@@ -187,6 +189,7 @@ export const SiteConfigSchema = z.object({
         id: z.string().min(1),
         label: z.string().min(1),
         channelNote: z.string(),
+        regionBadge: z.string().optional(),
         agentName: z.string(),
         agentRole: z.string(),
         callerName: z.string(),
@@ -200,6 +203,7 @@ export const SiteConfigSchema = z.object({
         ),
         lockedSlotMessage: z.string(),
         lockedSlotSub: z.string(),
+        completionSummary: z.string().optional(),
         whatsAppContactName: z.string(),
         whatsAppNotice: z.string(),
         whatsAppReply: z.string(),
