@@ -909,24 +909,31 @@ export default function SuperAdminCmsPage() {
             </div>
 
             {/* Live Scrolling Ticker Preview */}
-            <div className="rounded-2xl bg-[#090b10] border border-white/15 py-4 overflow-hidden relative">
+            <div className="relative z-20 w-full overflow-hidden py-4 border-t border-b border-white/10 bg-[#07080b] rounded-2xl">
               <div
-                className="marquee-track items-center whitespace-nowrap"
+                className="marquee-track flex items-center whitespace-nowrap"
                 style={{ animationDuration: `${draft.marquee.speedSeconds}s` }}
               >
                 {[0, 1].map((dup) => (
                   <div
                     key={dup}
-                    className="flex items-center gap-10 pr-10 font-mono text-xs tracking-[0.14em] uppercase text-[#b8bfcc] shrink-0"
+                    className="flex items-center gap-10 pr-10 py-1.5 font-mono text-xs tracking-[0.14em] uppercase text-[#b8bfcc] shrink-0"
                   >
                     {draft.marquee.items.map((item, idx) => (
-                      <span key={`${dup}-${idx}`} className="inline-flex items-center gap-3">
+                      <span
+                        key={`${dup}-${idx}`}
+                        className="flex items-center gap-3 leading-none py-1"
+                      >
                         <span
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            idx % 2 === 0 ? 'bg-[#5ee3ff]' : 'bg-[#a78bfa]'
+                          className={`w-1.5 h-1.5 rounded-full shrink-0 flex items-center leading-none ${
+                            idx % 2 === 0
+                              ? 'bg-[#5ee3ff] shadow-[0_0_10px_rgba(94,227,255,0.75)]'
+                              : 'bg-[#a78bfa] shadow-[0_0_10px_rgba(167,139,250,0.75)]'
                           }`}
                         />
-                        <span>{item || 'UNTITLED'}</span>
+                        <span className="leading-none flex items-center">
+                          {item || 'UNTITLED'}
+                        </span>
                       </span>
                     ))}
                   </div>

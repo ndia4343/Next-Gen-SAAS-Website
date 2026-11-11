@@ -10,21 +10,9 @@ interface HeroProps {
   content?: HeroSectionData;
 }
 
-type CoreTagId = 'default' | 'voice' | 'whatsapp' | 'workflows' | 'dashboards' | 'core';
-
-const TAG_HINTS: Record<CoreTagId, string> = {
-  default: 'MOVE YOUR CURSOR OVER THE CORE',
-  core: 'CLICK ANY TAG BELOW TO INSPECT A SYSTEM IN ACTION',
-  voice: 'VOICE — ANSWERS CALLS IN < 400MS & BOOKS DIRECTLY',
-  whatsapp: 'WHATSAPP — INSTANT FOLLOW-UPS, QUOTES & CONFIRMATIONS',
-  workflows: 'WORKFLOWS — WIRES PHONE, WHATSAPP, CALENDAR & CRM TOGETHER',
-  dashboards: 'DASHBOARDS — TRACKS RECOVERED REVENUE & CONVERSIONS LIVE',
-};
-
 export function Hero({}: HeroProps = {}) {
   const { config } = useSiteConfig();
   const sectionRef = useRef<HTMLElement>(null);
-  const [hoveredTag, setHoveredTag] = useState<CoreTagId>('default');
   const [coreBoost, setCoreBoost] = useState(false);
 
   const hero = config.hero;
@@ -73,7 +61,6 @@ export function Hero({}: HeroProps = {}) {
   const handleMouseLeave = () => {
     rawX.set(0);
     rawY.set(0);
-    setHoveredTag('default');
   };
 
   const handleHearSampleCall = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -133,7 +120,7 @@ export function Hero({}: HeroProps = {}) {
       />
 
       {/* Main Hero Grid */}
-      <div className="relative z-10 max-w-[1280px] mx-auto px-6 sm:px-8 pt-6 pb-16 lg:pb-20 min-h-[680px] grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-6 items-center">
+      <div className="relative z-10 max-w-[1280px] mx-auto px-6 sm:px-8 pt-6 pb-14 lg:pb-16 min-h-[620px] lg:min-h-[640px] grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-6 items-center">
         
         {/* LEFT: Editorial Typography & CTAs */}
         <div className="lg:col-span-6 flex flex-col items-start text-left z-20">
@@ -200,21 +187,11 @@ export function Hero({}: HeroProps = {}) {
             </a>
           </div>
 
-          {/* Live Cursor Hint / Active Node Preview */}
-          <div className="mt-10 flex items-center gap-3.5 font-mono text-[11px] sm:text-xs tracking-[0.09em] uppercase text-[#9aa1ad]">
-            <span className="w-10 h-[1px] bg-white/25 shrink-0" />
-            <span className={hoveredTag !== 'default' ? 'text-[#5ee3ff] transition-colors' : 'transition-colors'}>
-              {TAG_HINTS[hoveredTag]}
-            </span>
-          </div>
-
         </div>
 
         {/* RIGHT: Interactive 3D Gyroscopic Metallic Sphere & Orbiting Tags */}
         <div className="lg:col-span-6 relative flex items-center justify-center min-h-[380px] sm:min-h-[480px] lg:min-h-[540px]">
           <div
-            onMouseEnter={() => setHoveredTag('core')}
-            onMouseLeave={() => setHoveredTag('default')}
             onClick={() => {
               setCoreBoost(true);
               setTimeout(() => setCoreBoost(false), 900);
@@ -310,8 +287,6 @@ export function Hero({}: HeroProps = {}) {
             <motion.a
               href="#voice-simulation"
               onClick={handleHearSampleCall}
-              onMouseEnter={() => setHoveredTag('voice')}
-              onMouseLeave={() => setHoveredTag('core')}
               style={{ x: chipVoiceX, y: chipVoiceY }}
               className="zl-btn absolute left-[2%] sm:left-0 top-[15%] z-20 inline-flex items-center gap-2 min-h-[42px] px-4 sm:px-[18px] rounded-full border border-white/20 bg-[#0c0e13]/78 hover:border-[#5ee3ff]/70 hover:shadow-[0_0_24px_rgba(94,227,255,0.3)] backdrop-blur-md font-mono text-[11px] sm:text-xs tracking-[0.09em] uppercase text-[#eceef2] cursor-pointer"
             >
@@ -322,8 +297,6 @@ export function Hero({}: HeroProps = {}) {
             <motion.a
               href="#voice-simulation"
               onClick={(e) => scrollToTarget(e, 'voice-simulation', 'zavian:focus-whatsapp')}
-              onMouseEnter={() => setHoveredTag('whatsapp')}
-              onMouseLeave={() => setHoveredTag('core')}
               style={{ x: chipWaX, y: chipWaY }}
               className="zl-btn absolute right-[2%] sm:right-0 top-[24%] z-20 inline-flex items-center gap-2 min-h-[42px] px-4 sm:px-[18px] rounded-full border border-white/20 bg-[#0c0e13]/78 hover:border-[#5ee3ff]/70 hover:shadow-[0_0_24px_rgba(94,227,255,0.3)] backdrop-blur-md font-mono text-[11px] sm:text-xs tracking-[0.09em] uppercase text-[#eceef2] cursor-pointer"
             >
@@ -334,8 +307,6 @@ export function Hero({}: HeroProps = {}) {
             <motion.a
               href="#connected-hub"
               onClick={(e) => scrollToTarget(e, 'connected-hub')}
-              onMouseEnter={() => setHoveredTag('workflows')}
-              onMouseLeave={() => setHoveredTag('core')}
               style={{ x: chipWorkflowX, y: chipWorkflowY }}
               className="zl-btn absolute left-[4%] bottom-[13%] z-20 inline-flex items-center gap-2 min-h-[42px] px-4 sm:px-[18px] rounded-full border border-white/20 bg-[#0c0e13]/78 hover:border-[#b4a0ff]/70 hover:shadow-[0_0_24px_rgba(180,160,255,0.3)] backdrop-blur-md font-mono text-[11px] sm:text-xs tracking-[0.09em] uppercase text-[#eceef2] cursor-pointer"
             >
@@ -346,8 +317,6 @@ export function Hero({}: HeroProps = {}) {
             <motion.a
               href="#command-center"
               onClick={(e) => scrollToTarget(e, 'command-center')}
-              onMouseEnter={() => setHoveredTag('dashboards')}
-              onMouseLeave={() => setHoveredTag('core')}
               style={{ x: chipDashX, y: chipDashY }}
               className="zl-btn absolute right-[4%] bottom-[8%] z-20 inline-flex items-center gap-2 min-h-[42px] px-4 sm:px-[18px] rounded-full border border-white/20 bg-[#0c0e13]/78 hover:border-[#5ee3ff]/70 hover:shadow-[0_0_24px_rgba(94,227,255,0.3)] backdrop-blur-md font-mono text-[11px] sm:text-xs tracking-[0.09em] uppercase text-[#eceef2] cursor-pointer"
             >
@@ -360,49 +329,52 @@ export function Hero({}: HeroProps = {}) {
 
       </div>
 
-      {/* MARQUEE STRIP: Permanently Obsidian Dark + Glowing Separator Before Editorial Light Mode */}
-      <div className="relative w-full bg-[#090b10] border-t border-white/12 overflow-hidden">
-        {/* Top subtle cyan-lavender hairline luminescence */}
+      {/* MARQUEE STRIP: Permanently Obsidian Dark + Unclipped Vertical Clearance */}
+      <div className="relative z-20 w-full overflow-hidden py-4 border-t border-b border-white/10 bg-[#07080b]">
+        {/* Top subtle cyan-lavender hairline accent */}
         <div
-          className="pointer-events-none h-[1px] w-full"
+          className="pointer-events-none absolute top-0 left-0 right-0 h-[1px] z-20"
           style={{
             background:
               'linear-gradient(90deg, transparent 5%, rgba(94,227,255,0.5) 35%, rgba(167,139,250,0.5) 65%, transparent 95%)',
           }}
         />
 
-        <div className="py-5 overflow-hidden relative">
-          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-[#090b10] to-transparent z-10" />
-          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-[#090b10] to-transparent z-10" />
+        {/* Soft edge fade masks */}
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-[#07080b] to-transparent z-10" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-[#07080b] to-transparent z-10" />
 
-          <div
-            className="marquee-track items-center whitespace-nowrap"
-            style={{ animationDuration: `${Math.max(8, marquee.speedSeconds || 26)}s` }}
-          >
-            {[0, 1].map((dup) => (
-              <div
-                key={dup}
-                className="flex items-center gap-12 pr-12 font-mono text-[11.5px] sm:text-xs tracking-[0.14em] uppercase text-[#b8bfcc] shrink-0"
-              >
-                {doubledHalfItems.map((item, idx) => (
-                  <span key={`${dup}-${idx}`} className="inline-flex items-center gap-3.5">
-                    <span
-                      className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                        idx % 2 === 0 ? 'bg-[#5ee3ff]' : 'bg-[#a78bfa]'
-                      }`}
-                    />
-                    <span>{item}</span>
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-
+        <div
+          className="marquee-track flex items-center whitespace-nowrap"
+          style={{ animationDuration: `${Math.max(8, marquee.speedSeconds || 26)}s` }}
+        >
+          {[0, 1].map((dup) => (
+            <div
+              key={dup}
+              className="flex items-center gap-12 pr-12 py-1.5 font-mono text-[11.5px] sm:text-xs tracking-[0.14em] uppercase text-[#b8bfcc] shrink-0"
+            >
+              {doubledHalfItems.map((item, idx) => (
+                <span
+                  key={`${dup}-${idx}`}
+                  className="flex items-center gap-3.5 leading-none py-1"
+                >
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full shrink-0 flex items-center leading-none ${
+                      idx % 2 === 0
+                        ? 'bg-[#5ee3ff] shadow-[0_0_10px_rgba(94,227,255,0.75)]'
+                        : 'bg-[#a78bfa] shadow-[0_0_10px_rgba(167,139,250,0.75)]'
+                    }`}
+                  />
+                  <span className="leading-none flex items-center">{item}</span>
+                </span>
+              ))}
+            </div>
+          ))}
         </div>
 
         {/* Bottom glowing seam leading into #F8F9FA Architectural Light Canvas */}
         <div
-          className="h-[2px] w-full"
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-[2px] z-20"
           style={{
             background:
               'linear-gradient(90deg, rgba(6,120,143,0.25) 0%, rgba(94,227,255,0.65) 35%, rgba(90,63,209,0.65) 65%, rgba(6,120,143,0.25) 100%)',
