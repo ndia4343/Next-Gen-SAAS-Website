@@ -7,7 +7,6 @@ import {
   Sun,
   Briefcase,
   TrendingUp,
-  ArrowUpRight,
   CheckCircle2,
   Play,
   Pause,
@@ -18,6 +17,7 @@ import {
   PhoneCall,
   CalendarCheck,
   Sparkles,
+  Info,
 } from 'lucide-react';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 
@@ -78,7 +78,6 @@ function getNichePalette(id: string): NichePalette {
   };
 }
 
-// Builds smooth cubic Bezier path through points
 function buildSmoothPath(pts: { x: number; y: number }[]): string {
   if (pts.length === 0) return '';
   if (pts.length === 1) return `M ${pts[0].x} ${pts[0].y}`;
@@ -93,27 +92,27 @@ function buildSmoothPath(pts: { x: number; y: number }[]): string {
 }
 
 // ==========================================
-// 1. DENTAL OPERATORY + CONVERSION WAVE
+// 1. CLINIC TREATMENT ROOMS + INQUIRY WAVE (ILLUSTRATIVE DEMO)
 // ==========================================
-const DENTAL_CHAIRS = [
+const TREATMENT_ROOMS = [
   {
-    chair: 'Chair 01',
+    room: 'Treatment Room 01',
     patient: 'Farah Al-Hashimi',
-    procedure: 'Aligners',
-    status: 'LOCKED',
+    procedure: 'Aligners Consult',
+    status: 'BOOKED',
     tone: 'mint' as const,
     time: 'Thu 6:00 PM',
   },
   {
-    chair: 'Chair 02',
+    room: 'Treatment Room 02',
     patient: 'Marcus Vance',
-    procedure: 'DIFC',
+    procedure: '3D Scan + Review',
     status: 'SYNCED',
     tone: 'cyan' as const,
     time: 'Fri 4:30 PM',
   },
   {
-    chair: 'Chair 03',
+    room: 'Treatment Room 03',
     patient: 'David Wright',
     procedure: 'Consultation',
     status: 'CONFIRMED',
@@ -121,29 +120,29 @@ const DENTAL_CHAIRS = [
     time: 'Sat 10:30 AM',
   },
   {
-    chair: 'Chair 04',
-    patient: 'Available',
-    procedure: 'Standby Intake',
-    status: 'STANDBY',
+    room: 'Appointment Slot 04',
+    patient: 'Open Slot',
+    procedure: 'Ready for booking',
+    status: 'OPEN',
     tone: 'standby' as const,
-    time: 'Open Slot',
+    time: 'Available',
   },
 ];
 
-const DENTAL_WAVE_POINTS = [
-  { hour: '14:00', inbound: 32, booked: 'AED 4,200', afterHours: false },
-  { hour: '16:00', inbound: 44, booked: 'AED 6,800', afterHours: false },
-  { hour: '18:00', inbound: 72, booked: 'AED 14,500', afterHours: true },
-  { hour: '20:00', inbound: 88, booked: 'AED 24,200', afterHours: true },
-  { hour: '22:00', inbound: 96, booked: 'AED 31,400', afterHours: true },
-  { hour: '00:00', inbound: 89, booked: 'AED 26,900', afterHours: true },
-  { hour: '02:00', inbound: 78, booked: 'AED 18,400', afterHours: true },
-  { hour: '04:00', inbound: 42, booked: 'AED 7,100', afterHours: false },
-  { hour: '06:00', inbound: 36, booked: 'AED 5,600', afterHours: false },
+const CLINIC_WAVE_POINTS = [
+  { hour: '14:00', inbound: 32, booked: 'AED 4,200 (sample)', afterHours: false },
+  { hour: '16:00', inbound: 44, booked: 'AED 6,800 (sample)', afterHours: false },
+  { hour: '18:00', inbound: 72, booked: 'AED 14,500 (sample)', afterHours: true },
+  { hour: '20:00', inbound: 88, booked: 'AED 24,200 (sample)', afterHours: true },
+  { hour: '22:00', inbound: 96, booked: 'AED 31,400 (sample)', afterHours: true },
+  { hour: '00:00', inbound: 89, booked: 'AED 26,900 (sample)', afterHours: true },
+  { hour: '02:00', inbound: 78, booked: 'AED 18,400 (sample)', afterHours: true },
+  { hour: '04:00', inbound: 42, booked: 'AED 7,100 (sample)', afterHours: false },
+  { hour: '06:00', inbound: 36, booked: 'AED 5,600 (sample)', afterHours: false },
 ];
 
-function DentalTelemetryWidget() {
-  const [hoverIdx, setHoverIdx] = useState<number>(4); // Peak at 22:00 after-hours
+function ClinicTelemetryWidget() {
+  const [hoverIdx, setHoverIdx] = useState<number>(4);
 
   const width = 800;
   const height = 220;
@@ -154,8 +153,8 @@ function DentalTelemetryWidget() {
   const chartW = width - padL - padR;
   const chartH = height - padT - padB;
 
-  const coords = DENTAL_WAVE_POINTS.map((pt, i) => ({
-    x: padL + (i / (DENTAL_WAVE_POINTS.length - 1)) * chartW,
+  const coords = CLINIC_WAVE_POINTS.map((pt, i) => ({
+    x: padL + (i / (CLINIC_WAVE_POINTS.length - 1)) * chartW,
     y: padT + chartH - (pt.inbound / 100) * chartH,
     ...pt,
   }));
@@ -163,32 +162,31 @@ function DentalTelemetryWidget() {
   const linePath = buildSmoothPath(coords);
   const areaPath = `${linePath} L ${coords[coords.length - 1].x.toFixed(1)} ${(padT + chartH).toFixed(1)} L ${coords[0].x.toFixed(1)} ${(padT + chartH).toFixed(1)} Z`;
 
-  // After-hours spike band (18:00 = idx 2 through 02:00 = idx 6)
   const bandX1 = coords[2].x;
   const bandX2 = coords[6].x;
   const activePt = coords[hoverIdx] || coords[4];
 
   return (
     <div className="space-y-5">
-      {/* Top Grid: 4 Operatory Chair Live Status Cards */}
+      {/* Top Grid: 4 Sample Treatment Room Cards */}
       <div>
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
           <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#585A66] font-semibold">
-            Live Operatory Chair Telemetry
+            Sample Treatment Room Schedule
           </div>
           <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[#047857] font-semibold">
-            <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-            4 Chairs Connected · Real-Time PMS Write
+            <span className="w-2 h-2 rounded-full bg-[#10B981]" />
+            Sample Calendar View · Syncs with Google Calendar &amp; Cal.com
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-          {DENTAL_CHAIRS.map((c) => {
+          {TREATMENT_ROOMS.map((c) => {
             const isStandby = c.tone === 'standby';
             const isCyan = c.tone === 'cyan';
             return (
               <div
-                key={c.chair}
+                key={c.room}
                 className={`p-4 rounded-2xl transition-all duration-200 ${
                   isStandby
                     ? 'bg-[#FAFAFA] border border-dashed border-[rgba(0,0,0,0.16)]'
@@ -197,7 +195,7 @@ function DentalTelemetryWidget() {
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#585A66]">
-                    {c.chair}
+                    {c.room}
                   </span>
                   <span
                     className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold tracking-wider uppercase border ${
@@ -214,7 +212,7 @@ function DentalTelemetryWidget() {
                           ? 'bg-[#585A66]'
                           : isCyan
                           ? 'bg-[#00E5FF]'
-                          : 'bg-[#10B981] animate-pulse'
+                          : 'bg-[#10B981]'
                       }`}
                     />
                     {c.status}
@@ -227,7 +225,7 @@ function DentalTelemetryWidget() {
                 <div className="mt-1 flex items-center justify-between font-mono text-[11px] text-[#585A66]">
                   <span>{c.time}</span>
                   {!isStandby && (
-                    <span className="text-[#10B981] font-semibold">2-Way Sync</span>
+                    <span className="text-[#10B981] font-semibold">Calendar Synced</span>
                   )}
                 </div>
               </div>
@@ -236,15 +234,15 @@ function DentalTelemetryWidget() {
         </div>
       </div>
 
-      {/* Bottom Chart: SVG Patient Inbound & Conversion Wave */}
+      {/* Bottom Chart: Sample Patient Inquiry & After-Hours Wave */}
       <div className="rounded-2xl bg-[#FAFAFA] border border-[rgba(0,0,0,0.07)] p-5">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
           <div>
             <div className="text-sm font-bold text-[#0A0A0A]">
-              Patient Inbound &amp; After-Hours Conversion Wave
+              Sample Inquiry &amp; After-Hours Call Curve
             </div>
             <div className="text-xs text-[#585A66] mt-0.5">
-              Captures after-hours voice spikes (18:00 &ndash; 02:00) when front desk closes
+              Illustrative demo showing how evening and weekend calls (18:00 &ndash; 02:00) are answered and tracked
             </div>
           </div>
 
@@ -252,7 +250,7 @@ function DentalTelemetryWidget() {
             <span className="w-2 h-2 rounded-full bg-[#10B981]" />
             <span className="font-bold text-[#0A0A0A]">{activePt.hour}</span>
             <span className="text-[#585A66]">&bull;</span>
-            <span className="font-bold text-[#047857]">{activePt.inbound}% Capture</span>
+            <span className="font-bold text-[#047857]">{activePt.inbound}% Sample Activity</span>
             <span className="text-[#585A66]">&bull;</span>
             <span className="text-[#0A0A0A]">{activePt.booked}</span>
           </div>
@@ -263,7 +261,7 @@ function DentalTelemetryWidget() {
             viewBox={`0 0 ${width} ${height}`}
             className="w-full h-auto block select-none"
             role="img"
-            aria-label="Patient inbound and after-hours conversion wave between 18:00 and 02:00"
+            aria-label="Illustrative after-hours clinic inquiry and booking sample curve"
           >
             <defs>
               <linearGradient id="dentalWaveStroke" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -282,7 +280,6 @@ function DentalTelemetryWidget() {
               </linearGradient>
             </defs>
 
-            {/* Highlighted After-Hours Spike Window (18:00 to 02:00) */}
             <rect
               x={bandX1}
               y={10}
@@ -302,10 +299,9 @@ function DentalTelemetryWidget() {
               fontWeight="700"
               fontFamily="JetBrains Mono, monospace"
             >
-              AFTER-HOURS SPIKE WINDOW (18:00 &ndash; 02:00)
+              EVENING &amp; AFTER-HOURS WINDOW (18:00 &ndash; 02:00)
             </text>
 
-            {/* Horizontal subtle reference lines */}
             {[25, 50, 75, 100].map((pct) => {
               const y = padT + chartH - (pct / 100) * chartH;
               return (
@@ -321,7 +317,6 @@ function DentalTelemetryWidget() {
               );
             })}
 
-            {/* Area & Smooth Curve */}
             <path d={areaPath} fill="url(#dentalWaveFill)" />
             <path
               d={linePath}
@@ -331,7 +326,6 @@ function DentalTelemetryWidget() {
               strokeLinecap="round"
             />
 
-            {/* Interactive Nodes & Time Axis Labels */}
             {coords.map((pt, i) => {
               const selected = hoverIdx === i;
               return (
@@ -388,7 +382,7 @@ function DentalTelemetryWidget() {
 }
 
 // ==========================================
-// 2. SOLAR EPC YIELD S-CURVE & MARGIN STRIP
+// 2. SOLAR PIPELINE SAMPLE CURVE (SECONDARY)
 // ==========================================
 const SOLAR_SCURVE_DATA = [
   { label: 'W1', quotes: 24, signed: 12, yieldPct: '50.0%', kw: '110 kW' },
@@ -406,23 +400,23 @@ const SOLAR_SCURVE_DATA = [
 const SOLAR_MARGIN_CARDS = [
   {
     num: '01',
-    title: 'Automated Tariff & Roof Sizing',
-    detail: 'LESCO/K-Electric Bill OCR',
+    title: 'Utility Bill & System Sizing',
+    detail: 'Sample tariff review',
     metric: '2.1 min avg',
     icon: Zap,
   },
   {
     num: '02',
-    title: 'Sub-60s Branded PDF Proposal',
-    detail: 'WhatsApp Payload',
-    metric: '< 48s sent',
+    title: 'Branded PDF Quote Follow-Up',
+    detail: 'Sent in WhatsApp',
+    metric: 'Instant send',
     icon: FileText,
   },
   {
     num: '03',
-    title: 'Hardware Gross Margin per installed kW',
-    detail: 'Net Contractor Margin / kW',
-    metric: '18.5% locked',
+    title: 'Example Gross Margin Preview',
+    detail: 'Estimated hardware margin / kW',
+    metric: '18.5% sample',
     icon: ShieldCheck,
   },
 ];
@@ -458,26 +452,25 @@ function SolarTelemetryWidget() {
 
   return (
     <div className="space-y-5">
-      {/* Top Interactive S-Curve Area Graph */}
       <div className="rounded-2xl bg-[#FAFAFA] border border-[rgba(0,0,0,0.07)] p-5">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
           <div>
             <div className="text-sm font-bold text-[#0A0A0A]">
-              Yield S-Curve: Quotes Dispatched vs. Signed Solar Projects
+              Sample Solar Pipeline: Quotes Sent vs. Site Surveys Booked
             </div>
             <div className="text-xs text-[#585A66] mt-0.5">
-              Hover any week to inspect dispatched quotes against signed kW conversion lock
+              Illustrative demo · hover any week to preview sample pipeline tracking
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-4 font-mono text-[11px]">
             <span className="inline-flex items-center gap-2 text-[#B45309] font-semibold">
               <span className="w-5 border-t-2 border-dashed border-[#F59E0B]" />
-              Quotes Dispatched
+              Sample Quotes Sent
             </span>
             <span className="inline-flex items-center gap-2 text-[#C2410C] font-semibold">
               <span className="w-5 h-[2.5px] rounded-full bg-[#FF5722]" />
-              Signed Solar Projects
+              Sample Bookings
             </span>
           </div>
         </div>
@@ -487,7 +480,7 @@ function SolarTelemetryWidget() {
             viewBox={`0 0 ${width} ${height}`}
             className="w-full h-auto block select-none"
             role="img"
-            aria-label="Solar EPC Yield S-Curve showing Quotes Dispatched vs Signed Solar Projects with 98.2% Yield Lock"
+            aria-label="Illustrative Solar Pipeline sample curve"
           >
             <defs>
               <linearGradient id="solarAreaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -501,7 +494,6 @@ function SolarTelemetryWidget() {
               </linearGradient>
             </defs>
 
-            {/* Reference horizontal lines */}
             {[25, 50, 75, 100].map((pct) => {
               const y = padT + chartH - (pct / 100) * chartH;
               return (
@@ -528,7 +520,6 @@ function SolarTelemetryWidget() {
               );
             })}
 
-            {/* Dashed Amber Quotes Dispatched Line */}
             <path
               d={quotePath}
               fill="none"
@@ -538,7 +529,6 @@ function SolarTelemetryWidget() {
               strokeLinecap="round"
             />
 
-            {/* Signed Projects Area + Neon Orange Spline */}
             <path d={signedArea} fill="url(#solarAreaGrad)" />
             <path
               d={signedPath}
@@ -548,7 +538,6 @@ function SolarTelemetryWidget() {
               strokeLinecap="round"
             />
 
-            {/* Glowing Peak Dot at 98.2% Yield Lock */}
             <circle cx={peakPt.x} cy={peakPt.y} r="13" fill="rgba(255,87,34,0.18)" />
             <circle cx={peakPt.x} cy={peakPt.y} r="7" fill="#FF5722" stroke="#FFFFFF" strokeWidth="2.5" />
             <rect
@@ -568,10 +557,9 @@ function SolarTelemetryWidget() {
               fontWeight="700"
               fontFamily="JetBrains Mono, monospace"
             >
-              98.2% Yield Lock
+              Sample Peak: 98%
             </text>
 
-            {/* Interactive checkpoints */}
             {SOLAR_SCURVE_DATA.map((d, i) => {
               const sPt = signedPts[i];
               const qPt = quotePts[i];
@@ -600,12 +588,7 @@ function SolarTelemetryWidget() {
                       strokeDasharray="3 3"
                     />
                   )}
-                  <circle
-                    cx={qPt.x}
-                    cy={qPt.y}
-                    r={isSelected ? 4.5 : 3}
-                    fill="#F59E0B"
-                  />
+                  <circle cx={qPt.x} cy={qPt.y} r={isSelected ? 4.5 : 3} fill="#F59E0B" />
                   <circle
                     cx={sPt.x}
                     cy={sPt.y}
@@ -631,19 +614,17 @@ function SolarTelemetryWidget() {
           </svg>
         </div>
 
-        {/* Selected Week Summary Strip */}
         <div className="mt-3 pt-3 border-t border-[rgba(0,0,0,0.06)] flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
           <span className="text-[#585A66]">
-            Checkpoint <strong className="text-[#0A0A0A]">{currentData.label}</strong> &middot;{' '}
-            {currentData.kw} Pipeline
+            Sample Week <strong className="text-[#0A0A0A]">{currentData.label}</strong> &middot;{' '}
+            {currentData.kw} Sample Volume
           </span>
           <span className="font-bold text-[#C2410C]">
-            Quotes: {currentData.quotes} &rarr; Signed Yield: {currentData.yieldPct}
+            Sample Quotes: {currentData.quotes} &rarr; Example Share: {currentData.yieldPct}
           </span>
         </div>
       </div>
 
-      {/* Bottom Margin Strip: 3 Micro-Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
         {SOLAR_MARGIN_CARDS.map((card) => {
           const CardIcon = card.icon;
@@ -676,61 +657,60 @@ function SolarTelemetryWidget() {
 }
 
 // ==========================================
-// 3. HR STEPPED FUNNEL & LATENCY WATERFALL
+// 3. HR & RECRUITMENT SAMPLE FUNNEL (SECONDARY)
 // ==========================================
 const HR_FUNNEL_STAGES = [
   {
-    stage: 'Stage 1',
-    title: 'Inbound Lead Intake',
-    metricText: '1,240 applicants · 100%',
+    stage: 'Step 1',
+    title: 'Inbound Candidate Inquiry',
+    metricText: '1,240 sample applicants',
     pct: 100,
-    latency: '0.3s SIP Trigger',
-    note: 'Voice & WhatsApp inbound threads captured across job portals',
+    timing: 'Phone & WhatsApp',
+    note: 'Answers candidate calls and job questions around the clock',
   },
   {
-    stage: 'Stage 2',
-    title: 'Autonomous Voice Phone Screen',
-    metricText: '1,080 qualified · 87.1%',
+    stage: 'Step 2',
+    title: 'Initial Phone Screen',
+    metricText: '1,080 pre-screened (87%)',
     pct: 87.1,
-    latency: '14.2s Screen Sync',
-    note: 'Bilingual AI screens notice period, location & salary floor',
+    timing: 'Notice & Salary Check',
+    note: 'Confirms availability, notice period, and location fit',
   },
   {
-    stage: 'Stage 3',
-    title: 'WhatsApp CV & Notice Period Parsed',
-    metricText: '640 slotted · 51.6%',
+    stage: 'Step 3',
+    title: 'WhatsApp CV Collection',
+    metricText: '640 CVs collected (52%)',
     pct: 51.6,
-    latency: '28.5s OCR Parse',
-    note: 'Resume PDF extracted, scored & attached to candidate profile',
+    timing: 'CV Attached',
+    note: 'Collects candidate CV and notes before the interview',
   },
   {
-    stage: 'Stage 4',
-    title: 'Recruiter Calendar Direct Lock',
-    metricText: '480 confirmed · 38.7%',
+    stage: 'Step 4',
+    title: 'Recruiter Calendar Booking',
+    metricText: '480 booked calls (39%)',
     pct: 38.7,
-    latency: '41.0s ATS Push',
-    note: 'Locked directly onto recruiter calendar via ATS webhook',
+    timing: 'Calendar Synced',
+    note: 'Books suitable applicants onto your recruiter calendar',
   },
 ];
 
 function HrTelemetryWidget() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-      {/* Left 8 cols: 4-Stage Candidate Progression Funnel */}
       <div className="lg:col-span-8 rounded-2xl bg-[#FAFAFA] border border-[rgba(0,0,0,0.07)] p-5 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[rgba(0,0,0,0.07)]">
           <div>
             <div className="text-sm font-bold text-[#0A0A0A]">
-              4-Stage Candidate Progression Funnel
+              Sample Candidate Screening Flow
             </div>
             <div className="text-xs text-[#585A66] mt-0.5">
-              End-to-end automated screening without manual phone tag
+              Illustrative demo · screens applicants and books recruiter interviews without phone tag
             </div>
           </div>
 
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/30 font-mono text-[11px] font-bold text-[#6D28D9]">
             <Sparkles className="w-3 h-3" />
-            94.2% Role Match
+            Sample Screening View
           </span>
         </div>
 
@@ -754,7 +734,6 @@ function HrTelemetryWidget() {
                 </span>
               </div>
 
-              {/* Glowing Horizontal Progress Bar */}
               <div className="h-3 w-full rounded-full bg-[#F6F7F9] overflow-hidden border border-[rgba(0,0,0,0.05)]">
                 <motion.div
                   initial={{ width: 0 }}
@@ -771,7 +750,7 @@ function HrTelemetryWidget() {
               <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#585A66]">
                 <span>{item.note}</span>
                 <span className="font-mono font-semibold text-[#0A0A0A]">
-                  {item.latency}
+                  {item.timing}
                 </span>
               </div>
             </div>
@@ -779,21 +758,20 @@ function HrTelemetryWidget() {
         </div>
       </div>
 
-      {/* Right 4 cols: ATS Webhook Sync Latency Waterfall */}
       <div className="lg:col-span-4 rounded-2xl bg-[#FAFAFA] border border-[rgba(0,0,0,0.07)] p-5 flex flex-col justify-between gap-4">
         <div className="flex items-center justify-between pb-3 border-b border-[rgba(0,0,0,0.07)]">
-          <span className="text-sm font-bold text-[#0A0A0A]">Latency Waterfall</span>
+          <span className="text-sm font-bold text-[#0A0A0A]">Handover Timeline</span>
           <span className="inline-flex items-center gap-1 font-mono text-[11px] font-bold text-[#6D28D9]">
-            <Clock className="w-3.5 h-3.5" /> &lt; 45s Total
+            <Clock className="w-3.5 h-3.5" /> Under 1 min
           </span>
         </div>
 
         <div className="space-y-3 flex-1">
           {[
-            { icon: PhoneCall, step: 'SIP Voice Capture', offsetPct: 0, widthPct: 18, time: '0.3s' },
-            { icon: Sparkles, step: 'AI Role Scoring', offsetPct: 14, widthPct: 32, time: '14.2s' },
-            { icon: FileText, step: 'WhatsApp CV Parse', offsetPct: 38, widthPct: 36, time: '28.5s' },
-            { icon: CalendarCheck, step: 'ATS + Calendar Lock', offsetPct: 68, widthPct: 32, time: '41.0s' },
+            { icon: PhoneCall, step: 'Call Picked Up', offsetPct: 0, widthPct: 18, time: 'Instant' },
+            { icon: Sparkles, step: 'Questions Asked', offsetPct: 14, widthPct: 32, time: 'Notice & Pay' },
+            { icon: FileText, step: 'CV Collected in Chat', offsetPct: 38, widthPct: 36, time: 'WhatsApp' },
+            { icon: CalendarCheck, step: 'Recruiter Booked', offsetPct: 68, widthPct: 32, time: 'Calendar Sync' },
           ].map((wf) => {
             const StepIcon = wf.icon;
             return (
@@ -824,9 +802,9 @@ function HrTelemetryWidget() {
         </div>
 
         <div className="p-3.5 rounded-xl bg-[#0A0A0A] text-white text-xs flex items-center justify-between">
-          <span className="text-zinc-300">Greenhouse / Bullhorn</span>
+          <span className="text-zinc-300">Recruiter Calendar</span>
           <span className="font-mono font-bold text-[#C084FC] flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#C084FC]" /> Webhook Verified
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#C084FC]" /> Two-Way Sync
           </span>
         </div>
       </div>
@@ -834,29 +812,64 @@ function HrTelemetryWidget() {
   );
 }
 
+const SECTOR_PRIORITY: Record<string, number> = {
+  dental: 0,
+  solar: 1,
+  hr: 2,
+};
+
 // ==========================================
 // MAIN EXPORT: COMMAND CENTER SECTION
 // ==========================================
 export default function CommandCenterSection() {
   const { config } = useSiteConfig();
   const telemetry = config.telemetry;
-  const sectors = telemetry.sectors;
+
+  // Enforce clinic-first sector ordering: Dental & Aesthetics first (default index 0)
+  const sectors = [...telemetry.sectors].sort(
+    (a, b) => (SECTOR_PRIORITY[a.id] ?? 99) - (SECTOR_PRIORITY[b.id] ?? 99)
+  );
 
   const [activeIdx, setActiveIdx] = useState(0);
   const [isPausedByUser, setIsPausedByUser] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [progressPct, setProgressPct] = useState(0);
+
+  // Respect user's prefers-reduced-motion setting
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  // Sync sector if user clicks a secondary anchor from the Hero or Demo section
+  useEffect(() => {
+    const onSelectIndustry = (e: Event) => {
+      const targetId = (e as CustomEvent<string>).detail;
+      const foundIdx = sectors.findIndex((s) => s.id === targetId);
+      if (foundIdx >= 0) {
+        setActiveIdx(foundIdx);
+        setProgressPct(0);
+        setIsPausedByUser(true);
+      }
+    };
+    window.addEventListener('zavian:select-industry', onSelectIndustry);
+    return () => window.removeEventListener('zavian:select-industry', onSelectIndustry);
+  }, [sectors]);
 
   const safeIdx = activeIdx % Math.max(1, sectors.length);
   const activeSector = sectors[safeIdx] || sectors[0];
   const palette = getNichePalette(activeSector.id);
 
   const cycleMs = Math.max(2000, (telemetry.autoCycleSeconds || 4) * 1000);
-  const isPaused = isPausedByUser || isHovered || sectors.length <= 1;
+  const loopHalted = isPausedByUser || isPaused || prefersReducedMotion || sectors.length <= 1;
 
-  // Smooth 4-second auto-rotation loop with countdown progress indicator
   useEffect(() => {
-    if (isPaused) return;
+    if (loopHalted) return;
 
     const tickMs = 50;
     const increment = (tickMs / cycleMs) * 100;
@@ -873,7 +886,7 @@ export default function CommandCenterSection() {
     }, tickMs);
 
     return () => clearInterval(intervalId);
-  }, [isPaused, cycleMs, sectors.length]);
+  }, [loopHalted, cycleMs, sectors.length]);
 
   const handleTabClick = useCallback((idx: number) => {
     setActiveIdx(idx);
@@ -885,26 +898,25 @@ export default function CommandCenterSection() {
     setIsPausedByUser((prev) => !prev);
   };
 
-  const bookingUrl =
-    config.branding.calendarBookingUrl || 'https://calendar.app.google/u5vL88X41qmGBCky5';
-  const contactEmail = config.branding.contactEmail || 'contact@zavianlabs.com';
+  // Simplify to 3 clear sample metrics per sector
+  const displayKpis = (activeSector.kpis || []).slice(0, 3);
 
   return (
     <section
       id="command-center"
-      className="relative w-full bg-[#FFFFFF] text-[#0A0A0A] pt-20 pb-24 sm:pt-28 sm:pb-28 px-5 sm:px-8 border-t border-[rgba(0,0,0,0.07)] scroll-mt-20 overflow-hidden"
+      className="relative w-full bg-[#FFFFFF] text-[#0A0A0A] pt-20 pb-20 sm:pt-28 sm:pb-24 px-5 sm:px-8 border-t border-[rgba(0,0,0,0.07)] scroll-mt-20 overflow-hidden"
     >
       {/* Compatibility anchor */}
       <div id="dashboards" className="scroll-mt-20 pointer-events-none" />
 
       <div className="relative z-10 max-w-[1280px] mx-auto space-y-10">
         
-        {/* Header & Sector Tabs with Countdown Progress Indicator */}
+        {/* Clinic-First Header & Sector Tabs */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div className="max-w-[660px]">
             <h2
               className="font-serif-instrument font-normal text-[#0A0A0A] tracking-[-0.02em] leading-[1.02]"
-              style={{ fontSize: 'clamp(38px, 4.8vw, 68px)' }}
+              style={{ fontSize: 'clamp(36px, 4.8vw, 68px)' }}
             >
               {telemetry.sectionTitle}{' '}
               <span className="italic" style={{ color: palette.primary }}>
@@ -916,18 +928,20 @@ export default function CommandCenterSection() {
             </p>
           </div>
 
-          {/* 3-Sector Selector Strip with Embedded Countdown Progress Bar */}
+          {/* Clinic-First Tabs (Dental Primary, Solar & HR Secondary with "Also available") */}
           <div
             role="tablist"
-            aria-label="Command Center Sector Metrics"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            aria-label="Preview sample dashboard by sector"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
             className="inline-flex flex-wrap items-center gap-2 self-start lg:self-auto p-1.5 rounded-2xl bg-[#FAFAFA] border border-[rgba(0,0,0,0.08)] shadow-[0_6px_20px_rgba(0,0,0,0.03)]"
           >
             {sectors.map((sec, idx) => {
               const Icon = getSectorIcon(sec.id);
               const isSelected = safeIdx === idx;
               const tabPalette = getNichePalette(sec.id);
+              const isPrimaryClinic = sec.id === 'dental';
+              const showSecondaryPill = sec.id === 'solar' || sec.id === 'hr';
 
               return (
                 <button
@@ -936,27 +950,39 @@ export default function CommandCenterSection() {
                   role="tab"
                   aria-selected={isSelected}
                   onClick={() => handleTabClick(idx)}
-                  onMouseEnter={() => setIsHovered(true)}
-                  className={`relative overflow-hidden inline-flex flex-col items-start px-4 sm:px-5 pt-2.5 pb-3 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-[#0A0A0A] text-white shadow-md'
-                      : 'text-[#585A66] hover:text-[#0A0A0A] hover:bg-white'
+                  onMouseEnter={() => setIsPaused(true)}
+                  className={`relative overflow-hidden inline-flex flex-col items-start rounded-xl transition-all cursor-pointer ${
+                    isPrimaryClinic
+                      ? isSelected
+                        ? 'px-4 sm:px-5 pt-2.5 pb-3 bg-[#0A0A0A] text-white text-xs sm:text-sm font-semibold shadow-md'
+                        : 'px-4 sm:px-5 pt-2.5 pb-3 bg-white border border-[#10B981]/35 text-[#0A0A0A] text-xs sm:text-sm font-semibold hover:bg-[#FAFAFA]'
+                      : isSelected
+                      ? 'px-3.5 sm:px-4 pt-2 pb-2.5 bg-[#0A0A0A] text-white text-xs sm:text-sm font-medium shadow-md'
+                      : 'px-3.5 sm:px-4 pt-2 pb-2.5 text-[#585A66] hover:text-[#0A0A0A] hover:bg-white text-xs sm:text-sm font-medium'
                   }`}
                 >
                   <span className="flex items-center gap-2">
-                    <Icon
-                      className="w-4 h-4 shrink-0"
-                    />
+                    <Icon className="w-4 h-4 shrink-0" />
                     <span>{sec.label}</span>
+                    {showSecondaryPill && (
+                      <span
+                        className={`text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded-full ${
+                          isSelected
+                            ? 'bg-white/15 text-zinc-200'
+                            : 'bg-black/[0.05] text-[#585A66]'
+                        }`}
+                      >
+                        Also available
+                      </span>
+                    )}
                   </span>
 
-                  {/* Progress Indicator Bar Under Active Sector Tab */}
                   <span className="absolute left-0 right-0 bottom-0 h-[3px] bg-black/10 overflow-hidden">
                     {isSelected && (
                       <span
                         className="block h-full transition-[width] duration-75 ease-linear"
                         style={{
-                          width: `${isPaused ? Math.max(progressPct, 12) : progressPct}%`,
+                          width: `${loopHalted ? Math.max(progressPct, 14) : progressPct}%`,
                           background: `linear-gradient(90deg, ${tabPalette.primary}, ${tabPalette.secondary})`,
                         }}
                       />
@@ -970,26 +996,33 @@ export default function CommandCenterSection() {
 
         {/* Unified Command Center Surface (Pauses cleanly on hover for inspection) */}
         <div
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
           className="rounded-[28px] border border-[rgba(0,0,0,0.08)] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] p-6 sm:p-8 space-y-7"
         >
           
-          {/* Top Status Row + Auto-Rotation Indicator */}
+          {/* Top Status Row + Explicit Demo Honesty Caption + Auto-Loop Control */}
           <div className="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-[rgba(0,0,0,0.07)]">
-            <div
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full font-mono text-[11px] font-bold uppercase tracking-wider border"
-              style={{
-                backgroundColor: palette.badgeBg,
-                borderColor: palette.badgeBorder,
-                color: palette.badgeText,
-              }}
-            >
-              <span
-                className="w-2 h-2 rounded-full animate-pulse"
-                style={{ backgroundColor: palette.dotBg }}
-              />
-              <span>{activeSector.badgeLabel}</span>
+            <div className="flex flex-wrap items-center gap-3">
+              <div
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full font-mono text-[11px] font-bold uppercase tracking-wider border"
+                style={{
+                  backgroundColor: palette.badgeBg,
+                  borderColor: palette.badgeBorder,
+                  color: palette.badgeText,
+                }}
+              >
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: palette.dotBg }}
+                />
+                <span>{activeSector.badgeLabel}</span>
+              </div>
+
+              <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[#585A66]">
+                <Info className="w-3.5 h-3.5 text-[#585A66] shrink-0" />
+                <span>Illustrative demo &middot; sample data, not client results</span>
+              </span>
             </div>
 
             <div className="flex items-center gap-3">
@@ -998,20 +1031,25 @@ export default function CommandCenterSection() {
                 onClick={togglePlayPause}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FAFAFA] border border-[rgba(0,0,0,0.08)] font-mono text-[11px] text-[#585A66] hover:text-[#0A0A0A] transition-colors cursor-pointer"
               >
-                {isPausedByUser ? (
-                  <>
-                    <Play className="w-3 h-3" style={{ color: palette.primary }} />
-                    <span>Paused &bull; Resume Auto-Loop</span>
-                  </>
-                ) : isHovered ? (
+                {prefersReducedMotion ? (
                   <>
                     <Pause className="w-3 h-3" style={{ color: palette.primary }} />
-                    <span>Hover Inspecting (Paused)</span>
+                    <span>Static View (Reduced Motion)</span>
+                  </>
+                ) : isPausedByUser ? (
+                  <>
+                    <Play className="w-3 h-3" style={{ color: palette.primary }} />
+                    <span>Paused &bull; Resume Preview</span>
+                  </>
+                ) : isPaused ? (
+                  <>
+                    <Pause className="w-3 h-3" style={{ color: palette.primary }} />
+                    <span>Paused While Inspecting</span>
                   </>
                 ) : (
                   <>
                     <Pause className="w-3 h-3" style={{ color: palette.primary }} />
-                    <span>Auto-Looping Every {telemetry.autoCycleSeconds || 4}s</span>
+                    <span>Preview Switching Every {telemetry.autoCycleSeconds || 4}s</span>
                   </>
                 )}
               </button>
@@ -1024,95 +1062,54 @@ export default function CommandCenterSection() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.24 }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.24 }}
               className="space-y-7"
             >
-              {/* 4 Niche KPI Tiles */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {activeSector.kpis.map((kpi, idx) => (
+              {/* 3 Clear Sample Metric Cards with Honest Disclaimers */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {displayKpis.map((kpi, idx) => (
                   <div
                     key={`${activeSector.id}-kpi-${idx}`}
-                    className="p-5 rounded-2xl bg-[#FAFAFA] border border-[rgba(0,0,0,0.07)] transition-transform duration-200 hover:-translate-y-0.5"
+                    title="Example numbers to show what your dashboard will track."
+                    className="p-5 rounded-2xl bg-[#FAFAFA] border border-[rgba(0,0,0,0.07)] transition-transform duration-200 hover:-translate-y-0.5 flex flex-col justify-between"
                   >
-                    <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#585A66]">
-                      {kpi.label}
+                    <div>
+                      <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#585A66]">
+                        {kpi.label}
+                      </div>
+                      <div
+                        className="mt-2 font-serif-instrument text-4xl sm:text-[44px] leading-none"
+                        style={{
+                          color:
+                            idx === 1
+                              ? palette.primary
+                              : idx === 2
+                              ? palette.badgeText
+                              : '#0A0A0A',
+                        }}
+                      >
+                        {kpi.value}
+                      </div>
                     </div>
-                    <div
-                      className="mt-2 font-serif-instrument text-4xl sm:text-[42px] leading-none"
-                      style={{
-                        color:
-                          idx === 1
-                            ? palette.primary
-                            : idx === 2
-                            ? palette.badgeText
-                            : '#0A0A0A',
-                      }}
-                    >
-                      {kpi.value}
-                    </div>
-                    <div className="mt-2.5 inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-[#585A66]">
-                      <TrendingUp className="w-3.5 h-3.5 shrink-0" style={{ color: palette.primary }} />
-                      <span>{kpi.delta}</span>
-                    </div>
+                    <p className="mt-3 text-[11.5px] leading-snug text-[#585A66]">
+                      Example numbers to show what your dashboard will track.
+                    </p>
                   </div>
                 ))}
               </div>
 
-              {/* Distinct Niche Visual Graph Engine */}
+              {/* Sector Sample Panel */}
               {activeSector.id === 'solar' ? (
                 <SolarTelemetryWidget />
               ) : activeSector.id === 'hr' ? (
                 <HrTelemetryWidget />
               ) : (
-                <DentalTelemetryWidget />
+                <ClinicTelemetryWidget />
               )}
             </motion.div>
           </AnimatePresence>
 
         </div>
-
-        {/* Executive Closing CTA Card on Pure White #FFFFFF */}
-        <div className="relative overflow-hidden rounded-[32px] border border-[rgba(0,0,0,0.07)] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] px-6 sm:px-12 py-12 sm:py-16 text-center">
-          <div
-            className="pointer-events-none absolute left-1/2 -top-1/2 -translate-x-1/2 w-[620px] h-[620px] rounded-full blur-3xl opacity-35"
-            style={{
-              background:
-                'radial-gradient(circle, rgba(139,92,246,0.12) 0%, rgba(16,185,129,0.08) 45%, transparent 70%)',
-            }}
-          />
-
-          <h2
-            className="relative font-serif-instrument font-normal text-[#0A0A0A] max-w-[780px] mx-auto tracking-[-0.02em] leading-[1.02]"
-            style={{ fontSize: 'clamp(36px, 5vw, 72px)' }}
-          >
-            Let&apos;s build the system your business{' '}
-            <span className="italic chrome-text-light-bg">actually needs.</span>
-          </h2>
-
-          <p className="relative mt-4 max-w-[540px] mx-auto text-[15.5px] sm:text-base text-[#585A66] leading-relaxed">
-            Tell us how leads reach your team today. We&apos;ll show you a practical plan for voice, WhatsApp, and live dashboards.
-          </p>
-
-          <div className="relative mt-8 flex flex-wrap items-center justify-center gap-3.5">
-            <a
-              href={bookingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="zl-btn inline-flex items-center gap-2 min-h-[52px] px-8 rounded-full bg-[#0A0A0A] hover:bg-[#1F2024] text-white font-semibold text-[15px] shadow-[0_12px_30px_rgba(0,0,0,0.16)] cursor-pointer"
-            >
-              <span>Book Discovery Call</span>
-              <ArrowUpRight className="w-4 h-4" />
-            </a>
-
-            <a
-              href={`mailto:${contactEmail}`}
-              className="zl-btn inline-flex items-center min-h-[52px] px-8 rounded-full border border-[rgba(0,0,0,0.14)] bg-white hover:border-[#0A0A0A] text-[#0A0A0A] font-semibold text-[15px] cursor-pointer"
-            >
-              {contactEmail}
-            </a>
-          </div>
-        </div>
-
       </div>
     </section>
   );

@@ -16,10 +16,18 @@ export function Hero({}: HeroProps = {}) {
   const [coreBoost, setCoreBoost] = useState(false);
 
   const hero = config.hero;
-  const marquee = config.marquee;
-  const marqueeItems = marquee.items.length > 0 ? marquee.items : ['AI VOICE RECEPTIONISTS'];
-  const doubledHalfItems =
-    marqueeItems.length < 6 ? [...marqueeItems, ...marqueeItems] : marqueeItems;
+  const marqueeItems =
+    config.marquee.items.length > 0
+      ? config.marquee.items
+      : [
+          '24/7 CALL PICKUP',
+          'CALENDAR BOOKINGS',
+          'WHATSAPP CONFIRMATIONS',
+          'AFTER-HOURS COVERAGE',
+          'CUSTOM WORKFLOWS',
+        ];
+  const bookingUrl =
+    config.branding.calendarBookingUrl || 'https://calendar.app.google/u5vL88X41qmGBCky5';
 
   const fontSizePx = Math.max(36, Math.min(110, hero.headlineFontSize || 88));
   const minMobilePx = Math.min(36, Math.round(fontSizePx * 0.56));
@@ -69,13 +77,30 @@ export function Hero({}: HeroProps = {}) {
     if (target) {
       target.scrollIntoView({ behavior: 'smooth' });
     }
-    // Notify interactive audio simulation to switch to Dental and begin sample call
     setTimeout(() => {
       window.dispatchEvent(new CustomEvent('zavian:play-clinic-demo'));
     }, 350);
   };
 
-  const scrollToTarget = (e: React.MouseEvent<HTMLAnchorElement>, id: string, customEventName?: string) => {
+  const handleSelectSecondarySector = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    sectorId: 'solar' | 'hr' | 'custom'
+  ) => {
+    e.preventDefault();
+    const target = document.getElementById('voice-simulation');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('zavian:select-industry', { detail: sectorId }));
+    }, 250);
+  };
+
+  const scrollToTarget = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    id: string,
+    customEventName?: string
+  ) => {
     e.preventDefault();
     const target = document.getElementById(id);
     if (target) {
@@ -87,6 +112,12 @@ export function Hero({}: HeroProps = {}) {
       }, 350);
     }
   };
+
+  const primaryHref = hero.primaryCtaLink || '#voice-simulation';
+  const secondaryHref =
+    hero.secondaryCtaLink && hero.secondaryCtaLink.startsWith('http')
+      ? hero.secondaryCtaLink
+      : bookingUrl;
 
   return (
     <section
@@ -102,7 +133,8 @@ export function Hero({}: HeroProps = {}) {
       <div
         className="pointer-events-none absolute -top-44 -right-28 w-[760px] h-[760px] rounded-full blur-3xl opacity-90"
         style={{
-          background: 'radial-gradient(circle, rgba(94,227,255,0.20) 0%, rgba(167,139,250,0.12) 42%, transparent 70%)',
+          background:
+            'radial-gradient(circle, rgba(94,227,255,0.20) 0%, rgba(167,139,250,0.12) 42%, transparent 70%)',
         }}
       />
       <div
@@ -120,18 +152,18 @@ export function Hero({}: HeroProps = {}) {
       />
 
       {/* Main Hero Grid */}
-      <div className="relative z-10 max-w-[1280px] mx-auto px-6 sm:px-8 pt-6 pb-14 lg:pb-16 min-h-[620px] lg:min-h-[640px] grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-6 items-center">
+      <div className="relative z-10 max-w-[1280px] mx-auto px-6 sm:px-8 pt-6 pb-14 lg:pb-16 min-h-[600px] lg:min-h-[630px] grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-6 items-center">
         
-        {/* LEFT: Editorial Typography & CTAs */}
+        {/* LEFT: Editorial Clinic-First Typography & CTAs */}
         <div className="lg:col-span-6 flex flex-col items-start text-left z-20">
           
-          {/* Subtle Architectural Pill */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/15 bg-white/[0.04] font-mono text-[11px] sm:text-xs tracking-[0.12em] uppercase text-[#a0a7b3] backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-[#5ee3ff] shadow-[0_0_12px_#5ee3ff] animate-pulse" />
+          {/* Eyebrow / Tagline */}
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/15 bg-white/[0.04] font-mono text-[11px] sm:text-xs tracking-[0.08em] text-[#b8bfcc] backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-[#5ee3ff] shadow-[0_0_12px_#5ee3ff]" />
             <span>{hero.eyebrowBadge}</span>
           </div>
 
-          {/* Dynamic Typography Display Headline */}
+          {/* H1 Display Headline */}
           <h1
             className={`mt-7 ${fontFamilyClass} ${hero.headlineFontWeight} text-[#eceef2] tracking-[-0.02em] leading-[0.95]`}
             style={{ fontSize: `clamp(${minMobilePx}px, ${fluidVw}vw, ${fontSizePx}px)` }}
@@ -143,60 +175,81 @@ export function Hero({}: HeroProps = {}) {
             {hero.headlineSuffix}
           </h1>
 
-          {/* Clear Business-Focused Copy */}
-          <p className="mt-7 max-w-[530px] text-[17px] sm:text-[19px] leading-[1.6] text-[#a0a7b3] font-normal">
+          {/* Clinic-Focused Subheadline */}
+          <p className="mt-7 max-w-[540px] text-[17px] sm:text-[18.5px] leading-[1.6] text-[#a0a7b3] font-normal">
             {hero.subheadline}
           </p>
 
-          {/* Dual Interactive Action Pills */}
+          {/* Primary & Secondary Action CTAs */}
           <div className="mt-9 flex flex-wrap items-center gap-3.5">
             <a
-              href={hero.primaryCtaLink || '#voice-simulation'}
+              href={primaryHref}
               onClick={(e) => {
-                const link = hero.primaryCtaLink || '#voice-simulation';
-                if (link === '#voice-simulation') {
+                if (primaryHref === '#voice-simulation') {
                   handleHearSampleCall(e);
-                } else if (link.startsWith('#')) {
-                  scrollToTarget(e, link.slice(1));
+                } else if (primaryHref.startsWith('#')) {
+                  scrollToTarget(e, primaryHref.slice(1));
                 }
               }}
-              target={hero.primaryCtaLink?.startsWith('http') ? '_blank' : undefined}
-              rel={hero.primaryCtaLink?.startsWith('http') ? 'noopener noreferrer' : undefined}
+              target={primaryHref.startsWith('http') ? '_blank' : undefined}
+              rel={primaryHref.startsWith('http') ? 'noopener noreferrer' : undefined}
               className="zl-btn inline-flex items-center gap-3 min-h-[52px] px-7 rounded-full bg-[#eceef2] hover:bg-white text-[#07080b] font-semibold text-[15px] shadow-[0_8px_30px_rgba(236,238,242,0.18)] cursor-pointer"
             >
               <span
                 aria-hidden="true"
                 className="w-0 h-0 border-l-[9px] border-l-current border-y-[6px] border-y-transparent translate-x-[1px]"
               />
-              <span>{hero.primaryCtaText}</span>
+              <span>{hero.primaryCtaText || 'Hear it answer a call'}</span>
             </a>
 
             <a
-              href={hero.secondaryCtaLink || '#connected-hub'}
-              onClick={(e) => {
-                const link = hero.secondaryCtaLink || '#connected-hub';
-                if (link.startsWith('#')) {
-                  scrollToTarget(e, link.slice(1));
-                }
-              }}
-              target={hero.secondaryCtaLink?.startsWith('http') ? '_blank' : undefined}
-              rel={hero.secondaryCtaLink?.startsWith('http') ? 'noopener noreferrer' : undefined}
+              href={secondaryHref}
+              target="_blank"
+              rel="noopener noreferrer"
               className="zl-btn inline-flex items-center min-h-[52px] px-7 rounded-full border border-white/20 bg-white/[0.04] hover:bg-white/[0.09] hover:border-white/35 text-[#eceef2] font-semibold text-[15px] backdrop-blur-md cursor-pointer"
             >
-              {hero.secondaryCtaText}
+              {hero.secondaryCtaText || 'Book a free missed-call audit'}
             </a>
           </div>
+
+          {/* Sub-Hero Anchor Row for Secondary Sectors */}
+          <p className="mt-6 text-xs sm:text-[13px] text-[#8d95a5] leading-relaxed">
+            <span>Also built for: </span>
+            <a
+              href="#voice-simulation"
+              onClick={(e) => handleSelectSecondarySector(e, 'solar')}
+              className="text-[#c8ceda] hover:text-white underline decoration-white/25 underline-offset-4 transition-colors cursor-pointer"
+            >
+              Solar &amp; installers
+            </a>
+            <span className="mx-2 text-white/30">&middot;</span>
+            <a
+              href="#voice-simulation"
+              onClick={(e) => handleSelectSecondarySector(e, 'hr')}
+              className="text-[#c8ceda] hover:text-white underline decoration-white/25 underline-offset-4 transition-colors cursor-pointer"
+            >
+              HR &amp; recruitment
+            </a>
+            <span className="mx-2 text-white/30">&middot;</span>
+            <a
+              href="#voice-simulation"
+              onClick={(e) => handleSelectSecondarySector(e, 'custom')}
+              className="text-[#c8ceda] hover:text-white underline decoration-white/25 underline-offset-4 transition-colors cursor-pointer"
+            >
+              Custom workflows
+            </a>
+          </p>
 
         </div>
 
         {/* RIGHT: Interactive 3D Gyroscopic Metallic Sphere & Orbiting Tags */}
-        <div className="lg:col-span-6 relative flex items-center justify-center min-h-[380px] sm:min-h-[480px] lg:min-h-[540px]">
+        <div className="lg:col-span-6 relative flex items-center justify-center min-h-[360px] sm:min-h-[460px] lg:min-h-[520px]">
           <div
             onClick={() => {
               setCoreBoost(true);
               setTimeout(() => setCoreBoost(false), 900);
             }}
-            className="relative w-full max-w-[520px] aspect-square flex items-center justify-center anim-float-core cursor-pointer select-none"
+            className="relative w-full max-w-[500px] aspect-square flex items-center justify-center anim-float-core cursor-pointer select-none"
             style={{ perspective: '1100px' }}
           >
             {/* Outer Radiance Corona */}
@@ -230,7 +283,6 @@ export function Hero({}: HeroProps = {}) {
                   transform: coreBoost ? 'translateZ(24px) scale(1.04)' : 'translateZ(0px)',
                 }}
               >
-                {/* Iridescent cyan-lavender conic metallic glaze */}
                 <div
                   className="absolute inset-0 rounded-full mix-blend-overlay"
                   style={{
@@ -238,12 +290,10 @@ export function Hero({}: HeroProps = {}) {
                       'conic-gradient(from 210deg, transparent 0deg, rgba(94,227,255,0.42) 60deg, transparent 120deg, rgba(167,139,250,0.42) 220deg, transparent 300deg)',
                   }}
                 />
-                {/* Cursor-reactive bright specular reflection */}
                 <motion.div
                   style={{ x: sheenX, y: sheenY, rotate: -24 }}
                   className="absolute left-[16%] top-[12%] w-[36%] h-[21%] rounded-full bg-[radial-gradient(ellipse,rgba(255,255,255,0.92),transparent_70%)] pointer-events-none"
                 />
-                {/* Precision equatorial shimmer */}
                 <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
               </div>
 
@@ -305,8 +355,8 @@ export function Hero({}: HeroProps = {}) {
             </motion.a>
 
             <motion.a
-              href="#connected-hub"
-              onClick={(e) => scrollToTarget(e, 'connected-hub')}
+              href="#how-it-works"
+              onClick={(e) => scrollToTarget(e, 'how-it-works')}
               style={{ x: chipWorkflowX, y: chipWorkflowY }}
               className="zl-btn absolute left-[4%] bottom-[13%] z-20 inline-flex items-center gap-2 min-h-[42px] px-4 sm:px-[18px] rounded-full border border-white/20 bg-[#0c0e13]/78 hover:border-[#b4a0ff]/70 hover:shadow-[0_0_24px_rgba(180,160,255,0.3)] backdrop-blur-md font-mono text-[11px] sm:text-xs tracking-[0.09em] uppercase text-[#eceef2] cursor-pointer"
             >
@@ -329,57 +379,28 @@ export function Hero({}: HeroProps = {}) {
 
       </div>
 
-      {/* MARQUEE STRIP: Permanently Obsidian Dark + Unclipped Vertical Clearance */}
-      <div className="relative z-20 w-full overflow-hidden py-4 border-t border-b border-white/10 bg-[#07080b]">
-        {/* Top subtle cyan-lavender hairline accent */}
+      {/* CALM SINGLE-PASS DIVIDER: Obsidian Dark Seam with Muted Opacity into White #FFFFFF Canvas */}
+      <div className="relative z-20 w-full py-4 border-t border-b border-white/10 bg-[#07080b]">
         <div
-          className="pointer-events-none absolute top-0 left-0 right-0 h-[1px] z-20"
+          className="pointer-events-none absolute top-0 left-0 right-0 h-[1px]"
           style={{
             background:
-              'linear-gradient(90deg, transparent 5%, rgba(94,227,255,0.5) 35%, rgba(167,139,250,0.5) 65%, transparent 95%)',
+              'linear-gradient(90deg, transparent 5%, rgba(94,227,255,0.35) 35%, rgba(167,139,250,0.35) 65%, transparent 95%)',
           }}
         />
 
-        {/* Soft edge fade masks */}
-        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-[#07080b] to-transparent z-10" />
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-[#07080b] to-transparent z-10" />
-
-        <div
-          className="marquee-track flex items-center whitespace-nowrap"
-          style={{ animationDuration: `${Math.max(8, marquee.speedSeconds || 26)}s` }}
-        >
-          {[0, 1].map((dup) => (
-            <div
-              key={dup}
-              className="flex items-center gap-12 pr-12 py-1.5 font-mono text-[11.5px] sm:text-xs tracking-[0.14em] uppercase text-[#b8bfcc] shrink-0"
-            >
-              {doubledHalfItems.map((item, idx) => (
-                <span
-                  key={`${dup}-${idx}`}
-                  className="flex items-center gap-3.5 leading-none py-1"
-                >
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full shrink-0 flex items-center leading-none ${
-                      idx % 2 === 0
-                        ? 'bg-[#5ee3ff] shadow-[0_0_10px_rgba(94,227,255,0.75)]'
-                        : 'bg-[#a78bfa] shadow-[0_0_10px_rgba(167,139,250,0.75)]'
-                    }`}
-                  />
-                  <span className="leading-none flex items-center">{item}</span>
-                </span>
-              ))}
-            </div>
+        <div className="max-w-[1280px] mx-auto px-6 sm:px-8 flex flex-wrap items-center justify-center sm:justify-between gap-x-8 gap-y-2.5 opacity-60 font-mono text-[11px] tracking-[0.12em] uppercase text-[#9aa1ad]">
+          {marqueeItems.slice(0, 5).map((item, idx) => (
+            <span key={idx} className="inline-flex items-center gap-2.5 leading-none">
+              <span
+                className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                  idx % 2 === 0 ? 'bg-[#5ee3ff]/80' : 'bg-[#a78bfa]/80'
+                }`}
+              />
+              <span>{item}</span>
+            </span>
           ))}
         </div>
-
-        {/* Bottom glowing seam leading into Pure White #FFFFFF Architectural Canvas */}
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 right-0 h-[2px] z-20"
-          style={{
-            background:
-              'linear-gradient(90deg, rgba(6,120,143,0.25) 0%, rgba(94,227,255,0.65) 35%, rgba(90,63,209,0.65) 65%, rgba(6,120,143,0.25) 100%)',
-          }}
-        />
       </div>
     </section>
   );

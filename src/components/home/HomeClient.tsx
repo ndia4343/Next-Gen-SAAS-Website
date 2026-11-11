@@ -6,6 +6,11 @@ import HeroSection from '@/components/sections/HeroSection';
 import VoiceSimulationSection from '@/components/sections/VoiceSimulationSection';
 import ConnectedHubSection from '@/components/sections/ConnectedHubSection';
 import CommandCenterSection from '@/components/sections/CommandCenterSection';
+import HowItWorksSection from '@/components/sections/HowItWorksSection';
+import PricingSection from '@/components/sections/PricingSection';
+import FaqSection from '@/components/sections/FaqSection';
+import FounderSection from '@/components/sections/FounderSection';
+import FinalCtaSection from '@/components/sections/FinalCtaSection';
 import QuoteModal from '@/components/ui/QuoteModal';
 import Footer from '@/components/layout/Footer';
 import { WebsiteContent, ThemeBrandingConfig } from '@/lib/types';
@@ -83,6 +88,11 @@ export default function HomeClient({ content }: HomeClientProps) {
       <VoiceSimulationSection />
       <ConnectedHubSection />
       <CommandCenterSection />
+      <HowItWorksSection />
+      <PricingSection />
+      <FaqSection />
+      <FounderSection />
+      <FinalCtaSection />
 
       <Footer
         onOpenQuoteModal={handleOpenModal}

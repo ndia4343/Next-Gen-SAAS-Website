@@ -347,12 +347,12 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
 
             <div className="py-3">
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-base font-bold text-zinc-900 dark:text-white">Sarah &bull; Clinical Coordinator</h3>
+                <h3 className="text-base font-bold text-zinc-900 dark:text-white">Sarah &bull; Reception Coordinator</h3>
                 <span className="text-[9.5px] px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 font-medium">
-                  Verified Practice (DHA Licensed)
+                  Illustrative Demo
                 </span>
               </div>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Automated patient intake, after-work slot matching & 3D scan scheduling.</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Automated patient intake, after-work slot matching &amp; 3D scan scheduling.</p>
             </div>
 
             {/* Chat Screen Chassis */}
@@ -366,14 +366,13 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-zinc-900 dark:text-white">Sarah &bull; Clinical Coordinator</span>
+                      <span className="text-xs font-bold text-zinc-900 dark:text-white">Sarah &bull; Clinic Reception</span>
                       <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-medium">
-                        DHA Licensed
+                        Sample Demo
                       </span>
                     </div>
                     <div className="text-[10px] text-zinc-400 flex items-center gap-1.5">
-                      <span className="filter blur-[2px] select-none text-zinc-600 dark:text-zinc-400">[Private Dental Practice &bull; Sheikh Zayed Rd]</span>
-                      <span className="text-[8.5px] px-1 py-0.2 rounded bg-zinc-200/70 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-semibold">🔒 NDA Protected</span>
+                      <span className="select-none text-zinc-600 dark:text-zinc-400">Sample Aesthetics Clinic &bull; After-Hours Thread</span>
                     </div>
                   </div>
                 </div>
@@ -447,9 +446,9 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
             </div>
 
             <div className="py-3">
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Direct Clinic Diary Lock</h3>
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Direct Clinic Calendar Sync</h3>
               <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-relaxed">
-                Real-time two-way sync to the clinic Practice Management System (PMS). Operatory chair reserved, medical file opened, zero human receptionist delay.
+                Two-way sync to your booking calendar. Appointment slot reserved and summary logged without front-desk delay.
               </p>
             </div>
 
@@ -484,8 +483,8 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
                         <span className="font-semibold text-emerald-600 dark:text-emerald-400">Aligners Assessment</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-zinc-400">Operatory:</span>
-                        <span className="font-medium">Chair 02 (Level 18)</span>
+                        <span className="text-zinc-400">Treatment Room:</span>
+                        <span className="font-medium">Room 02</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-zinc-400">Valet Access:</span>
@@ -496,7 +495,7 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
                 ) : (
                   <div className="text-center py-6 text-zinc-400 dark:text-zinc-500 space-y-2">
                     <div className="w-6 h-6 rounded-full border-2 border-dashed border-zinc-300 dark:border-zinc-700 mx-auto animate-spin" />
-                    <p className="text-[10px] font-medium">Securing operatory slot...</p>
+                    <p className="text-[10px] font-medium">Checking open appointment slots...</p>
                   </div>
                 )}
               </AnimatePresence>
@@ -504,7 +503,7 @@ export function AsymmetricLuxuryPipeline({ onOpenQuoteModal }: AsymmetricLuxuryP
 
             <div className="mt-3 flex items-center justify-between text-[10.5px] text-zinc-500 dark:text-zinc-400 pt-2 border-t border-zinc-100 dark:border-zinc-800">
               <span className="flex items-center gap-1 font-mono text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                <Check className="w-3.5 h-3.5 text-emerald-500" /> Operatory Chair Confirmed // 0.4s PMS Write
+                <Check className="w-3.5 h-3.5 text-emerald-500" /> Treatment Room Confirmed // Calendar Synced
               </span>
             </div>
           </div>

@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, MessageCircle } from 'lucide-react';
 import { HeaderData, ThemeBrandingConfig } from '@/lib/types';
 import { useSiteConfig } from '@/context/SiteConfigContext';
+import { WHATSAPP_NUMBER } from '@/lib/default-config';
 
 interface NavbarProps {
   onOpenQuoteModal?: (service: string) => void;
@@ -12,12 +13,13 @@ interface NavbarProps {
 }
 
 const NAV_LINKS = [
-  { id: 'voice', label: 'Voice Simulation', href: '#voice-simulation' },
-  { id: 'hub', label: 'Connected Hub', href: '#connected-hub' },
-  { id: 'command', label: 'Command Center', href: '#command-center' },
+  { id: 'demo', label: 'Demo', href: '#voice-simulation' },
+  { id: 'how-it-works', label: 'How it works', href: '#how-it-works' },
+  { id: 'dashboard', label: 'Dashboard', href: '#command-center' },
+  { id: 'faq', label: 'FAQ', href: '#faq' },
 ];
 
-export default function Navbar({ content, themeBranding: initialBranding }: NavbarProps) {
+export default function Navbar({ themeBranding: initialBranding }: NavbarProps) {
   const { config } = useSiteConfig();
   const [branding, setBranding] = useState<ThemeBrandingConfig | undefined>(initialBranding);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -89,7 +91,8 @@ export default function Navbar({ content, themeBranding: initialBranding }: Navb
   const logoSrc =
     config.branding.logoImageUrl ||
     (branding?.logoImageUrl ? branding.logoImageUrl : '/images/zavian-cube-mark.png');
-  const bookingUrl = config.branding.calendarBookingUrl || 'https://calendar.app.google/u5vL88X41qmGBCky5';
+  const bookingUrl =
+    config.branding.calendarBookingUrl || 'https://calendar.app.google/u5vL88X41qmGBCky5';
   const wordmark1 = config.branding.logoTextPrimary || branding?.wordmark1 || 'ZAVIAN';
   const wordmark2 = config.branding.logoTextSecondary || branding?.wordmark2 || 'LABS';
 
@@ -99,7 +102,7 @@ export default function Navbar({ content, themeBranding: initialBranding }: Navb
         aria-label="Primary"
         className="pointer-events-auto w-full max-w-[1140px] mx-auto rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4 bg-[#0c0e13]/85 backdrop-blur-xl border border-white/15 shadow-[0_14px_45px_rgba(7,8,11,0.38)] transition-all duration-300"
       >
-        {/* Full Footer-Inspired Brand Lockup (dynamic icon size + silver-framed obsidian inset cube + uppercase ZAVIAN LABS) */}
+        {/* Brand Lockup */}
         <a
           href="#hero"
           onClick={(e) => handleScroll(e, '#hero')}
@@ -153,13 +156,25 @@ export default function Navbar({ content, themeBranding: initialBranding }: Navb
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 shrink-0">
+          {WHATSAPP_NUMBER && (
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="zl-btn hidden md:inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-white/20 bg-white/[0.06] hover:bg-white/[0.12] text-[#eceef2] font-semibold text-xs tracking-wide transition-all cursor-pointer whitespace-nowrap"
+            >
+              <MessageCircle className="w-3.5 h-3.5 text-[#10B981]" />
+              <span>Chat on WhatsApp</span>
+            </a>
+          )}
+
           <a
             href={bookingUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="zl-btn hidden sm:inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#eceef2] hover:bg-white text-[#07080b] font-semibold text-xs tracking-wide transition-all cursor-pointer whitespace-nowrap shadow-[0_4px_18px_rgba(236,238,242,0.18)]"
           >
-            <span>{content?.ctaText || 'Book Discovery Call'}</span>
+            <span>Book a free audit</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </a>
 
@@ -187,6 +202,18 @@ export default function Navbar({ content, themeBranding: initialBranding }: Navb
               {item.label}
             </a>
           ))}
+          {WHATSAPP_NUMBER && (
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileOpen(false)}
+              className="mt-1 px-4 py-3 rounded-2xl border border-white/15 bg-white/[0.06] text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5"
+            >
+              <MessageCircle className="w-3.5 h-3.5 text-[#10B981]" />
+              <span>Chat on WhatsApp</span>
+            </a>
+          )}
           <a
             href={bookingUrl}
             target="_blank"
@@ -194,7 +221,7 @@ export default function Navbar({ content, themeBranding: initialBranding }: Navb
             onClick={() => setMobileOpen(false)}
             className="mt-2 px-4 py-3 rounded-2xl bg-[#eceef2] text-[#07080b] font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5"
           >
-            <span>{content?.ctaText || 'Book Discovery Call'}</span>
+            <span>Book a free audit</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </a>
         </div>

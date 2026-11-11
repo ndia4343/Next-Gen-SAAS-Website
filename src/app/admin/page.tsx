@@ -1261,7 +1261,7 @@ export default function SuperAdminCmsPage() {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. DIFC Dubai (DHA Licensed) · AED"
+                      placeholder="e.g. UAE Clinics · AED"
                       value={activeIndustry.regionBadge || ''}
                       onChange={(e) => {
                         const val = e.target.value;

@@ -10,9 +10,9 @@ import { defaultConfig } from '@/lib/default-config';
 import { SiteConfigProvider } from '@/context/SiteConfigContext';
 
 export const metadata: Metadata = {
-  title: 'ZAVIAN LABS // Voice Receptionists, WhatsApp Automation & Custom Software',
+  title: 'Zavian Labs | AI Voice Receptionist for Clinics & Aesthetics Practices',
   description:
-    'We build AI voice receptionists, WhatsApp automation, workflows, dashboards, and custom software for businesses that run on conversations.',
+    'An AI receptionist that answers every call, books into your calendar and confirms with the patient, day or night. Built for clinics and aesthetics practices.',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

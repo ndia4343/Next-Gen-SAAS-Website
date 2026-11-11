@@ -221,9 +221,9 @@ export const FooterDataSchema = z.object({
   ),
   ctaText: z.string().default("Start a Project"),
   copyright: z.string().default("© 2026 ZAVIAN LABS. ALL RIGHTS RESERVED."),
-  statusLabel: z.string().default("SYSTEMS OPERATIONAL"),
-  latencyLabel: z.string().default("LATENCY: 24MS"),
-  regionLabel: z.string().default("US-EAST / CLOUDFLARE EDGE"),
+  statusLabel: z.string().default("CLINIC AUTOMATION STUDIO"),
+  latencyLabel: z.string().default("ANSWERS IN UNDER A SECOND"),
+  regionLabel: z.string().default("UAE & GLOBAL"),
   links: z.array(FooterLinkSchema),
 });
 export type FooterData = z.infer<typeof FooterDataSchema>;

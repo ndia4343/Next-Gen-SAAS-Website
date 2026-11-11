@@ -61,7 +61,7 @@ export default function ConnectedHubSection() {
 
       <div className="relative z-10 max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
         
-        {/* LEFT COLUMN: Headline & Interactive Side Inspector Card */}
+        {/* LEFT COLUMN: Plain Business Overview & Active Node Card */}
         <div className="lg:col-span-5 space-y-6">
           <h2
             className="font-serif-instrument font-normal text-[#0A0A0A] tracking-[-0.02em] leading-[1.02]"
@@ -75,7 +75,7 @@ export default function ConnectedHubSection() {
             {constellation.sectionDescription}
           </p>
 
-          {/* Side Technical Spec Inspector Card */}
+          {/* Side Detail Card */}
           <motion.div
             key={selectedId}
             initial={{ opacity: 0.75, y: 6 }}
@@ -89,7 +89,7 @@ export default function ConnectedHubSection() {
                 {activeStatus}
               </span>
               <span className="font-mono text-[11px] text-[#585A66]">
-                Active Node
+                Clinic Workflow
               </span>
             </div>
 
@@ -122,20 +122,18 @@ export default function ConnectedHubSection() {
           </motion.div>
         </div>
 
-        {/* RIGHT COLUMN: Interactive SVG Constellation Diagram */}
+        {/* RIGHT COLUMN: Interactive Constellation Diagram */}
         <div className="lg:col-span-7">
           <div
             className="relative rounded-[28px] border border-[rgba(0,0,0,0.07)] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] p-4 sm:p-6 overflow-hidden"
             style={{
-              backgroundImage:
-                'radial-gradient(rgba(0,0,0,0.05) 1px, transparent 0)',
+              backgroundImage: 'radial-gradient(rgba(0,0,0,0.05) 1px, transparent 0)',
               backgroundSize: '24px 24px',
             }}
           >
-            {/* Desktop / Tablet Interactive Constellation Stage */}
             <div className="relative w-full aspect-[640/420] min-h-[300px] sm:min-h-[410px]">
               
-              {/* SVG Data Rays Layer */}
+              {/* SVG Data Rays */}
               <svg
                 viewBox="0 0 640 420"
                 preserveAspectRatio="none"
@@ -194,7 +192,7 @@ export default function ConnectedHubSection() {
                 })}
               </svg>
 
-              {/* Central Obsidian 3D Metallic Node */}
+              {/* Central Hub Button */}
               <button
                 type="button"
                 onClick={() => setSelectedId('core')}

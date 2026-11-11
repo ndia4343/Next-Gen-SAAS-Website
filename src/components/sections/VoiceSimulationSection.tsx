@@ -15,10 +15,10 @@ import {
   CalendarCheck,
   PhoneCall,
   Globe,
-  Radio,
   Cpu,
   ArrowRight,
   Sparkles,
+  Info,
 } from 'lucide-react';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { VoiceIndustryConfig } from '@/types/site-config';
@@ -42,13 +42,13 @@ function getRegionBadge(ind: VoiceIndustryConfig): string {
   }
   switch (ind.id) {
     case 'dental':
-      return 'DIFC Dubai (DHA Licensed) · AED';
+      return 'UAE Clinics · AED';
     case 'solar':
-      return 'Pakistan Net-Metering · LESCO/IESCO';
+      return 'Regional Solar · Custom Quotes';
     case 'hr':
-      return 'US / UK Remote Hub · Multi-Currency';
+      return 'Hiring & Staffing · Multi-Timezone';
     default:
-      return 'Enterprise SLA · Custom Timezones';
+      return 'Custom Schedules · Any Timezone';
   }
 }
 
@@ -58,22 +58,35 @@ function getCompletionSummary(ind: VoiceIndustryConfig): string {
   }
   switch (ind.id) {
     case 'dental':
-      return 'Sarah just qualified the caller and locked Operatory Chair 2 in under 28 seconds.';
+      return 'Sarah just qualified the caller and booked Treatment Room 2 in under 28 seconds.';
     case 'solar':
-      return 'Hassan just sized the 12 kW load, booked the site survey, and sent the WhatsApp quote in under 28 seconds.';
+      return 'Hassan just sized the 12 kW request, booked the site survey, and sent the WhatsApp estimate.';
     case 'hr':
-      return 'Maya just qualified the candidate, parsed notice period, and synced the interview to ATS in under 28 seconds.';
+      return 'Maya just screened the candidate, noted notice period, and booked the recruiter call.';
     default:
-      return 'Zed just triaged the job ticket, scheduled the crew, and synced to your ERP in under 28 seconds.';
+      return 'Zed just logged the job ticket, booked the inspection slot, and sent WhatsApp follow-up instructions.';
   }
 }
+
+const ORDERED_SECTOR_PRIORITY: Record<string, number> = {
+  dental: 0,
+  solar: 1,
+  hr: 2,
+  custom: 3,
+};
 
 export default function VoiceSimulationSection() {
   const { config } = useSiteConfig();
   const vt = config.voiceTheatre;
-  const industries = vt.industries;
 
-  const [activeId, setActiveId] = useState<string>(industries[0]?.id || 'dental');
+  // Enforce clinic-first tab order: Dental & Aesthetics first, Solar / HR / Custom secondary
+  const industries = [...vt.industries].sort(
+    (a, b) => (ORDERED_SECTOR_PRIORITY[a.id] ?? 99) - (ORDERED_SECTOR_PRIORITY[b.id] ?? 99)
+  );
+
+  const [activeId, setActiveId] = useState<string>(
+    industries.find((ind) => ind.id === 'dental')?.id || industries[0]?.id || 'dental'
+  );
   const [playing, setPlaying] = useState(false);
   const [currentSec, setCurrentSec] = useState(0);
   const [audioDuration, setAudioDuration] = useState(28);
@@ -92,7 +105,7 @@ export default function VoiceSimulationSection() {
   const BOOKING_SEC = 19 * timeScale;
   const AUTO_COMPLETE_SEC = 26.8 * timeScale;
 
-  // Listen to global Hero events ("Hear a sample call" & "WhatsApp" tag)
+  // Listen to global Hero events ("Hear it answer a call", "WhatsApp" pill, and Sub-Hero secondary links)
   useEffect(() => {
     const onPlayClinic = () => {
       const firstDental = industries.find((i) => i.id === 'dental') || industries[0];
@@ -121,11 +134,28 @@ export default function VoiceSimulationSection() {
       }
     };
 
+    const onSelectIndustry = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      const targetId = customEvent.detail;
+      const found = industries.find((i) => i.id === targetId);
+      if (!found) return;
+      setActiveId(found.id);
+      setWaConfirmed(false);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      setCurrentSec(0.5);
+      setPlaying(true);
+    };
+
     window.addEventListener('zavian:play-clinic-demo', onPlayClinic);
     window.addEventListener('zavian:focus-whatsapp', onFocusWhatsapp);
+    window.addEventListener('zavian:select-industry', onSelectIndustry);
     return () => {
       window.removeEventListener('zavian:play-clinic-demo', onPlayClinic);
       window.removeEventListener('zavian:focus-whatsapp', onFocusWhatsapp);
+      window.removeEventListener('zavian:select-industry', onSelectIndustry);
     };
   }, [industries]);
 
@@ -168,7 +198,6 @@ export default function VoiceSimulationSection() {
   const showWa = currentSec >= WA_ARRIVAL_SEC;
   const showCompletion = currentSec >= AUTO_COMPLETE_SEC;
 
-  // Reset confirmation when scrubbing back before WhatsApp stage, auto-confirm if scrubbed past 26.8s
   useEffect(() => {
     if (currentSec < WA_ARRIVAL_SEC) {
       setWaConfirmed(false);
@@ -221,7 +250,6 @@ export default function VoiceSimulationSection() {
     }
   };
 
-  // Click-to-scrub helper (supports both karaoke turns and milestone / slider scrubbing)
   const scrubTo = (scriptSec: number, autoPlay = true) => {
     const rawTarget = scriptSec === 0 ? 0.1 : scriptSec * timeScale;
     const clamped = Math.min(Math.max(rawTarget, 0.1), durationSec);
@@ -261,7 +289,6 @@ export default function VoiceSimulationSection() {
 
   const handleQuickReplyConfirm = () => {
     setWaConfirmed(true);
-    // If paused during manual exploration at Stage 02, smoothly bring timeline to completion
     if (!playing && currentSec < AUTO_COMPLETE_SEC) {
       setTimeout(() => {
         setCurrentSec((prev) => Math.max(prev, Math.min(27.3 * timeScale, durationSec)));
@@ -269,7 +296,6 @@ export default function VoiceSimulationSection() {
     }
   };
 
-  // Active turn index for karaoke highlight
   let activeTurnIdx = -1;
   if (started) {
     for (let i = 0; i < current.script.length; i++) {
@@ -302,7 +328,6 @@ export default function VoiceSimulationSection() {
       className="relative w-full bg-[#FFFFFF] text-[#0A0A0A] py-20 sm:py-28 px-5 sm:px-8 scroll-mt-20 overflow-hidden"
     >
       {/* Compatibility anchors */}
-      <div id="how-it-works" className="scroll-mt-20 pointer-events-none" />
       <div id="voice" className="scroll-mt-20 pointer-events-none" />
       <div id="voice-demo" className="scroll-mt-20 pointer-events-none" />
       <div id="industries" className="scroll-mt-20 pointer-events-none" />
@@ -316,7 +341,7 @@ export default function VoiceSimulationSection() {
         }}
       />
 
-      {/* Hidden native audio element connected cleanly to Dental tab */}
+      {/* Working audio sample element */}
       <audio
         ref={audioRef}
         src={vt.demoAudioUrl || '/audio/clinic-demo.mp3'}
@@ -345,7 +370,7 @@ export default function VoiceSimulationSection() {
 
       <div className="relative z-10 max-w-[1280px] mx-auto">
         
-        {/* Header Row */}
+        {/* Clinic-First Header Row */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div className="max-w-[660px]">
             <div className="inline-flex items-center gap-2 font-mono text-xs tracking-[0.12em] uppercase text-[#10B981] font-semibold">
@@ -362,53 +387,86 @@ export default function VoiceSimulationSection() {
             </h2>
           </div>
 
-          <p className="max-w-[400px] text-[15.5px] sm:text-base leading-[1.6] text-[#585A66]">
+          <p className="max-w-[440px] text-[15.5px] sm:text-base leading-[1.6] text-[#585A66]">
             {vt.sectionDescription}
           </p>
         </div>
 
-        {/* Consolidated 4-Industry Tab Strip */}
-        <div
-          role="tablist"
-          aria-label="Choose your industry"
-          className="mt-10 flex flex-wrap items-center gap-3"
-        >
-          {industries.map((ind) => {
-            const Icon = getIndustryIcon(ind.id);
-            const active = current.id === ind.id;
+        {/* Clinic-First Tab Strip (Dental Primary, Solar & HR with "Also available" badge) */}
+        <div className="mt-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div
+            role="tablist"
+            aria-label="Choose industry workflow"
+            className="flex flex-wrap items-center gap-2.5"
+          >
+            {industries.map((ind) => {
+              const Icon = getIndustryIcon(ind.id);
+              const active = current.id === ind.id;
+              const isPrimaryClinic = ind.id === 'dental';
+              const showSecondaryBadge = ind.id === 'solar' || ind.id === 'hr';
 
-            return (
-              <button
-                key={ind.id}
-                role="tab"
-                type="button"
-                aria-selected={active}
-                onClick={() => handleSelectIndustry(ind.id)}
-                style={
-                  active
-                    ? { boxShadow: '0 8px 24px rgba(0, 0, 0, 0.10)' }
-                    : undefined
-                }
-                className={`zl-btn inline-flex items-center gap-2.5 min-h-[46px] px-5 rounded-full text-sm font-semibold border transition-all duration-200 cursor-pointer ${
-                  active
-                    ? 'bg-[#0A0A0A] border-[#0A0A0A] text-white'
-                    : 'bg-white border-[rgba(0,0,0,0.09)] text-[#585A66] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:border-[rgba(0,0,0,0.22)]'
-                }`}
-              >
-                <Icon className={`w-4 h-4 ${active ? 'text-[#10B981]' : 'text-[#585A66]'}`} />
-                <span>{ind.label}</span>
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={ind.id}
+                  role="tab"
+                  type="button"
+                  aria-selected={active}
+                  onClick={() => handleSelectIndustry(ind.id)}
+                  style={
+                    active
+                      ? { boxShadow: '0 8px 24px rgba(0, 0, 0, 0.10)' }
+                      : undefined
+                  }
+                  className={`zl-btn inline-flex items-center gap-2 rounded-full border transition-all duration-200 cursor-pointer ${
+                    isPrimaryClinic
+                      ? active
+                        ? 'min-h-[48px] px-5 bg-[#0A0A0A] border-[#0A0A0A] text-white text-sm font-semibold'
+                        : 'min-h-[48px] px-5 bg-white border-[#10B981]/50 text-[#0A0A0A] hover:bg-[#FAFAFA] text-sm font-semibold'
+                      : active
+                      ? 'min-h-[42px] px-4 bg-[#0A0A0A] border-[#0A0A0A] text-white text-xs sm:text-sm font-medium'
+                      : 'min-h-[42px] px-4 bg-[#FAFAFA] border-[rgba(0,0,0,0.07)] text-[#585A66] hover:bg-white hover:text-[#0A0A0A] text-xs sm:text-sm font-medium'
+                  }`}
+                >
+                  <Icon
+                    className={`w-4 h-4 shrink-0 ${
+                      active
+                        ? 'text-[#10B981]'
+                        : isPrimaryClinic
+                        ? 'text-[#10B981]'
+                        : 'text-[#585A66]'
+                    }`}
+                  />
+                  <span>{ind.label}</span>
+                  {showSecondaryBadge && (
+                    <span
+                      className={`text-[9.5px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                        active
+                          ? 'bg-white/15 text-zinc-200'
+                          : 'bg-black/[0.05] text-[#585A66]'
+                      }`}
+                    >
+                      Also available
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Explicit Demo Honesty Caption */}
+          <div className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[#585A66] shrink-0">
+            <Info className="w-3.5 h-3.5 text-[#585A66] shrink-0" />
+            <span>Illustrative demo &middot; sample data, not client results</span>
+          </div>
         </div>
 
         {/* Interactive Sandbox Theatre: Responsive flex-col lg:flex-row */}
-        <div className="mt-9 flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-0">
+        <div className="mt-7 flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-0">
           
           {/* LEFT: Anchored Obsidian Voice Console */}
           <div className="w-full lg:w-[66%] xl:w-[68%] relative z-10 rounded-[28px] border border-[rgba(0,0,0,0.12)] bg-[#0A0B0F] text-[#eceef2] shadow-[0_32px_80px_rgba(0,0,0,0.16)] overflow-hidden">
             
-            {/* Console Header Bar + Global Multi-Region Attribution */}
+            {/* Console Header Bar */}
             <div className="flex flex-wrap items-center justify-between gap-4 px-5 sm:px-7 py-5 border-b border-white/10">
               <div className="flex items-center gap-3.5 min-w-0">
                 <div
@@ -427,7 +485,7 @@ export default function VoiceSimulationSection() {
                     {playing && (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 font-mono text-[10px] text-emerald-300 uppercase">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                        Live
+                        Live Demo
                       </span>
                     )}
                   </div>
@@ -438,7 +496,7 @@ export default function VoiceSimulationSection() {
               </div>
 
               <div className="flex flex-wrap items-center gap-3 ml-auto">
-                {/* 5. Global Multi-Region Attribution Badge */}
+                {/* Honest Regional Attribution Badge */}
                 <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/15 font-mono text-[10.5px] tracking-[0.04em] text-[#d5dbe6]">
                   <Globe className="w-3.5 h-3.5 text-[#5ee3ff] shrink-0" />
                   <span>{regionBadge}</span>
@@ -559,7 +617,7 @@ export default function VoiceSimulationSection() {
                 </button>
               </div>
 
-              {/* 1. TECHNICAL HUD TELEMETRY STRIP */}
+              {/* PLAIN-LANGUAGE OPERATIONAL STATUS STRIP */}
               <div
                 className={`mt-4 p-2.5 sm:px-3.5 rounded-2xl border flex flex-wrap items-center justify-between gap-2.5 transition-all duration-300 ${
                   playing
@@ -567,9 +625,8 @@ export default function VoiceSimulationSection() {
                     : 'border-white/10 bg-white/[0.025]'
                 }`}
               >
-                {/* Latency Badge */}
                 <div
-                  className={`inline-flex items-center gap-2 font-mono text-[10.5px] sm:text-[11px] uppercase tracking-[0.05em] transition-colors ${
+                  className={`inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.03em] transition-colors ${
                     playing ? 'text-[#9fe9ff] font-semibold' : 'text-[#9aa1ad]'
                   }`}
                 >
@@ -581,26 +638,11 @@ export default function VoiceSimulationSection() {
                     />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-[#5ee3ff] shadow-[0_0_8px_#5ee3ff]" />
                   </span>
-                  <span>LATENCY: 340ms (Sub-400ms SLA)</span>
+                  <span>Answers in under a second</span>
                 </div>
 
-                {/* Stream Engine */}
                 <div
-                  className={`inline-flex items-center gap-1.5 font-mono text-[10.5px] sm:text-[11px] uppercase tracking-[0.05em] transition-colors ${
-                    playing ? 'text-[#eceef2]' : 'text-[#9aa1ad]'
-                  }`}
-                >
-                  <Radio
-                    className={`w-3.5 h-3.5 shrink-0 ${
-                      playing ? 'text-[#5ee3ff]' : 'text-[#7f8796]'
-                    }`}
-                  />
-                  <span>PIPELINE: WebSockets // Streaming TTS</span>
-                </div>
-
-                {/* Webhook Status */}
-                <div
-                  className={`inline-flex items-center gap-1.5 font-mono text-[10.5px] sm:text-[11px] uppercase tracking-[0.05em] transition-colors ${
+                  className={`inline-flex items-center gap-1.5 font-mono text-[11px] tracking-[0.03em] transition-colors ${
                     playing || showBooking ? 'text-emerald-300 font-semibold' : 'text-[#9aa1ad]'
                   }`}
                 >
@@ -609,18 +651,16 @@ export default function VoiceSimulationSection() {
                       playing || showBooking ? 'text-emerald-400' : 'text-[#7f8796]'
                     }`}
                   />
-                  <span>PMS DISPATCH: 2-Way Lock Active</span>
+                  <span>Syncs with your booking calendar</span>
                 </div>
               </div>
             </div>
 
-            {/* 2. CLICK-TO-SCRUB "KARAOKE" TRANSCRIPT FEED & BOOKING LOCK */}
+            {/* CLICK-TO-SCRUB "KARAOKE" TRANSCRIPT FEED & BOOKING LOCK */}
             <div className="px-5 sm:px-7 pt-3 pb-7 min-h-[340px] flex flex-col justify-start gap-3">
               <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.08em] text-[#8d95a3]">
-                <span>Click any line to scrub call &amp; device preview</span>
-                {!started && (
-                  <span className="text-[#5ee3ff]">Ready · Interactive Script</span>
-                )}
+                <span>Click any line to jump &amp; preview confirmation</span>
+                <span className="text-[#9aa1ad]">Sample conversation script</span>
               </div>
 
               <div className="space-y-3">
@@ -657,7 +697,7 @@ export default function VoiceSimulationSection() {
                             ? turn.isAi
                               ? 'bg-gradient-to-br from-[#5ee3ff]/16 to-[#a78bfa]/14 border-[#5ee3ff]/30 text-[#eceef2] opacity-95'
                               : 'bg-white/[0.06] border-white/12 text-[#e4e7ee] opacity-95'
-                            : 'bg-white/[0.03] border-white/10 text-[#9aa1ad] opacity-60 hover:opacity-100'
+                            : 'bg-white/[0.03] border-white/10 text-[#9aa1ad] opacity-65 hover:opacity-100'
                         }`}
                       >
                         <div className="flex items-center justify-between gap-3 font-mono text-[10px] tracking-[0.1em] uppercase mb-1">
@@ -698,7 +738,7 @@ export default function VoiceSimulationSection() {
                     </span>
                     <div className="min-w-0">
                       <div className="font-mono text-[10px] tracking-[0.1em] uppercase text-[#9fe9ff]">
-                        Confirmed in Calendar / PMS
+                        Confirmed on Clinic Calendar
                       </div>
                       <div className="text-sm sm:text-[15px] font-semibold text-white">
                         {current.lockedSlotMessage}
@@ -711,7 +751,7 @@ export default function VoiceSimulationSection() {
                 )}
               </AnimatePresence>
 
-              {/* 4. END-OF-CALL CONVERSION CTA BRIDGE */}
+              {/* END-OF-CALL CONVERSION CTA BRIDGE */}
               <AnimatePresence>
                 {showCompletion && (
                   <motion.div
@@ -726,7 +766,7 @@ export default function VoiceSimulationSection() {
                       </span>
                       <div className="min-w-0">
                         <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-emerald-300 font-bold">
-                          End-of-Call Summary · Complete
+                          Sample Call Complete
                         </div>
                         <p className="text-sm font-medium text-white leading-snug mt-0.5">
                           {completionSummary}
@@ -740,7 +780,7 @@ export default function VoiceSimulationSection() {
                       rel="noopener noreferrer"
                       className="zl-btn inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#eceef2] hover:bg-white text-[#07080b] font-semibold text-xs sm:text-sm whitespace-nowrap shadow-[0_6px_22px_rgba(236,238,242,0.22)] cursor-pointer shrink-0"
                     >
-                      <span>Deploy This Pipeline On Your Business Line</span>
+                      <span>Book a free missed-call audit</span>
                       <ArrowRight className="w-4 h-4 shrink-0" />
                     </a>
                   </motion.div>
@@ -749,7 +789,7 @@ export default function VoiceSimulationSection() {
             </div>
           </div>
 
-          {/* RIGHT: Responsive 3D Metallic Phone Mockup (6. Stacks cleanly on <1024px without overlap/rotation) */}
+          {/* RIGHT: Responsive 3D Metallic Phone Mockup */}
           <div className="w-full lg:w-[34%] xl:w-[32%] relative z-20 flex justify-center lg:justify-start ml-0 lg:-ml-12 mt-0 lg:mt-10 max-lg:!ml-0">
             <motion.div
               key={current.id}
@@ -783,13 +823,10 @@ export default function VoiceSimulationSection() {
                         {current.whatsAppContactName}
                       </div>
                       <div className="text-[#8696a0] text-[11px] truncate">
-                        Verified Business Account
+                        Sample Booking Thread
                       </div>
                     </div>
                   </div>
-                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 rounded-full shrink-0">
-                    Active
-                  </span>
                 </div>
 
                 {/* WhatsApp Thread Area */}
@@ -805,7 +842,7 @@ export default function VoiceSimulationSection() {
                         <PhoneCall className="w-4 h-4" />
                       </div>
                       <p className="text-[#8696a0] text-[13px] leading-relaxed">
-                        The WhatsApp confirmation &amp; files arrive at Stage 02, or click{' '}
+                        The WhatsApp confirmation appears right after the booking locks, or click{' '}
                         <button
                           type="button"
                           onClick={() => scrubTo(22.2, false)}
@@ -813,7 +850,7 @@ export default function VoiceSimulationSection() {
                         >
                           0:22 · WhatsApp
                         </button>{' '}
-                        to test interactive confirmation.
+                        to test confirming.
                       </p>
                     </div>
                   ) : (
@@ -855,7 +892,7 @@ export default function VoiceSimulationSection() {
                         </div>
                       </motion.div>
 
-                      {/* 3. Tactile Interactive Quick-Reply Pill vs Confirmed Thread */}
+                      {/* Tactile Interactive Quick-Reply Pill vs Confirmed Thread */}
                       {!waConfirmed ? (
                         <motion.div
                           initial={{ opacity: 0, y: 8 }}

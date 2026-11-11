@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { MessageCircle } from 'lucide-react';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import { FooterData, ThemeBrandingConfig } from '@/lib/types';
 import { useSiteConfig } from '@/context/SiteConfigContext';
+import { WHATSAPP_NUMBER } from '@/lib/default-config';
 
 interface FooterProps {
   onOpenQuoteModal?: (service: string) => void;
@@ -85,7 +87,8 @@ export default function Footer({ themeBranding: initialBranding }: FooterProps =
   const wordmark2 = config.branding.logoTextSecondary || branding?.wordmark2 || 'LABS';
   const companyName = config.branding.companyName || `${wordmark1} ${wordmark2}`;
   const contactEmail = config.branding.contactEmail || 'contact@zavianlabs.com';
-  const bookingUrl = config.branding.calendarBookingUrl || 'https://calendar.app.google/u5vL88X41qmGBCky5';
+  const bookingUrl =
+    config.branding.calendarBookingUrl || 'https://calendar.app.google/u5vL88X41qmGBCky5';
 
   return (
     <footer className="relative z-20 bg-[#07070A] border-t border-neutral-800 text-zinc-400 pt-12 pb-12 transition-colors duration-300">
@@ -96,12 +99,11 @@ export default function Footer({ themeBranding: initialBranding }: FooterProps =
           
           {/* Left Column (Brand Anchor) */}
           <div className="lg:col-span-5 space-y-4">
-            <a 
-              href="#hero" 
-              onClick={(e) => handleNavScroll(e, 'hero')} 
+            <a
+              href="#hero"
+              onClick={(e) => handleNavScroll(e, 'hero')}
               className="inline-flex items-center gap-3 group focus:outline-none"
             >
-              {/* Cube Icon (dynamic size matching Navbar lockup) */}
               <div
                 className="rounded-xl p-[1.5px] flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shrink-0 shadow-[0_0_20px_rgba(94,227,255,0.18)]"
                 style={{
@@ -133,18 +135,17 @@ export default function Footer({ themeBranding: initialBranding }: FooterProps =
               </div>
             </a>
 
-            {/* High-Contrast Headline */}
             <h3 className="text-2xl font-serif-instrument tracking-tight text-white mb-2 leading-snug">
               Every call answered.{' '}
-              <span className="italic text-[#b4a0ff]">Every booking tracked.</span>
+              <span className="italic text-[#b4a0ff]">Every booking logged.</span>
             </h3>
 
             <p className="text-xs text-zinc-400 leading-relaxed max-w-sm">
-              {config.branding.tagline || 'AI AUTOMATION & SOFTWARE STUDIO'} &mdash; Voice receptionists, WhatsApp follow-ups, live revenue dashboards, and custom software built around how your business operates.
+              {config.branding.tagline || 'AI VOICE RECEPTIONIST FOR CLINICS & AESTHETICS PRACTICES'} &mdash; AI receptionists, WhatsApp appointment follow-ups, and clear booking dashboards built for clinics.
             </p>
 
-            {/* Email Contact Pill */}
-            <div className="pt-1">
+            {/* Contact & Conditional WhatsApp Pills */}
+            <div className="pt-1 flex flex-wrap items-center gap-2.5">
               <a
                 href={`mailto:${contactEmail}`}
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700 shadow-xs transition-all text-xs font-mono group"
@@ -156,16 +157,28 @@ export default function Footer({ themeBranding: initialBranding }: FooterProps =
                 <span className="font-medium text-zinc-300 group-hover:text-white">{contactEmail}</span>
                 <span className="text-zinc-500 group-hover:text-white transition-colors">↗</span>
               </a>
+
+              {WHATSAPP_NUMBER && (
+                <a
+                  href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-emerald-500/40 transition-all text-xs font-mono"
+                >
+                  <MessageCircle className="w-3.5 h-3.5 text-[#10B981]" />
+                  <span>Chat on WhatsApp</span>
+                </a>
+              )}
             </div>
           </div>
 
           {/* Systems Column */}
           <div className="lg:col-span-3 space-y-3">
-            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-200 font-bold">Systems</h4>
+            <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-200 font-bold">What We Set Up</h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <a 
-                  href="#voice-simulation" 
+                <a
+                  href="#voice-simulation"
                   onClick={(e) => handleNavScroll(e, 'voice-simulation')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
@@ -173,30 +186,30 @@ export default function Footer({ themeBranding: initialBranding }: FooterProps =
                 </a>
               </li>
               <li>
-                <a 
-                  href="#voice-simulation" 
+                <a
+                  href="#voice-simulation"
                   onClick={(e) => handleNavScroll(e, 'voice-simulation')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  WhatsApp Automation
+                  WhatsApp Confirmations
                 </a>
               </li>
               <li>
-                <a 
-                  href="#connected-hub" 
+                <a
+                  href="#connected-hub"
                   onClick={(e) => handleNavScroll(e, 'connected-hub')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  Connected Systems Hub
+                  Calendar Sync &amp; Handoff
                 </a>
               </li>
               <li>
-                <a 
-                  href="#command-center" 
+                <a
+                  href="#command-center"
                   onClick={(e) => handleNavScroll(e, 'command-center')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  Command Center &amp; SolarPro
+                  Booking Dashboard
                 </a>
               </li>
             </ul>
@@ -207,39 +220,48 @@ export default function Footer({ themeBranding: initialBranding }: FooterProps =
             <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-200 font-bold">Navigation</h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <a 
-                  href="#hero" 
-                  onClick={(e) => handleNavScroll(e, 'hero')}
-                  className="text-zinc-400 hover:text-white transition-colors"
-                >
-                  Overview
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="#voice-simulation" 
+                <a
+                  href="#voice-simulation"
                   onClick={(e) => handleNavScroll(e, 'voice-simulation')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  Voice Simulation
+                  Demo
                 </a>
               </li>
               <li>
-                <a 
-                  href="#connected-hub" 
-                  onClick={(e) => handleNavScroll(e, 'connected-hub')}
+                <a
+                  href="#how-it-works"
+                  onClick={(e) => handleNavScroll(e, 'how-it-works')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  Connected Hub
+                  How it works
                 </a>
               </li>
               <li>
-                <a 
-                  href="#command-center" 
+                <a
+                  href="#command-center"
                   onClick={(e) => handleNavScroll(e, 'command-center')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  Command Center
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#pricing"
+                  onClick={(e) => handleNavScroll(e, 'pricing')}
+                  className="text-zinc-400 hover:text-white transition-colors"
+                >
+                  Pricing
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#faq"
+                  onClick={(e) => handleNavScroll(e, 'faq')}
+                  className="text-zinc-400 hover:text-white transition-colors"
+                >
+                  FAQ
                 </a>
               </li>
             </ul>
@@ -249,7 +271,7 @@ export default function Footer({ themeBranding: initialBranding }: FooterProps =
           <div className="lg:col-span-2 space-y-3">
             <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-200 font-bold">Get Started</h4>
             <p className="text-xs text-zinc-400 leading-snug">
-              See how this fits your calls, schedule, and team.
+              See how this fits your clinic calls, calendar, and reception team.
             </p>
             <div className="pt-1">
               <a
@@ -258,7 +280,7 @@ export default function Footer({ themeBranding: initialBranding }: FooterProps =
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center w-full px-4 py-2.5 text-xs font-semibold rounded-full bg-[#eceef2] hover:bg-white text-[#07080b] shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
               >
-                Book Discovery Call →
+                Book a free audit →
               </a>
             </div>
           </div>
@@ -268,19 +290,16 @@ export default function Footer({ themeBranding: initialBranding }: FooterProps =
         {/* Divider */}
         <div className="h-[1px] w-full bg-zinc-800/80 mb-6" />
 
-        {/* Operational Status Bar */}
+        {/* Clean Bottom Bar (No fake status badge) */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-zinc-500">
           <div>
             &copy; 2026 <strong className="font-bold text-white">{companyName}</strong>. ALL RIGHTS RESERVED.
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5 text-emerald-400 font-medium">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>SYSTEMS OPERATIONAL</span>
-            </div>
-            <button 
-              onClick={scrollToTop} 
+            <button
+              type="button"
+              onClick={scrollToTop}
               className="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white text-xs cursor-pointer transition-colors"
             >
               TOP ↑

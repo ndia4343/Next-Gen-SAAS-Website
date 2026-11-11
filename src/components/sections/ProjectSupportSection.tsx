@@ -45,8 +45,8 @@ const INDUSTRIES: IndustrySolution[] = [
   // 1. Solar EPC
   {
     id: "solar",
-    tabLabel: "Solar EPC",
-    badge: "SolarPro Telemetry",
+    tabLabel: "Solar Pipeline",
+    badge: "Solar Pipeline Overview",
     icon: Sun,
     headline: "Turn Power Bills into Signed Solar Contracts",
     subheadline: "Calculates panel sizing, net-metering ROI, and profit margins automatically the second a customer texts.",
@@ -94,8 +94,8 @@ const INDUSTRIES: IndustrySolution[] = [
     headline: "Keep Treatment Chairs Full All Week",
     subheadline: "Answers patient inquiries 24/7, triages cosmetic photos, and secures treatment deposits across Dubai clinics without front-desk delays.",
     telemetry: {
-      statusLabel: "Dubai Health Authority Compliant • DHA / MOH",
-      chartTitle: "Chair Occupancy & Treatment Value Yield",
+      statusLabel: "Clinic Scheduling Demo • UAE / Global",
+      chartTitle: "Sample Chair Utilization & Treatment Volume",
       trendBadge: "30-DAY OCCUPANCY TREND",
       chartType: "clinic",
       kpis: [
@@ -498,20 +498,20 @@ const CLINIC_DAYS = [
 
 const ClinicBarChart = () => (
   <div className="w-full h-full relative flex flex-col justify-between pt-1 pb-1 px-2 sm:px-4">
-    {/* Target Chair Utilization Benchmark Pill */}
+    {/* Target Utilization Guide Pill */}
     <div className="flex items-center justify-between z-20">
       <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-900 dark:bg-black text-white dark:text-emerald-400 border border-emerald-500/30 shadow-md font-mono text-[9.5px] sm:text-[10.5px] font-bold tracking-tight">
         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-        <span>Target Chair Utilization: 85%</span>
+        <span>Sample Room Target: 85%</span>
       </div>
       <span className="text-[9.5px] font-mono text-emerald-600 dark:text-emerald-400 font-bold hidden sm:inline">
-        Optimal Yield &ge; 85%
+        Illustrative Sample Data
       </span>
     </div>
 
     {/* Chart Stage with Dotted Target Line & Bar Tracks */}
     <div className="relative w-full h-20 sm:h-24 flex items-end justify-between px-2 sm:px-4 mt-1">
-      {/* Crisp Neon Mint Dotted Target Benchmark Line at 85% */}
+      {/* Dotted Target Guide Line at 85% */}
       <div 
         className="absolute left-0 right-0 z-0 pointer-events-none flex items-center"
         style={{ bottom: "85%" }}
