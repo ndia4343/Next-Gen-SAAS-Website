@@ -59,7 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
         />
       </head>
-      <body className="relative antialiased bg-[#F8F9FA] text-[#090A0D] transition-colors duration-300 overflow-x-hidden font-sans">
+      <body className="relative antialiased bg-[#FFFFFF] text-[#0A0A0A] transition-colors duration-300 overflow-x-hidden font-sans">
         <SiteConfigProvider initialConfig={initialSiteConfig}>
           <ThemeProvider initialThemeId={activeThemeId} initialMode={defaultMode}>
             <SmoothScrollProvider>

@@ -199,7 +199,7 @@ export default function VoiceSimulationSection() {
   return (
     <section
       id="voice-simulation"
-      className="relative w-full bg-[#F8F9FA] text-[#090A0D] py-20 sm:py-28 px-5 sm:px-8 scroll-mt-20 overflow-hidden"
+      className="relative w-full bg-[#FFFFFF] text-[#0A0A0A] py-20 sm:py-28 px-5 sm:px-8 scroll-mt-20 overflow-hidden"
     >
       {/* Compatibility anchors */}
       <div id="how-it-works" className="scroll-mt-20 pointer-events-none" />
@@ -207,12 +207,12 @@ export default function VoiceSimulationSection() {
       <div id="voice-demo" className="scroll-mt-20 pointer-events-none" />
       <div id="industries" className="scroll-mt-20 pointer-events-none" />
 
-      {/* Subtle architectural cobalt/indigo glow */}
+      {/* Subtle Warm / Neutral Studio Architectural Light (Zero Bluish Tint) */}
       <div
-        className="pointer-events-none absolute -top-32 right-0 w-[560px] h-[560px] rounded-full blur-3xl opacity-45"
+        className="pointer-events-none absolute -top-32 right-0 w-[560px] h-[560px] rounded-full blur-3xl opacity-35"
         style={{
           background:
-            'radial-gradient(circle, rgba(10,132,255,0.09) 0%, rgba(99,102,241,0.06) 48%, transparent 72%)',
+            'radial-gradient(circle, rgba(139,92,246,0.07) 0%, rgba(16,185,129,0.04) 48%, transparent 72%)',
         }}
       />
 
@@ -247,21 +247,21 @@ export default function VoiceSimulationSection() {
         {/* Header Row */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div className="max-w-[660px]">
-            <div className="inline-flex items-center gap-2 font-mono text-xs tracking-[0.12em] uppercase text-[#0A84FF] font-semibold">
-              <span className="w-2 h-2 rounded-full bg-[#0A84FF]" />
+            <div className="inline-flex items-center gap-2 font-mono text-xs tracking-[0.12em] uppercase text-[#10B981] font-semibold">
+              <span className="w-2 h-2 rounded-full bg-[#10B981]" />
               <span>{vt.sectionEyebrow}</span>
             </div>
 
             <h2
-              className="mt-4 font-serif-instrument font-normal text-[#090A0D] tracking-[-0.02em] leading-[1.02]"
+              className="mt-4 font-serif-instrument font-normal text-[#0A0A0A] tracking-[-0.02em] leading-[1.02]"
               style={{ fontSize: 'clamp(38px, 5vw, 72px)' }}
             >
               {vt.sectionTitle}{' '}
-              <span className="italic text-[#6366F1]">{vt.sectionTitleAccent}</span>
+              <span className="italic text-[#8B5CF6]">{vt.sectionTitleAccent}</span>
             </h2>
           </div>
 
-          <p className="max-w-[400px] text-[15.5px] sm:text-base leading-[1.6] text-[#525866]">
+          <p className="max-w-[400px] text-[15.5px] sm:text-base leading-[1.6] text-[#585A66]">
             {vt.sectionDescription}
           </p>
         </div>
@@ -285,16 +285,16 @@ export default function VoiceSimulationSection() {
                 onClick={() => handleSelectIndustry(ind.id)}
                 style={
                   active
-                    ? { boxShadow: '0 0 22px rgba(10, 132, 255, 0.22)' }
+                    ? { boxShadow: '0 8px 24px rgba(0, 0, 0, 0.10)' }
                     : undefined
                 }
                 className={`zl-btn inline-flex items-center gap-2.5 min-h-[46px] px-5 rounded-full text-sm font-semibold border transition-all duration-200 cursor-pointer ${
                   active
-                    ? 'bg-white border-[#0A84FF] text-[#0A84FF]'
-                    : 'bg-white/80 border-[rgba(15,23,42,0.10)] text-[#525866] hover:bg-white hover:text-[#090A0D] hover:border-[rgba(15,23,42,0.22)]'
+                    ? 'bg-[#0A0A0A] border-[#0A0A0A] text-white'
+                    : 'bg-white border-[rgba(0,0,0,0.09)] text-[#585A66] hover:bg-[#FAFAFA] hover:text-[#0A0A0A] hover:border-[rgba(0,0,0,0.22)]'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${active ? 'text-[#0A84FF]' : 'text-[#525866]'}`} />
+                <Icon className={`w-4 h-4 ${active ? 'text-[#10B981]' : 'text-[#585A66]'}`} />
                 <span>{ind.label}</span>
               </button>
             );
@@ -305,7 +305,7 @@ export default function VoiceSimulationSection() {
         <div className="mt-9 grid grid-cols-1 lg:grid-cols-12 items-start gap-8 lg:gap-0">
           
           {/* LEFT: Anchored Obsidian Voice Console (8 cols) */}
-          <div className="lg:col-span-8 relative z-10 rounded-[28px] border border-[rgba(15,23,42,0.12)] bg-[#0d1016] text-[#eceef2] shadow-[0_36px_90px_rgba(15,23,42,0.18)] overflow-hidden">
+          <div className="lg:col-span-8 relative z-10 rounded-[28px] border border-[rgba(0,0,0,0.12)] bg-[#0A0B0F] text-[#eceef2] shadow-[0_32px_80px_rgba(0,0,0,0.16)] overflow-hidden">
             
             {/* Console Header Bar */}
             <div className="flex flex-wrap items-center justify-between gap-4 px-6 sm:px-7 py-5 border-b border-white/10">
@@ -533,9 +533,9 @@ export default function VoiceSimulationSection() {
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="w-full max-w-[335px] rounded-[42px] p-3 transition-shadow"
               style={{
-                background: 'linear-gradient(145deg, #d7dce5 0%, #868f9f 52%, #4a5260 100%)',
+                background: 'linear-gradient(145deg, #e4e4e7 0%, #9ca3af 52%, #52525b 100%)',
                 boxShadow:
-                  '0 40px 85px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.14)',
+                  '0 36px 80px rgba(0, 0, 0, 0.20), 0 0 0 1px rgba(0, 0, 0, 0.10)',
               }}
             >
               {/* OLED Screen */}
@@ -661,12 +661,12 @@ export default function VoiceSimulationSection() {
           {current.outcomes.map((outcome, idx) => (
             <div
               key={`${current.id}-out-${idx}`}
-              className="zl-card flex items-start gap-3 px-5 py-4 rounded-2xl bg-white border border-[rgba(15,23,42,0.08)] shadow-[0_6px_20px_rgba(0,0,0,0.03)]"
+              className="zl-card flex items-start gap-3 px-5 py-4 rounded-2xl bg-white border border-[rgba(0,0,0,0.07)] shadow-[0_8px_30px_rgba(0,0,0,0.03)]"
             >
-              <span className="mt-0.5 w-6 h-6 rounded-full bg-[#0A84FF]/10 text-[#0A84FF] flex items-center justify-center shrink-0">
+              <span className="mt-0.5 w-6 h-6 rounded-full bg-[#10B981]/10 text-[#10B981] flex items-center justify-center shrink-0">
                 <Check className="w-3.5 h-3.5" />
               </span>
-              <span className="text-sm font-medium text-[#090A0D] leading-snug">
+              <span className="text-sm font-medium text-[#0A0A0A] leading-snug">
                 {outcome}
               </span>
             </div>

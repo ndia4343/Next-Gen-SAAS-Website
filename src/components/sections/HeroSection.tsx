@@ -94,7 +94,7 @@ export function Hero({}: HeroProps = {}) {
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full bg-[#07080b] text-[#eceef2] overflow-hidden pt-28 sm:pt-32"
+      className="hero-dark-canvas relative w-full bg-[#07080b] text-[#eceef2] overflow-hidden pt-28 sm:pt-32"
     >
       <div id="overview" className="absolute top-0 left-0 pointer-events-none" />
 
@@ -372,7 +372,7 @@ export function Hero({}: HeroProps = {}) {
           ))}
         </div>
 
-        {/* Bottom glowing seam leading into #F8F9FA Architectural Light Canvas */}
+        {/* Bottom glowing seam leading into Pure White #FFFFFF Architectural Canvas */}
         <div
           className="pointer-events-none absolute bottom-0 left-0 right-0 h-[2px] z-20"
           style={{

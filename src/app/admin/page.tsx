@@ -519,7 +519,7 @@ export default function SuperAdminCmsPage() {
                 <div>
                   <div className="text-sm font-semibold text-white">Architectural Light Body Canvas</div>
                   <div className="text-xs text-zinc-400">
-                    Keeps Hero &amp; Ticker permanently obsidian (#07080b) while rendering body sections in high-contrast studio chalk (#F8F9FA).
+                    Keeps Hero &amp; Ticker permanently obsidian (#07080b) while rendering body sections in pure architectural white (#FFFFFF).
                   </div>
                 </div>
                 <input

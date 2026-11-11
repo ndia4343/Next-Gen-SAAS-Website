@@ -199,20 +199,20 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm dark:backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-xl bg-white dark:bg-[#12151E] border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl p-6 sm:p-8 text-slate-900 dark:text-slate-100 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/55 dark:bg-black/80 backdrop-blur-sm dark:backdrop-blur-md animate-in fade-in duration-200">
+      <div className="relative w-full max-w-xl bg-[#FFFFFF] dark:bg-[#12151E] border border-[rgba(0,0,0,0.08)] dark:border-white/10 rounded-2xl shadow-2xl p-6 sm:p-8 text-[#0A0A0A] dark:text-zinc-100 overflow-hidden">
         
         {/* Top Progress Bar */}
         <div className="flex items-center justify-between gap-4 mb-6">
           <div className="flex-1 grid grid-cols-3 gap-2">
-            <div className={`h-1.5 rounded-full transition-all duration-300 ${step >= 1 ? "bg-violet-600 dark:bg-[#8B5CF6]" : "bg-slate-200 dark:bg-white/10"}`} />
-            <div className={`h-1.5 rounded-full transition-all duration-300 ${step >= 2 ? "bg-violet-600 dark:bg-[#8B5CF6]" : "bg-slate-200 dark:bg-white/10"}`} />
-            <div className={`h-1.5 rounded-full transition-all duration-300 ${step >= 3 ? "bg-violet-600 dark:bg-[#8B5CF6]" : "bg-slate-200 dark:bg-white/10"}`} />
+            <div className={`h-1.5 rounded-full transition-all duration-300 ${step >= 1 ? "bg-violet-600 dark:bg-[#8B5CF6]" : "bg-[#F6F7F9] dark:bg-white/10"}`} />
+            <div className={`h-1.5 rounded-full transition-all duration-300 ${step >= 2 ? "bg-violet-600 dark:bg-[#8B5CF6]" : "bg-[#F6F7F9] dark:bg-white/10"}`} />
+            <div className={`h-1.5 rounded-full transition-all duration-300 ${step >= 3 ? "bg-violet-600 dark:bg-[#8B5CF6]" : "bg-[#F6F7F9] dark:bg-white/10"}`} />
           </div>
           <button 
             type="button"
             onClick={onClose} 
-            className="text-slate-400 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors p-1 cursor-pointer rounded-lg hover:bg-slate-100 dark:hover:bg-white/5"
+            className="text-[#585A66] hover:text-[#0A0A0A] dark:text-zinc-400 dark:hover:text-white transition-colors p-1 cursor-pointer rounded-lg hover:bg-[#FAFAFA] dark:hover:bg-white/5"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -231,8 +231,8 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
             {step === 1 && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Step 1: Select Architectures</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                  <h3 className="text-2xl font-bold text-[#0A0A0A] dark:text-white tracking-tight">Step 1: Select Architectures</h3>
+                  <p className="text-sm text-[#585A66] dark:text-zinc-400 mt-1">
                     Select the AI systems you want deployed (choose all that apply, or continue for custom):
                   </p>
                 </div>
@@ -248,19 +248,19 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
                         className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all duration-200 ${
                           active
                             ? "bg-violet-50/80 dark:bg-[#8B5CF6]/15 border-violet-500 dark:border-[#8B5CF6] shadow-[0_0_15px_rgba(139,92,246,0.12)] dark:shadow-[0_0_15px_rgba(139,92,246,0.25)]"
-                            : "bg-slate-50 hover:bg-slate-100/80 border-slate-200 dark:bg-white/5 dark:border-white/5 dark:hover:border-white/20 dark:hover:bg-white/[0.07]"
+                            : "bg-[#FAFAFA] hover:bg-[#F6F7F9] border-[rgba(0,0,0,0.08)] dark:bg-white/5 dark:border-white/5 dark:hover:border-white/20 dark:hover:bg-white/[0.07]"
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <div className={`p-2 rounded-lg transition-colors ${
                             active 
                               ? "bg-violet-600 text-white dark:bg-[#8B5CF6]" 
-                              : "bg-slate-200/70 text-slate-600 dark:bg-white/5 dark:text-slate-400"
+                              : "bg-black/[0.05] text-[#585A66] dark:bg-white/5 dark:text-zinc-400"
                           }`}>
                             <Icon className="w-4 h-4" />
                           </div>
                           <span className={`text-sm font-semibold transition-colors ${
-                            active ? "text-slate-900 dark:text-white" : "text-slate-700 dark:text-slate-200"
+                            active ? "text-[#0A0A0A] dark:text-white" : "text-[#1F2024] dark:text-zinc-200"
                           }`}>
                             {opt.title}
                           </span>
@@ -269,7 +269,7 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
                         <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
                           active
                             ? "bg-violet-600 border-violet-600 text-white dark:bg-[#8B5CF6] dark:border-[#8B5CF6]"
-                            : "border-slate-300 dark:border-white/20 bg-white dark:bg-black/30"
+                            : "border-[rgba(0,0,0,0.16)] dark:border-white/20 bg-white dark:bg-black/30"
                         }`}>
                           {active && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                         </div>
@@ -278,7 +278,7 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
                   })}
                 </div>
 
-                <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex justify-end">
+                <div className="pt-4 border-t border-[rgba(0,0,0,0.07)] dark:border-white/10 flex justify-end">
                   <button
                     type="button"
                     onClick={() => setStep(2)}
@@ -295,8 +295,8 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
             {step === 2 && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Step 2: Monthly Inbound Volume</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                  <h3 className="text-2xl font-bold text-[#0A0A0A] dark:text-white tracking-tight">Step 2: Monthly Inbound Volume</h3>
+                  <p className="text-sm text-[#585A66] dark:text-zinc-400 mt-1">
                     Select your estimated monthly customer inquiries (calls, WhatsApp, or web):
                   </p>
                 </div>
@@ -311,18 +311,18 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
                         className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all duration-200 ${
                           active
                             ? "bg-violet-50/80 dark:bg-[#8B5CF6]/15 border-violet-500 dark:border-[#8B5CF6] shadow-[0_0_20px_rgba(139,92,246,0.12)] dark:shadow-[0_0_20px_rgba(139,92,246,0.25)]"
-                            : "bg-slate-50 hover:bg-slate-100/80 border-slate-200 dark:bg-white/5 dark:border-white/5 dark:hover:border-white/20 dark:hover:bg-white/[0.07]"
+                            : "bg-[#FAFAFA] hover:bg-[#F6F7F9] border-[rgba(0,0,0,0.08)] dark:bg-white/5 dark:border-white/5 dark:hover:border-white/20 dark:hover:bg-white/[0.07]"
                         }`}
                       >
                         <span className={`text-sm transition-colors ${
-                          active ? "text-slate-900 dark:text-white font-semibold" : "text-slate-700 dark:text-slate-200 font-medium"
+                          active ? "text-[#0A0A0A] dark:text-white font-semibold" : "text-[#1F2024] dark:text-zinc-200 font-medium"
                         }`}>
                           {v.label}
                         </span>
                         <span className={`text-[10px] font-mono tracking-widest px-2.5 py-1 rounded transition-colors ${
                           active 
                             ? "text-[#ea580c] dark:text-[#FF6B00] font-bold bg-[#FF6B00]/10 border border-[#FF6B00]/30" 
-                            : "text-slate-500 dark:text-slate-400 bg-slate-200/60 dark:bg-white/5"
+                            : "text-[#585A66] dark:text-zinc-400 bg-black/[0.05] dark:bg-white/5"
                         }`}>
                           {v.tier}
                         </span>
@@ -331,11 +331,11 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
                   })}
                 </div>
 
-                <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
+                <div className="pt-4 border-t border-[rgba(0,0,0,0.07)] dark:border-white/10 flex items-center justify-between">
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="inline-flex items-center gap-1.5 text-xs font-mono text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-xs font-mono text-[#585A66] hover:text-[#0A0A0A] dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" /> Back
                   </button>
@@ -355,55 +355,55 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
             {step === 3 && (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Step 3: Contact Information</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                  <h3 className="text-2xl font-bold text-[#0A0A0A] dark:text-white tracking-tight">Step 3: Contact Information</h3>
+                  <p className="text-sm text-[#585A66] dark:text-zinc-400 mt-1">
                     Where should we dispatch your custom architecture blueprint and cost breakdown?
                   </p>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-mono text-slate-700 dark:text-slate-400 uppercase tracking-wider mb-1.5 font-medium">Your Name *</label>
+                    <label className="block text-xs font-mono text-[#585A66] dark:text-zinc-400 uppercase tracking-wider mb-1.5 font-medium">Your Name *</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. Tariq Mahmood or Marcus Vance"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-300 dark:border-white/10 focus:border-violet-600 dark:focus:border-[#8B5CF6] focus:ring-2 focus:ring-violet-500/20 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-all"
+                      className="w-full bg-[#FAFAFA] dark:bg-white/5 border border-[rgba(0,0,0,0.12)] dark:border-white/10 focus:border-violet-600 dark:focus:border-[#8B5CF6] focus:ring-2 focus:ring-violet-500/20 rounded-xl px-4 py-3 text-sm text-[#0A0A0A] dark:text-white placeholder:text-[#585A66]/60 dark:placeholder:text-zinc-500 outline-none transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono text-slate-700 dark:text-slate-400 uppercase tracking-wider mb-1.5 font-medium">Work Email *</label>
+                    <label className="block text-xs font-mono text-[#585A66] dark:text-zinc-400 uppercase tracking-wider mb-1.5 font-medium">Work Email *</label>
                     <input
                       type="email"
                       required
                       placeholder="name@company.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-300 dark:border-white/10 focus:border-violet-600 dark:focus:border-[#8B5CF6] focus:ring-2 focus:ring-violet-500/20 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-all"
+                      className="w-full bg-[#FAFAFA] dark:bg-white/5 border border-[rgba(0,0,0,0.12)] dark:border-white/10 focus:border-violet-600 dark:focus:border-[#8B5CF6] focus:ring-2 focus:ring-violet-500/20 rounded-xl px-4 py-3 text-sm text-[#0A0A0A] dark:text-white placeholder:text-[#585A66]/60 dark:placeholder:text-zinc-500 outline-none transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono text-slate-700 dark:text-slate-400 uppercase tracking-wider mb-1.5 font-medium">Phone / WhatsApp *</label>
+                    <label className="block text-xs font-mono text-[#585A66] dark:text-zinc-400 uppercase tracking-wider mb-1.5 font-medium">Phone / WhatsApp *</label>
                     <input
                       type="tel"
                       placeholder="+44 / +971 / +92 / +1 WhatsApp Number"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-300 dark:border-white/10 focus:border-violet-600 dark:focus:border-[#8B5CF6] focus:ring-2 focus:ring-violet-500/20 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-all"
+                      className="w-full bg-[#FAFAFA] dark:bg-white/5 border border-[rgba(0,0,0,0.12)] dark:border-white/10 focus:border-violet-600 dark:focus:border-[#8B5CF6] focus:ring-2 focus:ring-violet-500/20 rounded-xl px-4 py-3 text-sm text-[#0A0A0A] dark:text-white placeholder:text-[#585A66]/60 dark:placeholder:text-zinc-500 outline-none transition-all"
                     />
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-slate-200 dark:border-white/10 space-y-3">
+                <div className="pt-4 border-t border-[rgba(0,0,0,0.07)] dark:border-white/10 space-y-3">
                   <div className="flex items-center justify-between">
                     <button
                       type="button"
                       onClick={() => setStep(2)}
-                      className="inline-flex items-center gap-1.5 text-xs font-mono text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono text-[#585A66] hover:text-[#0A0A0A] dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
                     >
                       <ArrowLeft className="w-3.5 h-3.5" /> Back
                     </button>
@@ -417,7 +417,7 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
                   </div>
 
                   {/* Trust Badge */}
-                  <div className="flex items-center justify-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono pt-2">
+                  <div className="flex items-center justify-center gap-1.5 text-xs text-[#585A66] dark:text-zinc-400 font-mono pt-2">
                     <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     <span>Fixed-scope architecture proposal sent within 24 hours. No sales spam.</span>
                   </div>
@@ -437,19 +437,19 @@ export const QuoteRequestModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, 
               Blueprint Request Staged
             </div>
 
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+            <h3 className="text-xl font-bold text-[#0A0A0A] dark:text-white">
               Inquiry Received
             </h3>
 
-            <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
+            <p className="text-xs text-[#585A66] dark:text-zinc-400 max-w-sm mx-auto leading-relaxed">
               Our engineering team will review your selected architectures and dispatch your custom blueprint to{" "}
-              <span className="font-semibold text-slate-900 dark:text-white">{formData.email}</span> within 24 business hours.
+              <span className="font-semibold text-[#0A0A0A] dark:text-white">{formData.email}</span> within 24 business hours.
             </p>
 
             <button
               type="button"
               onClick={onClose}
-              className="mt-6 px-6 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 dark:bg-white/10 dark:hover:bg-white/15 dark:border-white/10 dark:text-white text-xs font-semibold transition-all cursor-pointer"
+              className="mt-6 px-6 py-2.5 rounded-xl bg-[#FAFAFA] hover:bg-[#F6F7F9] text-[#0A0A0A] border border-[rgba(0,0,0,0.12)] dark:bg-white/10 dark:hover:bg-white/15 dark:border-white/10 dark:text-white text-xs font-semibold transition-all cursor-pointer"
             >
               Close Window
             </button>

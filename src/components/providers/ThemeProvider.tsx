@@ -97,7 +97,7 @@ export default function ThemeProvider({
     root.style.setProperty('--theme-title-accent', theme.titleHighlight);
     root.style.setProperty(
       '--theme-desc',
-      mode === 'light' ? '#475569' : theme.descriptionText
+      mode === 'light' ? '#585A66' : theme.descriptionText
     );
     root.style.setProperty('--theme-glow', theme.glow);
     root.style.setProperty('--theme-3d-light', theme.lightTint3D);
@@ -114,7 +114,7 @@ export default function ThemeProvider({
               --theme-primary: ${theme.primary};
               --theme-secondary: ${theme.secondary};
               --theme-title-accent: ${theme.titleHighlight};
-              --theme-desc: ${mode === 'light' ? '#475569' : theme.descriptionText};
+              --theme-desc: ${mode === 'light' ? '#585A66' : theme.descriptionText};
               --theme-glow: ${theme.glow};
               --theme-3d-light: ${theme.lightTint3D};
             }
