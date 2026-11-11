@@ -354,13 +354,13 @@ export function Hero({}: HeroProps = {}) {
           <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-[#090b10] to-transparent z-10" />
           <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-[#090b10] to-transparent z-10" />
 
-          <div className="animate-marquee flex items-center gap-12 whitespace-nowrap">
-            {[0, 1, 2].map((dup) => (
+          <div className="marquee-track items-center whitespace-nowrap">
+            {[0, 1].map((dup) => (
               <div
                 key={dup}
-                className="flex items-center gap-12 font-mono text-[11.5px] sm:text-xs tracking-[0.14em] uppercase text-[#b8bfcc] shrink-0"
+                className="flex items-center gap-12 pr-12 font-mono text-[11.5px] sm:text-xs tracking-[0.14em] uppercase text-[#b8bfcc] shrink-0"
               >
-                {MARQUEE_ITEMS.map((item, idx) => (
+                {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, idx) => (
                   <span key={`${dup}-${idx}`} className="inline-flex items-center gap-3.5">
                     <span
                       className={`w-1.5 h-1.5 rounded-full shrink-0 ${

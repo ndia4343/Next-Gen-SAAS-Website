@@ -332,6 +332,23 @@ body {
   cursor: auto !important;
 }
 
+@keyframes marqueeContinuous {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeContinuous 26s linear infinite !important;
+  will-change: transform;
+}
+
+/* Force no pause on hover to maintain uninterrupted flow */
+.marquee-track:hover {
+  animation-play-state: running !important;
+}
+
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -340,11 +357,12 @@ body {
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 28s linear infinite;
+  animation: marqueeContinuous 26s linear infinite !important;
+  will-change: transform;
 }
 
 .animate-marquee:hover {
-  animation-play-state: paused;
+  animation-play-state: running !important;
 }
 
 @layer utilities {
