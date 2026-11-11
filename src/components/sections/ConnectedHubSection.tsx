@@ -40,15 +40,29 @@ export default function ConnectedHubSection() {
   const [selectedId, setSelectedId] = useState<string>('core');
 
   const selectedPeripheral = nodes.find((n) => n.id === selectedId);
+  const sectionSubhead =
+    !constellation.sectionDescription ||
+    constellation.sectionDescription.startsWith('Every call and booking is logged.')
+      ? 'Keep your phone calls, WhatsApp messages, and clinic calendars working together.'
+      : constellation.sectionDescription;
   const activeTitle = selectedPeripheral ? selectedPeripheral.title : constellation.coreNodeTitle;
   const activeDescription = selectedPeripheral
     ? selectedPeripheral.description
+    : !constellation.coreNodeDescription ||
+      constellation.coreNodeDescription.startsWith('Every call and booking is logged.')
+    ? 'Centralizes every incoming inquiry and appointment into one reliable workflow.'
     : constellation.coreNodeDescription;
   const activeStatus = selectedPeripheral
     ? selectedPeripheral.status
     : constellation.coreNodeStatus;
   const activeSpecs = selectedPeripheral
     ? selectedPeripheral.specs
+    : constellation.coreNodeSpecs.some((s) => s.value === 'Every call and booking is logged')
+    ? [
+        { label: '01', value: 'Automatic Call & Booking Log' },
+        { label: '02', value: 'Instant Human Front-Desk Handover' },
+        { label: '03', value: 'Real-Time Booking Calendar Sync' },
+      ]
     : constellation.coreNodeSpecs;
 
   return (
@@ -72,7 +86,7 @@ export default function ConnectedHubSection() {
           </h2>
 
           <p className="text-[16px] sm:text-[17px] leading-[1.6] text-[#585A66] max-w-[460px]">
-            {constellation.sectionDescription}
+            {sectionSubhead}
           </p>
 
           {/* Side Detail Card */}

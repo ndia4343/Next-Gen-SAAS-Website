@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { PhoneCall, Wrench, Radio } from 'lucide-react';
-import { SETUP_TIMELINE } from '@/lib/default-config';
 
 interface HowItWorksSectionProps {
   onOpenQuoteModal?: (service?: string) => void;
@@ -23,7 +22,8 @@ export function HowItWorksSection(_props: HowItWorksSectionProps = {}) {
       num: '02',
       tag: '02 // We build and test your receptionist',
       title: 'We build and test your receptionist',
-      description: `We configure your AI receptionist to match your clinic's tone, treatment catalog, and scheduling calendar. Setup takes approximately ${SETUP_TIMELINE}.`,
+      description:
+        "We configure your AI receptionist to match your clinic's tone, treatment catalog, and scheduling calendar—completed within the decided timeline as per your project details and scope of work.",
       icon: Wrench,
       accent: '#0A84FF',
     },

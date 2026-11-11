@@ -2,53 +2,10 @@
 
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { SETUP_TIMELINE, SUPPORTED_LANGUAGES } from '@/lib/default-config';
-
-interface FaqItem {
-  id: string;
-  question: string;
-  answer: string;
-}
-
-const FAQ_ITEMS: FaqItem[] = [
-  {
-    id: 'unknown-answer',
-    question: 'What happens if the AI does not know the answer?',
-    answer:
-      'The receptionist never guesses. If a caller asks a complex clinical question, it politely takes a detailed message, marks the urgency, and routes it to your team via WhatsApp or email.',
-  },
-  {
-    id: 'front-desk-takeover',
-    question: 'Can our front desk team take over a call?',
-    answer:
-      'Yes. Your staff can view live call transcripts and take over any active conversation instantly with a single click.',
-  },
-  {
-    id: 'calendar-compatibility',
-    question: 'Does it work with our existing calendar or practice management software?',
-    answer:
-      'We connect directly with Google Calendar, Cal.com, and custom booking APIs. Compatibility with your specific clinic management system is confirmed during discovery.',
-  },
-  {
-    id: 'data-privacy',
-    question: 'How is patient and caller data handled?',
-    answer:
-      'All audio streams and chat transcripts are encrypted in transit and at rest. Patient data is never shared or used to train public machine learning models.',
-  },
-  {
-    id: 'languages',
-    question: 'Which languages does the receptionist speak?',
-    answer: `Our core system supports ${SUPPORTED_LANGUAGES} with natural pronunciation and accent recognition.`,
-  },
-  {
-    id: 'setup-timeline',
-    question: 'How long does setup take?',
-    answer: `Full onboarding, script testing, and calendar integration typically take ${SETUP_TIMELINE}.`,
-  },
-];
+import { DEFAULT_FAQ_ITEMS } from '@/lib/default-config';
 
 export default function FaqSection() {
-  const [openId, setOpenId] = useState<string | null>(FAQ_ITEMS[0].id);
+  const [openId, setOpenId] = useState<string | null>(DEFAULT_FAQ_ITEMS[0].id);
 
   const toggleItem = (id: string) => {
     setOpenId((prev) => (prev === id ? null : id));
@@ -75,7 +32,7 @@ export default function FaqSection() {
         </div>
 
         <div className="mt-10 space-y-3">
-          {FAQ_ITEMS.map((item) => {
+          {DEFAULT_FAQ_ITEMS.map((item) => {
             const isOpen = openId === item.id;
             const buttonId = `faq-btn-${item.id}`;
             const panelId = `faq-panel-${item.id}`;

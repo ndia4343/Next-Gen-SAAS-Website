@@ -818,12 +818,20 @@ const SECTOR_PRIORITY: Record<string, number> = {
   hr: 2,
 };
 
+const DEFAULT_DASHBOARD_DESCRIPTION =
+  'A clear view of after-hours call volume, booked treatment rooms, and front-desk time saved—syncing directly with your Google Calendar or scheduling software.';
+
 // ==========================================
 // MAIN EXPORT: COMMAND CENTER SECTION
 // ==========================================
 export default function CommandCenterSection() {
   const { config } = useSiteConfig();
   const telemetry = config.telemetry;
+  const dashboardDescription =
+    !telemetry.sectionDescription ||
+    telemetry.sectionDescription.startsWith('Every missed call')
+      ? DEFAULT_DASHBOARD_DESCRIPTION
+      : telemetry.sectionDescription;
 
   // Enforce clinic-first sector ordering: Dental & Aesthetics first (default index 0)
   const sectors = [...telemetry.sectors].sort(
@@ -924,7 +932,7 @@ export default function CommandCenterSection() {
               </span>
             </h2>
             <p className="mt-4 max-w-[580px] text-[15.5px] sm:text-base leading-[1.6] text-[#585A66]">
-              {telemetry.sectionDescription}
+              {dashboardDescription}
             </p>
           </div>
 

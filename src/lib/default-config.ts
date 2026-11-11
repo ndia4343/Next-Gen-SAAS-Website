@@ -3,11 +3,57 @@ import { SiteConfig } from '@/types/site-config';
 // TODO: Set your international WhatsApp number e.g. "971500000000" to activate button
 export const WHATSAPP_NUMBER: string = '';
 
-// TODO: Set your onboarding timeline e.g. "7–10 business days"
-export const SETUP_TIMELINE: string = '{{TIMELINE}}';
+// Generic scope-based onboarding timeline & language defaults
+export const SETUP_TIMELINE: string =
+  'the decided timeline based on the project details and scope of work';
 
-// TODO: Set your supported languages e.g. "English and Arabic"
-export const SUPPORTED_LANGUAGES: string = '{{LANGUAGES}}';
+export const SUPPORTED_LANGUAGES: string =
+  'languages tailored to the project details and scope of work';
+
+export interface FaqEntry {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+export const DEFAULT_FAQ_ITEMS: FaqEntry[] = [
+  {
+    id: 'unknown-answer',
+    question: 'What happens if the AI does not know the answer?',
+    answer:
+      'The receptionist never guesses. If a caller asks a complex clinical question, it politely takes a detailed message, marks the urgency, and routes it to your team via WhatsApp or email.',
+  },
+  {
+    id: 'front-desk-takeover',
+    question: 'Can our front desk team take over a call?',
+    answer:
+      'Yes. Your staff can view live call transcripts and take over any active conversation instantly with a single click.',
+  },
+  {
+    id: 'calendar-compatibility',
+    question: 'Does it work with our existing calendar or booking system?',
+    answer:
+      'We connect directly with Google Calendar, Cal.com, and custom booking APIs. Compatibility with your specific clinic management system is confirmed during discovery.',
+  },
+  {
+    id: 'data-privacy',
+    question: 'How is patient and caller data handled?',
+    answer:
+      'All audio streams and chat transcripts are encrypted in transit and at rest. Patient data is never shared or used to train public machine learning models.',
+  },
+  {
+    id: 'languages',
+    question: 'Which languages does the receptionist support?',
+    answer:
+      'Supported languages are configured as per the project details and scope of work, with natural pronunciation and accent recognition.',
+  },
+  {
+    id: 'setup-timeline',
+    question: 'How long does setup take?',
+    answer:
+      'Full onboarding, script testing, and calendar integration are delivered on the decided timeline as per the project details and scope of work.',
+  },
+];
 
 // TODO: Set founder details to render the "Who's Behind This" section on the storefront
 export const FOUNDER_NAME: string = '{{FOUNDER_NAME}}';
@@ -273,15 +319,15 @@ export const defaultConfig: SiteConfig = {
     sectionTitle: 'One desk.',
     sectionTitleAccent: 'Every booking connected.',
     sectionDescription:
-      'Every call and booking is logged. Hands over to your team when needed. Click any tool below to see how your clinic systems stay in sync.',
+      'Keep your phone calls, WhatsApp messages, and clinic calendars working together.',
     coreNodeTitle: 'ZAVIAN DESK',
     coreNodeDescription:
-      'Every call and booking is logged. Hands over to your team when needed—keeping calls, WhatsApp messages, and clinic calendars working together.',
-    coreNodeStatus: 'CALL & BOOKING LOG',
+      'Centralizes every incoming inquiry and appointment into one reliable workflow.',
+    coreNodeStatus: 'CONNECTED WORKFLOW',
     coreNodeSpecs: [
-      { label: 'Logging', value: 'Every call and booking is logged' },
-      { label: 'Handover', value: 'Hands over to your team when needed' },
-      { label: 'Calendar Sync', value: 'Syncs with your booking calendar' },
+      { label: '01', value: 'Automatic Call & Booking Log' },
+      { label: '02', value: 'Instant Human Front-Desk Handover' },
+      { label: '03', value: 'Real-Time Booking Calendar Sync' },
     ],
     nodes: [
       {
@@ -380,7 +426,7 @@ export const defaultConfig: SiteConfig = {
     sectionTitle: 'See every call become a',
     sectionTitleAccent: 'tracked booking.',
     sectionDescription:
-      'Every missed call is a patient booking lost to another clinic. Here is how our receptionist handles inquiries, calendar bookings, and follow-ups. (Select other sectors below to preview adapted workflows).',
+      'A clear view of after-hours call volume, booked treatment rooms, and front-desk time saved—syncing directly with your Google Calendar or scheduling software.',
     autoCycleSeconds: 4,
     sectors: [
       {
