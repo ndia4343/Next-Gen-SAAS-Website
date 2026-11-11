@@ -8,34 +8,41 @@ import AmbientOrbitalCursor from '@/components/ui/AmbientOrbitalCursor';
 import { getStorefrontContent } from '@/lib/siteContent';
 
 export const metadata: Metadata = {
-  title: 'ZAVIAN LABS // 3D SaaS & AI Engineering Studio',
-  description: 'GPU-accelerated WebGL motion and autonomous agent architectures.',
+  title: 'ZAVIAN LABS // Voice Receptionists, WhatsApp Automation & Custom Software',
+  description:
+    'We build AI voice receptionists, WhatsApp automation, workflows, dashboards, and custom software for businesses that run on conversations.',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   let activeThemeId = 'crimson-cyber';
-  let defaultMode: ThemeMode = 'dark';
+  let defaultMode: ThemeMode = 'light';
   try {
     const content = await getStorefrontContent();
     activeThemeId = content.themeBranding?.activeThemeId || 'crimson-cyber';
-    defaultMode = (content.themeBranding?.defaultMode as ThemeMode) || 'dark';
+    defaultMode = (content.themeBranding?.defaultMode as ThemeMode) || 'light';
   } catch {
     // fallback
   }
 
   return (
-    <html lang="en" suppressHydrationWarning className="dark">
+    <html lang="en" suppressHydrationWarning className="light">
       <head>
-        {/* Anti-Flicker Script: Synchronously applies dark/light class before React hydration */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+          rel="stylesheet"
+        />
+        {/* Anti-Flicker Script: Synchronously applies light editorial class before React hydration */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var saved = localStorage.getItem('zavian_theme');
-                  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  var mode = (saved === 'dark' || saved === 'light') ? saved : '${defaultMode}';
                   var root = document.documentElement;
+                  var isAdmin = window.location && window.location.pathname && window.location.pathname.indexOf('/admin') === 0;
+                  var saved = localStorage.getItem('zavian_theme');
+                  var mode = isAdmin ? ((saved === 'dark' || saved === 'light') ? saved : 'dark') : 'light';
                   root.classList.remove('dark', 'light');
                   root.classList.add(mode);
                   root.setAttribute('data-theme', mode);
@@ -45,7 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
         />
       </head>
-      <body className="relative antialiased bg-white dark:bg-[#07070d] text-neutral-900 dark:text-zinc-100 transition-colors duration-300 overflow-x-hidden">
+      <body className="relative antialiased bg-[#eceff3] text-[#0b0d12] transition-colors duration-300 overflow-x-hidden font-sans">
         <ThemeProvider initialThemeId={activeThemeId} initialMode={defaultMode}>
           <SmoothScrollProvider>
             <VisitorTracker />

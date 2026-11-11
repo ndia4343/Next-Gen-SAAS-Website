@@ -36,7 +36,7 @@ interface ThemeProviderProps {
 export default function ThemeProvider({
   children,
   initialThemeId = 'crimson-cyber',
-  initialMode = 'dark',
+  initialMode = 'light',
 }: ThemeProviderProps) {
   const [themeId, setThemeId] = useState<PredefinedThemeId>(
     (initialThemeId in PREDEFINED_THEMES ? initialThemeId : 'crimson-cyber') as PredefinedThemeId
@@ -46,14 +46,20 @@ export default function ThemeProvider({
 
   const theme = getTheme(themeId);
 
-  // Sync mode with localStorage & prefers-color-scheme on mount
+  // Sync mode: public storefront enforces the unified editorial light canvas below hero; /admin keeps saved dark preference
   useEffect(() => {
     setMounted(true);
     try {
-      const saved = localStorage.getItem('zavian_theme');
-      if (saved === 'dark' || saved === 'light') {
-        setModeState(saved as ThemeMode);
-      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      const isAdmin =
+        typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
+      if (isAdmin) {
+        const saved = localStorage.getItem('zavian_theme');
+        if (saved === 'dark' || saved === 'light') {
+          setModeState(saved as ThemeMode);
+        } else {
+          setModeState('dark');
+        }
+      } else {
         setModeState('light');
       }
     } catch {

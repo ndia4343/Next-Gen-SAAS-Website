@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
-import ThemeToggle from '@/components/ui/ThemeToggle';
 import { FooterData, ThemeBrandingConfig } from '@/lib/types';
 
 interface FooterProps {
@@ -90,54 +89,53 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             <a 
               href="#hero" 
               onClick={(e) => handleNavScroll(e, 'hero')} 
-              className="inline-flex items-center gap-2.5 group focus:outline-none"
+              className="inline-flex items-center gap-3 group focus:outline-none"
             >
-              {/* Cube Icon */}
-              <div className="w-8 h-8 rounded-xl bg-white/[0.08] p-1 border border-white/15 flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-105 shrink-0 shadow-sm">
-                {(branding?.logoMode === 'image' || (branding?.logoMode !== 'svg' && branding?.logoImageUrl)) && branding?.logoImageUrl ? (
-                  <img
-                    src={branding.logoImageUrl}
-                    alt="Brand Logo"
-                    style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18))' }}
-                    className="w-full h-full object-contain p-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
-                  />
-                ) : branding?.logoMode === 'svg' && branding?.logoSvgContent ? (
-                  <div
-                    className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full text-white"
-                    dangerouslySetInnerHTML={{ __html: branding.logoSvgContent }}
-                  />
-                ) : (
-                  <img
-                    src="/images/zavian-cube-mark.png"
-                    alt="Brand Logo"
-                    style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18))' }}
-                    className="w-full h-full object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
-                  />
-                )}
+              {/* Cube Icon (36px x 36px obsidian inset matching Navbar lockup) */}
+              <div
+                className="w-9 h-9 rounded-xl p-[1.5px] flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shrink-0 shadow-[0_0_20px_rgba(94,227,255,0.18)]"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(242,244,248,0.65) 0%, rgba(138,146,162,0.4) 50%, rgba(94,227,255,0.45) 100%)',
+                }}
+              >
+                <div className="w-full h-full rounded-[10px] bg-[#07080b] p-1 flex items-center justify-center overflow-hidden">
+                  {(branding?.logoMode === 'image' || (branding?.logoMode !== 'svg' && branding?.logoImageUrl)) && branding?.logoImageUrl ? (
+                    <img
+                      src={branding.logoImageUrl}
+                      alt="Brand Logo"
+                      style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18))' }}
+                      className="w-full h-full object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
+                    />
+                  ) : branding?.logoMode === 'svg' && branding?.logoSvgContent ? (
+                    <div
+                      className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full text-white"
+                      dangerouslySetInnerHTML={{ __html: branding.logoSvgContent }}
+                    />
+                  ) : (
+                    <img
+                      src="/images/zavian-cube-mark.png"
+                      alt="Brand Logo"
+                      style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18))' }}
+                      className="w-full h-full object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
+                    />
+                  )}
+                </div>
               </div>
-              <div className="flex items-center text-base tracking-wider leading-none">
-                <span className="font-extrabold text-white">{branding?.wordmark1 || 'ZAVIAN'}</span>
-                <span className="font-bold text-[#A855F7] ml-1.5">{branding?.wordmark2 || 'LABS'}</span>
+              <div className="flex items-center text-[15px] tracking-widest leading-none uppercase">
+                <span className="font-bold text-[#eceef2]">{branding?.wordmark1 || 'ZAVIAN'}</span>
+                <span className="font-normal text-[#b4a0ff] ml-1.5">{branding?.wordmark2 || 'LABS'}</span>
               </div>
             </a>
 
-            {/* High-Contrast Visible Headline */}
-            <h3 className="text-2xl font-extrabold tracking-tight text-white mb-2 leading-snug">
-              <span className="text-white" style={{ color: '#ffffff' }}>Zero missed inquiries.</span>{' '}
-              <span 
-                className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-400 inline-block font-extrabold"
-                style={{
-                  backgroundImage: 'linear-gradient(to right, #a78bfa, #a5b4fc, #22d3ee)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
-                Zero human delay.
-              </span>
+            {/* High-Contrast Headline */}
+            <h3 className="text-2xl font-serif-instrument tracking-tight text-white mb-2 leading-snug">
+              Every call answered.{' '}
+              <span className="italic text-[#b4a0ff]">Every booking tracked.</span>
             </h3>
 
             <p className="text-xs text-zinc-400 leading-relaxed max-w-sm">
-              Intelligent voice agents, WhatsApp booking systems, and custom software that capture and track every opportunity around the clock.
+              Voice receptionists, WhatsApp follow-ups, live revenue dashboards, and custom software built around how your business operates.
             </p>
 
             {/* Email Contact Pill */}
@@ -146,7 +144,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                 href="mailto:contact@zavianlabs.com"
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700 shadow-xs transition-all text-xs font-mono group"
               >
-                <svg className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg className="w-3.5 h-3.5 text-[#5ee3ff] group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect width="20" height="16" x="2" y="4" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
@@ -162,15 +160,8 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             <ul className="space-y-2 text-xs">
               <li>
                 <a 
-                  href="#how-it-works" 
-                  onClick={(e) => {
-                    if (onOpenQuoteModal) {
-                      e.preventDefault();
-                      onOpenQuoteModal('voice_receptionist');
-                    } else {
-                      handleNavScroll(e, 'how-it-works');
-                    }
-                  }}
+                  href="#voice-simulation" 
+                  onClick={(e) => handleNavScroll(e, 'voice-simulation')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
                   AI Voice Receptionist
@@ -178,50 +169,29 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               </li>
               <li>
                 <a 
-                  href="#how-it-works" 
-                  onClick={(e) => {
-                    if (onOpenQuoteModal) {
-                      e.preventDefault();
-                      onOpenQuoteModal('whatsapp_funnel');
-                    } else {
-                      handleNavScroll(e, 'how-it-works');
-                    }
-                  }}
+                  href="#voice-simulation" 
+                  onClick={(e) => handleNavScroll(e, 'voice-simulation')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  WhatsApp Booking Concierge
+                  WhatsApp Automation
                 </a>
               </li>
               <li>
                 <a 
-                  href="#how-it-works" 
-                  onClick={(e) => {
-                    if (onOpenQuoteModal) {
-                      e.preventDefault();
-                      onOpenQuoteModal('profit_dashboard');
-                    } else {
-                      handleNavScroll(e, 'how-it-works');
-                    }
-                  }}
+                  href="#connected-hub" 
+                  onClick={(e) => handleNavScroll(e, 'connected-hub')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  Live Revenue Dashboards
+                  Connected Systems Hub
                 </a>
               </li>
               <li>
                 <a 
-                  href="#industries" 
-                  onClick={(e) => {
-                    if (onOpenQuoteModal) {
-                      e.preventDefault();
-                      onOpenQuoteModal('estimation_engine');
-                    } else {
-                      handleNavScroll(e, 'industries');
-                    }
-                  }}
+                  href="#command-center" 
+                  onClick={(e) => handleNavScroll(e, 'command-center')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  SolarPro Calculation Engine
+                  Command Center &amp; SolarPro
                 </a>
               </li>
             </ul>
@@ -242,31 +212,29 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               </li>
               <li>
                 <a 
-                  href="#how-it-works" 
-                  onClick={(e) => handleNavScroll(e, 'how-it-works')}
+                  href="#voice-simulation" 
+                  onClick={(e) => handleNavScroll(e, 'voice-simulation')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  How It Works
+                  Voice Simulation
                 </a>
               </li>
               <li>
                 <a 
-                  href="#industries" 
-                  onClick={(e) => handleNavScroll(e, 'industries')}
+                  href="#connected-hub" 
+                  onClick={(e) => handleNavScroll(e, 'connected-hub')}
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  Industries
+                  Connected Hub
                 </a>
               </li>
               <li>
                 <a 
-                  href="https://wa.me/971500000000?text=Hi%20Zavian%20Labs%2C%20I%20would%20like%20to%20learn%20more%20about%20your%20autonomous%20systems"
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-zinc-400 hover:text-white transition-colors inline-flex items-center gap-1"
+                  href="#command-center" 
+                  onClick={(e) => handleNavScroll(e, 'command-center')}
+                  className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  <span>Direct WhatsApp</span>
-                  <span className="text-zinc-500 text-[10px]">↗</span>
+                  Command Center
                 </a>
               </li>
             </ul>
@@ -276,14 +244,14 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
           <div className="lg:col-span-2 space-y-3">
             <h4 className="text-xs uppercase font-mono tracking-widest text-zinc-200 font-bold">Get Started</h4>
             <p className="text-xs text-zinc-400 leading-snug">
-              Deploy autonomous systems into your business.
+              See how this fits your calls, schedule, and team.
             </p>
             <div className="pt-1">
               <a
                 href={BOOKING_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full px-4 py-2.5 text-xs font-semibold rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white shadow-md shadow-indigo-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+                className="inline-flex items-center justify-center w-full px-4 py-2.5 text-xs font-semibold rounded-full bg-[#eceef2] hover:bg-white text-[#07080b] shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
               >
                 Book Discovery Call →
               </a>
@@ -306,7 +274,6 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>SYSTEMS OPERATIONAL</span>
             </div>
-            <ThemeToggle />
             <button 
               onClick={scrollToTop} 
               className="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white text-xs cursor-pointer transition-colors"

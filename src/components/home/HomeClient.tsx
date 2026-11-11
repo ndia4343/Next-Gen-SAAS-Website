@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import HeroSection from '@/components/sections/HeroSection';
-import HowItWorksSection from '@/components/sections/HowItWorksSection';
-import ProjectSupportSection from '@/components/sections/ProjectSupportSection';
+import VoiceSimulationSection from '@/components/sections/VoiceSimulationSection';
+import ConnectedHubSection from '@/components/sections/ConnectedHubSection';
+import CommandCenterSection from '@/components/sections/CommandCenterSection';
 import QuoteModal from '@/components/ui/QuoteModal';
 import Footer from '@/components/layout/Footer';
 import { WebsiteContent, ThemeBrandingConfig } from '@/lib/types';
@@ -19,7 +20,6 @@ export default function HomeClient({ content }: HomeClientProps) {
   const [branding, setBranding] = useState<ThemeBrandingConfig>(content.themeBranding);
 
   useEffect(() => {
-    // 1. Sync from localStorage for immediate reflection on client
     try {
       const saved = localStorage.getItem('zavian_theme_branding');
       if (saved) {
@@ -30,7 +30,6 @@ export default function HomeClient({ content }: HomeClientProps) {
       }
     } catch {}
 
-    // 2. Listen to real-time custom events & cross-tab storage changes
     const handleBrandingUpdate = (e: Event) => {
       const customEvent = e as CustomEvent<ThemeBrandingConfig>;
       if (customEvent.detail) {
@@ -49,7 +48,6 @@ export default function HomeClient({ content }: HomeClientProps) {
     window.addEventListener('zavian_branding_updated', handleBrandingUpdate);
     window.addEventListener('storage', handleStorage);
 
-    // 3. Fetch latest active content from /api/content
     fetch('/api/content')
       .then((res) => res.json())
       .then((data) => {
@@ -71,17 +69,20 @@ export default function HomeClient({ content }: HomeClientProps) {
   };
 
   return (
-    <main className="relative bg-white dark:bg-[#07070d] min-h-screen transition-colors">
+    <main className="relative bg-[#eceff3] text-[#0b0d12] min-h-screen overflow-x-hidden">
       <Navbar
         onOpenQuoteModal={handleOpenModal}
         content={content.header}
         themeBranding={branding}
       />
+
+      {/* Permanently Dark Obsidian Hero + Marquee Strip */}
       <HeroSection onOpenQuoteModal={handleOpenModal} content={content.hero} />
-      <HowItWorksSection
-        onOpenQuoteModal={handleOpenModal}
-      />
-      <ProjectSupportSection onOpenQuoteModal={handleOpenModal} content={content.projectSupport} />
+
+      {/* Clean Editorial Light Mode Canvas (#eceff3) with Dark Contrast Interactive Anchors */}
+      <VoiceSimulationSection />
+      <ConnectedHubSection />
+      <CommandCenterSection />
 
       <Footer
         onOpenQuoteModal={handleOpenModal}

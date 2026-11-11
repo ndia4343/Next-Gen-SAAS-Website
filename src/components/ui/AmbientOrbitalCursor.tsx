@@ -130,8 +130,8 @@ export default function AmbientOrbitalCursor() {
         }}
         className={`pointer-events-none fixed top-0 left-0 rounded-full border transition-colors duration-200 flex items-center justify-center ${
           isHovered
-            ? 'border-stone-400/35 dark:border-stone-500/35 bg-stone-500/10 dark:bg-stone-400/10 backdrop-blur-[2px]'
-            : 'border-stone-400/50 dark:border-stone-600/50 bg-stone-500/5 dark:bg-stone-400/5'
+            ? 'border-[#06788f]/45 bg-[#06788f]/10 backdrop-blur-[2px]'
+            : 'border-stone-400/55 bg-stone-500/[0.04]'
         }`}
       >
         {/* Dynamic Rotating Orbital Axis */}
@@ -139,12 +139,12 @@ export default function AmbientOrbitalCursor() {
           style={{ rotate: orbitRotate }}
           className="absolute inset-0 w-full h-full pointer-events-none"
         >
-          {/* The Orbiting Satellite (4px Claude Terracotta / Warm Clay Dot) */}
+          {/* The Orbiting Satellite (Claude Terracotta / Warm Clay Dot) */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#D97757] shadow-[0_0_8px_rgba(217,119,87,0.9)]" />
         </motion.div>
       </motion.div>
 
-      {/* Center Precision Click Dot (Zero-Latency Exact Click Point) */}
+      {/* Center Precision Click Dot (Zero-Latency Exact Click Point — High Contrast on Both Light & Dark Canvas) */}
       <motion.div
         style={{
           x: mouseX,
@@ -157,7 +157,7 @@ export default function AmbientOrbitalCursor() {
           scale: isHovered ? 0.75 : 1,
         }}
         transition={{ duration: 0.12 }}
-        className="pointer-events-none fixed top-0 left-0 w-1 h-1 rounded-full bg-stone-800 dark:bg-stone-100 shadow-xs"
+        className="pointer-events-none fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-[#0b0d12] ring-1 ring-white/85 shadow-xs"
       />
 
     </div>
