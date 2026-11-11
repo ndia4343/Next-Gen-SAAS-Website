@@ -27,7 +27,7 @@ interface IndustrySolution {
   id: string;
   tabLabel: string;
   badge: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   headline: string;
   subheadline: string;
   telemetry: {

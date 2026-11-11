@@ -12,8 +12,8 @@
   "dependencies": {
     "@elevenlabs/react": "^1.20.2",
     "@gsap/react": "^2.1.1",
-    "@react-three/drei": "^9.120.4",
-    "@react-three/fiber": "^8.17.10",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.0.0-rc.10",
     "@react-three/postprocessing": "^2.16.3",
     "@tailwindcss/postcss": "^4.0.0",
     "@tailwindcss/typography": "^0.5.16",
@@ -27,7 +27,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.6.0",
-    "three": "^0.172.0",
+    "three": "^0.187.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {

@@ -46,19 +46,14 @@ export default function ThemeProvider({
 
   const theme = getTheme(themeId);
 
-  // Sync mode: public storefront enforces the unified editorial light canvas below hero; /admin keeps saved dark preference
+  // Sync mode: public storefront uses editorial light canvas below hero; /admin stays dark obsidian
   useEffect(() => {
     setMounted(true);
     try {
       const isAdmin =
         typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
       if (isAdmin) {
-        const saved = localStorage.getItem('zavian_theme');
-        if (saved === 'dark' || saved === 'light') {
-          setModeState(saved as ThemeMode);
-        } else {
-          setModeState('dark');
-        }
+        setModeState('dark');
       } else {
         setModeState('light');
       }

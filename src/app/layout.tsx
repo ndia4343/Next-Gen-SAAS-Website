@@ -5,6 +5,9 @@ import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
 import ThemeProvider, { ThemeMode } from '@/components/providers/ThemeProvider';
 import VisitorTracker from '@/components/analytics/VisitorTracker';
 import { getStorefrontContent } from '@/lib/siteContent';
+import { getServerSiteConfig } from '@/lib/site-config-store';
+import { defaultConfig } from '@/lib/default-config';
+import { SiteConfigProvider } from '@/context/SiteConfigContext';
 
 export const metadata: Metadata = {
   title: 'ZAVIAN LABS // Voice Receptionists, WhatsApp Automation & Custom Software',
@@ -15,10 +18,15 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   let activeThemeId = 'crimson-cyber';
   let defaultMode: ThemeMode = 'light';
+  let initialSiteConfig = defaultConfig;
   try {
-    const content = await getStorefrontContent();
+    const [content, serverConfig] = await Promise.all([
+      getStorefrontContent(),
+      getServerSiteConfig(),
+    ]);
     activeThemeId = content.themeBranding?.activeThemeId || 'crimson-cyber';
     defaultMode = (content.themeBranding?.defaultMode as ThemeMode) || 'light';
+    initialSiteConfig = serverConfig;
   } catch {
     // fallback
   }
@@ -41,7 +49,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   var root = document.documentElement;
                   var isAdmin = window.location && window.location.pathname && window.location.pathname.indexOf('/admin') === 0;
                   var saved = localStorage.getItem('zavian_theme');
-                  var mode = isAdmin ? ((saved === 'dark' || saved === 'light') ? saved : 'dark') : 'light';
+                  var mode = isAdmin ? ((saved === 'dark' || saved === 'light') ? saved : 'dark') : '${initialSiteConfig.branding.enableLightMode ? 'light' : 'dark'}';
                   root.classList.remove('dark', 'light');
                   root.classList.add(mode);
                   root.setAttribute('data-theme', mode);
@@ -51,13 +59,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
         />
       </head>
-      <body className="relative antialiased bg-[#eceff3] text-[#0b0d12] transition-colors duration-300 overflow-x-hidden font-sans">
-        <ThemeProvider initialThemeId={activeThemeId} initialMode={defaultMode}>
-          <SmoothScrollProvider>
-            <VisitorTracker />
-            <div className="relative z-10">{children}</div>
-          </SmoothScrollProvider>
-        </ThemeProvider>
+      <body className="relative antialiased bg-[#F8F9FA] text-[#090A0D] transition-colors duration-300 overflow-x-hidden font-sans">
+        <SiteConfigProvider initialConfig={initialSiteConfig}>
+          <ThemeProvider initialThemeId={activeThemeId} initialMode={defaultMode}>
+            <SmoothScrollProvider>
+              <VisitorTracker />
+              <div className="relative z-10">{children}</div>
+            </SmoothScrollProvider>
+          </ThemeProvider>
+        </SiteConfigProvider>
       </body>
     </html>
   );

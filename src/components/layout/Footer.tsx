@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import { FooterData, ThemeBrandingConfig } from '@/lib/types';
+import { useSiteConfig } from '@/context/SiteConfigContext';
 
 interface FooterProps {
   onOpenQuoteModal?: (service: string) => void;
@@ -10,9 +11,8 @@ interface FooterProps {
   themeBranding?: ThemeBrandingConfig;
 }
 
-const BOOKING_URL = 'https://calendar.app.google/u5vL88X41qmGBCky5';
-
-export default function Footer({ onOpenQuoteModal, themeBranding: initialBranding }: FooterProps = {}) {
+export default function Footer({ themeBranding: initialBranding }: FooterProps = {}) {
+  const { config } = useSiteConfig();
   const { lenis } = useSmoothScroll();
   const [branding, setBranding] = useState<ThemeBrandingConfig | undefined>(initialBranding);
 
@@ -77,6 +77,16 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
     }
   };
 
+  const iconSize = Math.max(24, Math.min(64, config.branding.logoIconSize || 36));
+  const logoSrc =
+    config.branding.logoImageUrl ||
+    (branding?.logoImageUrl ? branding.logoImageUrl : '/images/zavian-cube-mark.png');
+  const wordmark1 = config.branding.logoTextPrimary || branding?.wordmark1 || 'ZAVIAN';
+  const wordmark2 = config.branding.logoTextSecondary || branding?.wordmark2 || 'LABS';
+  const companyName = config.branding.companyName || `${wordmark1} ${wordmark2}`;
+  const contactEmail = config.branding.contactEmail || 'contact@zavianlabs.com';
+  const bookingUrl = config.branding.calendarBookingUrl || 'https://calendar.app.google/u5vL88X41qmGBCky5';
+
   return (
     <footer className="relative z-20 bg-[#07070A] border-t border-neutral-800 text-zinc-400 pt-12 pb-12 transition-colors duration-300">
       <div className="max-w-6xl mx-auto px-6">
@@ -91,31 +101,26 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
               onClick={(e) => handleNavScroll(e, 'hero')} 
               className="inline-flex items-center gap-3 group focus:outline-none"
             >
-              {/* Cube Icon (36px x 36px obsidian inset matching Navbar lockup) */}
+              {/* Cube Icon (dynamic size matching Navbar lockup) */}
               <div
-                className="w-9 h-9 rounded-xl p-[1.5px] flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shrink-0 shadow-[0_0_20px_rgba(94,227,255,0.18)]"
+                className="rounded-xl p-[1.5px] flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shrink-0 shadow-[0_0_20px_rgba(94,227,255,0.18)]"
                 style={{
+                  width: `${iconSize}px`,
+                  height: `${iconSize}px`,
                   background:
                     'linear-gradient(135deg, rgba(242,244,248,0.65) 0%, rgba(138,146,162,0.4) 50%, rgba(94,227,255,0.45) 100%)',
                 }}
               >
                 <div className="w-full h-full rounded-[10px] bg-[#07080b] p-1 flex items-center justify-center overflow-hidden">
-                  {(branding?.logoMode === 'image' || (branding?.logoMode !== 'svg' && branding?.logoImageUrl)) && branding?.logoImageUrl ? (
-                    <img
-                      src={branding.logoImageUrl}
-                      alt="Brand Logo"
-                      style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18))' }}
-                      className="w-full h-full object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
-                    />
-                  ) : branding?.logoMode === 'svg' && branding?.logoSvgContent ? (
+                  {branding?.logoMode === 'svg' && branding?.logoSvgContent ? (
                     <div
                       className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full text-white"
                       dangerouslySetInnerHTML={{ __html: branding.logoSvgContent }}
                     />
                   ) : (
                     <img
-                      src="/images/zavian-cube-mark.png"
-                      alt="Brand Logo"
+                      src={logoSrc}
+                      alt={companyName}
                       style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18))' }}
                       className="w-full h-full object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
                     />
@@ -123,8 +128,8 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
                 </div>
               </div>
               <div className="flex items-center text-[15px] tracking-widest leading-none uppercase">
-                <span className="font-bold text-[#eceef2]">{branding?.wordmark1 || 'ZAVIAN'}</span>
-                <span className="font-normal text-[#b4a0ff] ml-1.5">{branding?.wordmark2 || 'LABS'}</span>
+                <span className="font-bold text-[#eceef2]">{wordmark1}</span>
+                <span className="font-normal text-[#b4a0ff] ml-1.5">{wordmark2}</span>
               </div>
             </a>
 
@@ -135,20 +140,20 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             </h3>
 
             <p className="text-xs text-zinc-400 leading-relaxed max-w-sm">
-              Voice receptionists, WhatsApp follow-ups, live revenue dashboards, and custom software built around how your business operates.
+              {config.branding.tagline || 'AI AUTOMATION & SOFTWARE STUDIO'} &mdash; Voice receptionists, WhatsApp follow-ups, live revenue dashboards, and custom software built around how your business operates.
             </p>
 
             {/* Email Contact Pill */}
             <div className="pt-1">
               <a
-                href="mailto:contact@zavianlabs.com"
+                href={`mailto:${contactEmail}`}
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700 shadow-xs transition-all text-xs font-mono group"
               >
                 <svg className="w-3.5 h-3.5 text-[#5ee3ff] group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect width="20" height="16" x="2" y="4" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
-                <span className="font-medium text-zinc-300 group-hover:text-white">contact@zavianlabs.com</span>
+                <span className="font-medium text-zinc-300 group-hover:text-white">{contactEmail}</span>
                 <span className="text-zinc-500 group-hover:text-white transition-colors">↗</span>
               </a>
             </div>
@@ -248,7 +253,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
             </p>
             <div className="pt-1">
               <a
-                href={BOOKING_URL}
+                href={bookingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center w-full px-4 py-2.5 text-xs font-semibold rounded-full bg-[#eceef2] hover:bg-white text-[#07080b] shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
@@ -266,7 +271,7 @@ export default function Footer({ onOpenQuoteModal, themeBranding: initialBrandin
         {/* Operational Status Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-zinc-500">
           <div>
-            &copy; 2026 <strong className="font-bold text-white">ZAVIAN LABS</strong>. ALL RIGHTS RESERVED.
+            &copy; 2026 <strong className="font-bold text-white">{companyName}</strong>. ALL RIGHTS RESERVED.
           </div>
 
           <div className="flex items-center gap-4">

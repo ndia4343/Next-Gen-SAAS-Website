@@ -69,7 +69,7 @@ export default function HomeClient({ content }: HomeClientProps) {
   };
 
   return (
-    <main className="relative bg-[#eceff3] text-[#0b0d12] min-h-screen overflow-x-hidden">
+    <main className="relative bg-[#F8F9FA] text-[#090A0D] min-h-screen overflow-x-hidden">
       <Navbar
         onOpenQuoteModal={handleOpenModal}
         content={content.header}
@@ -79,7 +79,7 @@ export default function HomeClient({ content }: HomeClientProps) {
       {/* Permanently Dark Obsidian Hero + Marquee Strip */}
       <HeroSection onOpenQuoteModal={handleOpenModal} content={content.hero} />
 
-      {/* Clean Editorial Light Mode Canvas (#eceff3) with Dark Contrast Interactive Anchors */}
+      {/* High-Contrast Architectural Chalk Canvas (#F8F9FA) with Dark Contrast Interactive Anchors */}
       <VoiceSimulationSection />
       <ConnectedHubSection />
       <CommandCenterSection />

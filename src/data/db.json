@@ -926,13 +926,13 @@
       "city": "Localhost Dev",
       "region": "Sindh",
       "country": "Pakistan",
-      "currentPage": "/",
-      "referrer": "http://localhost:3000/",
+      "currentPage": "/lab",
+      "referrer": "http://localhost:3000/lab",
       "deviceType": "Desktop",
       "browser": "Chrome",
-      "visitCount": 30,
+      "visitCount": 68,
       "firstSeenAt": "2026-10-26T20:26:46.052Z",
-      "lastVisitedAt": "2026-11-01T22:42:50.036Z"
+      "lastVisitedAt": "2026-11-04T21:04:37.269Z"
     },
     {
       "visitorId": "test_vis_999",

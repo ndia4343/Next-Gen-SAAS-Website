@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
         throw new Error(data.error || 'Invalid credentials');
       }
 
-      router.push('/admin/branding');
+      router.push('/admin');
       router.refresh();
     } catch (err: any) {
       setError(err.message || 'Authentication failed');

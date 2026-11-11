@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { HeroSectionData } from '@/lib/types';
+import { useSiteConfig } from '@/context/SiteConfigContext';
 
 interface HeroProps {
   onOpenQuoteModal?: (service: string) => void;
@@ -20,18 +21,22 @@ const TAG_HINTS: Record<CoreTagId, string> = {
   dashboards: 'DASHBOARDS — TRACKS RECOVERED REVENUE & CONVERSIONS LIVE',
 };
 
-const MARQUEE_ITEMS = [
-  'AI VOICE RECEPTIONISTS',
-  'WHATSAPP AUTOMATION',
-  'BUSINESS WORKFLOWS',
-  'CUSTOM DASHBOARDS',
-  'TAILORED SOFTWARE',
-];
-
 export function Hero({}: HeroProps = {}) {
+  const { config } = useSiteConfig();
   const sectionRef = useRef<HTMLElement>(null);
   const [hoveredTag, setHoveredTag] = useState<CoreTagId>('default');
   const [coreBoost, setCoreBoost] = useState(false);
+
+  const hero = config.hero;
+  const marquee = config.marquee;
+  const marqueeItems = marquee.items.length > 0 ? marquee.items : ['AI VOICE RECEPTIONISTS'];
+  const doubledHalfItems =
+    marqueeItems.length < 6 ? [...marqueeItems, ...marqueeItems] : marqueeItems;
+
+  const fontSizePx = Math.max(36, Math.min(110, hero.headlineFontSize || 88));
+  const minMobilePx = Math.min(36, Math.round(fontSizePx * 0.56));
+  const fluidVw = (fontSizePx / 14.4).toFixed(2);
+  const fontFamilyClass = hero.headlineFontFamily === 'sans' ? 'font-sans' : 'font-serif-instrument';
 
   // Smooth spring cursor tracking (-1 to 1 normalized around hero)
   const rawX = useMotionValue(0);
@@ -136,46 +141,62 @@ export function Hero({}: HeroProps = {}) {
           {/* Subtle Architectural Pill */}
           <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/15 bg-white/[0.04] font-mono text-[11px] sm:text-xs tracking-[0.12em] uppercase text-[#a0a7b3] backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-[#5ee3ff] shadow-[0_0_12px_#5ee3ff] animate-pulse" />
-            <span>Voice &bull; WhatsApp &bull; Custom Software</span>
+            <span>{hero.eyebrowBadge}</span>
           </div>
 
-          {/* Instrument Serif Display Headline */}
+          {/* Dynamic Typography Display Headline */}
           <h1
-            className="mt-7 font-serif-instrument font-normal text-[#eceef2] tracking-[-0.02em] leading-[0.95]"
-            style={{ fontSize: 'clamp(52px, 6.2vw, 96px)' }}
+            className={`mt-7 ${fontFamilyClass} ${hero.headlineFontWeight} text-[#eceef2] tracking-[-0.02em] leading-[0.95]`}
+            style={{ fontSize: `clamp(${minMobilePx}px, ${fluidVw}vw, ${fontSizePx}px)` }}
           >
-            Technology that{' '}
+            {hero.headlinePrefix}{' '}
             <span className="italic chrome-text inline-block pr-2">
-              picks up
+              {hero.headlineAccent}
             </span>{' '}
-            the phone.
+            {hero.headlineSuffix}
           </h1>
 
           {/* Clear Business-Focused Copy */}
           <p className="mt-7 max-w-[530px] text-[17px] sm:text-[19px] leading-[1.6] text-[#a0a7b3] font-normal">
-            We build AI voice receptionists, WhatsApp automation, workflows, dashboards and custom software for businesses that run on conversations.
+            {hero.subheadline}
           </p>
 
           {/* Dual Interactive Action Pills */}
           <div className="mt-9 flex flex-wrap items-center gap-3.5">
             <a
-              href="#voice-simulation"
-              onClick={handleHearSampleCall}
+              href={hero.primaryCtaLink || '#voice-simulation'}
+              onClick={(e) => {
+                const link = hero.primaryCtaLink || '#voice-simulation';
+                if (link === '#voice-simulation') {
+                  handleHearSampleCall(e);
+                } else if (link.startsWith('#')) {
+                  scrollToTarget(e, link.slice(1));
+                }
+              }}
+              target={hero.primaryCtaLink?.startsWith('http') ? '_blank' : undefined}
+              rel={hero.primaryCtaLink?.startsWith('http') ? 'noopener noreferrer' : undefined}
               className="zl-btn inline-flex items-center gap-3 min-h-[52px] px-7 rounded-full bg-[#eceef2] hover:bg-white text-[#07080b] font-semibold text-[15px] shadow-[0_8px_30px_rgba(236,238,242,0.18)] cursor-pointer"
             >
               <span
                 aria-hidden="true"
                 className="w-0 h-0 border-l-[9px] border-l-current border-y-[6px] border-y-transparent translate-x-[1px]"
               />
-              <span>Hear a sample call</span>
+              <span>{hero.primaryCtaText}</span>
             </a>
 
             <a
-              href="#connected-hub"
-              onClick={(e) => scrollToTarget(e, 'connected-hub')}
+              href={hero.secondaryCtaLink || '#connected-hub'}
+              onClick={(e) => {
+                const link = hero.secondaryCtaLink || '#connected-hub';
+                if (link.startsWith('#')) {
+                  scrollToTarget(e, link.slice(1));
+                }
+              }}
+              target={hero.secondaryCtaLink?.startsWith('http') ? '_blank' : undefined}
+              rel={hero.secondaryCtaLink?.startsWith('http') ? 'noopener noreferrer' : undefined}
               className="zl-btn inline-flex items-center min-h-[52px] px-7 rounded-full border border-white/20 bg-white/[0.04] hover:bg-white/[0.09] hover:border-white/35 text-[#eceef2] font-semibold text-[15px] backdrop-blur-md cursor-pointer"
             >
-              Explore the systems
+              {hero.secondaryCtaText}
             </a>
           </div>
 
@@ -354,13 +375,16 @@ export function Hero({}: HeroProps = {}) {
           <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-[#090b10] to-transparent z-10" />
           <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-[#090b10] to-transparent z-10" />
 
-          <div className="marquee-track items-center whitespace-nowrap">
+          <div
+            className="marquee-track items-center whitespace-nowrap"
+            style={{ animationDuration: `${Math.max(8, marquee.speedSeconds || 26)}s` }}
+          >
             {[0, 1].map((dup) => (
               <div
                 key={dup}
                 className="flex items-center gap-12 pr-12 font-mono text-[11.5px] sm:text-xs tracking-[0.14em] uppercase text-[#b8bfcc] shrink-0"
               >
-                {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, idx) => (
+                {doubledHalfItems.map((item, idx) => (
                   <span key={`${dup}-${idx}`} className="inline-flex items-center gap-3.5">
                     <span
                       className={`w-1.5 h-1.5 rounded-full shrink-0 ${
@@ -373,9 +397,10 @@ export function Hero({}: HeroProps = {}) {
               </div>
             ))}
           </div>
+
         </div>
 
-        {/* Bottom glowing seam leading into #eceff3 Light Editorial Canvas */}
+        {/* Bottom glowing seam leading into #F8F9FA Architectural Light Canvas */}
         <div
           className="h-[2px] w-full"
           style={{

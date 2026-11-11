@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { HeaderData, ThemeBrandingConfig } from '@/lib/types';
-
-const BOOKING_URL = 'https://calendar.app.google/u5vL88X41qmGBCky5';
+import { useSiteConfig } from '@/context/SiteConfigContext';
 
 interface NavbarProps {
   onOpenQuoteModal?: (service: string) => void;
@@ -19,6 +18,7 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar({ content, themeBranding: initialBranding }: NavbarProps) {
+  const { config } = useSiteConfig();
   const [branding, setBranding] = useState<ThemeBrandingConfig | undefined>(initialBranding);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -85,30 +85,36 @@ export default function Navbar({ content, themeBranding: initialBranding }: Navb
     }
   };
 
-  const hasCustomImage =
-    (branding?.logoMode === 'image' || (branding?.logoMode !== 'svg' && branding?.logoImageUrl)) &&
-    Boolean(branding?.logoImageUrl);
+  const iconSize = Math.max(24, Math.min(64, config.branding.logoIconSize || 36));
+  const logoSrc =
+    config.branding.logoImageUrl ||
+    (branding?.logoImageUrl ? branding.logoImageUrl : '/images/zavian-cube-mark.png');
+  const bookingUrl = config.branding.calendarBookingUrl || 'https://calendar.app.google/u5vL88X41qmGBCky5';
+  const wordmark1 = config.branding.logoTextPrimary || branding?.wordmark1 || 'ZAVIAN';
+  const wordmark2 = config.branding.logoTextSecondary || branding?.wordmark2 || 'LABS';
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex flex-col items-center px-4 pt-4 sm:pt-5 pointer-events-none">
       <nav
         aria-label="Primary"
-        className="pointer-events-auto w-full max-w-[1140px] mx-auto rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4 bg-[#0c0e13]/82 backdrop-blur-xl border border-white/15 shadow-[0_14px_45px_rgba(7,8,11,0.38)] transition-all duration-300"
+        className="pointer-events-auto w-full max-w-[1140px] mx-auto rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4 bg-[#0c0e13]/85 backdrop-blur-xl border border-white/15 shadow-[0_14px_45px_rgba(7,8,11,0.38)] transition-all duration-300"
       >
-        {/* Full Footer-Inspired Brand Lockup (36px x 36px silver-framed obsidian inset cube + uppercase ZAVIAN LABS) */}
+        {/* Full Footer-Inspired Brand Lockup (dynamic icon size + silver-framed obsidian inset cube + uppercase ZAVIAN LABS) */}
         <a
           href="#hero"
           onClick={(e) => handleScroll(e, '#hero')}
           className="flex items-center gap-3 group focus:outline-none cursor-pointer shrink-0"
         >
           <div
-            className="relative w-9 h-9 rounded-xl p-[1.5px] shrink-0 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 shadow-[0_0_20px_rgba(94,227,255,0.22)]"
+            className="relative rounded-xl p-[1.5px] shrink-0 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 shadow-[0_0_20px_rgba(94,227,255,0.22)]"
             style={{
+              width: `${iconSize}px`,
+              height: `${iconSize}px`,
               background:
                 'linear-gradient(135deg, rgba(242,244,248,0.75) 0%, rgba(138,146,162,0.45) 45%, rgba(94,227,255,0.55) 100%)',
             }}
           >
-            <div className="w-full h-full rounded-[10.5px] bg-[#07080b] p-1 flex items-center justify-center overflow-hidden shadow-inner">
+            <div className="w-full h-full rounded-[10px] bg-[#07080b] p-1 flex items-center justify-center overflow-hidden shadow-inner">
               {branding?.logoMode === 'svg' && branding?.logoSvgContent ? (
                 <div
                   className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full text-white"
@@ -116,8 +122,8 @@ export default function Navbar({ content, themeBranding: initialBranding }: Navb
                 />
               ) : (
                 <img
-                  src={hasCustomImage ? branding!.logoImageUrl : '/images/zavian-cube-mark.png'}
-                  alt="Brand Logo"
+                  src={logoSrc}
+                  alt={config.branding.companyName || 'Brand Logo'}
                   style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18))' }}
                   className="w-full h-full object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
                 />
@@ -126,12 +132,8 @@ export default function Navbar({ content, themeBranding: initialBranding }: Navb
           </div>
 
           <div className="flex items-center text-sm sm:text-[15px] leading-none uppercase tracking-widest">
-            <span className="font-bold text-[#eceef2]">
-              {branding?.wordmark1 || 'ZAVIAN'}
-            </span>
-            <span className="font-normal text-[#b4a0ff] ml-1.5">
-              {branding?.wordmark2 || 'LABS'}
-            </span>
+            <span className="font-bold text-[#eceef2]">{wordmark1}</span>
+            <span className="font-normal text-[#b4a0ff] ml-1.5">{wordmark2}</span>
           </div>
         </a>
 
@@ -152,7 +154,7 @@ export default function Navbar({ content, themeBranding: initialBranding }: Navb
         {/* Right Actions */}
         <div className="flex items-center gap-2 shrink-0">
           <a
-            href={BOOKING_URL}
+            href={bookingUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="zl-btn hidden sm:inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#eceef2] hover:bg-white text-[#07080b] font-semibold text-xs tracking-wide transition-all cursor-pointer whitespace-nowrap shadow-[0_4px_18px_rgba(236,238,242,0.18)]"
@@ -186,7 +188,7 @@ export default function Navbar({ content, themeBranding: initialBranding }: Navb
             </a>
           ))}
           <a
-            href={BOOKING_URL}
+            href={bookingUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setMobileOpen(false)}

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import ZavianLogo from '@/components/ui/ZavianLogo';
 import {
+  Sliders,
   Palette,
   Compass,
   Layout,
@@ -17,6 +18,12 @@ import {
 } from 'lucide-react';
 
 const ADMIN_MODULES = [
+  {
+    group: 'UNIFIED CONFIGURATION',
+    items: [
+      { label: 'Site Config CMS', href: '/admin', icon: Sliders },
+    ],
+  },
   {
     group: 'IDENTITY & DESIGN',
     items: [
@@ -59,7 +66,7 @@ export default function AdminSidebar() {
     <aside className="w-72 bg-[#060609] border-r border-white/10 flex flex-col shrink-0 min-h-screen">
       {/* Brand & Badge */}
       <div className="p-6 border-b border-white/10">
-        <Link href="/admin/branding" className="block mb-2">
+        <Link href="/admin" className="block mb-2">
           <ZavianLogo showTagline={true} />
         </Link>
         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-600/10 border border-red-500/20 text-[10px] font-mono text-red-400 font-semibold tracking-wider uppercase">
