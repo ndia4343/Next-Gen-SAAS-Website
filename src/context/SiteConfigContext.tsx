@@ -2,8 +2,37 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { SiteConfig } from '@/types/site-config';
-import { defaultConfig } from '@/lib/default-config';
+import { FaqItemConfig, SiteConfig } from '@/types/site-config';
+import { defaultConfig, DEFAULT_FAQ_ITEMS } from '@/lib/default-config';
+
+function normalizeSiteConfig(incoming: SiteConfig): SiteConfig {
+  const rawFaq = incoming.faq;
+  const faq: FaqItemConfig[] =
+    Array.isArray(rawFaq) && rawFaq.length > 0
+      ? rawFaq.map((item, idx) => {
+          const fallback = DEFAULT_FAQ_ITEMS[idx];
+          const legacy = item as unknown as {
+            id?: string;
+            question?: string;
+            q?: string;
+            title?: string;
+            answer?: string;
+            a?: string;
+          };
+          return {
+            id: legacy.id || fallback?.id || `faq-${idx + 1}`,
+            question: legacy.question || legacy.q || legacy.title || fallback?.question || '',
+            answer: legacy.answer || legacy.a || fallback?.answer || '',
+          };
+        })
+      : DEFAULT_FAQ_ITEMS;
+
+  return {
+    ...defaultConfig,
+    ...incoming,
+    faq,
+  };
+}
 
 const STORAGE_KEY = 'zavian_site_config_v1';
 const BROADCAST_CHANNEL = 'zavian-site-config';
@@ -43,7 +72,7 @@ export function SiteConfigProvider({
   initialConfig = defaultConfig,
 }: SiteConfigProviderProps) {
   const router = useRouter();
-  const [config, setConfig] = useState<SiteConfig>(initialConfig);
+  const [config, setConfig] = useState<SiteConfig>(() => normalizeSiteConfig(initialConfig));
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
@@ -53,9 +82,10 @@ export function SiteConfigProvider({
       if (!res.ok) return;
       const data = await res.json();
       if (data?.success && data?.config) {
-        setConfig(data.config as SiteConfig);
+        const normalized = normalizeSiteConfig(data.config as SiteConfig);
+        setConfig(normalized);
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(data.config));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
         } catch {}
       }
     } catch {
@@ -71,7 +101,7 @@ export function SiteConfigProvider({
     const handleStorage = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY && e.newValue) {
         try {
-          setConfig(JSON.parse(e.newValue) as SiteConfig);
+          setConfig(normalizeSiteConfig(JSON.parse(e.newValue) as SiteConfig));
         } catch {}
       }
     };
@@ -79,7 +109,7 @@ export function SiteConfigProvider({
     const handleCustomEvent = (e: Event) => {
       const custom = e as CustomEvent<SiteConfig>;
       if (custom.detail) {
-        setConfig(custom.detail);
+        setConfig(normalizeSiteConfig(custom.detail));
       }
     };
 
@@ -88,7 +118,7 @@ export function SiteConfigProvider({
       channel = new BroadcastChannel(BROADCAST_CHANNEL);
       channel.onmessage = (event) => {
         if (event.data) {
-          setConfig(event.data as SiteConfig);
+          setConfig(normalizeSiteConfig(event.data as SiteConfig));
         }
       };
     } catch {}

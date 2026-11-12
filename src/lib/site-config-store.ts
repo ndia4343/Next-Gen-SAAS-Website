@@ -1,13 +1,36 @@
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import { SiteConfig } from '@/types/site-config';
-import { defaultConfig } from '@/lib/default-config';
+import { FaqItemConfig, SiteConfig } from '@/types/site-config';
+import { defaultConfig, DEFAULT_FAQ_ITEMS } from '@/lib/default-config';
 
 const CONFIG_FILE_PATH = path.join(process.cwd(), 'src', 'data', 'site-config.json');
 
 let memorySiteConfig: SiteConfig | null = null;
 let writeQueue: Promise<void> = Promise.resolve();
+
+function normalizeFaqList(rawFaq: unknown): FaqItemConfig[] {
+  if (!Array.isArray(rawFaq) || rawFaq.length === 0) {
+    return DEFAULT_FAQ_ITEMS;
+  }
+
+  return rawFaq.map((item, idx) => {
+    const fallback = DEFAULT_FAQ_ITEMS[idx];
+    const record = (item && typeof item === 'object' ? item : {}) as {
+      id?: string;
+      question?: string;
+      q?: string;
+      title?: string;
+      answer?: string;
+      a?: string;
+    };
+    return {
+      id: record.id || fallback?.id || `faq-${idx + 1}`,
+      question: record.question || record.q || record.title || fallback?.question || '',
+      answer: record.answer || record.a || fallback?.answer || '',
+    };
+  });
+}
 
 function mergeWithDefaults(partial: Partial<SiteConfig> | null | undefined): SiteConfig {
   if (!partial) return defaultConfig;
@@ -52,6 +75,7 @@ function mergeWithDefaults(partial: Partial<SiteConfig> | null | undefined): Sit
           ? partial.telemetry.sectors
           : defaultConfig.telemetry.sectors,
     },
+    faq: normalizeFaqList(partial.faq),
   };
 }
 

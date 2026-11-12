@@ -246,4 +246,42 @@ export const initialContent: WebsiteContent = {
       "Hey! Welcome to Zavian Labs. I handle our front desk so no one gets left on hold. Are you looking to automate your phone calls, set up WhatsApp booking funnels, or build custom software?",
     isLiveIndicator: true,
   },
+  faq: [
+    {
+      id: "unknown-answer",
+      question: "What happens if the AI does not know the answer?",
+      answer:
+        "The receptionist never guesses. If a caller asks a complex clinical question, it politely takes a detailed message, marks the urgency, and routes it to your team via WhatsApp or email.",
+    },
+    {
+      id: "front-desk-takeover",
+      question: "Can our front desk team take over a call?",
+      answer:
+        "Yes. Your staff can view live call transcripts and take over any active conversation instantly with a single click.",
+    },
+    {
+      id: "calendar-compatibility",
+      question: "Does it work with our existing calendar or booking system?",
+      answer:
+        "We connect directly with Google Calendar, Cal.com, and custom booking APIs. Compatibility with your specific clinic management system is confirmed during discovery.",
+    },
+    {
+      id: "data-privacy",
+      question: "How is patient and caller data handled?",
+      answer:
+        "All audio streams and chat transcripts are encrypted in transit and at rest. Patient data is never shared or used to train public machine learning models.",
+    },
+    {
+      id: "languages",
+      question: "Which languages does the receptionist support?",
+      answer:
+        "Supported languages are configured as per the project details and scope of work, with natural pronunciation and accent recognition.",
+    },
+    {
+      id: "setup-timeline",
+      question: "How long does setup take?",
+      answer:
+        "Full onboarding, script testing, and calendar integration are delivered on the decided timeline as per the project details and scope of work.",
+    },
+  ],
 };

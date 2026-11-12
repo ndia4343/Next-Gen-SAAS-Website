@@ -1,4 +1,4 @@
-import { SiteConfig } from '@/types/site-config';
+import { FaqItemConfig, SiteConfig } from '@/types/site-config';
 
 // TODO: Set your international WhatsApp number e.g. "971500000000" to activate button
 export const WHATSAPP_NUMBER: string = '';
@@ -10,11 +10,7 @@ export const SETUP_TIMELINE: string =
 export const SUPPORTED_LANGUAGES: string =
   'languages tailored to the project details and scope of work';
 
-export interface FaqEntry {
-  id: string;
-  question: string;
-  answer: string;
-}
+export type FaqEntry = FaqItemConfig;
 
 export const DEFAULT_FAQ_ITEMS: FaqEntry[] = [
   {
@@ -536,4 +532,5 @@ export const defaultConfig: SiteConfig = {
       },
     ],
   },
+  faq: DEFAULT_FAQ_ITEMS,
 };

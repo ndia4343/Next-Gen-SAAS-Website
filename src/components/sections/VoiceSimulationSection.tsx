@@ -846,9 +846,9 @@ export default function VoiceSimulationSection() {
                         <button
                           type="button"
                           onClick={() => scrubTo(22.2, false)}
-                          className="text-[#5ee3ff] underline underline-offset-2 cursor-pointer"
+                          className="inline-flex items-center justify-center px-2.5 py-0.5 mx-1 rounded-full bg-[#005c4b] hover:bg-[#047857] text-white font-semibold text-[11.5px] leading-tight border border-emerald-400/60 shadow-[0_2px_10px_rgba(16,185,129,0.24)] transition-colors cursor-pointer align-middle whitespace-nowrap"
                         >
-                          0:22 · WhatsApp
+                          1 — Confirm
                         </button>{' '}
                         to test confirming.
                       </p>

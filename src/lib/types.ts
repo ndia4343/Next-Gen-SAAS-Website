@@ -275,6 +275,13 @@ export type ThemeBrandingConfig = z.infer<typeof ThemeBrandingSchema>;
 // ==========================================
 // 11. Complete Aggregate Website Content Schema
 // ==========================================
+export const FaqItemSchema = z.object({
+  id: z.string(),
+  question: z.string(),
+  answer: z.string(),
+});
+export type FaqItemData = z.infer<typeof FaqItemSchema>;
+
 export const WebsiteContentSchema = z.object({
   themeBranding: ThemeBrandingSchema.default({
     activeThemeId: 'crimson-cyber',
@@ -295,6 +302,7 @@ export const WebsiteContentSchema = z.object({
   projectSupport: ProjectSupportSectionDataSchema,
   footer: FooterDataSchema,
   freyaVoiceAgent: FreyaConfigSchema,
+  faq: z.array(FaqItemSchema).optional(),
 });
 export type WebsiteContent = z.infer<typeof WebsiteContentSchema>;
 

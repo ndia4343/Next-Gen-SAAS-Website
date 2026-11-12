@@ -136,6 +136,12 @@ export interface TelemetryConfig {
   sectors: TelemetrySectorConfig[];
 }
 
+export interface FaqItemConfig {
+  id: string;
+  question: string;
+  answer: string;
+}
+
 export interface SiteConfig {
   branding: BrandingConfig;
   hero: HeroConfig;
@@ -143,6 +149,7 @@ export interface SiteConfig {
   voiceTheatre: VoiceTheatreConfig;
   constellation: ConstellationConfig;
   telemetry: TelemetryConfig;
+  faq?: FaqItemConfig[];
 }
 
 // ==========================================
@@ -271,4 +278,13 @@ export const SiteConfigSchema = z.object({
       })
     ).min(1),
   }),
+  faq: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        question: z.string().min(1),
+        answer: z.string().min(1),
+      })
+    )
+    .optional(),
 });
