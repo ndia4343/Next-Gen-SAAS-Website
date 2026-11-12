@@ -17,7 +17,7 @@
   --font-display: "Instrument Serif", Georgia, serif;
   --font-sans: "Inter Tight", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
-  --animate-marquee: marqueeContinuous 26s linear infinite;
+  --animate-marquee: marqueeContinuous 60s linear infinite;
 }
 
 :root {
@@ -400,8 +400,8 @@ html.dark,
 
 /* Continuous, Uninterrupted Marquee Animation */
 @keyframes marqueeContinuous {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% { transform: translate3d(0%, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 .marquee-track,
@@ -409,7 +409,7 @@ html.dark,
   display: flex;
   width: max-content;
   animation-name: marqueeContinuous;
-  animation-duration: 26s;
+  animation-duration: 60s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   will-change: transform;
@@ -434,7 +434,7 @@ html.dark,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *:not(.marquee-track) {
     animation: none !important;
     transition: none !important;
   }

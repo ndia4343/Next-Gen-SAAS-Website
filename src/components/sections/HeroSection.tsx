@@ -379,8 +379,8 @@ export function Hero({}: HeroProps = {}) {
 
       </div>
 
-      {/* CALM SINGLE-PASS DIVIDER: Obsidian Dark Seam with Muted Opacity into White #FFFFFF Canvas */}
-      <div className="relative z-20 w-full py-4 border-t border-b border-white/10 bg-[#07080b]">
+      {/* CONTINUOUS SLOW OBSIDIAN TICKER: Smooth seamless marquee with subtle dark seam */}
+      <div className="relative z-20 w-full overflow-hidden py-4 border-t border-b border-white/10 bg-[#07080b]">
         <div
           className="pointer-events-none absolute top-0 left-0 right-0 h-[1px]"
           style={{
@@ -389,16 +389,34 @@ export function Hero({}: HeroProps = {}) {
           }}
         />
 
-        <div className="max-w-[1280px] mx-auto px-6 sm:px-8 flex flex-wrap items-center justify-center sm:justify-between gap-x-8 gap-y-2.5 opacity-60 font-mono text-[11px] tracking-[0.12em] uppercase text-[#9aa1ad]">
-          {marqueeItems.slice(0, 5).map((item, idx) => (
-            <span key={idx} className="inline-flex items-center gap-2.5 leading-none">
-              <span
-                className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                  idx % 2 === 0 ? 'bg-[#5ee3ff]/80' : 'bg-[#a78bfa]/80'
-                }`}
-              />
-              <span>{item}</span>
-            </span>
+        <div
+          className="marquee-track flex items-center whitespace-nowrap"
+          style={{
+            animationDuration: `${config.marquee?.speedSeconds || 60}s`,
+          }}
+        >
+          {[0, 1].map((dup) => (
+            <div
+              key={dup}
+              aria-hidden={dup === 1 ? true : undefined}
+              className="flex items-center gap-10 pr-10 py-1.5 opacity-75 font-mono text-[11px] tracking-[0.12em] uppercase text-[#9aa1ad] shrink-0"
+            >
+              {[...marqueeItems, ...marqueeItems].map((item, idx) => (
+                <span
+                  key={`${dup}-${idx}`}
+                  className="flex items-center gap-2.5 leading-none py-1"
+                >
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full shrink-0 flex items-center leading-none ${
+                      idx % 2 === 0
+                        ? 'bg-[#5ee3ff]/85 shadow-[0_0_8px_rgba(94,227,255,0.55)]'
+                        : 'bg-[#a78bfa]/85 shadow-[0_0_8px_rgba(167,139,250,0.55)]'
+                    }`}
+                  />
+                  <span className="leading-none flex items-center">{item}</span>
+                </span>
+              ))}
+            </div>
           ))}
         </div>
       </div>

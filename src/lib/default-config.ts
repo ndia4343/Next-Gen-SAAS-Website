@@ -91,7 +91,7 @@ export const defaultConfig: SiteConfig = {
       'AFTER-HOURS COVERAGE',
       'CUSTOM WORKFLOWS',
     ],
-    speedSeconds: 26,
+    speedSeconds: 60,
   },
   voiceTheatre: {
     sectionEyebrow: '01 — Clinic Call & Booking Demo',

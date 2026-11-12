@@ -953,9 +953,9 @@ export default function SuperAdminCmsPage() {
               </div>
               <input
                 type="range"
-                min={8}
-                max={60}
-                step={1}
+                min={10}
+                max={120}
+                step={2}
                 value={draft.marquee.speedSeconds}
                 onChange={(e) =>
                   setDraft((prev) => ({
